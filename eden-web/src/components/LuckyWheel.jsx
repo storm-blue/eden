@@ -9,9 +9,9 @@ const LotteryLuckyWheel = () => {
             fonts: [{
                 text: '🍰',
                 top: '15%',
-                fontSize: '35px'
+                fontSize: '30px'
             }, {
-                text: '好吃的',
+                text: '吃的～',
                 top: '55%',
                 fontSize: '16px',
                 fontColor: '#333',
@@ -25,7 +25,7 @@ const LotteryLuckyWheel = () => {
                 top: '15%',
                 fontSize: '35px'
             }, {
-                text: '好喝的',
+                text: '喝的～',
                 top: '55%',
                 fontSize: '16px',
                 fontColor: '#333',
@@ -39,7 +39,7 @@ const LotteryLuckyWheel = () => {
                 top: '15%',
                 fontSize: '35px'
             }, {
-                text: '爱心',
+                text: '爱',
                 top: '55%',
                 fontSize: '18px',
                 fontColor: '#333',
@@ -79,7 +79,7 @@ const LotteryLuckyWheel = () => {
             fonts: [{
                 text: '🔄',
                 top: '15%',
-                fontSize: '35px'
+                fontSize: '30px'
             }, {
                 text: '再转一次',
                 top: '55%',
@@ -93,7 +93,7 @@ const LotteryLuckyWheel = () => {
             fonts: [{
                 text: '🎁',
                 top: '15%',
-                fontSize: '35px'
+                fontSize: '30px'
             }, {
                 text: '随机礼物',
                 top: '55%',
@@ -136,7 +136,7 @@ const LotteryLuckyWheel = () => {
         },
         {
             radius: '35px',
-            background: '#3c6aff', // 明亮蓝色内圈 🌈
+            background: '#678cff', // 明亮蓝色内圈 🌈
             pointer: true, // 官方指针配置
             fonts: []
         }
@@ -168,7 +168,7 @@ const LotteryLuckyWheel = () => {
     const [result, setResult] = useState('')
 
     // 奖品概率配置（对应prizes数组的索引）
-    const prizeProbabilities = [0.15, 0.20, 0.25, 0.15, 0.10, 0.10, 0.05]
+    const prizeProbabilities = [0.15, 0.20, 0.01, 0.25, 0.10, 0.25, 0.04]
     // 好吃的15%, 好喝的20%, 爱心25%, 空空如也15%, 红包10%, 再转一次10%, 随机礼物5%
 
     // 奖品名称映射
