@@ -1,0 +1,73 @@
+server:
+  port: 5000
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: eden-lottery-server
+  
+  # SQLite数据库配置
+  datasource:
+    url: jdbc:sqlite:eden_lottery.db
+    driver-class-name: org.sqlite.JDBC
+    username: 
+    password: 
+  
+  # JPA/Hibernate配置
+  jpa:
+    database-platform: org.hibernate.community.dialect.SQLiteDialect
+    hibernate:
+      ddl-auto: update
+    show-sql: true
+    properties:
+      hibernate:
+        format_sql: true
+        dialect: org.hibernate.community.dialect.SQLiteDialect
+  
+  # 跨域配置
+  web:
+    cors:
+      allowed-origins: "http://localhost:3000"
+      allowed-methods: "*"
+      allowed-headers: "*"
+      allow-credentials: true
+
+# 日志配置
+logging:
+  level:
+    com.eden: DEBUG
+    org.springframework.web: DEBUG
+    org.hibernate.SQL: DEBUG
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+
+# 应用配置
+app:
+  lottery:
+    # 每日最大抽奖次数
+    max-daily-draws: 50
+    # 奖品概率配置
+    prizes:
+      - name: "🍰 吃的～"
+        probability: 0.15
+        level: "common"
+      - name: "🥤 喝的～" 
+        probability: 0.20
+        level: "common"
+      - name: "❤️ 爱"
+        probability: 0.01
+        level: "epic"
+      - name: "💸 空空如也"
+        probability: 0.25
+        level: "common"
+      - name: "🧧 红包"
+        probability: 0.10
+        level: "uncommon"
+      - name: "🔄 再转一次"
+        probability: 0.25
+        level: "special"
+      - name: "🎁 随机礼物"
+        probability: 0.04
+        level: "rare"

@@ -163,54 +163,69 @@ const LotteryLuckyWheel = () => {
         }
     })
 
-    const myLucky = useRef()
-    const [isSpinning, setIsSpinning] = useState(false)
-    const [result, setResult] = useState('')
+     const myLucky = useRef()
+     const [isSpinning, setIsSpinning] = useState(false)
+     const [result, setResult] = useState('')
 
-    // 奖品概率配置（对应prizes数组的索引）
-    const prizeProbabilities = [0.15, 0.20, 0.01, 0.25, 0.10, 0.25, 0.04]
-    // 好吃的15%, 好喝的20%, 爱心25%, 空空如也15%, 红包10%, 再转一次10%, 随机礼物5%
+     // 奖品名称映射（与后端保持一致）
+     const prizeNames = [
+         '🍰 吃的～',
+         '🥤 喝的～',
+         '❤️ 爱',
+         '💸 空空如也',
+         '🧧 红包',
+         '🔄 再转一次',
+         '🎁 随机礼物'
+     ]
 
-    // 奖品名称映射
-    const prizeNames = [
-        '🍰 好吃的',
-        '🥤 好喝的',
-        '❤️ 爱心',
-        '💸 空空如也',
-        '🧧 红包',
-        '🔄 再转一次',
-        '🎁 随机礼物'
-    ]
+     const startSpin = async () => {
+         if (isSpinning) return
 
-    const startSpin = () => {
-        if (isSpinning) return
+         setIsSpinning(true)
+         setResult('')
 
-        setIsSpinning(true)
-        setResult('')
+         try {
+             // 开始转盘动画
+             myLucky.current.play()
 
-        // 基于概率选择奖品
-        const random = Math.random()
-        let cumulativeProbability = 0
-        let selectedIndex = 0
+             // 调用后端抽奖接口
+             const response = await fetch('http://localhost:5000/api/lottery', {
+                 method: 'POST',
+                 headers: {
+                     'Content-Type': 'application/json',
+                 },
+                 body: JSON.stringify({
+                     userId: 'web_user_' + Date.now()
+                 })
+             })
 
-        for (let i = 0; i < prizeProbabilities.length; i++) {
-            cumulativeProbability += prizeProbabilities[i]
-            if (random <= cumulativeProbability) {
-                selectedIndex = i
-                break
-            }
-        }
+             const result = await response.json()
 
-        console.log(`随机数: ${random}, 选中索引: ${selectedIndex}, 奖品: ${prizeNames[selectedIndex]}`)
+             if (result.success) {
+                 const prizeName = result.data.prize.name
+                 console.log('抽奖成功:', prizeName)
 
-        // 开始抽奖动画，LuckyCanvas会自动处理角度计算
-        myLucky.current.play()
+                 // 根据奖品名称找到对应的索引
+                 let selectedIndex = prizeNames.findIndex(name => name === prizeName)
+                 if (selectedIndex === -1) {
+                     selectedIndex = 0 // 默认第一个
+                 }
 
-        // 设置停止位置
-        setTimeout(() => {
-            myLucky.current.stop(selectedIndex)
-        }, 2000)
-    }
+                 // 延迟停止转盘，让动画更自然
+                 setTimeout(() => {
+                     myLucky.current.stop(selectedIndex)
+                 }, 1500)
+             } else {
+                 console.error('抽奖失败:', result.message)
+                 setIsSpinning(false)
+                 alert('抽奖失败，请稍后再试: ' + result.message)
+             }
+         } catch (error) {
+             console.error('网络错误:', error)
+             setIsSpinning(false)
+             alert('网络连接失败，请检查后端服务是否启动')
+         }
+     }
 
     const onEnd = (prize) => {
         setIsSpinning(false)

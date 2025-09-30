@@ -1,13 +1,14 @@
 # 🎪 Eden 欢乐抽奖系统
 
-一个可爱的移动端抽奖应用，包含前端展示页面和后端API服务。
+一个可爱的移动端抽奖应用，前端采用React，后端采用Java Spring Boot + SQLite轻量级数据库。
 
 ## 📱 特色功能
 
 - 🎨 **可爱设计**: 专为移动端优化的可爱界面
 - 🎯 **转盘抽奖**: 炫酷的转盘动画效果
 - 🎁 **丰富奖品**: 7种不同级别的奖品
-- 📊 **概率控制**: 后端可配置的奖品概率
+- 📊 **概率控制**: 后端控制的奖品概率配置
+- 💾 **数据持久化**: SQLite轻量级数据库存储
 - 💫 **动画效果**: 流畅的CSS动画和转场效果
 - 📱 **响应式设计**: 完美适配各种手机屏幕尺寸
 
@@ -30,28 +31,58 @@ npm run dev
 
 ### 后端启动
 
+#### 方式1：使用启动脚本（推荐）
 ```bash
 # 进入后端目录
 cd eden-server
 
-# 安装依赖
-npm install
+# Linux/Mac
+./start.sh
 
-# 启动开发服务器
-npm run dev
+# Windows
+start.bat
+```
+
+#### 方式2：使用Maven命令
+```bash
+# 进入后端目录
+cd eden-server
+
+# 编译项目
+mvn clean compile
+
+# 启动服务
+mvn spring-boot:run
 ```
 
 后端API服务将在 `http://localhost:5000` 启动
 
+### 环境要求
+
+**前端**
+- Node.js 16+ 
+- npm 或 yarn
+
+**后端**
+- Java 17 或更高版本
+- Maven 3.6 或更高版本
+
 ## 🎮 使用方法
 
-1. 打开浏览器访问 `http://localhost:3000`
-2. 点击"🎲 开始抽奖"按钮
-3. 观看转盘旋转动画
-4. 查看抽奖结果弹窗
-5. 可以重置转盘继续游戏
+1. 先启动Java后端服务（`http://localhost:5000`）
+2. 再启动前端服务（`http://localhost:3000`）
+3. 打开浏览器访问前端地址
+4. 点击"🎲 开始抽奖"按钮
+5. 观看转盘旋转动画
+6. 查看抽奖结果弹窗
+7. 可以重置转盘继续游戏
 
 ## 📚 API 接口
+
+### 健康检查
+```
+GET /api/health
+```
 
 ### 获取奖品列表
 ```
@@ -61,12 +92,16 @@ GET /api/prizes
 ### 执行抽奖
 ```
 POST /api/lottery
-Body: { "userId": "optional_user_id" }
+Content-Type: application/json
+
+{
+  "userId": "optional_user_id"
+}
 ```
 
 ### 获取抽奖记录
 ```
-GET /api/records/:userId?
+GET /api/records/{userId}
 ```
 
 ### 获取统计信息
@@ -74,36 +109,33 @@ GET /api/records/:userId?
 GET /api/stats
 ```
 
-### 健康检查
-```
-GET /api/health
-```
-
 ## 🎁 奖品配置
 
-系统包含7种奖品：
+系统包含7种奖品（概率在后端配置）：
 
 | 奖品 | 级别 | 概率 |
 |------|------|------|
-| 🎁 大奖 | Epic | 5% |
-| 🎮 游戏币 | Rare | 15% |
-| 🎪 再来一次 | Common | 20% |
-| 🎈 小奖品 | Common | 25% |
-| 🍭 糖果 | Common | 15% |
-| 🎨 贴纸 | Uncommon | 10% |
-| 🌟 积分 | Uncommon | 10% |
+| 🍰 吃的～ | Common | 15% |
+| 🥤 喝的～ | Common | 20% |
+| ❤️ 爱 | Epic | 1% |
+| 💸 空空如也 | Common | 25% |
+| 🧧 红包 | Uncommon | 10% |
+| 🔄 再转一次 | Special | 25% |
+| 🎁 随机礼物 | Rare | 4% |
 
 ## 🛠 技术栈
 
 ### 前端
 - **React 18** - 现代化React框架
 - **Vite** - 快速构建工具
+- **Lucky Canvas** - 转盘组件库
 - **CSS3** - 原生CSS动画和响应式设计
 
 ### 后端
-- **Node.js** - 服务器运行环境
-- **Express.js** - Web应用框架
-- **CORS** - 跨域资源共享
+- **Spring Boot 3.2** - Java Web框架
+- **Spring Data JPA** - 数据访问层
+- **SQLite** - 轻量级数据库
+- **Maven** - 依赖管理工具
 
 ## 📱 移动端优化
 
@@ -120,6 +152,62 @@ GET /api/health
 - 流畅的转场动画
 - 弹性交互效果
 - 浮动装饰元素
+
+## 🗄️ 数据存储
+
+使用SQLite轻量级数据库，包含以下数据表：
+
+- **prizes**: 奖品信息表
+- **lottery_records**: 抽奖记录表
+
+数据库文件：`eden_lottery.db`（自动创建）
+
+## 📁 项目结构
+
+```
+eden/
+├── eden-web/                    # React前端
+│   ├── src/
+│   │   ├── components/
+│   │   │   ├── LuckyWheel.jsx   # 转盘组件
+│   │   │   └── LuckyWheel.css   # 转盘样式
+│   │   ├── App.jsx              # 主应用
+│   │   └── main.jsx             # 入口文件
+│   ├── package.json
+│   └── vite.config.js
+├── eden-server/                 # Java后端
+│   ├── src/main/java/com/eden/lottery/
+│   │   ├── controller/          # 控制器层
+│   │   ├── service/             # 服务层
+│   │   ├── repository/          # 数据访问层
+│   │   ├── entity/              # 实体类
+│   │   └── dto/                 # 数据传输对象
+│   ├── pom.xml                  # Maven配置
+│   ├── start.sh                 # Linux/Mac启动脚本
+│   └── start.bat                # Windows启动脚本
+└── README.md                    # 项目说明
+```
+
+## 🔧 开发说明
+
+### 修改奖品概率
+
+编辑 `eden-server/src/main/resources/application.yml` 文件中的概率配置：
+
+```yaml
+app:
+  lottery:
+    prizes:
+      - name: "🍰 吃的～"
+        probability: 0.15  # 修改这里的概率值
+        level: "common"
+```
+
+### 自定义奖品
+
+1. 修改后端配置文件中的奖品列表
+2. 更新前端 `LuckyWheel.jsx` 中的转盘奖品显示
+3. 确保前后端奖品名称一致
 
 ## 📄 许可证
 
