@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eden.lottery.mapper.PrizeMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.eden.lottery.entity.Prize">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="name" property="name" jdbcType="VARCHAR"/>
+        <result column="probability" property="probability" jdbcType="DOUBLE"/>
+        <result column="level" property="level" jdbcType="VARCHAR"/>
+        <result column="created_at" property="createdAt" jdbcType="TIMESTAMP"/>
+        <result column="updated_at" property="updatedAt" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        id, name, probability, level, created_at, updated_at
+    </sql>
+
+    <!-- 插入奖品 -->
+    <insert id="insert" parameterType="com.eden.lottery.entity.Prize">
+        <selectKey keyProperty="id" resultType="long" order="AFTER">
+            SELECT LAST_INSERT_ROWID()
+        </selectKey>
+        INSERT INTO prizes (name, probability, level, created_at, updated_at)
+        VALUES (#{name}, #{probability}, #{level}, #{createdAt}, #{updatedAt})
+    </insert>
+
+    <!-- 根据ID查询 -->
+    <select id="selectById" parameterType="long" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM prizes
+        WHERE id = #{id}
+    </select>
+
+    <!-- 查询所有奖品 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM prizes
+        ORDER BY id
+    </select>
+
+    <!-- 查询有效奖品 -->
+    <select id="selectValidPrizes" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM prizes
+        WHERE probability > 0
+        ORDER BY id
+    </select>
+
+    <!-- 根据级别查询 -->
+    <select id="selectByLevel" parameterType="string" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM prizes
+        WHERE level = #{level}
+        ORDER BY id
+    </select>
+
+    <!-- 更新奖品 -->
+    <update id="updateById" parameterType="com.eden.lottery.entity.Prize">
+        UPDATE prizes
+        SET name = #{name},
+            probability = #{probability},
+            level = #{level},
+            updated_at = #{updatedAt}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 删除奖品 -->
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM prizes WHERE id = #{id}
+    </delete>
+
+    <!-- 统计数量 -->
+    <select id="count" resultType="long">
+        SELECT COUNT(*) FROM prizes
+    </select>
+
+</mapper>

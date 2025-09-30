@@ -3,8 +3,8 @@ package com.eden.lottery.service;
 import com.eden.lottery.dto.LotteryResult;
 import com.eden.lottery.entity.LotteryRecord;
 import com.eden.lottery.entity.Prize;
-import com.eden.lottery.repository.LotteryRecordRepository;
-import com.eden.lottery.repository.PrizeRepository;
+import com.eden.lottery.mapper.LotteryRecordMapper;
+import com.eden.lottery.mapper.PrizeMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 抽奖服务
@@ -26,18 +27,19 @@ public class LotteryService {
     private final SecureRandom random = new SecureRandom();
     
     @Autowired
-    private PrizeRepository prizeRepository;
+    private PrizeMapper prizeMapper;
     
     @Autowired
-    private LotteryRecordRepository recordRepository;
+    private LotteryRecordMapper recordMapper;
     
     /**
      * 执行抽奖
      */
+    @Transactional(timeout = 10)
     public LotteryResult drawLottery(String userId, String ipAddress, String userAgent) {
         try {
             // 获取所有有效奖品
-            List<Prize> prizes = prizeRepository.findValidPrizes();
+            List<Prize> prizes = prizeMapper.selectValidPrizes();
             if (prizes.isEmpty()) {
                 throw new RuntimeException("暂无可用奖品");
             }
@@ -46,8 +48,8 @@ public class LotteryService {
             Prize selectedPrize = selectPrizeByProbability(prizes);
             
             // 记录抽奖结果
-            LotteryRecord record = new LotteryRecord(userId, selectedPrize, ipAddress, userAgent);
-            record = recordRepository.save(record);
+            LotteryRecord record = new LotteryRecord(userId, selectedPrize.getId(), ipAddress, userAgent);
+            recordMapper.insert(record);
             
             logger.info("用户 {} 抽中了 {}", userId, selectedPrize.getName());
             
@@ -85,43 +87,34 @@ public class LotteryService {
      * 获取所有奖品（不包含概率信息）
      */
     public List<Prize> getAllPrizes() {
-        return prizeRepository.findValidPrizes();
+        return prizeMapper.selectValidPrizes();
     }
     
     /**
      * 获取用户抽奖记录
      */
     public List<LotteryRecord> getUserRecords(String userId, int limit) {
-        return recordRepository.findByUserIdOrderByCreatedAtDesc(userId, 
-                org.springframework.data.domain.PageRequest.of(0, limit));
+        return recordMapper.selectByUserId(userId, 0, limit);
     }
     
     /**
      * 获取最近抽奖记录
      */
     public List<LotteryRecord> getRecentRecords() {
-        return recordRepository.findTop50ByOrderByCreatedAtDesc();
+        return recordMapper.selectRecentRecords(50);
     }
     
     /**
      * 获取抽奖统计信息
      */
     public Object getStatistics() {
-        List<Object[]> prizeStats = recordRepository.getPrizeStatistics();
-        long totalDraws = recordRepository.count();
+        List<Map<String, Object>> prizesStatistics = recordMapper.selectPrizeStatistics();
+        long drawsCount = recordMapper.count();
         
         return new Object() {
-            public final long totalDraws = LotteryService.this.getTotalDraws();
-            public final List<Object[]> prizeStats = LotteryService.this.getPrizeStats();
+            public final long totalDraws = drawsCount;
+            public final List<Map<String, Object>> prizeStats = prizesStatistics;
             public final LocalDateTime lastUpdate = LocalDateTime.now();
-            
-            private long getTotalDraws() {
-                return totalDraws;
-            }
-            
-            private List<Object[]> getPrizeStats() {
-                return prizeStats;
-            }
         };
     }
 }

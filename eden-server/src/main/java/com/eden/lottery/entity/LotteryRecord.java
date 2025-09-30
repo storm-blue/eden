@@ -1,50 +1,28 @@
 package com.eden.lottery.entity;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 /**
  * 抽奖记录实体类
  */
-@Entity
-@Table(name = "lottery_records")
 public class LotteryRecord {
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @Column(name = "user_id", length = 100)
     private String userId;
-    
-    @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "prize_id")
-    private Prize prize;
-    
-    @Column(name = "ip_address", length = 45)
+    private Long prizeId;
+    private Prize prize; // 关联的奖品对象，用于查询时填充
     private String ipAddress;
-    
-    @Column(name = "user_agent", length = 500)
     private String userAgent;
-    
-    @Column(name = "created_at", nullable = false)
     private LocalDateTime createdAt;
     
     public LotteryRecord() {}
     
-    public LotteryRecord(String userId, Prize prize, String ipAddress, String userAgent) {
+    public LotteryRecord(String userId, Long prizeId, String ipAddress, String userAgent) {
         this.userId = userId;
-        this.prize = prize;
+        this.prizeId = prizeId;
         this.ipAddress = ipAddress;
         this.userAgent = userAgent;
         this.createdAt = LocalDateTime.now();
-    }
-    
-    @PrePersist
-    protected void onCreate() {
-        if (createdAt == null) {
-            createdAt = LocalDateTime.now();
-        }
     }
     
     // Getters and Setters
@@ -62,6 +40,14 @@ public class LotteryRecord {
     
     public void setUserId(String userId) {
         this.userId = userId;
+    }
+    
+    public Long getPrizeId() {
+        return prizeId;
+    }
+    
+    public void setPrizeId(Long prizeId) {
+        this.prizeId = prizeId;
     }
     
     public Prize getPrize() {
@@ -101,7 +87,7 @@ public class LotteryRecord {
         return "LotteryRecord{" +
                 "id=" + id +
                 ", userId='" + userId + '\'' +
-                ", prize=" + (prize != null ? prize.getName() : null) +
+                ", prizeId=" + prizeId +
                 ", ipAddress='" + ipAddress + '\'' +
                 ", createdAt=" + createdAt +
                 '}';

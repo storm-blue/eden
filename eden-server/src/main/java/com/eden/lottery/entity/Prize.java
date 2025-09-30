@@ -1,32 +1,17 @@
 package com.eden.lottery.entity;
 
-import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 /**
  * 奖品实体类
  */
-@Entity
-@Table(name = "prizes")
 public class Prize {
     
-    @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    
-    @Column(name = "name", nullable = false, length = 50)
     private String name;
-    
-    @Column(name = "probability", nullable = false)
     private Double probability;
-    
-    @Column(name = "level", nullable = false, length = 20)
     private String level;
-    
-    @Column(name = "created_at")
     private LocalDateTime createdAt;
-    
-    @Column(name = "updated_at")
     private LocalDateTime updatedAt;
     
     public Prize() {}
@@ -37,17 +22,6 @@ public class Prize {
         this.level = level;
         this.createdAt = LocalDateTime.now();
         this.updatedAt = LocalDateTime.now();
-    }
-    
-    @PrePersist
-    protected void onCreate() {
-        createdAt = LocalDateTime.now();
-        updatedAt = LocalDateTime.now();
-    }
-    
-    @PreUpdate
-    protected void onUpdate() {
-        updatedAt = LocalDateTime.now();
     }
     
     // Getters and Setters

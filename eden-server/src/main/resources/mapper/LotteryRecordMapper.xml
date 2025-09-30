@@ -1,0 +1,115 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eden.lottery.mapper.LotteryRecordMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.eden.lottery.entity.LotteryRecord">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="prize_id" property="prizeId" jdbcType="BIGINT"/>
+        <result column="ip_address" property="ipAddress" jdbcType="VARCHAR"/>
+        <result column="user_agent" property="userAgent" jdbcType="VARCHAR"/>
+        <result column="created_at" property="createdAt" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 带奖品信息的结果映射 -->
+    <resultMap id="WithPrizeResultMap" type="com.eden.lottery.entity.LotteryRecord">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="prize_id" property="prizeId" jdbcType="BIGINT"/>
+        <result column="ip_address" property="ipAddress" jdbcType="VARCHAR"/>
+        <result column="user_agent" property="userAgent" jdbcType="VARCHAR"/>
+        <result column="created_at" property="createdAt" jdbcType="TIMESTAMP"/>
+        <association property="prize" javaType="com.eden.lottery.entity.Prize">
+            <id column="prize_id" property="id" jdbcType="BIGINT"/>
+            <result column="prize_name" property="name" jdbcType="VARCHAR"/>
+            <result column="prize_probability" property="probability" jdbcType="DOUBLE"/>
+            <result column="prize_level" property="level" jdbcType="VARCHAR"/>
+            <result column="prize_created_at" property="createdAt" jdbcType="TIMESTAMP"/>
+            <result column="prize_updated_at" property="updatedAt" jdbcType="TIMESTAMP"/>
+        </association>
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        id, user_id, prize_id, ip_address, user_agent, created_at
+    </sql>
+
+    <!-- 带奖品信息的列 -->
+    <sql id="With_Prize_Column_List">
+        lr.id, lr.user_id, lr.prize_id, lr.ip_address, lr.user_agent, lr.created_at,
+        p.id as prize_id, p.name as prize_name, p.probability as prize_probability, 
+        p.level as prize_level, p.created_at as prize_created_at, p.updated_at as prize_updated_at
+    </sql>
+
+    <!-- 插入记录 -->
+    <insert id="insert" parameterType="com.eden.lottery.entity.LotteryRecord">
+        <selectKey keyProperty="id" resultType="long" order="AFTER">
+            SELECT LAST_INSERT_ROWID()
+        </selectKey>
+        INSERT INTO lottery_records (user_id, prize_id, ip_address, user_agent, created_at)
+        VALUES (#{userId}, #{prizeId}, #{ipAddress}, #{userAgent}, #{createdAt})
+    </insert>
+
+    <!-- 根据ID查询 -->
+    <select id="selectById" parameterType="long" resultMap="WithPrizeResultMap">
+        SELECT <include refid="With_Prize_Column_List"/>
+        FROM lottery_records lr
+        LEFT JOIN prizes p ON lr.prize_id = p.id
+        WHERE lr.id = #{id}
+    </select>
+
+    <!-- 根据用户ID查询 -->
+    <select id="selectByUserId" resultMap="WithPrizeResultMap">
+        SELECT <include refid="With_Prize_Column_List"/>
+        FROM lottery_records lr
+        LEFT JOIN prizes p ON lr.prize_id = p.id
+        WHERE lr.user_id = #{userId}
+        ORDER BY lr.created_at DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 查询最近记录 -->
+    <select id="selectRecentRecords" parameterType="int" resultMap="WithPrizeResultMap">
+        SELECT <include refid="With_Prize_Column_List"/>
+        FROM lottery_records lr
+        LEFT JOIN prizes p ON lr.prize_id = p.id
+        ORDER BY lr.created_at DESC
+        LIMIT #{limit}
+    </select>
+
+    <!-- 根据时间范围查询 -->
+    <select id="selectByDateRange" resultMap="WithPrizeResultMap">
+        SELECT <include refid="With_Prize_Column_List"/>
+        FROM lottery_records lr
+        LEFT JOIN prizes p ON lr.prize_id = p.id
+        WHERE lr.created_at BETWEEN #{startTime} AND #{endTime}
+        ORDER BY lr.created_at DESC
+    </select>
+
+    <!-- 统计用户指定日期抽奖次数 -->
+    <select id="countByUserIdAndDate" resultType="long">
+        SELECT COUNT(*)
+        FROM lottery_records
+        WHERE user_id = #{userId}
+        AND DATE(created_at) = #{date}
+    </select>
+
+    <!-- 奖品统计信息 -->
+    <select id="selectPrizeStatistics" resultType="map">
+        SELECT 
+            p.name,
+            p.level,
+            COUNT(lr.id) as count
+        FROM prizes p
+        LEFT JOIN lottery_records lr ON p.id = lr.prize_id
+        GROUP BY p.id, p.name, p.level
+        ORDER BY count DESC
+    </select>
+
+    <!-- 统计总数 -->
+    <select id="count" resultType="long">
+        SELECT COUNT(*) FROM lottery_records
+    </select>
+
+</mapper>

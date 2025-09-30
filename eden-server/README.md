@@ -1,6 +1,6 @@
-# 🎪 Eden抽奖系统 - Java后端
+# 🎪 Eden抽奖系统 - Java后端 (MyBatis版本)
 
-基于Spring Boot + SQLite的轻量级抽奖系统后端服务。
+基于Spring Boot + MyBatis + SQLite的轻量级抽奖系统后端服务。
 
 ## 🚀 快速启动
 
@@ -12,7 +12,7 @@
 
 ```bash
 # 进入Java后端目录
-cd eden-server-java
+cd eden-server
 
 # 编译项目
 mvn clean compile
@@ -72,7 +72,7 @@ GET /api/stats
 ### 数据表结构
 
 **prizes 奖品表**
-- id: 主键
+- id: 主键 (自增)
 - name: 奖品名称
 - probability: 中奖概率
 - level: 奖品级别
@@ -80,7 +80,7 @@ GET /api/stats
 - updated_at: 更新时间
 
 **lottery_records 抽奖记录表**
-- id: 主键
+- id: 主键 (自增)
 - user_id: 用户ID
 - prize_id: 奖品ID（外键）
 - ip_address: 客户端IP
@@ -104,7 +104,7 @@ GET /api/stats
 ## 🛠 技术栈
 
 - **Spring Boot 3.2** - 主框架
-- **Spring Data JPA** - 数据访问层
+- **MyBatis 3.0** - 持久层框架
 - **SQLite** - 轻量级数据库
 - **Maven** - 依赖管理
 - **Logback** - 日志框架
@@ -119,14 +119,67 @@ src/main/java/com/eden/lottery/
 ├── service/                        # 服务层
 │   ├── LotteryService.java
 │   └── PrizeInitService.java
-├── repository/                     # 数据访问层
-│   ├── PrizeRepository.java
-│   └── LotteryRecordRepository.java
+├── mapper/                         # MyBatis Mapper接口
+│   ├── PrizeMapper.java
+│   └── LotteryRecordMapper.java
 ├── entity/                         # 实体类
 │   ├── Prize.java
 │   └── LotteryRecord.java
-└── dto/                           # 数据传输对象
-    ├── ApiResponse.java
-    ├── LotteryRequest.java
-    └── LotteryResult.java
+├── dto/                           # 数据传输对象
+│   ├── ApiResponse.java
+│   ├── LotteryRequest.java
+│   └── LotteryResult.java
+└── config/                        # 配置类
+    ├── CorsConfig.java
+    └── DatabaseInitializer.java
+
+src/main/resources/
+├── mapper/                        # MyBatis XML映射文件
+│   ├── PrizeMapper.xml
+│   └── LotteryRecordMapper.xml
+├── sql/
+│   └── schema.sql                 # 数据库表结构
+└── application.yml                # 应用配置
 ```
+
+## 🔧 MyBatis特性
+
+### XML映射文件
+- 支持结果映射 (ResultMap)
+- 复杂查询和关联查询
+- 动态SQL支持
+
+### 数据库连接池
+- HikariCP 连接池
+- 单连接配置（适合SQLite）
+- 连接超时和泄漏检测
+
+### 事务管理
+- 声明式事务 (@Transactional)
+- 事务超时控制
+- 回滚机制
+
+## 💡 vs JPA/Hibernate
+
+**选择MyBatis的优势:**
+- ✅ 更直观的SQL控制
+- ✅ 更好的SQLite兼容性
+- ✅ 更少的配置复杂度
+- ✅ 更精确的查询优化
+- ✅ 避免ORM映射问题
+
+## 🚀 启动流程
+
+1. **数据库初始化** - 自动创建表结构
+2. **奖品数据初始化** - 插入默认奖品数据
+3. **服务启动** - Web服务和API接口可用
+
+## 📄 许可证
+
+MIT License
+
+---
+
+<div align="center">
+🎪 MyBatis版本 - 更简单、更可控的数据访问！🎪
+</div>

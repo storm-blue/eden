@@ -1,12 +1,13 @@
 package com.eden.lottery.service;
 
 import com.eden.lottery.entity.Prize;
-import com.eden.lottery.repository.PrizeRepository;
+import com.eden.lottery.mapper.PrizeMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
+import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,12 +16,13 @@ import java.util.List;
  * 奖品初始化服务
  */
 @Service
+@Order(2) // 确保在数据库初始化之后执行
 public class PrizeInitService implements ApplicationRunner {
     
     private static final Logger logger = LoggerFactory.getLogger(PrizeInitService.class);
     
     @Autowired
-    private PrizeRepository prizeRepository;
+    private PrizeMapper prizeMapper;
     
     @Override
     public void run(ApplicationArguments args) {
@@ -35,7 +37,7 @@ public class PrizeInitService implements ApplicationRunner {
      * 初始化默认奖品
      */
     private void initializePrizes() {
-        List<Prize> existingPrizes = prizeRepository.findAll();
+        List<Prize> existingPrizes = prizeMapper.selectAll();
         
         if (existingPrizes.isEmpty()) {
             logger.info("开始初始化奖品数据...");
@@ -52,7 +54,7 @@ public class PrizeInitService implements ApplicationRunner {
             };
             
             for (Prize prize : defaultPrizes) {
-                prizeRepository.save(prize);
+                prizeMapper.insert(prize);
                 logger.info("初始化奖品: {} - 概率: {}%", prize.getName(), prize.getProbability() * 100);
             }
             
