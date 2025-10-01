@@ -1,0 +1,27 @@
+version: '3.8'
+
+services:
+  eden-app:
+    build: .
+    ports:
+      - "80:80"
+      - "5000:5000"
+    volumes:
+      - eden_data:/app/data
+      - eden_logs:/var/log/eden
+    environment:
+      - SPRING_PROFILES_ACTIVE=prod
+      - JAVA_OPTS=-Xmx512m -Xms256m
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost/api/user/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+
+volumes:
+  eden_data:
+    driver: local
+  eden_logs:
+    driver: local

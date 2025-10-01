@@ -1,0 +1,81 @@
+server:
+  port: 5000
+  servlet:
+    context-path: /
+
+spring:
+  application:
+    name: eden-lottery-server
+  
+  # 生产环境数据库配置
+  datasource:
+    url: jdbc:sqlite:/opt/eden/data/eden_lottery.db?journal_mode=WAL&synchronous=NORMAL&cache_size=10000&foreign_keys=true&busy_timeout=30000
+    driver-class-name: org.sqlite.JDBC
+    username:
+    password:
+    hikari:
+      maximum-pool-size: 1
+      minimum-idle: 1
+      connection-timeout: 30000
+      idle-timeout: 600000
+      max-lifetime: 1800000
+      leak-detection-threshold: 60000
+
+# MyBatis配置
+mybatis:
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: com.eden.lottery.entity
+  configuration:
+    map-underscore-to-camel-case: true
+    cache-enabled: true
+    lazy-loading-enabled: true
+    multiple-result-sets-enabled: true
+    use-column-label: true
+    use-generated-keys: false
+    auto-mapping-behavior: partial
+    default-executor-type: simple
+    default-statement-timeout: 30
+    log-impl: org.apache.ibatis.logging.slf4j.Slf4jImpl
+
+# 生产环境日志配置
+logging:
+  level:
+    root: INFO
+    com.eden: INFO
+    org.springframework.web: WARN
+  pattern:
+    console: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+    file: "%d{yyyy-MM-dd HH:mm:ss} [%thread] %-5level %logger{36} - %msg%n"
+  file:
+    name: /var/log/eden/backend.log
+    max-size: 100MB
+    max-history: 30
+
+# 应用配置
+app:
+  lottery:
+    # 每日最大抽奖次数
+    max-daily-draws: 50
+    # 奖品概率配置
+    prizes:
+      - name: "🍰 吃的～"
+        probability: 0.15
+        level: "common"
+      - name: "🥤 喝的～"
+        probability: 0.20
+        level: "common"
+      - name: "❤️ 爱"
+        probability: 0.01
+        level: "epic"
+      - name: "💸 空空如也"
+        probability: 0.25
+        level: "common"
+      - name: "🧧 红包"
+        probability: 0.10
+        level: "uncommon"
+      - name: "🔄 再转一次"
+        probability: 0.25
+        level: "special"
+      - name: "🎁 随机礼物"
+        probability: 0.04
+        level: "rare"

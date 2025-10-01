@@ -1,0 +1,32 @@
+[Unit]
+Description=Eden Lottery Backend Service
+After=network.target
+
+[Service]
+Type=simple
+User=eden
+Group=eden
+WorkingDirectory=/opt/eden/eden-server
+ExecStart=/usr/bin/java -jar target/eden-lottery-server-1.0.0.jar --server.port=5000 --spring.profiles.active=prod
+ExecStop=/bin/kill -TERM $MAINPID
+Restart=always
+RestartSec=10
+
+# 环境变量
+Environment=JAVA_OPTS="-Xmx512m -Xms256m"
+Environment=SPRING_PROFILES_ACTIVE=prod
+
+# 日志配置
+StandardOutput=journal
+StandardError=journal
+SyslogIdentifier=eden-backend
+
+# 安全配置
+NoNewPrivileges=yes
+PrivateTmp=yes
+ProtectSystem=strict
+ProtectHome=yes
+ReadWritePaths=/opt/eden/eden-server
+
+[Install]
+WantedBy=multi-user.target
