@@ -366,6 +366,20 @@ const LotteryLuckyWheel = () => {
                     }} // 点击抽奖按钮会触发
                     onEnd={onEnd}
                 />
+                {/* 转盘中心显示剩余次数 */}
+                {userInfo && (
+                    <div className="wheel-center-info">
+                        <div className="center-remaining-draws">
+                            剩余
+                        </div>
+                        <div className="center-remaining-number">
+                            {userInfo.remainingDraws}
+                        </div>
+                        <div className="center-remaining-unit">
+                            次
+                        </div>
+                    </div>
+                )}
             </div>
 
             {/* 控制按钮 */}
@@ -384,11 +398,6 @@ const LotteryLuckyWheel = () => {
                             title="点击修改姓名"
                         >
                             👤 {userName}
-                            {userInfo && (
-                                <span className="remaining-draws">
-                                    剩余: {userInfo.remainingDraws}次
-                                </span>
-                            )}
                         </div>
                     </div>
                 )}
