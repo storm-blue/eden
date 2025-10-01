@@ -104,10 +104,6 @@ public class LotteryService {
         logger.debug("随机数: {}", randomValue);
 
         for (Prize prize : prizes) {
-            if (prize.getId() == 3) {
-                return prize;
-            }
-
             cumulativeProbability += prize.getProbability();
             logger.debug("奖品: {}, 累计概率: {}", prize.getName(), cumulativeProbability);
 
