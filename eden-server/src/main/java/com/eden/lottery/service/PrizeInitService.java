@@ -44,13 +44,13 @@ public class PrizeInitService implements ApplicationRunner {
             
             // 创建默认奖品
             Prize[] defaultPrizes = {
-                new Prize("🍰 吃的～", 0.15, "common"),
-                new Prize("🥤 喝的～", 0.15, "common"),
-                new Prize("❤️ 爱", 0.01, "epic"),
-                new Prize("💸 空空如也", 0.25, "common"),
-                new Prize("🧧 红包", 0.10, "uncommon"),
+                new Prize("🍰 吃的～", 0.13, "common"),
+                new Prize("🥤 喝的～", 0.13, "common"),
+                new Prize("❤️ 爱", 0.002, "epic"),
+                new Prize("💸 空空如也", 0.35, "common"),
+                new Prize("🧧 红包", 0.06, "uncommon"),
                 new Prize("🔄 再转一次", 0.30, "special"),
-                new Prize("🎁 随机礼物", 0.04, "rare")
+                new Prize("🎁 随机礼物", 0.028, "rare")
             };
             
             for (Prize prize : defaultPrizes) {
