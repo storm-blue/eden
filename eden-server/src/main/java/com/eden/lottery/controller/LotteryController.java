@@ -145,12 +145,25 @@ public class LotteryController {
             }
             
             User user = userService.getUserInfo(userId);
+            if (user == null) {
+                // 用户不存在，返回默认信息
+                final String finalUserId = userId; // 避免自引用
+                Object userInfo = new Object() {
+                    public final String userId = finalUserId;
+                    public final Integer remainingDraws = 0;
+                    public final Integer dailyDraws = 0;
+                    public final String message = "用户不存在";
+                };
+                return ApiResponse.success("用户不存在", userInfo);
+            }
+            
+            final User finalUser = user; // 避免自引用
             Object userInfo = new Object() {
-                public final String userId = user.getUserId();
-                public final Integer remainingDraws = user.getRemainingDraws();
-                public final Integer dailyDraws = user.getDailyDraws();
-                public final String createTime = user.getCreateTime().toString();
-                public final String lastRefreshDate = user.getLastRefreshDate().toString();
+                public final String userId = finalUser.getUserId();
+                public final Integer remainingDraws = finalUser.getRemainingDraws();
+                public final Integer dailyDraws = finalUser.getDailyDraws();
+                public final String createTime = finalUser.getCreateTime().toString();
+                public final String lastRefreshDate = finalUser.getLastRefreshDate().toString();
             };
             
             return ApiResponse.success("获取用户信息成功", userInfo);

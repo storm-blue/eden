@@ -26,23 +26,38 @@ public class UserService {
     private final Random random = new Random();
     
     /**
-     * 获取或创建用户
+     * 获取用户信息（不自动创建）
      * @param userId 用户ID（姓名）
-     * @return 用户信息
+     * @return 用户信息，如果不存在返回null
+     */
+    public User getUserById(String userId) {
+        return userMapper.selectByUserId(userId);
+    }
+    
+    /**
+     * 创建新用户
+     * @param userId 用户ID（姓名）
+     * @param dailyDraws 每日抽奖次数，如果为null则随机分配1-5次
+     * @return 创建的用户信息
      */
     @Transactional
-    public User getOrCreateUser(String userId) {
-        User user = userMapper.selectByUserId(userId);
-        
-        if (user == null) {
-            // 新用户，随机分配每日抽奖次数（1-5次）
-            int randomDailyDraws = random.nextInt(5) + 1;
-            user = new User(userId, randomDailyDraws);
-            
-            userMapper.insert(user);
-            logger.info("创建新用户: {}, 每日抽奖次数: {}", userId, randomDailyDraws);
+    public User createUser(String userId, Integer dailyDraws) {
+        // 检查用户是否已存在
+        User existingUser = userMapper.selectByUserId(userId);
+        if (existingUser != null) {
+            logger.warn("用户 {} 已存在，无法重复创建", userId);
+            return existingUser;
         }
         
+        // 如果没有指定每日抽奖次数，则随机分配（1-5次）
+        if (dailyDraws == null || dailyDraws <= 0) {
+            dailyDraws = random.nextInt(5) + 1;
+        }
+        
+        User user = new User(userId, dailyDraws);
+        userMapper.insert(user);
+        
+        logger.info("创建新用户: {}, 每日抽奖次数: {}", userId, dailyDraws);
         return user;
     }
     
@@ -52,17 +67,24 @@ public class UserService {
      * @return 是否可以抽奖
      */
     public boolean canDraw(String userId) {
-        User user = getOrCreateUser(userId);
+        User user = getUserById(userId);
+        if (user == null) {
+            logger.info("用户 {} 不存在，无法抽奖", userId);
+            return false;
+        }
         return user.getRemainingDraws() > 0;
     }
     
     /**
      * 获取用户剩余抽奖次数
      * @param userId 用户ID
-     * @return 剩余次数
+     * @return 剩余次数，如果用户不存在返回0
      */
     public int getRemainingDraws(String userId) {
-        User user = getOrCreateUser(userId);
+        User user = getUserById(userId);
+        if (user == null) {
+            return 0;
+        }
         return user.getRemainingDraws();
     }
     
@@ -124,10 +146,10 @@ public class UserService {
     /**
      * 获取用户详细信息
      * @param userId 用户ID
-     * @return 用户信息
+     * @return 用户信息，如果不存在返回null
      */
     public User getUserInfo(String userId) {
-        return getOrCreateUser(userId);
+        return getUserById(userId);
     }
     
     /**
@@ -142,15 +164,22 @@ public class UserService {
      * 更新用户每日抽奖次数
      * @param userId 用户ID
      * @param dailyDraws 新的每日抽奖次数
+     * @return 是否更新成功
      */
     @Transactional
-    public void updateUserDailyDraws(String userId, Integer dailyDraws) {
-        User user = getOrCreateUser(userId);
+    public boolean updateUserDailyDraws(String userId, Integer dailyDraws) {
+        User user = getUserById(userId);
+        if (user == null) {
+            logger.error("用户 {} 不存在，无法更新每日抽奖次数", userId);
+            return false;
+        }
+        
         user.setDailyDraws(dailyDraws);
         user.setUpdateTime(LocalDateTime.now());
         
         userMapper.update(user);
         logger.info("更新用户 {} 的每日抽奖次数为: {}", userId, dailyDraws);
+        return true;
     }
     
     /**
@@ -166,7 +195,12 @@ public class UserService {
                 amount = 1; // 默认增加1次
             }
             
-            User user = getOrCreateUser(userId);
+            User user = getUserById(userId);
+            if (user == null) {
+                logger.error("用户 {} 不存在，无法增加抽奖次数", userId);
+                return false;
+            }
+            
             user.setRemainingDraws(user.getRemainingDraws() + amount);
             user.setUpdateTime(LocalDateTime.now());
             

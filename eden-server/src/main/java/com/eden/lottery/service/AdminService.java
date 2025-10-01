@@ -101,8 +101,8 @@ public class AdminService {
     /**
      * 设置用户每日抽奖次数（管理员功能）
      */
-    public void setUserDailyDraws(String userId, Integer dailyDraws) {
-        userService.updateUserDailyDraws(userId, dailyDraws);
+    public boolean setUserDailyDraws(String userId, Integer dailyDraws) {
+        return userService.updateUserDailyDraws(userId, dailyDraws);
     }
     
     /**
@@ -113,17 +113,18 @@ public class AdminService {
             dailyDraws = 3; // 默认每日3次
         }
         
-        // 通过userService的getOrCreateUser方法创建用户
+        // 检查用户是否已存在
         User existingUser = userService.getUserInfo(userId);
-        if (existingUser.getCreateTime() != null) {
+        if (existingUser != null) {
             // 用户已存在，更新每日抽奖次数
             userService.updateUserDailyDraws(userId, dailyDraws);
-            logger.info("管理员更新用户 {} 的每日抽奖次数为: {}", userId, dailyDraws);
+            logger.info("管理员更新现有用户 {} 的每日抽奖次数为: {}", userId, dailyDraws);
+            return userService.getUserInfo(userId);
         } else {
+            // 创建新用户
             logger.info("管理员创建新用户: {}，每日抽奖次数: {}", userId, dailyDraws);
+            return userService.createUser(userId, dailyDraws);
         }
-        
-        return userService.getUserInfo(userId);
     }
     
     /**

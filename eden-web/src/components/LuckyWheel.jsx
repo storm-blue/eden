@@ -210,9 +210,13 @@ const LotteryLuckyWheel = () => {
              return
          }
 
-         // 检查剩余抽奖次数
-         if (userInfo && userInfo.remainingDraws <= 0) {
-             alert('您的抽奖次数已用完，请明天再来！')
+         // 检查用户是否存在和剩余抽奖次数
+         if (!userInfo || userInfo.remainingDraws <= 0) {
+             if (!userInfo || userInfo.message === "用户不存在") {
+                 alert('用户不存在，请联系管理员创建账户！')
+             } else {
+                 alert('您的抽奖次数已用完，请明天再来！')
+             }
              return
          }
 
@@ -384,13 +388,13 @@ const LotteryLuckyWheel = () => {
                     onEnd={onEnd}
                 />
                 {/* 转盘中心显示剩余次数 */}
-                {userInfo && (
+                {userName && (
                     <div className="wheel-center-info">
                         <div className="center-remaining-draws">
                             剩余
                         </div>
                         <div className="center-remaining-number">
-                            {userInfo.remainingDraws}
+                            {userInfo ? userInfo.remainingDraws : 0}
                         </div>
                         <div className="center-remaining-unit">
                             次
@@ -421,12 +425,13 @@ const LotteryLuckyWheel = () => {
                 
                 {/* 开始抽奖按钮 */}
                 <button
-                    className={`spin-button ${isSpinning || !userName || (userInfo && userInfo.remainingDraws <= 0) ? 'disabled' : ''}`}
+                    className={`spin-button ${isSpinning || !userName || !userInfo || userInfo.remainingDraws <= 0 ? 'disabled' : ''}`}
                     onClick={startSpin}
-                    disabled={isSpinning || !userName || (userInfo && userInfo.remainingDraws <= 0)}
+                    disabled={isSpinning || !userName || !userInfo || userInfo.remainingDraws <= 0}
                 >
                     {isSpinning ? '🎯 转动中...' : 
-                     (userInfo && userInfo.remainingDraws <= 0) ? '🚫 次数已用完' : 
+                     (!userInfo || userInfo.message === "用户不存在") ? '👤 用户不存在' :
+                     (userInfo.remainingDraws <= 0) ? '🚫 次数已用完' : 
                      '🎲 转动命运'}
                 </button>
             </div>

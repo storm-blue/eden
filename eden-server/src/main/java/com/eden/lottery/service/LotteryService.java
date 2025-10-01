@@ -3,6 +3,7 @@ package com.eden.lottery.service;
 import com.eden.lottery.dto.LotteryResult;
 import com.eden.lottery.entity.LotteryRecord;
 import com.eden.lottery.entity.Prize;
+import com.eden.lottery.entity.User;
 import com.eden.lottery.mapper.LotteryRecordMapper;
 import com.eden.lottery.mapper.PrizeMapper;
 import org.slf4j.Logger;
@@ -41,6 +42,12 @@ public class LotteryService {
     @Transactional(timeout = 10)
     public LotteryResult drawLottery(String userId, String ipAddress, String userAgent) {
         try {
+            // 检查用户是否存在
+            User user = userService.getUserInfo(userId);
+            if (user == null) {
+                throw new RuntimeException("用户不存在，请联系管理员创建账户！");
+            }
+            
             // 检查用户是否可以抽奖
             if (!userService.canDraw(userId)) {
                 throw new RuntimeException("您的抽奖次数已用完，请明天再来！");

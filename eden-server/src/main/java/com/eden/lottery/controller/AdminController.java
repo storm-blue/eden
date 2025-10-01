@@ -188,17 +188,21 @@ public class AdminController {
                 return ApiResponse.error("参数错误");
             }
 
-            adminService.setUserDailyDraws(
+            boolean success = adminService.setUserDailyDraws(
                 managementRequest.getUserId(), 
                 managementRequest.getDailyDraws()
             );
-
-            Object result = new Object() {
-                public final String userId = managementRequest.getUserId();
-                public final Integer dailyDraws = managementRequest.getDailyDraws();
-                public final String message = "每日抽奖次数设置成功";
-            };
-            return ApiResponse.success("操作成功", result);
+            
+            if (success) {
+                Object result = new Object() {
+                    public final String userId = managementRequest.getUserId();
+                    public final Integer dailyDraws = managementRequest.getDailyDraws();
+                    public final String message = "每日抽奖次数设置成功";
+                };
+                return ApiResponse.success("操作成功", result);
+            } else {
+                return ApiResponse.error("用户不存在，请先创建用户");
+            }
         } catch (Exception e) {
             logger.error("设置用户每日抽奖次数失败", e);
             return ApiResponse.error("操作失败");
