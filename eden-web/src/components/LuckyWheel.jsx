@@ -166,6 +166,10 @@ const LotteryLuckyWheel = () => {
      const myLucky = useRef()
      const [isSpinning, setIsSpinning] = useState(false)
      const [result, setResult] = useState('')
+     const [currentPrize, setCurrentPrize] = useState('') // 存储后端返回的奖品名称
+     const [userName, setUserName] = useState('') // 用户姓名
+     const [showNameInput, setShowNameInput] = useState(true) // 是否显示姓名输入框
+     const [tempName, setTempName] = useState('') // 临时存储输入的姓名
 
      // 奖品名称映射（与后端保持一致）
      const prizeNames = [
@@ -180,9 +184,17 @@ const LotteryLuckyWheel = () => {
 
      const startSpin = async () => {
          if (isSpinning) return
+         
+         // 检查是否已填写用户姓名
+         if (!userName) {
+             alert('请先填写用户姓名！')
+             setShowNameInput(true)
+             return
+         }
 
          setIsSpinning(true)
          setResult('')
+         setCurrentPrize('') // 清空之前的奖品缓存
 
          try {
              // 开始转盘动画
@@ -195,7 +207,7 @@ const LotteryLuckyWheel = () => {
                      'Content-Type': 'application/json',
                  },
                  body: JSON.stringify({
-                     userId: 'web_user_' + Date.now()
+                     userId: userName || 'anonymous'
                  })
              })
 
@@ -203,7 +215,9 @@ const LotteryLuckyWheel = () => {
 
              if (result.success) {
                  const prizeName = result.data.prize.name
-                 console.log('抽奖成功:', prizeName)
+                 
+                 // 保存后端返回的奖品名称
+                 setCurrentPrize(prizeName)
 
                  // 根据奖品名称找到对应的索引
                  let selectedIndex = prizeNames.findIndex(name => name === prizeName)
@@ -229,22 +243,81 @@ const LotteryLuckyWheel = () => {
 
     const onEnd = (prize) => {
         setIsSpinning(false)
-        const prizeText = prizeNames[prize]
-        setResult(prizeText)
-        console.log(`抽奖结果: ${prizeText}`)
+        
+        // 优先使用后端返回的奖品名称，如果没有则尝试解析转盘返回的索引
+        if (currentPrize) {
+            setResult(currentPrize)
+        } else {
+            // 备用方案：尝试从转盘回调解析索引
+            let prizeIndex;
+            if (typeof prize === 'number') {
+                prizeIndex = prize;
+            } else if (prize && typeof prize === 'object') {
+                prizeIndex = prize.index || 0;
+            } else {
+                prizeIndex = 0;
+            }
+            
+            const prizeText = prizeNames[prizeIndex]
+            setResult(prizeText)
+        }
     }
 
-    const resetWheel = () => {
-        setResult('')
-        setIsSpinning(false)
+    // 处理姓名确认
+    const handleNameConfirm = () => {
+        if (!tempName.trim()) {
+            alert('请输入您的姓名！')
+            return
+        }
+        setUserName(tempName.trim())
+        setShowNameInput(false)
+    }
+
+    // 处理键盘回车
+    const handleNameKeyPress = (e) => {
+        if (e.key === 'Enter') {
+            handleNameConfirm()
+        }
     }
 
     return (
         <div className="lucky-lottery-container">
+            {/* 用户姓名输入模态框 */}
+            {showNameInput && (
+                <div className="name-input-modal">
+                    <div className="name-input-content">
+                        <h2 className="name-input-title">🎪 欢迎来到Eden抽奖</h2>
+                        <p className="name-input-subtitle">命运是一件奇妙的事。它一旦来临，就必须接受。</p>
+                        <p className="name-input-subtitle">请输入您的姓名❤️：</p>
+                        <div className="name-input-field">
+                            <input
+                                type="text"
+                                placeholder="请输入您的姓名"
+                                value={tempName}
+                                onChange={(e) => setTempName(e.target.value)}
+                                onKeyPress={handleNameKeyPress}
+                                className="name-input"
+                                autoFocus
+                                maxLength={20}
+                            />
+                        </div>
+                        <button
+                            className="name-confirm-button"
+                            onClick={handleNameConfirm}
+                            disabled={!tempName.trim()}
+                        >
+                            🎯 开始游戏
+                        </button>
+                    </div>
+                </div>
+            )}
+
             {/* 标题 */}
             <div className="header">
                 <h1 className="title">🎪 Eden欢乐抽奖 🎪</h1>
-                <p className="subtitle">转动转盘，好运连连！</p>
+                <p className="subtitle">
+                    {userName ? `${userName}，转动转盘，好运连连！` : '转动转盘，好运连连！'}
+                </p>
             </div>
 
             {/* 转盘区域 */}
@@ -266,20 +339,31 @@ const LotteryLuckyWheel = () => {
 
             {/* 控制按钮 */}
             <div className="controls">
+                {/* 用户信息行 */}
+                {userName && (
+                    <div className="user-info-row">
+                        <div 
+                            className={`current-user ${isSpinning ? 'disabled' : 'clickable'}`}
+                            onClick={() => {
+                                if (!isSpinning) {
+                                    setShowNameInput(true)
+                                    setTempName(userName)
+                                }
+                            }}
+                            title="点击修改姓名"
+                        >
+                            👤 {userName}
+                        </div>
+                    </div>
+                )}
+                
+                {/* 开始抽奖按钮 */}
                 <button
-                    className={`spin-button ${isSpinning ? 'disabled' : ''}`}
+                    className={`spin-button ${isSpinning || !userName ? 'disabled' : ''}`}
                     onClick={startSpin}
-                    disabled={isSpinning}
+                    disabled={isSpinning || !userName}
                 >
                     {isSpinning ? '🎯 转动中...' : '🎲 开始抽奖'}
-                </button>
-
-                <button
-                    className="reset-button"
-                    onClick={resetWheel}
-                    disabled={isSpinning}
-                >
-                    🔄 重置
                 </button>
             </div>
 
@@ -291,7 +375,10 @@ const LotteryLuckyWheel = () => {
                         <div className="result-prize">{result}</div>
                         <button
                             className="continue-button"
-                            onClick={() => setResult('')}
+                            onClick={() => {
+                                setResult('')
+                                setCurrentPrize('')
+                            }}
                         >
                             继续游戏
                         </button>
@@ -311,3 +398,4 @@ const LotteryLuckyWheel = () => {
 }
 
 export default LotteryLuckyWheel
+
