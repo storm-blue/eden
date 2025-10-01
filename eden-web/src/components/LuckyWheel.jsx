@@ -268,12 +268,21 @@ const LotteryLuckyWheel = () => {
          }
      }
 
-    const onEnd = (prize) => {
+    const onEnd = async (prize) => {
         setIsSpinning(false)
         
         // 优先使用后端返回的奖品名称，如果没有则尝试解析转盘返回的索引
         if (currentPrize) {
             setResult(currentPrize)
+            
+            // 检查是否抽到"再转一次"，如果是则刷新用户信息显示额外获得的次数
+            if (currentPrize === '🔄 再转一次') {
+                // 延迟刷新用户信息，确保后端处理完毕
+                setTimeout(async () => {
+                    await fetchUserInfo(userName)
+                    console.log('抽到再转一次，已刷新剩余次数')
+                }, 500)
+            }
         } else {
             // 备用方案：尝试从转盘回调解析索引
             let prizeIndex;
@@ -287,6 +296,14 @@ const LotteryLuckyWheel = () => {
             
             const prizeText = prizeNames[prizeIndex]
             setResult(prizeText)
+            
+            // 检查是否抽到"再转一次"
+            if (prizeText === '🔄 再转一次') {
+                setTimeout(async () => {
+                    await fetchUserInfo(userName)
+                    console.log('抽到再转一次，已刷新剩余次数')
+                }, 500)
+            }
         }
     }
 

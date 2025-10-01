@@ -159,6 +159,35 @@ public class LotteryController {
             return ApiResponse.error("获取用户信息失败");
         }
     }
+    
+    /**
+     * 增加用户抽奖次数（抽到"再转一次"时使用）
+     */
+    @PostMapping("/user/{userId}/increase-draws")
+    public ApiResponse<Object> increaseDraws(@PathVariable String userId, 
+                                           @RequestParam(defaultValue = "1") Integer amount) {
+        try {
+            if (!StringUtils.hasText(userId)) {
+                return ApiResponse.error("用户ID不能为空");
+            }
+            
+            boolean success = userService.increaseRemainingDraws(userId, amount);
+            if (success) {
+                User user = userService.getUserInfo(userId);
+                Object result = new Object() {
+                    public final String userId = user.getUserId();
+                    public final Integer remainingDraws = user.getRemainingDraws();
+                    public final String message = "抽奖次数增加成功";
+                };
+                return ApiResponse.success("抽奖次数增加成功", result);
+            } else {
+                return ApiResponse.error("抽奖次数增加失败");
+            }
+        } catch (Exception e) {
+            logger.error("增加用户抽奖次数失败", e);
+            return ApiResponse.error("增加抽奖次数失败");
+        }
+    }
 
     /**
      * 首页信息

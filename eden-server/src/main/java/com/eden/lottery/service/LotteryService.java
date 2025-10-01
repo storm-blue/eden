@@ -64,6 +64,16 @@ public class LotteryService {
             LotteryRecord record = new LotteryRecord(userId, selectedPrize.getId(), ipAddress, userAgent);
             recordMapper.insert(record);
             
+            // 检查是否抽到"再转一次"，如果是则增加抽奖次数
+            if ("🔄 再转一次".equals(selectedPrize.getName())) {
+                boolean increased = userService.increaseRemainingDraws(userId, 1);
+                if (increased) {
+                    logger.info("用户 {} 抽中'再转一次'，剩余抽奖次数+1", userId);
+                } else {
+                    logger.warn("用户 {} 抽中'再转一次'，但次数增加失败", userId);
+                }
+            }
+            
             // 获取用户剩余抽奖次数
             int remainingDraws = userService.getRemainingDraws(userId);
             

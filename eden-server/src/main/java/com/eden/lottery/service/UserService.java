@@ -152,4 +152,31 @@ public class UserService {
         userMapper.update(user);
         logger.info("更新用户 {} 的每日抽奖次数为: {}", userId, dailyDraws);
     }
+    
+    /**
+     * 增加用户剩余抽奖次数（抽到"再转一次"时使用）
+     * @param userId 用户ID
+     * @param amount 增加的次数，默认为1
+     * @return 是否增加成功
+     */
+    @Transactional
+    public boolean increaseRemainingDraws(String userId, Integer amount) {
+        try {
+            if (amount == null || amount <= 0) {
+                amount = 1; // 默认增加1次
+            }
+            
+            User user = getOrCreateUser(userId);
+            user.setRemainingDraws(user.getRemainingDraws() + amount);
+            user.setUpdateTime(LocalDateTime.now());
+            
+            userMapper.update(user);
+            logger.info("用户 {} 剩余抽奖次数增加 {} 次，当前剩余: {} 次", 
+                       userId, amount, user.getRemainingDraws());
+            return true;
+        } catch (Exception e) {
+            logger.error("用户 {} 抽奖次数增加失败: {}", userId, e.getMessage());
+            return false;
+        }
+    }
 }
