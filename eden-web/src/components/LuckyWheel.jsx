@@ -170,17 +170,35 @@ const LotteryLuckyWheel = () => {
      const [userName, setUserName] = useState('') // 用户姓名
      const [showNameInput, setShowNameInput] = useState(true) // 是否显示姓名输入框
      const [tempName, setTempName] = useState('') // 临时存储输入的姓名
+     const [userInfo, setUserInfo] = useState(null) // 用户信息（包含剩余抽奖次数）
 
-     // 奖品名称映射（与后端保持一致）
-     const prizeNames = [
-         '🍰 吃的～',
-         '🥤 喝的～',
-         '❤️ 爱',
-         '💸 空空如也',
-         '🧧 红包',
-         '🔄 再转一次',
-         '🎁 随机礼物'
-     ]
+    // 奖品名称映射（与后端保持一致）
+    const prizeNames = [
+        '🍰 吃的～',
+        '🥤 喝的～',
+        '❤️ 爱',
+        '💸 空空如也',
+        '🧧 红包',
+        '🔄 再转一次',
+        '🎁 随机礼物'
+    ]
+
+    // 获取用户信息
+    const fetchUserInfo = async (userId) => {
+        try {
+            const response = await fetch(`http://localhost:5000/api/user/${userId}`)
+            const result = await response.json()
+            
+            if (result.success) {
+                setUserInfo(result.data)
+                console.log('获取用户信息成功:', result.data)
+            } else {
+                console.error('获取用户信息失败:', result.message)
+            }
+        } catch (error) {
+            console.error('获取用户信息网络错误:', error)
+        }
+    }
 
      const startSpin = async () => {
          if (isSpinning) return
@@ -189,6 +207,12 @@ const LotteryLuckyWheel = () => {
          if (!userName) {
              alert('请先填写用户姓名！')
              setShowNameInput(true)
+             return
+         }
+
+         // 检查剩余抽奖次数
+         if (userInfo && userInfo.remainingDraws <= 0) {
+             alert('您的抽奖次数已用完，请明天再来！')
              return
          }
 
@@ -211,24 +235,27 @@ const LotteryLuckyWheel = () => {
                  })
              })
 
-             const result = await response.json()
+            const result = await response.json()
 
-             if (result.success) {
-                 const prizeName = result.data.prize.name
-                 
-                 // 保存后端返回的奖品名称
-                 setCurrentPrize(prizeName)
+            if (result.success) {
+                const prizeName = result.data.prize.name
+                
+                // 保存后端返回的奖品名称
+                setCurrentPrize(prizeName)
 
-                 // 根据奖品名称找到对应的索引
-                 let selectedIndex = prizeNames.findIndex(name => name === prizeName)
-                 if (selectedIndex === -1) {
-                     selectedIndex = 0 // 默认第一个
-                 }
+                // 根据奖品名称找到对应的索引
+                let selectedIndex = prizeNames.findIndex(name => name === prizeName)
+                if (selectedIndex === -1) {
+                    selectedIndex = 0 // 默认第一个
+                }
 
-                 // 延迟停止转盘，让动画更自然
-                 setTimeout(() => {
-                     myLucky.current.stop(selectedIndex)
-                 }, 1500)
+                // 延迟停止转盘，让动画更自然
+                setTimeout(() => {
+                    myLucky.current.stop(selectedIndex)
+                }, 1500)
+                
+                // 刷新用户信息以显示最新的剩余次数
+                await fetchUserInfo(userName)
              } else {
                  console.error('抽奖失败:', result.message)
                  setIsSpinning(false)
@@ -264,13 +291,17 @@ const LotteryLuckyWheel = () => {
     }
 
     // 处理姓名确认
-    const handleNameConfirm = () => {
+    const handleNameConfirm = async () => {
         if (!tempName.trim()) {
             alert('请输入您的姓名！')
             return
         }
-        setUserName(tempName.trim())
+        const newUserName = tempName.trim()
+        setUserName(newUserName)
         setShowNameInput(false)
+        
+        // 获取用户信息
+        await fetchUserInfo(newUserName)
     }
 
     // 处理键盘回车
@@ -287,8 +318,8 @@ const LotteryLuckyWheel = () => {
                 <div className="name-input-modal">
                     <div className="name-input-content">
                         <h2 className="name-input-title">🎪 欢迎来到Eden抽奖</h2>
-                        <p className="name-input-subtitle">命运是一件奇妙的事。它一旦来临，就必须接受。</p>
-                        <p className="name-input-subtitle">请输入您的姓名❤️：</p>
+                        <p className="name-input-subtitle"><u>❤命运一旦来临，就必须接受它❤</u></p>
+                        <p className="name-input-subtitle">请输入您的姓名：</p>
                         <div className="name-input-field">
                             <input
                                 type="text"
@@ -353,17 +384,24 @@ const LotteryLuckyWheel = () => {
                             title="点击修改姓名"
                         >
                             👤 {userName}
+                            {userInfo && (
+                                <span className="remaining-draws">
+                                    剩余: {userInfo.remainingDraws}次
+                                </span>
+                            )}
                         </div>
                     </div>
                 )}
                 
                 {/* 开始抽奖按钮 */}
                 <button
-                    className={`spin-button ${isSpinning || !userName ? 'disabled' : ''}`}
+                    className={`spin-button ${isSpinning || !userName || (userInfo && userInfo.remainingDraws <= 0) ? 'disabled' : ''}`}
                     onClick={startSpin}
-                    disabled={isSpinning || !userName}
+                    disabled={isSpinning || !userName || (userInfo && userInfo.remainingDraws <= 0)}
                 >
-                    {isSpinning ? '🎯 转动中...' : '🎲 开始抽奖'}
+                    {isSpinning ? '🎯 转动中...' : 
+                     (userInfo && userInfo.remainingDraws <= 0) ? '🚫 次数已用完' : 
+                     '🎲 转动命运'}
                 </button>
             </div>
 

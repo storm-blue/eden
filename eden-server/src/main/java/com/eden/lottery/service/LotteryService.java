@@ -32,16 +32,29 @@ public class LotteryService {
     @Autowired
     private LotteryRecordMapper recordMapper;
     
+    @Autowired
+    private UserService userService;
+    
     /**
      * 执行抽奖
      */
     @Transactional(timeout = 10)
     public LotteryResult drawLottery(String userId, String ipAddress, String userAgent) {
         try {
+            // 检查用户是否可以抽奖
+            if (!userService.canDraw(userId)) {
+                throw new RuntimeException("您的抽奖次数已用完，请明天再来！");
+            }
+            
             // 获取所有有效奖品
             List<Prize> prizes = prizeMapper.selectValidPrizes();
             if (prizes.isEmpty()) {
                 throw new RuntimeException("暂无可用奖品");
+            }
+            
+            // 扣减用户抽奖次数
+            if (!userService.decreaseDraws(userId)) {
+                throw new RuntimeException("抽奖次数扣减失败，请稍后再试");
             }
             
             // 基于概率选择奖品
@@ -51,13 +64,16 @@ public class LotteryService {
             LotteryRecord record = new LotteryRecord(userId, selectedPrize.getId(), ipAddress, userAgent);
             recordMapper.insert(record);
             
-            logger.info("用户 {} 抽中了 {}", userId, selectedPrize.getName());
+            // 获取用户剩余抽奖次数
+            int remainingDraws = userService.getRemainingDraws(userId);
+            
+            logger.info("用户 {} 抽中了 {}, 剩余抽奖次数: {}", userId, selectedPrize.getName(), remainingDraws);
             
             return new LotteryResult(selectedPrize, record.getId(), record.getCreatedAt());
             
         } catch (Exception e) {
             logger.error("抽奖失败: {}", e.getMessage(), e);
-            throw new RuntimeException("抽奖系统暂时不可用，请稍后再试");
+            throw new RuntimeException(e.getMessage());
         }
     }
     

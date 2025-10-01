@@ -22,9 +22,20 @@ CREATE TABLE IF NOT EXISTS lottery_records (
     FOREIGN KEY (prize_id) REFERENCES prizes(id)
 );
 
+-- 用户表
+CREATE TABLE IF NOT EXISTS users (
+    user_id VARCHAR(50) PRIMARY KEY,
+    remaining_draws INTEGER NOT NULL DEFAULT 0,
+    daily_draws INTEGER NOT NULL DEFAULT 3,
+    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    last_refresh_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- 创建索引
 CREATE INDEX IF NOT EXISTS idx_lottery_records_user_id ON lottery_records(user_id);
 CREATE INDEX IF NOT EXISTS idx_lottery_records_created_at ON lottery_records(created_at);
 CREATE INDEX IF NOT EXISTS idx_lottery_records_prize_id ON lottery_records(prize_id);
 CREATE INDEX IF NOT EXISTS idx_prizes_level ON prizes(level);
 CREATE INDEX IF NOT EXISTS idx_prizes_probability ON prizes(probability);
+CREATE INDEX IF NOT EXISTS idx_users_last_refresh_date ON users(last_refresh_date);

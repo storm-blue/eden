@@ -6,6 +6,8 @@ import com.eden.lottery.dto.LotteryResult;
 import com.eden.lottery.entity.LotteryRecord;
 import com.eden.lottery.entity.Prize;
 import com.eden.lottery.service.LotteryService;
+import com.eden.lottery.service.UserService;
+import com.eden.lottery.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -27,6 +29,9 @@ public class LotteryController {
 
     @Autowired
     private LotteryService lotteryService;
+    
+    @Autowired
+    private UserService userService;
 
     /**
      * 健康检查
@@ -126,6 +131,32 @@ public class LotteryController {
         } catch (Exception e) {
             logger.error("获取统计信息失败", e);
             return ApiResponse.error("获取统计信息失败");
+        }
+    }
+    
+    /**
+     * 获取用户信息
+     */
+    @GetMapping("/user/{userId}")
+    public ApiResponse<Object> getUserInfo(@PathVariable String userId) {
+        try {
+            if (!StringUtils.hasText(userId)) {
+                return ApiResponse.error("用户ID不能为空");
+            }
+            
+            User user = userService.getUserInfo(userId);
+            Object userInfo = new Object() {
+                public final String userId = user.getUserId();
+                public final Integer remainingDraws = user.getRemainingDraws();
+                public final Integer dailyDraws = user.getDailyDraws();
+                public final String createTime = user.getCreateTime().toString();
+                public final String lastRefreshDate = user.getLastRefreshDate().toString();
+            };
+            
+            return ApiResponse.success("获取用户信息成功", userInfo);
+        } catch (Exception e) {
+            logger.error("获取用户信息失败", e);
+            return ApiResponse.error("获取用户信息失败");
         }
     }
 
