@@ -163,16 +163,17 @@ const LotteryLuckyWheel = () => {
         }
     })
 
-     const myLucky = useRef()
-     const [isSpinning, setIsSpinning] = useState(false)
-     const [result, setResult] = useState('')
-     const [currentPrize, setCurrentPrize] = useState('') // 存储后端返回的奖品名称
-     const [userName, setUserName] = useState('') // 用户姓名
-     const [showNameInput, setShowNameInput] = useState(true) // 是否显示姓名输入框
-     const [tempName, setTempName] = useState('') // 临时存储输入的姓名
-     const [userInfo, setUserInfo] = useState(null) // 用户信息（包含剩余抽奖次数）
-     const [showWelcomeEffect, setShowWelcomeEffect] = useState(false) // 是否显示欢迎特效
-     const [welcomeEffectFinished, setWelcomeEffectFinished] = useState(true) // 欢迎特效是否播放完成，默认为true
+    const myLucky = useRef()
+    const [isSpinning, setIsSpinning] = useState(false)
+    const [result, setResult] = useState('')
+    const [currentPrize, setCurrentPrize] = useState('') // 存储后端返回的奖品名称
+    const [userName, setUserName] = useState('') // 用户姓名
+    const [showNameInput, setShowNameInput] = useState(true) // 是否显示姓名输入框
+    const [tempName, setTempName] = useState('') // 临时存储输入的姓名
+    const [userInfo, setUserInfo] = useState(null) // 用户信息（包含剩余抽奖次数）
+    const [showWelcomeEffect, setShowWelcomeEffect] = useState(false) // 是否显示欢迎特效
+    const [welcomeEffectFinished, setWelcomeEffectFinished] = useState(true) // 欢迎特效是否播放完成，默认为true
+    const [showLoveEffect, setShowLoveEffect] = useState(false) // 是否显示爱心特效
 
     // 奖品名称映射（与后端保持一致）
     const prizeNames = [
@@ -190,7 +191,7 @@ const LotteryLuckyWheel = () => {
         try {
             const response = await fetch(`/api/user/${userId}`)
             const result = await response.json()
-            
+
             if (result.success) {
                 setUserInfo(result.data)
                 console.log('获取用户信息成功:', result.data)
@@ -202,15 +203,15 @@ const LotteryLuckyWheel = () => {
         }
     }
 
-     const startSpin = async () => {
-         if (isSpinning) return
-         
-         // 检查是否已填写用户姓名
-         if (!userName) {
-             alert('请先填写用户姓名！')
-             setShowNameInput(true)
-             return
-         }
+    const startSpin = async () => {
+        if (isSpinning) return
+
+        // 检查是否已填写用户姓名
+        if (!userName) {
+            alert('请先填写用户姓名！')
+            setShowNameInput(true)
+            return
+        }
 
         // 检查欢迎特效是否播放完成
         if (showWelcomeEffect || !welcomeEffectFinished) {
@@ -218,75 +219,81 @@ const LotteryLuckyWheel = () => {
             return
         }
 
-         // 检查用户是否存在和剩余抽奖次数
-         if (!userInfo || userInfo.remainingDraws <= 0) {
-             if (!userInfo || userInfo.message === "用户不存在") {
-                 alert('用户不存在，请联系管理员创建账户！')
-             } else {
-                 alert('您的抽奖次数已用完，请明天再来！')
-             }
-             return
-         }
+        // 检查用户是否存在和剩余抽奖次数
+        if (!userInfo || userInfo.remainingDraws <= 0) {
+            if (!userInfo || userInfo.message === "用户不存在") {
+                alert('用户不存在，请联系管理员创建账户！')
+            } else {
+                alert('您的抽奖次数已用完，请明天再来！')
+            }
+            return
+        }
 
-         setIsSpinning(true)
-         setResult('')
-         setCurrentPrize('') // 清空之前的奖品缓存
+        setIsSpinning(true)
+        setResult('')
+        setCurrentPrize('') // 清空之前的奖品缓存
 
-         try {
-             // 先调用后端抽奖接口，成功后再开始转盘动画
-             const response = await fetch('/api/lottery', {
-                 method: 'POST',
-                 headers: {
-                     'Content-Type': 'application/json',
-                 },
-                 body: JSON.stringify({
-                     userId: userName || 'anonymous'
-                 })
-             })
+        try {
+            // 先调用后端抽奖接口，成功后再开始转盘动画
+            const response = await fetch('/api/lottery', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userId: userName || 'anonymous'
+                })
+            })
 
-             const result = await response.json()
+            const result = await response.json()
 
-             if (result.success) {
-                 const prizeName = result.data.prize.name
-                 
-                 // 保存后端返回的奖品名称
-                 setCurrentPrize(prizeName)
+            if (result.success) {
+                const prizeName = result.data.prize.name
 
-                 // 根据奖品名称找到对应的索引
-                 let selectedIndex = prizeNames.findIndex(name => name === prizeName)
-                 if (selectedIndex === -1) {
-                     selectedIndex = 0 // 默认第一个
-                 }
+                // 保存后端返回的奖品名称
+                setCurrentPrize(prizeName)
 
-                 // 后端抽奖成功，开始转盘动画
-                 myLucky.current.play()
-                 
-                 // 延迟停止转盘，让动画更自然
-                 setTimeout(() => {
-                     myLucky.current.stop(selectedIndex)
-                 }, 1500)
-                 
-                 // 刷新用户信息以显示最新的剩余次数
-                 await fetchUserInfo(userName)
-             } else {
-                 console.error('抽奖失败:', result.message)
-                 setIsSpinning(false)
-                 alert('抽奖失败，请稍后再试: ' + result.message)
-             }
-         } catch (error) {
-             console.error('网络错误:', error)
-             setIsSpinning(false)
-             alert('网络连接失败，请检查后端服务是否启动')
-         }
-     }
+                // 根据奖品名称找到对应的索引
+                let selectedIndex = prizeNames.findIndex(name => name === prizeName)
+                if (selectedIndex === -1) {
+                    selectedIndex = 0 // 默认第一个
+                }
+
+                // 后端抽奖成功，开始转盘动画
+                myLucky.current.play()
+
+                // 延迟停止转盘，让动画更自然
+                setTimeout(() => {
+                    myLucky.current.stop(selectedIndex)
+                }, 1500)
+
+                // 刷新用户信息以显示最新的剩余次数
+                await fetchUserInfo(userName)
+            } else {
+                console.error('抽奖失败:', result.message)
+                setIsSpinning(false)
+                alert('抽奖失败，请稍后再试: ' + result.message)
+            }
+        } catch (error) {
+            console.error('网络错误:', error)
+            setIsSpinning(false)
+            alert('网络连接失败，请检查后端服务是否启动')
+        }
+    }
 
     const onEnd = async (prize) => {
         setIsSpinning(false)
-        
+
         // 优先使用后端返回的奖品名称，如果没有则尝试解析转盘返回的索引
         if (currentPrize) {
-            setResult(currentPrize)
-            
+            // 检查是否抽到"爱"，如果是则显示爱心特效
+            if (currentPrize === '❤️ 爱') {
+                setShowLoveEffect(true)
+                // 不自动隐藏，等待用户点击
+            } else {
+                setResult(currentPrize)
+            }
+
             // 检查是否抽到"再转一次"，如果是则刷新用户信息显示额外获得的次数
             if (currentPrize === '🔄 再转一次') {
                 // 延迟刷新用户信息，确保后端处理完毕
@@ -305,10 +312,17 @@ const LotteryLuckyWheel = () => {
             } else {
                 prizeIndex = 0;
             }
-            
+
             const prizeText = prizeNames[prizeIndex]
-            setResult(prizeText)
-            
+
+            // 检查是否抽到"爱"，如果是则显示爱心特效
+            if (prizeText === '❤️ 爱') {
+                setShowLoveEffect(true)
+                // 不自动隐藏，等待用户点击
+            } else {
+                setResult(prizeText)
+            }
+
             // 检查是否抽到"再转一次"
             if (prizeText === '🔄 再转一次') {
                 setTimeout(async () => {
@@ -328,11 +342,11 @@ const LotteryLuckyWheel = () => {
         const newUserName = tempName.trim()
         setUserName(newUserName)
         setShowNameInput(false)
-        
+
         // 先获取用户信息，判断用户是否存在
         const response = await fetch(`/api/user/${newUserName}`)
         const userData = await response.json()
-        
+
         if (userData.data && userData.data.message === "用户不存在") {
             // 用户不存在，直接设置为特效已完成状态，并更新用户信息
             setWelcomeEffectFinished(true)
@@ -359,6 +373,12 @@ const LotteryLuckyWheel = () => {
         // 用户信息已经在handleNameConfirm中获取，不需要重复获取
     }
 
+    // 处理爱心特效继续
+    const handleLoveContinue = () => {
+        setShowLoveEffect(false)
+        // 爱心特效结束后不需要额外操作
+    }
+
     return (
         <div className="lucky-lottery-container">
             {/* 用户姓名输入模态框 */}
@@ -366,7 +386,7 @@ const LotteryLuckyWheel = () => {
                 <div className="name-input-modal">
                     <div className="name-input-content">
                         <h2 className="name-input-title">🎪 欢迎来到Eden抽奖</h2>
-                        <p className="name-input-subtitle"><u>❤命运一旦来临，就必须接受它❤</u></p>
+                        <p className="name-input-subtitle"><u>❤命运一旦来临，就必须接受❤</u></p>
                         <p className="name-input-subtitle">请输入您的姓名：</p>
                         <div className="name-input-field">
                             <input
@@ -435,7 +455,7 @@ const LotteryLuckyWheel = () => {
                 {/* 用户信息行 */}
                 {userName && (
                     <div className="user-info-row">
-                        <div 
+                        <div
                             className={`current-user ${isSpinning ? 'disabled' : 'clickable'}`}
                             onClick={() => {
                                 if (!isSpinning) {
@@ -449,19 +469,19 @@ const LotteryLuckyWheel = () => {
                         </div>
                     </div>
                 )}
-                
+
                 {/* 开始抽奖按钮 */}
                 <button
                     className={`spin-button ${isSpinning || !userName || !userInfo || showWelcomeEffect || !welcomeEffectFinished || userInfo.remainingDraws <= 0 ? 'disabled' : ''}`}
                     onClick={startSpin}
                     disabled={isSpinning || !userName || !userInfo || showWelcomeEffect || !welcomeEffectFinished || userInfo.remainingDraws <= 0}
                 >
-                    {isSpinning ? '🎯 转动中...' : 
-                     showWelcomeEffect ? '🎪 欢迎特效中...' :
-                     !welcomeEffectFinished ? '🎪 欢迎特效中...' :
-                     (!userInfo || userInfo.message === "用户不存在") ? '👤 用户不存在' :
-                     (userInfo.remainingDraws <= 0) ? '🚫 次数已用完' : 
-                     '🎲 转动命运'}
+                    {isSpinning ? '🎯 转动中...' :
+                        showWelcomeEffect ? '🎪 欢迎特效中...' :
+                            !welcomeEffectFinished ? '🎪 欢迎特效中...' :
+                                (!userInfo || userInfo.message === "用户不存在") ? '👤 用户不存在' :
+                                    (userInfo.remainingDraws <= 0) ? '🚫 次数已用完' :
+                                        '🎲 转动命运'}
                 </button>
             </div>
 
@@ -506,7 +526,7 @@ const LotteryLuckyWheel = () => {
                                 <div className="explosion explosion-5"></div>
                             </div>
                         </div>
-                        
+
                         {/* 闪烁星星 */}
                         <div className="sparkles">
                             <div className="sparkle sparkle-1">⭐</div>
@@ -519,13 +539,13 @@ const LotteryLuckyWheel = () => {
                             <div className="sparkle sparkle-8">💫</div>
                         </div>
 
-                          {/* 欢迎文字 */}
-                          <div className="welcome-text">
-                              <h1 className="welcome-title">欢迎宝宝大人</h1>
-                              <p className="welcome-subtitle">✨ {userName} ✨</p>
-                              <p className="welcome-message">准备好接受命运的眷顾了吗？</p>
-                              <p className="welcome-continue-hint">点击继续 🎯</p>
-                          </div>
+                        {/* 欢迎文字 */}
+                        <div className="welcome-text">
+                            <h1 className="welcome-title">欢迎宝宝大人</h1>
+                            <p className="welcome-subtitle">✨ {userName} ✨</p>
+                            <p className="welcome-message">准备好接受命运的眷顾了吗？</p>
+                            <p className="welcome-continue-hint">点击继续 🎯</p>
+                        </div>
 
                         {/* 彩带效果 */}
                         <div className="confetti">
@@ -537,6 +557,47 @@ const LotteryLuckyWheel = () => {
                             <div className="confetti-piece confetti-6"></div>
                             <div className="confetti-piece confetti-7"></div>
                             <div className="confetti-piece confetti-8"></div>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* 爱心特效 */}
+            {showLoveEffect && (
+                <div className="love-effect-overlay" onClick={handleLoveContinue}>
+                    <div className="love-effect-container">
+                        {/* 背景爱心雨 */}
+                        <div className="love-rain">
+                            <div className="love-drop love-drop-1">💕</div>
+                            <div className="love-drop love-drop-2">💖</div>
+                            <div className="love-drop love-drop-3">💗</div>
+                            <div className="love-drop love-drop-4">💝</div>
+                            <div className="love-drop love-drop-5">💞</div>
+                            <div className="love-drop love-drop-6">💕</div>
+                            <div className="love-drop love-drop-7">💖</div>
+                            <div className="love-drop love-drop-8">💗</div>
+                        </div>
+
+                        {/* 中心立体爱心 */}
+                        <div className="love-heart-container">
+                            <div className="love-heart-3d">
+                                <div className="css-heart">
+                                    <div className="heart-left"></div>
+                                    <div className="heart-right"></div>
+                                </div>
+                            </div>
+
+                            {/* 爱心光环 */}
+                            <div className="love-halo love-halo-1"></div>
+                            <div className="love-halo love-halo-2"></div>
+                            <div className="love-halo love-halo-3"></div>
+                        </div>
+
+                        {/* 爱心文字 */}
+                        <div className="love-text">
+                            <h1 className="love-title">亲爱的小猫咪</h1>
+                            <p className="love-subtitle">✨ 你就是我的心脏 ✨</p>
+                            <p className="love-continue-hint">点击继续 💕</p>
                         </div>
                     </div>
                 </div>
