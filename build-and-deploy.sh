@@ -39,18 +39,30 @@ echo "✅ 前端构建完成"
 echo "☕ 构建后端应用..."
 cd $BACKEND_DIR
 
-# 使用Maven构建
+# 检查是否有Maven
 if command -v mvn &> /dev/null; then
+    echo "使用系统Maven构建..."
     mvn clean package -DskipTests
-else
-    # 如果没有Maven，下载Maven Wrapper
-    if [ ! -f "mvnw" ]; then
-        echo "📦 下载 Maven Wrapper..."
-        curl -o maven-wrapper.jar https://repo1.maven.org/maven2/org/apache/maven/wrapper/maven-wrapper/3.2.0/maven-wrapper-3.2.0.jar
-        echo "exec java -classpath maven-wrapper.jar org.apache.maven.wrapper.MavenWrapperMain \"\$@\"" > mvnw
-        chmod +x mvnw
-    fi
+elif [ -f "mvnw" ] && [ -f ".mvn/wrapper/maven-wrapper.properties" ]; then
+    echo "使用Maven Wrapper构建..."
     ./mvnw clean package -DskipTests
+else
+    echo "📦 安装Maven..."
+    # 安装Maven
+    cd /tmp
+    wget https://archive.apache.org/dist/maven/maven-3/3.9.5/binaries/apache-maven-3.9.5-bin.tar.gz
+    tar -xzf apache-maven-3.9.5-bin.tar.gz
+    sudo mv apache-maven-3.9.5 /opt/maven
+    
+    # 设置环境变量
+    echo 'export MAVEN_HOME=/opt/maven' | sudo tee -a /etc/environment
+    echo 'export PATH=$PATH:$MAVEN_HOME/bin' | sudo tee -a /etc/environment
+    export MAVEN_HOME=/opt/maven
+    export PATH=$PATH:$MAVEN_HOME/bin
+    
+    cd $BACKEND_DIR
+    echo "使用新安装的Maven构建..."
+    /opt/maven/bin/mvn clean package -DskipTests
 fi
 
 echo "✅ 后端构建完成"

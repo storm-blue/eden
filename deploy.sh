@@ -30,11 +30,16 @@ apt install -y nodejs
 echo "☕ 安装 Java 17..."
 apt install -y openjdk-17-jdk
 
+# 安装 Maven
+echo "📦 安装 Maven..."
+apt install -y maven
+
 # 验证安装
 echo "✅ 验证安装..."
 node --version
 npm --version
 java -version
+mvn --version
 
 # 创建应用目录
 echo "📁 创建应用目录..."
