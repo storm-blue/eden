@@ -186,6 +186,17 @@ const LotteryLuckyWheel = () => {
         '🎁 随机礼物'
     ]
 
+    // 奖品说明映射
+    const prizeDescriptions = {
+        '🍰 吃的～': '请找猫咪主人领取',
+        '🥤 喝的～': '饮下月亮，撒出月光',
+        '❤️ 爱': '满满的爱意，温暖你的心田💕',
+        '💸 空空如也': '请向：上下左右前后转',
+        '🧧 红包': '红包来喽～',
+        '🔄 再转一次': '这是一种勇敢，也是一次机会',
+        '🎁 随机礼物': '未知的好处就是……'
+    }
+
     // 获取用户信息
     const fetchUserInfo = async (userId) => {
         try {
@@ -491,6 +502,9 @@ const LotteryLuckyWheel = () => {
                     <div className="result-content">
                         <h2 className="result-title">🎉 恭喜你获得 🎉</h2>
                         <div className="result-prize">{result}</div>
+                        <div className="result-description">
+                            {prizeDescriptions[result] || '恭喜获得奖品！'}
+                        </div>
                         <button
                             className="continue-button"
                             onClick={() => {
