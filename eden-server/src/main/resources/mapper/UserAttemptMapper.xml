@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eden.lottery.mapper.UserAttemptMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="UserAttemptResultMap" type="com.eden.lottery.entity.UserAttempt">
+        <id property="id" column="id"/>
+        <result property="attemptUserId" column="attempt_user_id"/>
+        <result property="userExists" column="user_exists"/>
+        <result property="ipAddress" column="ip_address"/>
+        <result property="userAgent" column="user_agent"/>
+        <result property="attemptTime" column="attempt_time"/>
+    </resultMap>
+
+    <!-- 插入用户尝试记录 -->
+    <insert id="insert" parameterType="com.eden.lottery.entity.UserAttempt">
+        INSERT INTO user_attempts (attempt_user_id, user_exists, ip_address, user_agent, attempt_time)
+        VALUES (#{attemptUserId}, #{userExists}, #{ipAddress}, #{userAgent}, #{attemptTime})
+    </insert>
+
+    <!-- 查询所有用户尝试记录（按时间倒序） -->
+    <select id="selectAll" resultMap="UserAttemptResultMap">
+        SELECT id, attempt_user_id, user_exists, ip_address, user_agent, attempt_time
+        FROM user_attempts
+        ORDER BY attempt_time DESC
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+    </select>
+
+    <!-- 根据用户ID查询尝试记录 -->
+    <select id="selectByUserId" resultMap="UserAttemptResultMap">
+        SELECT id, attempt_user_id, user_exists, ip_address, user_agent, attempt_time
+        FROM user_attempts
+        WHERE attempt_user_id = #{attemptUserId}
+        ORDER BY attempt_time DESC
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+    </select>
+
+    <!-- 查询指定时间范围内的尝试记录 -->
+    <select id="selectByTimeRange" resultMap="UserAttemptResultMap">
+        SELECT id, attempt_user_id, user_exists, ip_address, user_agent, attempt_time
+        FROM user_attempts
+        WHERE attempt_time BETWEEN #{startTime} AND #{endTime}
+        ORDER BY attempt_time DESC
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+    </select>
+
+    <!-- 统计总尝试次数 -->
+    <select id="countTotal" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM user_attempts
+    </select>
+
+    <!-- 统计不存在用户的尝试次数 -->
+    <select id="countNonExistentUsers" resultType="java.lang.Long">
+        SELECT COUNT(*) FROM user_attempts WHERE user_exists = 0
+    </select>
+
+    <!-- 获取最近的尝试记录 -->
+    <select id="selectRecentAttempts" resultMap="UserAttemptResultMap">
+        SELECT id, attempt_user_id, user_exists, ip_address, user_agent, attempt_time
+        FROM user_attempts
+        WHERE attempt_time >= datetime('now', '-' || #{hours} || ' hours')
+        ORDER BY attempt_time DESC
+        <if test="limit != null">
+            LIMIT #{limit}
+        </if>
+    </select>
+
+    <!-- 删除指定时间之前的记录 -->
+    <delete id="deleteBeforeTime">
+        DELETE FROM user_attempts WHERE attempt_time &lt; #{beforeTime}
+    </delete>
+
+</mapper>

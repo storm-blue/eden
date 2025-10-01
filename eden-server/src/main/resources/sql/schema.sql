@@ -32,6 +32,16 @@ CREATE TABLE IF NOT EXISTS users (
     last_refresh_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- 用户尝试记录表
+CREATE TABLE IF NOT EXISTS user_attempts (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    attempt_user_id VARCHAR(50) NOT NULL,
+    user_exists INTEGER NOT NULL DEFAULT 0,  -- 0: 不存在, 1: 存在
+    ip_address VARCHAR(45),
+    user_agent VARCHAR(500),
+    attempt_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- 创建索引
 CREATE INDEX IF NOT EXISTS idx_lottery_records_user_id ON lottery_records(user_id);
 CREATE INDEX IF NOT EXISTS idx_lottery_records_created_at ON lottery_records(created_at);
@@ -39,3 +49,6 @@ CREATE INDEX IF NOT EXISTS idx_lottery_records_prize_id ON lottery_records(prize
 CREATE INDEX IF NOT EXISTS idx_prizes_level ON prizes(level);
 CREATE INDEX IF NOT EXISTS idx_prizes_probability ON prizes(probability);
 CREATE INDEX IF NOT EXISTS idx_users_last_refresh_date ON users(last_refresh_date);
+CREATE INDEX IF NOT EXISTS idx_user_attempts_user_id ON user_attempts(attempt_user_id);
+CREATE INDEX IF NOT EXISTS idx_user_attempts_time ON user_attempts(attempt_time);
+CREATE INDEX IF NOT EXISTS idx_user_attempts_exists ON user_attempts(user_exists);

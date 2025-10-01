@@ -232,6 +232,48 @@
             color: #333;
         }
 
+        .filter-section {
+            background: #e8f4fd;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #667eea;
+        }
+
+        .stats-section {
+            background: #f0f8ff;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            border-left: 4px solid #28a745;
+        }
+
+        .stats-section h4 {
+            margin-bottom: 15px;
+            color: #333;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 12px;
+            font-weight: bold;
+            text-align: center;
+        }
+
+        .badge-success {
+            background-color: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+        }
+
+        .badge-danger {
+            background-color: #f8d7da;
+            color: #721c24;
+            border: 1px solid #f5c6cb;
+        }
+
         .form-row {
             display: flex;
             gap: 15px;
@@ -381,6 +423,7 @@
             <div class="tabs">
                 <button class="tab active" data-tab="users">用户管理</button>
                 <button class="tab" data-tab="history">抽奖历史</button>
+                <button class="tab" data-tab="attempts">用户尝试记录</button>
                 <button class="tab" data-tab="actions">用户操作</button>
             </div>
 
@@ -423,6 +466,104 @@
                             <tr><td colspan="6" style="text-align: center; padding: 20px;">点击刷新加载数据</td></tr>
                         </tbody>
                     </table>
+                </div>
+            </div>
+
+            <!-- 用户尝试记录标签页 -->
+            <div id="attempts" class="tab-content">
+                <!-- 过滤选项 -->
+                <div class="filter-section">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="attemptUserId">用户ID筛选:</label>
+                            <input type="text" id="attemptUserId" placeholder="输入用户ID进行筛选">
+                        </div>
+                        <div class="form-group">
+                            <label for="attemptHours">时间范围:</label>
+                            <select id="attemptHours">
+                                <option value="1">最近1小时</option>
+                                <option value="6">最近6小时</option>
+                                <option value="24" selected>最近24小时</option>
+                                <option value="72">最近3天</option>
+                                <option value="168">最近7天</option>
+                                <option value="0">全部记录</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="attemptLimit">显示条数:</label>
+                            <select id="attemptLimit">
+                                <option value="50">50条</option>
+                                <option value="100" selected>100条</option>
+                                <option value="200">200条</option>
+                                <option value="500">500条</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button onclick="loadAttempts()" class="btn btn-primary">🔍 查询</button>
+                            <button onclick="loadAttemptStats()" class="btn btn-secondary">📊 统计</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 统计信息 -->
+                <div id="attemptStatsSection" class="stats-section" style="display: none;">
+                    <h4>📊 用户尝试统计</h4>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3 id="totalAttempts">-</h3>
+                            <p>总尝试次数</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="existentUserAttempts">-</h3>
+                            <p>已存在用户尝试</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="nonExistentUserAttempts">-</h3>
+                            <p>不存在用户尝试</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="nonExistentRate">-</h3>
+                            <p>不存在用户比例</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 尝试记录表格 -->
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>用户ID</th>
+                                <th>用户存在</th>
+                                <th>IP地址</th>
+                                <th>用户代理</th>
+                                <th>尝试时间</th>
+                            </tr>
+                        </thead>
+                        <tbody id="attemptsTableBody">
+                            <!-- 动态加载 -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 清理操作 -->
+                <div class="action-form">
+                    <h4>🗑️ 清理旧记录</h4>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="cleanupDays">清理天数:</label>
+                            <select id="cleanupDays">
+                                <option value="7">7天前</option>
+                                <option value="30" selected>30天前</option>
+                                <option value="90">90天前</option>
+                                <option value="365">1年前</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button onclick="cleanupAttempts()" class="btn btn-danger">🗑️ 清理记录</button>
+                        </div>
+                    </div>
                 </div>
             </div>
 
@@ -611,6 +752,8 @@
             // 加载对应数据
             if (tabName === 'history') {
                 loadHistory();
+            } else if (tabName === 'attempts') {
+                loadAttempts();
             }
         }
 
@@ -831,6 +974,113 @@
             } catch (error) {
                 console.error('删除用户错误:', error);
                 showMessage('adminMessage', '网络错误', 'error');
+            }
+        }
+
+        // 加载用户尝试记录
+        async function loadAttempts() {
+            try {
+                const userId = document.getElementById('attemptUserId').value.trim();
+                const hours = document.getElementById('attemptHours').value;
+                const limit = document.getElementById('attemptLimit').value;
+                
+                let url = `${API_BASE}/admin/user-attempts?limit=${limit}`;
+                if (userId) {
+                    url += `&userId=${encodeURIComponent(userId)}`;
+                } else if (hours > 0) {
+                    url += `&hours=${hours}`;
+                }
+
+                const response = await fetch(url, {
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    const tableBody = document.getElementById('attemptsTableBody');
+                    if (result.data.length === 0) {
+                        tableBody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px;">暂无数据</td></tr>';
+                        return;
+                    }
+
+                    tableBody.innerHTML = result.data.map(attempt => `
+                        <tr>
+                            <td>${attempt.id}</td>
+                            <td><strong>${attempt.attemptUserId}</strong></td>
+                            <td>
+                                <span class="badge ${attempt.userExists ? 'badge-success' : 'badge-danger'}">
+                                    ${attempt.userExists ? '✅ 存在' : '❌ 不存在'}
+                                </span>
+                            </td>
+                            <td>${attempt.ipAddress || '-'}</td>
+                            <td title="${attempt.userAgent || '-'}" style="max-width: 200px; overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
+                                ${attempt.userAgent ? attempt.userAgent.substring(0, 50) + (attempt.userAgent.length > 50 ? '...' : '') : '-'}
+                            </td>
+                            <td>${new Date(attempt.attemptTime).toLocaleString()}</td>
+                        </tr>
+                    `).join('');
+                }
+            } catch (error) {
+                console.error('加载用户尝试记录错误:', error);
+                showMessage('adminMessage', '加载用户尝试记录失败', 'error');
+            }
+        }
+
+        // 加载用户尝试统计
+        async function loadAttemptStats() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/user-attempts/stats`, {
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    const stats = result.data;
+                    document.getElementById('totalAttempts').textContent = stats.totalAttempts || 0;
+                    document.getElementById('existentUserAttempts').textContent = stats.existentUserAttempts || 0;
+                    document.getElementById('nonExistentUserAttempts').textContent = stats.nonExistentUserAttempts || 0;
+                    document.getElementById('nonExistentRate').textContent = (stats.nonExistentRate || 0).toFixed(1) + '%';
+                    
+                    // 显示统计区域
+                    document.getElementById('attemptStatsSection').style.display = 'block';
+                }
+            } catch (error) {
+                console.error('加载用户尝试统计错误:', error);
+                showMessage('adminMessage', '加载统计信息失败', 'error');
+            }
+        }
+
+        // 清理旧的用户尝试记录
+        async function cleanupAttempts() {
+            const days = document.getElementById('cleanupDays').value;
+            
+            if (!confirm(`确定要清理 ${days} 天前的用户尝试记录吗？此操作不可撤销！`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/admin/user-attempts/cleanup?days=${days}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showMessage('adminMessage', `清理完成！删除了 ${result.data.deletedCount} 条记录`, 'success');
+                    loadAttempts(); // 刷新列表
+                    loadAttemptStats(); // 刷新统计
+                } else {
+                    showMessage('adminMessage', result.message || '清理失败', 'error');
+                }
+            } catch (error) {
+                console.error('清理用户尝试记录错误:', error);
+                showMessage('adminMessage', '清理失败', 'error');
             }
         }
 

@@ -7,6 +7,8 @@ import com.eden.lottery.entity.LotteryRecord;
 import com.eden.lottery.entity.User;
 import com.eden.lottery.service.AdminService;
 import com.eden.lottery.service.LotteryService;
+import com.eden.lottery.service.UserAttemptService;
+import com.eden.lottery.entity.UserAttempt;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,10 +30,12 @@ public class AdminController {
 
     private final AdminService adminService;
     private final LotteryService lotteryService;
+    private final UserAttemptService userAttemptService;
     
-    public AdminController(AdminService adminService, LotteryService lotteryService) {
+    public AdminController(AdminService adminService, LotteryService lotteryService, UserAttemptService userAttemptService) {
         this.adminService = adminService;
         this.lotteryService = lotteryService;
+        this.userAttemptService = userAttemptService;
     }
 
     /**
@@ -286,10 +290,12 @@ public class AdminController {
             }
 
             Object stats = lotteryService.getStatistics();
+            Object attemptStats = userAttemptService.getAttemptStatistics();
             List<User> users = adminService.getAllUsers();
             
             Object result = new Object() {
                 public final Object lotteryStats = stats;
+                public final Object attemptStats = AdminController.this.userAttemptService.getAttemptStatistics();
                 public final int totalUsers = users.size();
                 public final long totalActiveUsers = users.stream()
                     .filter(user -> user.getRemainingDraws() > 0)
@@ -300,6 +306,95 @@ public class AdminController {
         } catch (Exception e) {
             logger.error("获取统计信息失败", e);
             return ApiResponse.error("获取统计信息失败");
+        }
+    }
+
+    /**
+     * 获取用户尝试记录
+     */
+    @GetMapping("/user-attempts")
+    public ApiResponse<List<Object>> getUserAttempts(HttpServletRequest request,
+                                                    @RequestParam(defaultValue = "100") Integer limit,
+                                                    @RequestParam(required = false) String userId,
+                                                    @RequestParam(defaultValue = "24") Integer hours) {
+        try {
+            if (!validateAdmin(request)) {
+                return ApiResponse.error("未授权访问");
+            }
+
+            List<UserAttempt> attempts;
+            
+            if (StringUtils.hasText(userId)) {
+                // 查询特定用户的尝试记录
+                attempts = userAttemptService.getAttemptsByUserId(userId, limit);
+            } else if (hours > 0) {
+                // 查询最近N小时的尝试记录
+                attempts = userAttemptService.getRecentAttempts(hours, limit);
+            } else {
+                // 查询所有尝试记录
+                attempts = userAttemptService.getAllAttempts(limit);
+            }
+
+            List<Object> attemptList = attempts.stream()
+                    .map(attempt -> new Object() {
+                        public final Long id = attempt.getId();
+                        public final String attemptUserId = attempt.getAttemptUserId();
+                        public final Boolean userExists = attempt.getUserExists();
+                        public final String ipAddress = attempt.getIpAddress();
+                        public final String userAgent = attempt.getUserAgent();
+                        public final String attemptTime = attempt.getAttemptTime().toString();
+                    })
+                    .collect(Collectors.toList());
+
+            return ApiResponse.success("获取用户尝试记录成功", attemptList);
+        } catch (Exception e) {
+            logger.error("获取用户尝试记录失败", e);
+            return ApiResponse.error("获取用户尝试记录失败");
+        }
+    }
+
+    /**
+     * 获取用户尝试统计信息
+     */
+    @GetMapping("/user-attempts/stats")
+    public ApiResponse<Object> getUserAttemptStats(HttpServletRequest request) {
+        try {
+            if (!validateAdmin(request)) {
+                return ApiResponse.error("未授权访问");
+            }
+
+            Object stats = userAttemptService.getAttemptStatistics();
+            return ApiResponse.success("获取用户尝试统计成功", stats);
+        } catch (Exception e) {
+            logger.error("获取用户尝试统计失败", e);
+            return ApiResponse.error("获取用户尝试统计失败");
+        }
+    }
+
+    /**
+     * 清理旧的用户尝试记录
+     */
+    @DeleteMapping("/user-attempts/cleanup")
+    public ApiResponse<Object> cleanupOldAttempts(HttpServletRequest request,
+                                                 @RequestParam(defaultValue = "30") Integer days) {
+        try {
+            if (!validateAdmin(request)) {
+                return ApiResponse.error("未授权访问");
+            }
+
+            java.time.LocalDateTime beforeTime = java.time.LocalDateTime.now().minusDays(days);
+            int deletedCount = userAttemptService.cleanOldAttempts(beforeTime);
+            
+            final int finalDeletedCount = deletedCount;
+            Object result = new Object() {
+                public final int deletedCount = finalDeletedCount;
+                public final String message = "清理完成，删除了 " + finalDeletedCount + " 条记录";
+            };
+            
+            return ApiResponse.success("清理完成", result);
+        } catch (Exception e) {
+            logger.error("清理用户尝试记录失败", e);
+            return ApiResponse.error("清理失败");
         }
     }
 

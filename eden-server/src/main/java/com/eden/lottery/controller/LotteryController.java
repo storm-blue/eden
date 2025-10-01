@@ -7,6 +7,7 @@ import com.eden.lottery.entity.LotteryRecord;
 import com.eden.lottery.entity.Prize;
 import com.eden.lottery.service.LotteryService;
 import com.eden.lottery.service.UserService;
+import com.eden.lottery.service.UserAttemptService;
 import com.eden.lottery.entity.User;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -32,6 +33,9 @@ public class LotteryController {
     
     @Autowired
     private UserService userService;
+    
+    @Autowired
+    private UserAttemptService userAttemptService;
 
     /**
      * 健康检查
@@ -138,13 +142,22 @@ public class LotteryController {
      * 获取用户信息
      */
     @GetMapping("/user/{userId}")
-    public ApiResponse<Object> getUserInfo(@PathVariable String userId) {
+    public ApiResponse<Object> getUserInfo(@PathVariable String userId, HttpServletRequest httpRequest) {
         try {
             if (!StringUtils.hasText(userId)) {
                 return ApiResponse.error("用户ID不能为空");
             }
             
+            // 获取客户端信息
+            String ipAddress = getClientIpAddress(httpRequest);
+            String userAgent = httpRequest.getHeader("User-Agent");
+            
             User user = userService.getUserInfo(userId);
+            boolean userExists = (user != null);
+            
+            // 记录用户尝试
+            userAttemptService.recordAttempt(userId, userExists, ipAddress, userAgent);
+            
             if (user == null) {
                 // 用户不存在，返回默认信息
                 final String finalUserId = userId; // 避免自引用
