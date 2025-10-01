@@ -197,13 +197,14 @@ public class LotteryController {
         return ApiResponse.success("🎪 欢迎来到Eden抽奖系统API服务 🎪", new Object() {
             public final String message = "🎪 欢迎来到Eden抽奖系统API服务 🎪";
             public final String version = "2.0.0-Java";
-            public final Object endpoints = new Object() {
-                public final String prizes = "GET /api/prizes";
-                public final String lottery = "POST /api/lottery";
-                public final String records = "GET /api/records/{userId}";
-                public final String stats = "GET /api/stats";
-                public final String health = "GET /api/health";
-            };
+                public final Object endpoints = new Object() {
+                    public final String prizes = "GET /api/prizes";
+                    public final String lottery = "POST /api/lottery";
+                    public final String records = "GET /api/records/{userId}";
+                    public final String stats = "GET /api/stats";
+                    public final String health = "GET /api/health";
+                    public final String admin = "管理后台: /admin.html";
+                };
         });
     }
 
