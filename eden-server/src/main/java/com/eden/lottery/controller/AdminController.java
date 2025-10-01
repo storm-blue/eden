@@ -242,6 +242,38 @@ public class AdminController {
             return ApiResponse.error("操作失败");
         }
     }
+    
+    /**
+     * 删除用户
+     */
+    @DeleteMapping("/users/{userId}")
+    public ApiResponse<Object> deleteUser(HttpServletRequest request,
+                                         @PathVariable String userId) {
+        try {
+            if (!validateAdmin(request)) {
+                return ApiResponse.error("未授权访问");
+            }
+
+            if (!StringUtils.hasText(userId)) {
+                return ApiResponse.error("用户ID不能为空");
+            }
+
+            boolean success = adminService.deleteUser(userId);
+            if (success) {
+                final String finalUserId = userId; // 避免自引用
+                Object result = new Object() {
+                    public final String userId = finalUserId;
+                    public final String message = "用户删除成功";
+                };
+                return ApiResponse.success("删除成功", result);
+            } else {
+                return ApiResponse.error("用户不存在或删除失败");
+            }
+        } catch (Exception e) {
+            logger.error("删除用户失败", e);
+            return ApiResponse.error("删除用户失败");
+        }
+    }
 
     /**
      * 获取系统统计信息

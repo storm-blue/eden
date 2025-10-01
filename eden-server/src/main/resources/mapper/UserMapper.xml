@@ -76,4 +76,9 @@
         ORDER BY create_time DESC
     </select>
 
+    <!-- 删除用户 -->
+    <delete id="deleteByUserId">
+        DELETE FROM users WHERE user_id = #{userId}
+    </delete>
+
 </mapper>

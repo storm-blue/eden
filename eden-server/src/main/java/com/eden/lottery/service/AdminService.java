@@ -128,6 +128,19 @@ public class AdminService {
     }
     
     /**
+     * 删除用户（管理员功能）
+     */
+    public boolean deleteUser(String userId) {
+        boolean success = userService.deleteUser(userId);
+        if (success) {
+            logger.info("管理员删除用户: {}", userId);
+        } else {
+            logger.warn("管理员删除用户失败: {}", userId);
+        }
+        return success;
+    }
+    
+    /**
      * 清理过期的Session
      */
     public void cleanupExpiredSessions() {

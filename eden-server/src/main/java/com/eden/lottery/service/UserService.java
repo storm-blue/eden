@@ -213,4 +213,27 @@ public class UserService {
             return false;
         }
     }
+    
+    /**
+     * 删除用户
+     * @param userId 用户ID
+     * @return 是否删除成功
+     */
+    @Transactional
+    public boolean deleteUser(String userId) {
+        try {
+            User user = getUserById(userId);
+            if (user == null) {
+                logger.warn("用户 {} 不存在，无法删除", userId);
+                return false;
+            }
+            
+            userMapper.deleteByUserId(userId);
+            logger.info("成功删除用户: {}", userId);
+            return true;
+        } catch (Exception e) {
+            logger.error("删除用户 {} 失败: {}", userId, e.getMessage());
+            return false;
+        }
+    }
 }

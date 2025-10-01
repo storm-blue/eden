@@ -158,6 +158,7 @@ GET /api/stats
    - **添加用户**: 创建新用户并设置每日抽奖次数（⭐ 必须功能）
    - **增加次数**: 给指定用户增加当前剩余抽奖次数
    - **设置每日次数**: 修改用户的每日刷新抽奖次数
+   - **删除用户**: 删除指定用户及其相关数据（⚠️ 谨慎操作）
 
 ### ⚠️ **重要说明**
 
@@ -206,6 +207,10 @@ Header: Authorization: Bearer {token}
   "userId": "用户名",
   "dailyDraws": 5
 }
+
+# 删除用户
+DELETE /api/admin/users/{userId}
+Header: Authorization: Bearer {token}
 ```
 
 ## 🎁 奖品配置

@@ -273,6 +273,26 @@
             background: #5a67d8;
         }
 
+        .delete-btn {
+            background: #e53e3e;
+            color: white;
+            border: none;
+            padding: 6px 12px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            transition: all 0.2s ease;
+        }
+
+        .delete-btn:hover {
+            background: #c53030;
+            transform: translateY(-1px);
+        }
+
+        .delete-btn:active {
+            transform: translateY(0);
+        }
+
         .message {
             padding: 10px 15px;
             border-radius: 5px;
@@ -371,14 +391,15 @@
                         <thead>
                             <tr>
                                 <th>用户ID</th>
-                                <th>剩余次数</th>
-                                <th>每日次数</th>
-                                <th>创建时间</th>
-                                <th>最后刷新</th>
+                            <th>剩余次数</th>
+                            <th>每日次数</th>
+                            <th>创建时间</th>
+                            <th>最后刷新</th>
+                            <th>操作</th>
                             </tr>
                         </thead>
                         <tbody id="usersTable">
-                            <tr><td colspan="5" style="text-align: center; padding: 20px;">加载中...</td></tr>
+                            <tr><td colspan="6" style="text-align: center; padding: 20px;">加载中...</td></tr>
                         </tbody>
                     </table>
                 </div>
@@ -635,6 +656,11 @@
                             <td>${user.dailyDraws}</td>
                             <td>${new Date(user.createTime).toLocaleString()}</td>
                             <td>${new Date(user.lastRefreshDate).toLocaleString()}</td>
+                            <td>
+                                <button class="delete-btn" onclick="deleteUser('${user.userId}')" title="删除用户">
+                                    🗑️ 删除
+                                </button>
+                            </td>
                         `;
                     });
                 }
@@ -776,6 +802,34 @@
                 }
             } catch (error) {
                 console.error('设置每日抽奖次数错误:', error);
+                showMessage('adminMessage', '网络错误', 'error');
+            }
+        }
+
+        // 删除用户
+        async function deleteUser(userId) {
+            if (!confirm(`确定要删除用户 "${userId}" 吗？\n\n⚠️ 警告：删除后该用户的所有数据将无法恢复！`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/admin/users/${encodeURIComponent(userId)}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showMessage('adminMessage', `用户 ${userId} 删除成功！`, 'success');
+                    loadUsers(); // 刷新用户列表
+                    loadStats(); // 刷新统计信息
+                } else {
+                    showMessage('adminMessage', result.message || '删除失败', 'error');
+                }
+            } catch (error) {
+                console.error('删除用户错误:', error);
                 showMessage('adminMessage', '网络错误', 'error');
             }
         }

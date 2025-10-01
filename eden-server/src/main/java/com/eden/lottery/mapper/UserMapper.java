@@ -52,4 +52,9 @@ public interface UserMapper {
      * 获取所有用户
      */
     List<User> selectAll();
+    
+    /**
+     * 删除用户
+     */
+    void deleteByUserId(@Param("userId") String userId);
 }
