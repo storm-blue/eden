@@ -171,6 +171,8 @@ const LotteryLuckyWheel = () => {
      const [showNameInput, setShowNameInput] = useState(true) // 是否显示姓名输入框
      const [tempName, setTempName] = useState('') // 临时存储输入的姓名
      const [userInfo, setUserInfo] = useState(null) // 用户信息（包含剩余抽奖次数）
+     const [showWelcomeEffect, setShowWelcomeEffect] = useState(false) // 是否显示欢迎特效
+     const [welcomeEffectFinished, setWelcomeEffectFinished] = useState(false) // 欢迎特效是否播放完成
 
     // 奖品名称映射（与后端保持一致）
     const prizeNames = [
@@ -207,6 +209,12 @@ const LotteryLuckyWheel = () => {
          if (!userName) {
              alert('请先填写用户姓名！')
              setShowNameInput(true)
+             return
+         }
+
+         // 检查欢迎特效是否播放完成
+         if (!welcomeEffectFinished) {
+             alert('请等待欢迎特效播放完成！')
              return
          }
 
@@ -321,8 +329,9 @@ const LotteryLuckyWheel = () => {
         setUserName(newUserName)
         setShowNameInput(false)
         
-        // 获取用户信息
-        await fetchUserInfo(newUserName)
+        // 显示欢迎特效
+        setShowWelcomeEffect(true)
+        setWelcomeEffectFinished(false)
     }
 
     // 处理键盘回车
@@ -330,6 +339,14 @@ const LotteryLuckyWheel = () => {
         if (e.key === 'Enter') {
             handleNameConfirm()
         }
+    }
+
+    // 处理欢迎特效继续按钮
+    const handleWelcomeContinue = async () => {
+        setShowWelcomeEffect(false)
+        setWelcomeEffectFinished(true)
+        // 获取用户信息
+        await fetchUserInfo(userName)
     }
 
     return (
@@ -425,11 +442,12 @@ const LotteryLuckyWheel = () => {
                 
                 {/* 开始抽奖按钮 */}
                 <button
-                    className={`spin-button ${isSpinning || !userName || !userInfo || userInfo.remainingDraws <= 0 ? 'disabled' : ''}`}
+                    className={`spin-button ${isSpinning || !userName || !userInfo || !welcomeEffectFinished || userInfo.remainingDraws <= 0 ? 'disabled' : ''}`}
                     onClick={startSpin}
-                    disabled={isSpinning || !userName || !userInfo || userInfo.remainingDraws <= 0}
+                    disabled={isSpinning || !userName || !userInfo || !welcomeEffectFinished || userInfo.remainingDraws <= 0}
                 >
                     {isSpinning ? '🎯 转动中...' : 
+                     !welcomeEffectFinished ? '🎪 欢迎特效中...' :
                      (!userInfo || userInfo.message === "用户不存在") ? '👤 用户不存在' :
                      (userInfo.remainingDraws <= 0) ? '🚫 次数已用完' : 
                      '🎲 转动命运'}
@@ -451,6 +469,64 @@ const LotteryLuckyWheel = () => {
                         >
                             继续游戏
                         </button>
+                    </div>
+                </div>
+            )}
+
+            {/* 欢迎特效 */}
+            {showWelcomeEffect && (
+                <div className="welcome-effect-overlay" onClick={handleWelcomeContinue}>
+                    <div className="welcome-effect-container">
+                        {/* 礼花特效 */}
+                        <div className="fireworks">
+                            <div className="firework firework-1">
+                                <div className="explosion explosion-1"></div>
+                            </div>
+                            <div className="firework firework-2">
+                                <div className="explosion explosion-2"></div>
+                            </div>
+                            <div className="firework firework-3">
+                                <div className="explosion explosion-3"></div>
+                            </div>
+                            <div className="firework firework-4">
+                                <div className="explosion explosion-4"></div>
+                            </div>
+                            <div className="firework firework-5">
+                                <div className="explosion explosion-5"></div>
+                            </div>
+                        </div>
+                        
+                        {/* 闪烁星星 */}
+                        <div className="sparkles">
+                            <div className="sparkle sparkle-1">⭐</div>
+                            <div className="sparkle sparkle-2">🌟</div>
+                            <div className="sparkle sparkle-3">✨</div>
+                            <div className="sparkle sparkle-4">💫</div>
+                            <div className="sparkle sparkle-5">⭐</div>
+                            <div className="sparkle sparkle-6">🌟</div>
+                            <div className="sparkle sparkle-7">✨</div>
+                            <div className="sparkle sparkle-8">💫</div>
+                        </div>
+
+                          {/* 欢迎文字 */}
+                          <div className="welcome-text">
+                              <h1 className="welcome-title">欢迎宝宝大人</h1>
+                              <p className="welcome-subtitle">✨ {userName} ✨</p>
+                              <p className="welcome-message">准备好接受命运的眷顾了吗？</p>
+                              <p className="welcome-continue-hint">点击继续 🎯</p>
+                          </div>
+
+                        {/* 彩带效果 */}
+                        <div className="confetti">
+                            <div className="confetti-piece confetti-1"></div>
+                            <div className="confetti-piece confetti-2"></div>
+                            <div className="confetti-piece confetti-3"></div>
+                            <div className="confetti-piece confetti-4"></div>
+                            <div className="confetti-piece confetti-5"></div>
+                            <div className="confetti-piece confetti-6"></div>
+                            <div className="confetti-piece confetti-7"></div>
+                            <div className="confetti-piece confetti-8"></div>
+                        </div>
                     </div>
                 </div>
             )}
