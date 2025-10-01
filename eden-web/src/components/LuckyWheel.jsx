@@ -225,10 +225,7 @@ const LotteryLuckyWheel = () => {
          setCurrentPrize('') // 清空之前的奖品缓存
 
          try {
-             // 开始转盘动画
-             myLucky.current.play()
-
-             // 调用后端抽奖接口
+             // 先调用后端抽奖接口，成功后再开始转盘动画
              const response = await fetch('http://localhost:5000/api/lottery', {
                  method: 'POST',
                  headers: {
@@ -239,27 +236,30 @@ const LotteryLuckyWheel = () => {
                  })
              })
 
-            const result = await response.json()
+             const result = await response.json()
 
-            if (result.success) {
-                const prizeName = result.data.prize.name
-                
-                // 保存后端返回的奖品名称
-                setCurrentPrize(prizeName)
+             if (result.success) {
+                 const prizeName = result.data.prize.name
+                 
+                 // 保存后端返回的奖品名称
+                 setCurrentPrize(prizeName)
 
-                // 根据奖品名称找到对应的索引
-                let selectedIndex = prizeNames.findIndex(name => name === prizeName)
-                if (selectedIndex === -1) {
-                    selectedIndex = 0 // 默认第一个
-                }
+                 // 根据奖品名称找到对应的索引
+                 let selectedIndex = prizeNames.findIndex(name => name === prizeName)
+                 if (selectedIndex === -1) {
+                     selectedIndex = 0 // 默认第一个
+                 }
 
-                // 延迟停止转盘，让动画更自然
-                setTimeout(() => {
-                    myLucky.current.stop(selectedIndex)
-                }, 1500)
-                
-                // 刷新用户信息以显示最新的剩余次数
-                await fetchUserInfo(userName)
+                 // 后端抽奖成功，开始转盘动画
+                 myLucky.current.play()
+                 
+                 // 延迟停止转盘，让动画更自然
+                 setTimeout(() => {
+                     myLucky.current.stop(selectedIndex)
+                 }, 1500)
+                 
+                 // 刷新用户信息以显示最新的剩余次数
+                 await fetchUserInfo(userName)
              } else {
                  console.error('抽奖失败:', result.message)
                  setIsSpinning(false)
