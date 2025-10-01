@@ -172,7 +172,7 @@ const LotteryLuckyWheel = () => {
      const [tempName, setTempName] = useState('') // 临时存储输入的姓名
      const [userInfo, setUserInfo] = useState(null) // 用户信息（包含剩余抽奖次数）
      const [showWelcomeEffect, setShowWelcomeEffect] = useState(false) // 是否显示欢迎特效
-     const [welcomeEffectFinished, setWelcomeEffectFinished] = useState(false) // 欢迎特效是否播放完成
+     const [welcomeEffectFinished, setWelcomeEffectFinished] = useState(true) // 欢迎特效是否播放完成，默认为true
 
     // 奖品名称映射（与后端保持一致）
     const prizeNames = [
@@ -188,7 +188,7 @@ const LotteryLuckyWheel = () => {
     // 获取用户信息
     const fetchUserInfo = async (userId) => {
         try {
-            const response = await fetch(`http://localhost:5000/api/user/${userId}`)
+            const response = await fetch(`/api/user/${userId}`)
             const result = await response.json()
             
             if (result.success) {
@@ -212,11 +212,11 @@ const LotteryLuckyWheel = () => {
              return
          }
 
-         // 检查欢迎特效是否播放完成
-         if (!welcomeEffectFinished) {
-             alert('请等待欢迎特效播放完成！')
-             return
-         }
+        // 检查欢迎特效是否播放完成
+        if (showWelcomeEffect || !welcomeEffectFinished) {
+            alert('请等待欢迎特效播放完成！')
+            return
+        }
 
          // 检查用户是否存在和剩余抽奖次数
          if (!userInfo || userInfo.remainingDraws <= 0) {
@@ -234,7 +234,7 @@ const LotteryLuckyWheel = () => {
 
          try {
              // 先调用后端抽奖接口，成功后再开始转盘动画
-             const response = await fetch('http://localhost:5000/api/lottery', {
+             const response = await fetch('/api/lottery', {
                  method: 'POST',
                  headers: {
                      'Content-Type': 'application/json',
@@ -329,9 +329,20 @@ const LotteryLuckyWheel = () => {
         setUserName(newUserName)
         setShowNameInput(false)
         
-        // 显示欢迎特效
-        setShowWelcomeEffect(true)
-        setWelcomeEffectFinished(false)
+        // 先获取用户信息，判断用户是否存在
+        const response = await fetch(`/api/user/${newUserName}`)
+        const userData = await response.json()
+        
+        if (userData.data && userData.data.message === "用户不存在") {
+            // 用户不存在，直接设置为特效已完成状态，并更新用户信息
+            setWelcomeEffectFinished(true)
+            setUserInfo(userData.data)
+        } else {
+            // 用户存在，显示欢迎特效
+            setShowWelcomeEffect(true)
+            setWelcomeEffectFinished(false)
+            setUserInfo(userData.data)
+        }
     }
 
     // 处理键盘回车
@@ -342,11 +353,10 @@ const LotteryLuckyWheel = () => {
     }
 
     // 处理欢迎特效继续按钮
-    const handleWelcomeContinue = async () => {
+    const handleWelcomeContinue = () => {
         setShowWelcomeEffect(false)
         setWelcomeEffectFinished(true)
-        // 获取用户信息
-        await fetchUserInfo(userName)
+        // 用户信息已经在handleNameConfirm中获取，不需要重复获取
     }
 
     return (
@@ -442,11 +452,12 @@ const LotteryLuckyWheel = () => {
                 
                 {/* 开始抽奖按钮 */}
                 <button
-                    className={`spin-button ${isSpinning || !userName || !userInfo || !welcomeEffectFinished || userInfo.remainingDraws <= 0 ? 'disabled' : ''}`}
+                    className={`spin-button ${isSpinning || !userName || !userInfo || showWelcomeEffect || !welcomeEffectFinished || userInfo.remainingDraws <= 0 ? 'disabled' : ''}`}
                     onClick={startSpin}
-                    disabled={isSpinning || !userName || !userInfo || !welcomeEffectFinished || userInfo.remainingDraws <= 0}
+                    disabled={isSpinning || !userName || !userInfo || showWelcomeEffect || !welcomeEffectFinished || userInfo.remainingDraws <= 0}
                 >
                     {isSpinning ? '🎯 转动中...' : 
+                     showWelcomeEffect ? '🎪 欢迎特效中...' :
                      !welcomeEffectFinished ? '🎪 欢迎特效中...' :
                      (!userInfo || userInfo.message === "用户不存在") ? '👤 用户不存在' :
                      (userInfo.remainingDraws <= 0) ? '🚫 次数已用完' : 
