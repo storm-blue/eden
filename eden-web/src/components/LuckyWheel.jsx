@@ -342,7 +342,7 @@ const LotteryLuckyWheel = () => {
                     setAnimatingWish(null)
                     setWishContent('')
                     await fetchWishes() // 刷新许愿列表
-                    await fetchUserInfo() // 刷新用户信息（包含许愿次数）
+                    await fetchUserInfo(userName) // 刷新用户信息（包含许愿次数）
                     
                     // 显示成功提示
                     const successMsg = document.createElement('div')
@@ -426,6 +426,13 @@ const LotteryLuckyWheel = () => {
         }
         return stars
     }, []) // 空依赖数组，只计算一次
+
+    // 当用户名改变时，重新获取用户信息
+    useEffect(() => {
+        if (userName && !showWishPage) {
+            fetchUserInfo(userName)
+        }
+    }, [userName, showWishPage])
 
     // 打开许愿页面时获取所有许愿
     useEffect(() => {
