@@ -78,6 +78,40 @@
         LIMIT #{limit}
     </select>
 
+    <!-- 分页查询所有抽奖记录 -->
+    <select id="selectAllWithPagination" resultMap="WithPrizeResultMap">
+        SELECT <include refid="With_Prize_Column_List"/>
+        FROM lottery_records lr
+        LEFT JOIN prizes p ON lr.prize_id = p.id
+        ORDER BY lr.created_at DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 分页查询抽奖记录（支持用户ID筛选） -->
+    <select id="selectWithPagination" resultMap="WithPrizeResultMap">
+        SELECT <include refid="With_Prize_Column_List"/>
+        FROM lottery_records lr
+        LEFT JOIN prizes p ON lr.prize_id = p.id
+        <where>
+            <if test="userId != null and userId != ''">
+                lr.user_id = #{userId}
+            </if>
+        </where>
+        ORDER BY lr.created_at DESC
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 统计抽奖记录总数（支持用户ID筛选） -->
+    <select id="countWithFilter" resultType="long">
+        SELECT COUNT(*)
+        FROM lottery_records lr
+        <where>
+            <if test="userId != null and userId != ''">
+                lr.user_id = #{userId}
+            </if>
+        </where>
+    </select>
+
     <!-- 根据时间范围查询 -->
     <select id="selectByDateRange" resultMap="WithPrizeResultMap">
         SELECT <include refid="With_Prize_Column_List"/>

@@ -107,30 +107,65 @@ public class AdminController {
     }
 
     /**
-     * 获取抽奖历史记录
+     * 获取抽奖历史记录（分页）
      */
     @GetMapping("/lottery-history")
-    public ApiResponse<List<Object>> getLotteryHistory(HttpServletRequest request,
-                                                       @RequestParam(defaultValue = "100") int limit) {
+    public ApiResponse<Object> getLotteryHistory(HttpServletRequest request,
+                                               @RequestParam(defaultValue = "1") int page,
+                                               @RequestParam(defaultValue = "20") int size,
+                                               @RequestParam(required = false) String userId) {
         try {
             if (!validateAdmin(request)) {
                 return ApiResponse.error("未授权访问");
             }
 
-            List<LotteryRecord> records = lotteryService.getRecentRecords();
+            // 计算偏移量
+            int offset = (page - 1) * size;
+            
+            // 获取分页数据
+            List<LotteryRecord> records = lotteryService.getLotteryHistoryWithPagination(userId, offset, size);
+            long totalCount = lotteryService.getLotteryHistoryCount(userId);
+            
             List<Object> historyList = records.stream()
-                    .limit(limit)
                     .map(record -> new Object() {
                         public final Long id = record.getId();
                         public final String userId = record.getUserId();
-                        public final String prizeName = record.getPrize().getName();
-                        public final String prizeLevel = record.getPrize().getLevel();
+                        public final String prizeName = record.getPrize() != null ? record.getPrize().getName() : "未知奖品";
+                        public final String prizeLevel = record.getPrize() != null ? record.getPrize().getLevel() : "未知";
                         public final String ipAddress = record.getIpAddress();
                         public final String createTime = record.getCreatedAt().toString();
                     })
                     .collect(Collectors.toList());
 
-            return ApiResponse.success("获取抽奖历史成功", historyList);
+            // 计算分页信息
+            int totalPages = (int) Math.ceil((double) totalCount / size);
+            boolean hasNext = page < totalPages;
+            boolean hasPrev = page > 1;
+
+            final int finalPage = page;
+            final int finalSize = size;
+            final long finalTotalCount = totalCount;
+            final int finalTotalPages = totalPages;
+            final boolean finalHasNext = hasNext;
+            final boolean finalHasPrev = hasPrev;
+            final String finalUserId = userId;
+
+            Object result = new Object() {
+                public final List<Object> records = historyList;
+                public final Object pagination = new Object() {
+                    public final int currentPage = finalPage;
+                    public final int pageSize = finalSize;
+                    public final long totalCount = finalTotalCount;
+                    public final int totalPages = finalTotalPages;
+                    public final boolean hasNext = finalHasNext;
+                    public final boolean hasPrev = finalHasPrev;
+                };
+                public final Object filter = new Object() {
+                    public final String userId = finalUserId;
+                };
+            };
+
+            return ApiResponse.success("获取抽奖历史成功", result);
         } catch (Exception e) {
             logger.error("获取抽奖历史失败", e);
             return ApiResponse.error("获取抽奖历史失败");

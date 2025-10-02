@@ -138,6 +138,26 @@ public class LotteryService {
     }
 
     /**
+     * 分页获取抽奖历史记录
+     * @param userId 用户ID（可选）
+     * @param offset 偏移量
+     * @param limit 每页数量
+     * @return 抽奖记录列表
+     */
+    public List<LotteryRecord> getLotteryHistoryWithPagination(String userId, int offset, int limit) {
+        return recordMapper.selectWithPagination(userId, offset, limit);
+    }
+
+    /**
+     * 获取抽奖历史记录总数
+     * @param userId 用户ID（可选）
+     * @return 记录总数
+     */
+    public long getLotteryHistoryCount(String userId) {
+        return recordMapper.countWithFilter(userId);
+    }
+
+    /**
      * 获取抽奖统计信息
      */
     public Object getStatistics() {

@@ -37,6 +37,33 @@ public interface LotteryRecordMapper {
     List<LotteryRecord> selectRecentRecords(@Param("limit") int limit);
     
     /**
+     * 分页查询所有抽奖记录
+     * @param offset 偏移量
+     * @param limit 每页数量
+     * @return 抽奖记录列表
+     */
+    List<LotteryRecord> selectAllWithPagination(@Param("offset") int offset, 
+                                               @Param("limit") int limit);
+    
+    /**
+     * 分页查询抽奖记录（支持用户ID筛选）
+     * @param userId 用户ID（可选）
+     * @param offset 偏移量
+     * @param limit 每页数量
+     * @return 抽奖记录列表
+     */
+    List<LotteryRecord> selectWithPagination(@Param("userId") String userId,
+                                            @Param("offset") int offset, 
+                                            @Param("limit") int limit);
+    
+    /**
+     * 统计抽奖记录总数（支持用户ID筛选）
+     * @param userId 用户ID（可选）
+     * @return 记录总数
+     */
+    long countWithFilter(@Param("userId") String userId);
+    
+    /**
      * 根据时间范围查询抽奖记录
      */
     List<LotteryRecord> selectByDateRange(@Param("startTime") LocalDateTime startTime,

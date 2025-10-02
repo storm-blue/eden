@@ -274,6 +274,91 @@
             border: 1px solid #f5c6cb;
         }
 
+        .badge-secondary {
+            background-color: #e2e3e5;
+            color: #383d41;
+            border: 1px solid #d6d8db;
+        }
+
+        .badge-primary {
+            background-color: #bee5eb;
+            color: #0c5460;
+            border: 1px solid #abdde5;
+        }
+
+        .badge-warning {
+            background-color: #ffeaa7;
+            color: #856404;
+            border: 1px solid #ffd93d;
+        }
+
+        /* 分页样式 */
+        .pagination-container {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+            padding: 15px;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+
+        .pagination-info {
+            color: #666;
+            font-size: 14px;
+        }
+
+        .pagination-controls {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .pagination-controls .btn {
+            padding: 6px 12px;
+            font-size: 14px;
+            min-width: 60px;
+        }
+
+        .pagination-controls .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .page-numbers {
+            display: flex;
+            gap: 5px;
+            margin: 0 10px;
+        }
+
+        .page-number {
+            padding: 6px 10px;
+            border: 1px solid #ddd;
+            background: white;
+            color: #333;
+            text-decoration: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            min-width: 32px;
+            text-align: center;
+        }
+
+        .page-number:hover {
+            background: #e9ecef;
+        }
+
+        .page-number.active {
+            background: #667eea;
+            color: white;
+            border-color: #667eea;
+        }
+
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 14px;
+        }
+
         .form-row {
             display: flex;
             gap: 15px;
@@ -450,6 +535,30 @@
 
             <!-- 抽奖历史标签页 -->
             <div id="history" class="tab-content">
+                <!-- 筛选和分页控制 -->
+                <div class="filter-section">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="historyUserId">用户ID筛选:</label>
+                            <input type="text" id="historyUserId" placeholder="输入用户ID进行筛选">
+                        </div>
+                        <div class="form-group">
+                            <label for="historyPageSize">每页条数:</label>
+                            <select id="historyPageSize">
+                                <option value="10">10条</option>
+                                <option value="20" selected>20条</option>
+                                <option value="50">50条</option>
+                                <option value="100">100条</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <button onclick="loadHistory(1)" class="btn btn-primary">🔍 查询</button>
+                            <button onclick="clearHistoryFilter()" class="btn btn-secondary">🔄 清除筛选</button>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 数据表格 -->
                 <div class="table-container">
                     <table>
                         <thead>
@@ -463,9 +572,23 @@
                             </tr>
                         </thead>
                         <tbody id="historyTable">
-                            <tr><td colspan="6" style="text-align: center; padding: 20px;">点击刷新加载数据</td></tr>
+                            <tr><td colspan="6" style="text-align: center; padding: 20px;">点击查询加载数据</td></tr>
                         </tbody>
                     </table>
+                </div>
+
+                <!-- 分页导航 -->
+                <div class="pagination-container" id="historyPagination" style="display: none;">
+                    <div class="pagination-info">
+                        <span id="historyPaginationInfo">显示第 1-20 条，共 0 条记录</span>
+                    </div>
+                    <div class="pagination-controls">
+                        <button id="historyFirstPage" onclick="loadHistory(1)" class="btn btn-sm">首页</button>
+                        <button id="historyPrevPage" onclick="loadHistoryPrevPage()" class="btn btn-sm">上一页</button>
+                        <span class="page-numbers" id="historyPageNumbers"></span>
+                        <button id="historyNextPage" onclick="loadHistoryNextPage()" class="btn btn-sm">下一页</button>
+                        <button id="historyLastPage" onclick="loadHistoryLastPage()" class="btn btn-sm">末页</button>
+                    </div>
                 </div>
             </div>
 
@@ -812,10 +935,24 @@
             }
         }
 
-        // 加载抽奖历史
-        async function loadHistory() {
+        // 分页相关变量
+        let currentHistoryPage = 1;
+        let historyPageSize = 20;
+        let historyTotalPages = 1;
+        let historyTotalCount = 0;
+
+        // 加载抽奖历史（分页）
+        async function loadHistory(page = 1) {
             try {
-                const response = await fetch(`${API_BASE}/admin/lottery-history`, {
+                const userId = document.getElementById('historyUserId').value.trim();
+                const pageSize = document.getElementById('historyPageSize').value;
+                
+                let url = `${API_BASE}/admin/lottery-history?page=${page}&size=${pageSize}`;
+                if (userId) {
+                    url += `&userId=${encodeURIComponent(userId)}`;
+                }
+
+                const response = await fetch(url, {
                     headers: {
                         'Authorization': `Bearer ${adminToken}`
                     }
@@ -823,24 +960,122 @@
 
                 const result = await response.json();
                 if (result.success) {
+                    const data = result.data;
+                    
+                    // 更新分页变量
+                    currentHistoryPage = data.pagination.currentPage;
+                    historyPageSize = data.pagination.pageSize;
+                    historyTotalPages = data.pagination.totalPages;
+                    historyTotalCount = data.pagination.totalCount;
+
+                    // 更新表格内容
                     const tbody = document.getElementById('historyTable');
                     tbody.innerHTML = '';
 
-                    result.data.forEach(record => {
-                        const row = tbody.insertRow();
-                        row.innerHTML = `
-                            <td>${record.id}</td>
-                            <td>${record.userId}</td>
-                            <td>${record.prizeName}</td>
-                            <td>${record.prizeLevel}</td>
-                            <td>${record.ipAddress}</td>
-                            <td>${new Date(record.createTime).toLocaleString()}</td>
-                        `;
-                    });
+                    if (data.records.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px;">暂无数据</td></tr>';
+                    } else {
+                        data.records.forEach(record => {
+                            const row = tbody.insertRow();
+                            row.innerHTML = `
+                                <td>${record.id}</td>
+                                <td><strong>${record.userId}</strong></td>
+                                <td>${record.prizeName}</td>
+                                <td><span class="badge badge-${getBadgeClass(record.prizeLevel)}">${record.prizeLevel}</span></td>
+                                <td>${record.ipAddress || '-'}</td>
+                                <td>${new Date(record.createTime).toLocaleString()}</td>
+                            `;
+                        });
+                    }
+
+                    // 更新分页信息
+                    updateHistoryPagination();
+                    
+                    // 显示分页控件
+                    document.getElementById('historyPagination').style.display = 'flex';
+                } else {
+                    showMessage('adminMessage', result.message || '加载失败', 'error');
                 }
             } catch (error) {
                 console.error('加载抽奖历史错误:', error);
+                showMessage('adminMessage', '加载抽奖历史失败', 'error');
             }
+        }
+
+        // 更新分页信息和控件
+        function updateHistoryPagination() {
+            // 更新分页信息文本
+            const startRecord = (currentHistoryPage - 1) * historyPageSize + 1;
+            const endRecord = Math.min(currentHistoryPage * historyPageSize, historyTotalCount);
+            document.getElementById('historyPaginationInfo').textContent = 
+                `显示第 ${startRecord}-${endRecord} 条，共 ${historyTotalCount} 条记录`;
+
+            // 更新按钮状态
+            document.getElementById('historyFirstPage').disabled = currentHistoryPage === 1;
+            document.getElementById('historyPrevPage').disabled = currentHistoryPage === 1;
+            document.getElementById('historyNextPage').disabled = currentHistoryPage === historyTotalPages;
+            document.getElementById('historyLastPage').disabled = currentHistoryPage === historyTotalPages;
+
+            // 更新页码
+            updateHistoryPageNumbers();
+        }
+
+        // 更新页码显示
+        function updateHistoryPageNumbers() {
+            const pageNumbers = document.getElementById('historyPageNumbers');
+            pageNumbers.innerHTML = '';
+
+            const maxShowPages = 5;
+            let startPage = Math.max(1, currentHistoryPage - Math.floor(maxShowPages / 2));
+            let endPage = Math.min(historyTotalPages, startPage + maxShowPages - 1);
+
+            if (endPage - startPage + 1 < maxShowPages) {
+                startPage = Math.max(1, endPage - maxShowPages + 1);
+            }
+
+            for (let i = startPage; i <= endPage; i++) {
+                const pageBtn = document.createElement('span');
+                pageBtn.className = `page-number ${i === currentHistoryPage ? 'active' : ''}`;
+                pageBtn.textContent = i;
+                pageBtn.onclick = () => loadHistory(i);
+                pageNumbers.appendChild(pageBtn);
+            }
+        }
+
+        // 分页导航函数
+        function loadHistoryPrevPage() {
+            if (currentHistoryPage > 1) {
+                loadHistory(currentHistoryPage - 1);
+            }
+        }
+
+        function loadHistoryNextPage() {
+            if (currentHistoryPage < historyTotalPages) {
+                loadHistory(currentHistoryPage + 1);
+            }
+        }
+
+        function loadHistoryLastPage() {
+            loadHistory(historyTotalPages);
+        }
+
+        // 清除筛选
+        function clearHistoryFilter() {
+            document.getElementById('historyUserId').value = '';
+            document.getElementById('historyPageSize').value = '20';
+            loadHistory(1);
+        }
+
+        // 获取徽章样式类
+        function getBadgeClass(level) {
+            const levelMap = {
+                'common': 'secondary',
+                'uncommon': 'primary', 
+                'rare': 'warning',
+                'epic': 'danger',
+                'special': 'success'
+            };
+            return levelMap[level] || 'secondary';
         }
 
         // 添加用户
