@@ -1842,14 +1842,14 @@
 /* 指向星星的小三角箭头 */
 .wish-tooltip-arrow {
     position: absolute;
-    bottom: -23px;
+    bottom: -18px;
     left: 50%;
     transform: translateX(-50%);
     width: 0;
     height: 0;
     border-left: 8px solid transparent;
     border-right: 8px solid transparent;
-    border-top: 18px solid #667eea;
+    border-top: 12px solid #667eea;
 }
 
 .wish-tooltip-arrow::before {
@@ -1861,7 +1861,7 @@
     height: 0;
     border-left: 9px solid transparent;
     border-right: 9px solid transparent;
-    border-top: 19px solid rgba(255, 255, 255, 0.2);
+    border-top: 13px solid rgba(255, 255, 255, 0.2);
 }
 
 @keyframes tooltipFadeIn {
