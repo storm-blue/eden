@@ -207,6 +207,8 @@ const LotteryLuckyWheel = () => {
     const [showWishInput, setShowWishInput] = useState(false) // 是否显示许愿输入框
     const [wishContent, setWishContent] = useState('') // 许愿内容
     const [selectedWish, setSelectedWish] = useState(null) // 选中的许愿
+    const [showWishAnimation, setShowWishAnimation] = useState(false) // 是否显示许愿变星星动画
+    const [animatingWish, setAnimatingWish] = useState(null) // 正在动画的许愿数据
 
     // 奖品名称映射（与后端保持一致）
   const prizeNames = [
@@ -316,11 +318,60 @@ const LotteryLuckyWheel = () => {
             
             const data = await response.json()
             if (data.success) {
-                setWishContent('')
+                // 准备动画数据
+                const newWish = {
+                    id: data.data.id,
+                    userId: data.data.userId,
+                    wishContent: data.data.wishContent,
+                    starX: data.data.starX,
+                    starY: data.data.starY,
+                    starSize: data.data.starSize,
+                    createTime: data.data.createTime
+                }
+                
+                // 设置动画状态
+                setAnimatingWish(newWish)
+                setShowWishAnimation(true)
+                
+                // 隐藏输入框但保持内容显示
                 setShowWishInput(false)
-                await fetchWishes() // 刷新许愿列表
-                await fetchUserInfo() // 刷新用户信息（包含许愿次数）
-                alert('✨ 你的愿望已化作星光，在夜空中闪耀！')
+                
+                // 3秒后完成动画
+                setTimeout(async () => {
+                    setShowWishAnimation(false)
+                    setAnimatingWish(null)
+                    setWishContent('')
+                    await fetchWishes() // 刷新许愿列表
+                    await fetchUserInfo() // 刷新用户信息（包含许愿次数）
+                    
+                    // 显示成功提示
+                    const successMsg = document.createElement('div')
+                    successMsg.textContent = '✨ 你的愿望已化作星光，在夜空中闪耀！'
+                    successMsg.style.cssText = `
+                        position: fixed;
+                        top: 50%;
+                        left: 50%;
+                        transform: translate(-50%, -50%);
+                        background: rgba(255, 215, 0, 0.95);
+                        color: #333;
+                        padding: 15px 25px;
+                        border-radius: 25px;
+                        font-size: 16px;
+                        font-weight: 600;
+                        z-index: 10000;
+                        box-shadow: 0 8px 32px rgba(255, 215, 0, 0.5);
+                        backdrop-filter: blur(10px);
+                        animation: successFadeInOut 2s ease-in-out forwards;
+                    `
+                    document.body.appendChild(successMsg)
+                    
+                    // 2秒后移除提示
+                    setTimeout(() => {
+                        if (successMsg.parentNode) {
+                            successMsg.parentNode.removeChild(successMsg)
+                        }
+                    }, 2000)
+                }, 3000)
             } else {
                 alert('许愿失败: ' + data.message)
             }
@@ -896,6 +947,33 @@ const LotteryLuckyWheel = () => {
                         >
                             {userInfo && userInfo.wishCount > 0 ? `✨ 开始许愿 (${userInfo.wishCount}次)` : '✨ 暂无许愿机会'}
                         </button>
+
+                        {/* 许愿变星星动画 */}
+                        {showWishAnimation && animatingWish && (
+                            <div className="wish-to-star-animation">
+                                {/* 从输入框位置开始的文字 */}
+                                <div className="animating-wish-text">
+                                    {animatingWish.wishContent}
+                                </div>
+                                {/* 变成星星并飞到目标位置 */}
+                                <div 
+                                    className="animating-star"
+                                    style={{
+                                        '--target-x': `${animatingWish.starX}%`,
+                                        '--target-y': `${animatingWish.starY}%`,
+                                        '--star-size': `${animatingWish.starSize * 6 + 12}px`
+                                    }}
+                                >
+                                    ⭐
+                                </div>
+                                {/* 魔法粒子效果 */}
+                                <div className="magic-particles">
+                                    {[...Array(8)].map((_, i) => (
+                                        <div key={i} className={`particle particle-${i}`}>✨</div>
+                                    ))}
+                                </div>
+                            </div>
+                        )}
 
                         {/* 许愿输入框 */}
                         {showWishInput && (
