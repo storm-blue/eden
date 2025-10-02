@@ -26,6 +26,17 @@
         VALUES (#{name}, #{probability}, #{level}, #{createdAt}, #{updatedAt})
     </insert>
 
+    <!-- 插入或更新奖品（UPSERT） -->
+    <insert id="insertOrUpdate" parameterType="com.eden.lottery.entity.Prize">
+        INSERT INTO prizes (id, name, probability, level, created_at, updated_at)
+        VALUES (#{id}, #{name}, #{probability}, #{level}, #{createdAt}, #{updatedAt})
+        ON CONFLICT(id) DO UPDATE SET
+            name = excluded.name,
+            probability = excluded.probability,
+            level = excluded.level,
+            updated_at = excluded.updated_at
+    </insert>
+
     <!-- 根据ID查询 -->
     <select id="selectById" parameterType="long" resultMap="BaseResultMap">
         SELECT <include refid="Base_Column_List"/>
@@ -69,11 +80,6 @@
     <!-- 删除奖品 -->
     <delete id="deleteById" parameterType="long">
         DELETE FROM prizes WHERE id = #{id}
-    </delete>
-
-    <!-- 删除所有奖品 -->
-    <delete id="deleteAll">
-        DELETE FROM prizes
     </delete>
 
     <!-- 统计数量 -->

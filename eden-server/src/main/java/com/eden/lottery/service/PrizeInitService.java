@@ -37,7 +37,7 @@ public class PrizeInitService implements ApplicationRunner {
 
     /**
      * 重新初始化奖品数据
-     * 每次启动都会清空现有数据并重新插入默认奖品配置
+     * 使用UPSERT模式：存在则更新，不存在则插入
      */
     @Transactional
     private void reinitializePrizes() {
@@ -45,25 +45,19 @@ public class PrizeInitService implements ApplicationRunner {
 
         // 查询现有奖品数量
         List<Prize> existingPrizes = prizeMapper.selectAll();
-        if (!existingPrizes.isEmpty()) {
-            logger.info("发现现有奖品 {} 个，正在清理...", existingPrizes.size());
-            int deletedCount = prizeMapper.deleteAll();
-            logger.info("✅ 成功删除 {} 个现有奖品", deletedCount);
-        } else {
-            logger.info("数据库中无现有奖品数据");
-        }
+        logger.info("当前数据库中有 {} 个奖品", existingPrizes.size());
 
-        // 创建默认奖品配置
+        // 创建默认奖品配置（带固定ID）
         // 注意：顺序必须与前端LuckyWheel.jsx中的prizes数组顺序一致！
         Prize[] defaultPrizes = {
-                new Prize("🍰 吃的～", 0.08, "common"),
-                new Prize("🥤 喝的～", 0.08, "common"),
-                new Prize("❤️ 爱", 0.002, "epic"),
-                new Prize("💸 空空如也", 0.40, "common"),
-                new Prize("🧧 红包", 0.05, "uncommon"),
-                new Prize("🔄 再转一次", 0.30, "special"),
-                new Prize("🎁 随机礼物", 0.028, "rare"),
-                new Prize("💬 陪聊服务", 0.06, "rare")
+            createPrizeWithId(1L, "🍰 吃的～", 0.08, "common"),      // 索引0: 8%
+            createPrizeWithId(2L, "🥤 喝的～", 0.08, "common"),      // 索引1: 8%
+            createPrizeWithId(3L, "❤️ 爱", 0.002, "epic"),           // 索引2: 0.2%
+            createPrizeWithId(4L, "💸 空空如也", 0.40, "common"),    // 索引3: 40%
+            createPrizeWithId(5L, "🧧 红包", 0.05, "uncommon"),      // 索引4: 5%
+            createPrizeWithId(6L, "🔄 再转一次", 0.30, "special"),   // 索引5: 30%
+            createPrizeWithId(7L, "🎁 随机礼物", 0.028, "rare"),     // 索引6: 2.8%
+            createPrizeWithId(8L, "💬 陪聊服务", 0.06, "rare")       // 索引7: 6%
         };
 
         // 验证概率总和
@@ -78,12 +72,13 @@ public class PrizeInitService implements ApplicationRunner {
             logger.info("✅ 概率验证通过：总和为 {}", totalProbability);
         }
 
-        // 插入新的奖品数据
+        // 使用UPSERT插入或更新奖品数据
         for (int i = 0; i < defaultPrizes.length; i++) {
             Prize prize = defaultPrizes[i];
-            prizeMapper.insert(prize);
-            logger.info("插入奖品[{}]: {} - 概率: {}% - 级别: {}",
-                    i, prize.getName(), prize.getProbability() * 100, prize.getLevel());
+            int result = prizeMapper.insertOrUpdate(prize);
+            String action = existingPrizes.stream().anyMatch(p -> p.getId().equals(prize.getId())) ? "更新" : "插入";
+            logger.info("{}奖品[{}]: {} - 概率: {}% - 级别: {}", 
+                       action, i, prize.getName(), prize.getProbability() * 100, prize.getLevel());
         }
 
         logger.info("🎉 奖品重新初始化完成！共配置 {} 个奖品，概率总和: {}%",
@@ -93,7 +88,16 @@ public class PrizeInitService implements ApplicationRunner {
         logger.info("📋 奖品配置摘要:");
         for (int i = 0; i < defaultPrizes.length; i++) {
             Prize prize = defaultPrizes[i];
-            logger.info("   索引{}: {} ({}%)", i, prize.getName(), prize.getProbability() * 100);
+            logger.info("   ID{}/索引{}: {} ({}%)", prize.getId(), i, prize.getName(), prize.getProbability() * 100);
         }
+    }
+
+    /**
+     * 创建带ID的奖品对象
+     */
+    private Prize createPrizeWithId(Long id, String name, Double probability, String level) {
+        Prize prize = new Prize(name, probability, level);
+        prize.setId(id);
+        return prize;
     }
 }

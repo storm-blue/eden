@@ -18,6 +18,12 @@ public interface PrizeMapper {
     int insert(Prize prize);
     
     /**
+     * 插入或更新奖品（UPSERT）
+     * 如果ID存在则更新，不存在则插入
+     */
+    int insertOrUpdate(Prize prize);
+    
+    /**
      * 根据ID查询奖品
      */
     Prize selectById(@Param("id") Long id);
@@ -46,11 +52,6 @@ public interface PrizeMapper {
      * 删除奖品
      */
     int deleteById(@Param("id") Long id);
-    
-    /**
-     * 删除所有奖品
-     */
-    int deleteAll();
     
     /**
      * 统计奖品数量
