@@ -365,6 +365,14 @@ const LotteryLuckyWheel = () => {
                     `
                     document.body.appendChild(successMsg)
                     
+                    // 让新创建的星星继续闪烁几次以突出显示
+                    setTimeout(() => {
+                        const newStar = document.querySelector(`[data-wish-id="${newWish.id}"]`)
+                        if (newStar) {
+                            newStar.style.animation = 'newStarHighlight 2s ease-in-out'
+                        }
+                    }, 100)
+                    
                     // 2秒后移除提示
                     setTimeout(() => {
                         if (successMsg.parentNode) {
@@ -887,6 +895,7 @@ const LotteryLuckyWheel = () => {
                                 <div
                                     key={wish.id}
                                     className={`wish-star wish-star-size-${wish.starSize}`}
+                                    data-wish-id={wish.id}
                                     style={{
                                         left: `${wish.starX}%`,
                                         top: `${wish.starY}%`,
