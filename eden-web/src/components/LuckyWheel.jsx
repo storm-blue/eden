@@ -102,6 +102,20 @@ const LotteryLuckyWheel = () => {
                 fontWeight: 'bold'
             }]
         },
+        {
+            background: '#bec3e7', // 浅紫色 🌈
+            fonts: [{
+                text: '💬',
+                top: '15%',
+                fontSize: '30px'
+            }, {
+                text: '陪聊服务',
+                top: '55%',
+                fontSize: '14px',
+                fontColor: '#333',
+                fontWeight: 'bold'
+            }]
+        },
     ])
 
     const [blocks, setBlocks] = useState([
