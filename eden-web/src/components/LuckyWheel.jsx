@@ -116,6 +116,20 @@ const LotteryLuckyWheel = () => {
                 fontWeight: 'bold'
             }]
         },
+        {
+            background: '#e7bebe', // 浅紫色 🌈
+            fonts: [{
+                text: '💬',
+                top: '15%',
+                fontSize: '30px'
+            }, {
+                text: '许愿一次',
+                top: '55%',
+                fontSize: '14px',
+                fontColor: '#333',
+                fontWeight: 'bold'
+            }]
+        },
     ])
 
     const [blocks, setBlocks] = useState([
@@ -198,7 +212,8 @@ const LotteryLuckyWheel = () => {
         '🧧 红包',
         '🔄 再转一次',
         '🎁 随机礼物',
-        '💬 陪聊服务'
+        '💬 陪聊服务',
+        '✨ 许愿一次'
     ]
 
     // 奖品说明映射（支持多个说明，随机展示）
@@ -238,6 +253,9 @@ const LotteryLuckyWheel = () => {
             '把大象装冰箱，拢共分几步？',
             '话说伊朗这个导弹……',
             '嘘！听说了吗？',
+        ],
+        '✨ 许愿一次': [
+            '次数多了就成真的了！',
         ]
     }
 
