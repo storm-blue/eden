@@ -48,6 +48,11 @@ public interface PrizeMapper {
     int deleteById(@Param("id") Long id);
     
     /**
+     * 删除所有奖品
+     */
+    int deleteAll();
+    
+    /**
      * 统计奖品数量
      */
     long count();
