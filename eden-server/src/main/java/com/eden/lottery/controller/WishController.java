@@ -2,6 +2,7 @@ package com.eden.lottery.controller;
 
 import com.eden.lottery.dto.ApiResponse;
 import com.eden.lottery.entity.Wish;
+import com.eden.lottery.service.UserService;
 import com.eden.lottery.service.WishService;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
