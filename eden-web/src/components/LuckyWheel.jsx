@@ -1,101 +1,101 @@
-import React, {useRef, useState} from 'react'
+import React, {useRef, useState, useEffect, useMemo} from 'react'
 import {LuckyWheel} from '@lucky-canvas/react'
 import './LuckyWheel.css'
 
 const LotteryLuckyWheel = () => {
-    const [prizes, setPrizes] = useState([
-        {
+  const [prizes, setPrizes] = useState([
+    { 
             background: '#ffcdd2', // 浅粉红色 🌈
-            fonts: [{
-                text: '🍰',
+      fonts: [{ 
+        text: '🍰', 
                 top: '15%',
                 fontSize: '30px'
-            }, {
+      }, { 
                 text: '吃的～',
                 top: '55%',
-                fontSize: '16px',
+        fontSize: '16px',
                 fontColor: '#333',
-                fontWeight: 'bold'
-            }]
-        },
-        {
+        fontWeight: 'bold'
+      }] 
+    },
+    { 
             background: '#ffe0b2', // 浅橙色 🌈
-            fonts: [{
-                text: '🥤',
+      fonts: [{ 
+        text: '🥤', 
                 top: '15%',
-                fontSize: '35px'
-            }, {
+        fontSize: '35px'
+      }, { 
                 text: '喝的～',
                 top: '55%',
-                fontSize: '16px',
+        fontSize: '16px',
                 fontColor: '#333',
-                fontWeight: 'bold'
-            }]
-        },
-        {
+        fontWeight: 'bold'
+      }] 
+    },
+    { 
             background: '#fff9c4', // 浅黄色 🌈
-            fonts: [{
-                text: '❤️',
+      fonts: [{ 
+        text: '❤️', 
                 top: '15%',
-                fontSize: '35px'
-            }, {
+        fontSize: '35px'
+      }, { 
                 text: '爱',
                 top: '55%',
-                fontSize: '18px',
-                fontColor: '#333',
-                fontWeight: 'bold'
-            }]
-        },
-        {
+        fontSize: '18px',
+        fontColor: '#333',
+        fontWeight: 'bold'
+      }] 
+    },
+    { 
             background: '#c8e6c9', // 浅绿色 🌈
-            fonts: [{
-                text: '💸',
+      fonts: [{ 
+        text: '💸', 
                 top: '15%',
-                fontSize: '35px'
-            }, {
-                text: '空空如也',
+        fontSize: '35px'
+      }, { 
+        text: '空空如也', 
                 top: '55%',
-                fontSize: '14px',
+        fontSize: '14px',
                 fontColor: '#333',
-                fontWeight: 'bold'
-            }]
-        },
-        {
+        fontWeight: 'bold'
+      }] 
+    },
+    { 
             background: '#b3e5fc', // 浅青色 🌈
-            fonts: [{
-                text: '🧧',
+      fonts: [{ 
+        text: '🧧', 
                 top: '15%',
-                fontSize: '35px'
-            }, {
-                text: '红包',
+        fontSize: '35px'
+      }, { 
+        text: '红包', 
                 top: '55%',
-                fontSize: '18px',
-                fontColor: '#333',
-                fontWeight: 'bold'
-            }]
-        },
-        {
+        fontSize: '18px',
+        fontColor: '#333',
+        fontWeight: 'bold'
+      }] 
+    },
+    { 
             background: '#bbdefb', // 浅蓝色 🌈
-            fonts: [{
-                text: '🔄',
+      fonts: [{ 
+        text: '🔄', 
                 top: '15%',
                 fontSize: '30px'
-            }, {
-                text: '再转一次',
+      }, { 
+        text: '再转一次', 
                 top: '55%',
-                fontSize: '14px',
+        fontSize: '14px',
                 fontColor: '#333',
-                fontWeight: 'bold'
-            }]
-        },
-        {
+        fontWeight: 'bold'
+      }] 
+    },
+    { 
             background: '#e1bee7', // 浅紫色 🌈
-            fonts: [{
-                text: '🎁',
+      fonts: [{ 
+        text: '🎁', 
                 top: '15%',
                 fontSize: '30px'
-            }, {
-                text: '随机礼物',
+      }, { 
+        text: '随机礼物', 
                 top: '55%',
                 fontSize: '14px',
                 fontColor: '#333',
@@ -119,81 +119,81 @@ const LotteryLuckyWheel = () => {
         {
             background: '#e7bebe', // 浅紫色 🌈
             fonts: [{
-                text: '💬',
+                text: '✨',
                 top: '15%',
                 fontSize: '30px'
             }, {
                 text: '许愿一次',
                 top: '55%',
-                fontSize: '14px',
+        fontSize: '14px',
                 fontColor: '#333',
-                fontWeight: 'bold'
-            }]
-        },
-    ])
+        fontWeight: 'bold'
+      }] 
+    },
+  ])
 
-    const [blocks, setBlocks] = useState([
-        {
+  const [blocks, setBlocks] = useState([
+    { 
             padding: '10px',
-            background: '#ff6ec7', // 亮粉色外圈 🌈
-            paddingColor: '#ffea00'
-        },
-        {
+      background: '#ff6ec7', // 亮粉色外圈 🌈
+      paddingColor: '#ffea00'
+    },
+    { 
             padding: '10px',
-            background: '#ffffff', // 纯白色内圈
-            paddingColor: '#00e5ff'
-        }
-    ])
+      background: '#ffffff', // 纯白色内圈
+      paddingColor: '#00e5ff'
+    }
+  ])
 
-    const [buttons, setButtons] = useState([
-        {
-            radius: '55px',
+  const [buttons, setButtons] = useState([
+    { 
+      radius: '55px', 
             background: '#ff6ec7', // 明亮红色外圈 🌈
         },
         {
             radius: '50px',
             background: '#fff5ca' // 纯白中圈
-        },
-        {
-            radius: '45px',
+    },
+    { 
+      radius: '45px', 
             background: '#f0caff' // 纯白中圈
         },
         {
             radius: '40px',
             background: '#fdeeff' // 纯白中圈
-        },
-        {
-            radius: '35px',
+    },
+    { 
+      radius: '35px', 
             background: '#678cff', // 明亮蓝色内圈 🌈
-            pointer: true, // 官方指针配置
+      pointer: true, // 官方指针配置
             fonts: []
-        }
-    ])
+    }
+  ])
 
-    // 转盘配置
-    const [defaultConfig, setDefaultConfig] = useState({
-        gutter: 8,
-        offsetDegree: 0,
-        speed: 20,
-        accelerationTime: 3000,
-        decelerationTime: 3000
-    })
+  // 转盘配置
+  const [defaultConfig, setDefaultConfig] = useState({
+    gutter: 8,
+    offsetDegree: 0,
+    speed: 20,
+    accelerationTime: 3000,
+    decelerationTime: 3000
+  })
 
-    // 指针样式配置 - 让指针更细一些
-    const [defaultStyle, setDefaultStyle] = useState({
-        pointer: {
-            style: 'triangle',
-            background: '#ff1744',
-            borderColor: '#ffffff',
-            borderWidth: 0.5, // 更细的边框
-            width: 10, // 指针宽度
-            height: 20 // 保持长度
-        }
-    })
+  // 指针样式配置 - 让指针更细一些
+  const [defaultStyle, setDefaultStyle] = useState({
+    pointer: {
+      style: 'triangle',
+      background: '#ff1744',
+      borderColor: '#ffffff', 
+      borderWidth: 0.5, // 更细的边框
+      width: 10, // 指针宽度
+      height: 20 // 保持长度
+    }
+  })
 
-    const myLucky = useRef()
-    const [isSpinning, setIsSpinning] = useState(false)
-    const [result, setResult] = useState('')
+  const myLucky = useRef()
+  const [isSpinning, setIsSpinning] = useState(false)
+  const [result, setResult] = useState('')
     const [currentPrize, setCurrentPrize] = useState('') // 存储后端返回的奖品名称
     const [userName, setUserName] = useState('') // 用户姓名
     const [showNameInput, setShowNameInput] = useState(true) // 是否显示姓名输入框
@@ -201,16 +201,21 @@ const LotteryLuckyWheel = () => {
     const [userInfo, setUserInfo] = useState(null) // 用户信息（包含剩余抽奖次数）
     const [showWelcomeEffect, setShowWelcomeEffect] = useState(false) // 是否显示欢迎特效
     const [welcomeEffectFinished, setWelcomeEffectFinished] = useState(true) // 欢迎特效是否播放完成，默认为true
-    const [showLoveEffect, setShowLoveEffect] = useState(false) // 是否显示爱心特效
+    const [showLoveEffect, setShowLoveEffect] = useState(false)
+    const [showWishPage, setShowWishPage] = useState(false)
+    const [wishes, setWishes] = useState([]) // 所有许愿列表
+    const [showWishInput, setShowWishInput] = useState(false) // 是否显示许愿输入框
+    const [wishContent, setWishContent] = useState('') // 许愿内容
+    const [selectedWish, setSelectedWish] = useState(null) // 选中的许愿
 
     // 奖品名称映射（与后端保持一致）
-    const prizeNames = [
+  const prizeNames = [
         '🍰 吃的～',
         '🥤 喝的～',
         '❤️ 爱',
-        '💸 空空如也',
-        '🧧 红包',
-        '🔄 再转一次',
+    '💸 空空如也',
+    '🧧 红包',
+    '🔄 再转一次',
         '🎁 随机礼物',
         '💬 陪聊服务',
         '✨ 许愿一次'
@@ -271,6 +276,103 @@ const LotteryLuckyWheel = () => {
         }
         return descriptions
     }
+
+    // 获取所有许愿
+    const fetchWishes = async () => {
+        try {
+            const response = await fetch('/api/wishes')
+            const data = await response.json()
+            if (data.success) {
+                setWishes(data.data)
+            }
+        } catch (error) {
+            console.error('获取许愿列表失败:', error)
+        }
+    }
+
+    // 创建许愿
+    const createWish = async () => {
+        if (!wishContent.trim()) {
+            alert('请输入许愿内容')
+            return
+        }
+        
+        if (wishContent.length > 30) {
+            alert('许愿内容不能超过30个字符')
+            return
+        }
+
+        try {
+            const response = await fetch('/api/wishes', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify({
+                    userId: userName,
+                    wishContent: wishContent.trim()
+                })
+            })
+            
+            const data = await response.json()
+            if (data.success) {
+                setWishContent('')
+                setShowWishInput(false)
+                await fetchWishes() // 刷新许愿列表
+                alert('✨ 你的愿望已化作星光，在夜空中闪耀！')
+            } else {
+                alert('许愿失败: ' + data.message)
+            }
+        } catch (error) {
+            console.error('创建许愿失败:', error)
+            alert('许愿失败，请稍后重试')
+        }
+    }
+
+    // 点击星星显示许愿内容
+    const handleStarClick = (wish, event) => {
+        // 如果点击的是同一个星星，则关闭弹框
+        if (selectedWish && selectedWish.id === wish.id) {
+            setSelectedWish(null)
+            return
+        }
+        
+        // 获取点击位置相对于页面的坐标
+        const rect = event.currentTarget.getBoundingClientRect()
+        const wishWithPosition = {
+            ...wish,
+            clickX: rect.left + rect.width / 2,
+            clickY: rect.top + rect.height / 2
+        }
+        setSelectedWish(wishWithPosition)
+    }
+
+    // 关闭许愿详情
+    const closeWishDetail = () => {
+        setSelectedWish(null)
+    }
+
+    // 使用useMemo生成固定的背景星星，只计算一次
+    const backgroundStars = useMemo(() => {
+        const stars = []
+        for (let i = 0; i < 50; i++) {
+            stars.push({
+                id: i,
+                left: Math.random() * 100,
+                top: Math.random() * 100,
+                animationDelay: Math.random() * 3,
+                fontSize: 8 + Math.random() * 4
+            })
+        }
+        return stars
+    }, []) // 空依赖数组，只计算一次
+
+    // 打开许愿页面时获取所有许愿
+    useEffect(() => {
+        if (showWishPage) {
+            fetchWishes()
+        }
+    }, [showWishPage])
 
     // 获取用户信息
     const fetchUserInfo = async (userId) => {
@@ -346,11 +448,11 @@ const LotteryLuckyWheel = () => {
                 }
 
                 // 后端抽奖成功，开始转盘动画
-                myLucky.current.play()
-
+    myLucky.current.play()
+    
                 // 延迟停止转盘，让动画更自然
-                setTimeout(() => {
-                    myLucky.current.stop(selectedIndex)
+    setTimeout(() => {
+      myLucky.current.stop(selectedIndex)
                 }, 1500)
 
                 // 刷新用户信息以显示最新的剩余次数
@@ -368,7 +470,7 @@ const LotteryLuckyWheel = () => {
     }
 
     const onEnd = async (prize) => {
-        setIsSpinning(false)
+    setIsSpinning(false)
 
         // 优先使用后端返回的奖品名称，如果没有则尝试解析转盘返回的索引
         if (currentPrize) {
@@ -376,6 +478,9 @@ const LotteryLuckyWheel = () => {
             if (currentPrize === '❤️ 爱') {
                 setShowLoveEffect(true)
                 // 不自动隐藏，等待用户点击
+            } else if (currentPrize === '✨ 许愿一次') {
+                // 抽到许愿一次，显示特殊弹窗
+                setResult(currentPrize)
             } else {
                 setResult(currentPrize)
             }
@@ -406,7 +511,7 @@ const LotteryLuckyWheel = () => {
                 setShowLoveEffect(true)
                 // 不自动隐藏，等待用户点击
             } else {
-                setResult(prizeText)
+    setResult(prizeText)
             }
 
             // 检查是否抽到"再转一次"
@@ -463,10 +568,10 @@ const LotteryLuckyWheel = () => {
     const handleLoveContinue = () => {
         setShowLoveEffect(false)
         // 爱心特效结束后不需要额外操作
-    }
+  }
 
-    return (
-        <div className="lucky-lottery-container">
+  return (
+    <div className="lucky-lottery-container">
             {/* 用户姓名输入模态框 */}
             {showNameInput && (
                 <div className="name-input-modal">
@@ -497,29 +602,29 @@ const LotteryLuckyWheel = () => {
                 </div>
             )}
 
-            {/* 标题 */}
-            <div className="header">
-                <h1 className="title">🎪 Eden欢乐抽奖 🎪</h1>
+      {/* 标题 */}
+      <div className="header">
+        <h1 className="title">🎪 Eden欢乐抽奖 🎪</h1>
                 <p className="subtitle">
                     {userName ? `${userName}，转动转盘，好运连连！` : '转动转盘，好运连连！'}
                 </p>
-            </div>
+      </div>
 
-            {/* 转盘区域 */}
-            <div className="wheel-container">
-                <LuckyWheel
-                    ref={myLucky}
-                    width="380px"
-                    height="380px"
-                    prizes={prizes}
-                    blocks={blocks}
-                    buttons={buttons}
-                    defaultConfig={defaultConfig}
-                    defaultStyle={defaultStyle}
+      {/* 转盘区域 */}
+      <div className="wheel-container">
+        <LuckyWheel
+          ref={myLucky}
+          width="380px"
+          height="380px"
+          prizes={prizes}
+          blocks={blocks}
+          buttons={buttons}
+          defaultConfig={defaultConfig}
+          defaultStyle={defaultStyle}
                     onStart={() => {
                     }} // 点击抽奖按钮会触发
-                    onEnd={onEnd}
-                />
+          onEnd={onEnd}
+        />
                 {/* 转盘中心显示剩余次数 */}
                 {userName && (
                     <div className="wheel-center-info">
@@ -534,10 +639,10 @@ const LotteryLuckyWheel = () => {
                         </div>
                     </div>
                 )}
-            </div>
+      </div>
 
-            {/* 控制按钮 */}
-            <div className="controls">
+      {/* 控制按钮 */}
+      <div className="controls">
                 {/* 用户信息行 */}
                 {userName && (
                     <div className="user-info-row">
@@ -557,7 +662,7 @@ const LotteryLuckyWheel = () => {
                 )}
 
                 {/* 开始抽奖按钮 */}
-                <button
+        <button 
                     className={`spin-button ${isSpinning || !userName || !userInfo || showWelcomeEffect || !welcomeEffectFinished || userInfo.remainingDraws <= 0 ? 'disabled' : ''}`}
                     onClick={startSpin}
                     disabled={isSpinning || !userName || !userInfo || showWelcomeEffect || !welcomeEffectFinished || userInfo.remainingDraws <= 0}
@@ -568,27 +673,51 @@ const LotteryLuckyWheel = () => {
                                 (!userInfo || userInfo.message === "用户不存在") ? '👤 用户不存在' :
                                     (userInfo.remainingDraws <= 0) ? '🚫 次数已用完' :
                                         '🎲 转动命运'}
-                </button>
-            </div>
+        </button>
+      </div>
 
-            {/* 结果显示 */}
-            {result && (
-                <div className="result-modal">
-                    <div className="result-content">
-                        <h2 className="result-title">🎉 恭喜你获得 🎉</h2>
-                        <div className="result-prize">{result}</div>
+      {/* 结果显示 */}
+      {result && (
+        <div className="result-modal">
+          <div className="result-content">
+            <h2 className="result-title">🎉 恭喜你获得 🎉</h2>
+            <div className="result-prize">{result}</div>
                         <div className="result-description">
                             {getRandomPrizeDescription(result)}
                         </div>
-                        <button
-                            className="continue-button"
-                            onClick={() => {
-                                setResult('')
-                                setCurrentPrize('')
-                            }}
-                        >
-                            继续游戏
-                        </button>
+                        {result === '✨ 许愿一次' ? (
+                            <div className="wish-buttons">
+                                <button
+                                    className="wish-button"
+                                    onClick={() => {
+                                        setResult('')
+                                        setCurrentPrize('')
+                                        setShowWishPage(true)
+                                    }}
+                                >
+                                    ✨ 许愿
+                                </button>
+                                <button
+                                    className="give-up-button"
+                                    onClick={() => {
+                                        setResult('')
+                                        setCurrentPrize('')
+                                    }}
+                                >
+                                    放弃
+                                </button>
+                            </div>
+                        ) : (
+            <button 
+              className="continue-button"
+                                onClick={() => {
+                                    setResult('')
+                                    setCurrentPrize('')
+                                }}
+            >
+              继续游戏
+            </button>
+                        )}
                     </div>
                 </div>
             )}
@@ -692,15 +821,158 @@ const LotteryLuckyWheel = () => {
                 </div>
             )}
 
-            {/* 装饰元素 */}
-            <div className="decorations">
-                <div className="star star-1">⭐</div>
-                <div className="star star-2">🌟</div>
-                <div className="star star-3">✨</div>
-                <div className="star star-4">💫</div>
-            </div>
+            {/* 许愿页面 */}
+            {showWishPage && (
+                <div className="wish-page-overlay">
+                    <div className="wish-page-container">
+                        {/* 夜空背景 */}
+                        <div 
+                            className="night-sky"
+                            onClick={() => setSelectedWish(null)}
+                        >
+                            {/* 渲染所有许愿星星 */}
+                            {wishes.map((wish) => (
+                                <div
+                                    key={wish.id}
+                                    className={`wish-star wish-star-size-${wish.starSize}`}
+                                    style={{
+                                        left: `${wish.starX}%`,
+                                        top: `${wish.starY}%`,
+                                    }}
+                                    onClick={(e) => {
+                                        e.stopPropagation()
+                                        handleStarClick(wish, e)
+                                    }}
+                                    title={`${wish.userId}的愿望`}
+                                >
+                                    ✨
+                                </div>
+                            ))}
+                            
+                            {/* 背景装饰星星 */}
+                            <div className="background-stars">
+                                {backgroundStars.map((star) => (
+                                    <div
+                                        key={star.id}
+                                        className="bg-star"
+                                        style={{
+                                            left: `${star.left}%`,
+                                            top: `${star.top}%`,
+                                            animationDelay: `${star.animationDelay}s`,
+                                            fontSize: `${star.fontSize}px`
+                                        }}
+                                    >
+                                        ⭐
+                                    </div>
+                                ))}
+                            </div>
+                        </div>
+
+                        {/* 许愿页面标题 */}
+                        <div className="wish-page-title">
+                            <h2>愿望星空</h2>
+                            <p>每颗星星都承载着一个美好的愿望</p>
+                        </div>
+
+                        {/* 关闭按钮 */}
+                        <button 
+                            className="wish-close-button"
+                            onClick={() => setShowWishPage(false)}
+                        >
+                            ✕
+                        </button>
+
+                        {/* 开始许愿按钮 */}
+                        <button
+                            className="start-wish-button"
+                            onClick={() => setShowWishInput(true)}
+                        >
+                            ✨ 开始许愿
+                        </button>
+
+                        {/* 许愿输入框 */}
+                        {showWishInput && (
+                            <div className="wish-input-modal">
+                                <div className="wish-input-content">
+                                    <h3>✨ 许下你的愿望 ✨</h3>
+                                    <textarea
+                                        className="wish-textarea"
+                                        placeholder="请输入你的愿望... (最多30字)"
+                                        value={wishContent}
+                                        onChange={(e) => setWishContent(e.target.value)}
+                                        maxLength={30}
+                                    />
+                                    <div className="wish-input-buttons">
+                                        <button 
+                                            className="wish-confirm-button"
+                                            onClick={createWish}
+                                        >
+                                            许愿
+                                        </button>
+                                        <button 
+                                            className="wish-cancel-button"
+                                            onClick={() => {
+                                                setShowWishInput(false)
+                                                setWishContent('')
+                                            }}
+                                        >
+                                            取消
+                                        </button>
+                                    </div>
+                                    <div className="wish-char-count">
+                                        {wishContent.length}/30
+                                    </div>
+                                </div>
+                            </div>
+                        )}
+
+                        {/* 许愿详情小弹框 */}
+                        {selectedWish && (
+                            <div 
+                                className="wish-tooltip"
+                                style={{
+                                    position: 'fixed',
+                                    left: `${selectedWish.clickX}px`,
+                                    top: `${selectedWish.clickY}px`,
+                                    transform: 'translate(-50%, calc(-100% - 30px))',
+                                    zIndex: 400
+                                }}
+                                onClick={(e) => e.stopPropagation()}
+                            >
+                                <div className="wish-tooltip-content">
+                                    <div className="wish-tooltip-header">
+                                        <span className="wish-tooltip-user">✨ {selectedWish.userId}</span>
+                                        <button 
+                                            className="wish-tooltip-close"
+                                            onClick={closeWishDetail}
+                                        >
+                                            ×
+                                        </button>
+                                    </div>
+                                    <div className="wish-tooltip-text">
+                                        {selectedWish.wishContent}
+                                    </div>
+                                    <div className="wish-tooltip-time">
+                                        {new Date(selectedWish.createTime).toLocaleDateString()}
+                                    </div>
+                                </div>
+                                {/* 指向星星的小三角 */}
+                                <div className="wish-tooltip-arrow"></div>
+                            </div>
+                        )}
+          </div>
         </div>
-    )
+      )}
+
+      {/* 装饰元素 */}
+      <div className="decorations">
+        <div className="star star-1">⭐</div>
+        <div className="star star-2">🌟</div>
+        <div className="star star-3">✨</div>
+        <div className="star star-4">💫</div>
+      </div>
+    </div>
+  )
 }
 
 export default LotteryLuckyWheel

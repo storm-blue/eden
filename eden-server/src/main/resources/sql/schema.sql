@@ -42,6 +42,18 @@ CREATE TABLE IF NOT EXISTS user_attempts (
     attempt_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
+-- 许愿表
+CREATE TABLE IF NOT EXISTS wishes (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id VARCHAR(50) NOT NULL,
+    wish_content TEXT NOT NULL,
+    star_x DOUBLE NOT NULL,  -- 星星X坐标 (0-100%)
+    star_y DOUBLE NOT NULL,  -- 星星Y坐标 (0-100%)
+    star_size INTEGER DEFAULT 3,  -- 星星大小 (1-5)
+    create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
 -- 创建索引
 CREATE INDEX IF NOT EXISTS idx_lottery_records_user_id ON lottery_records(user_id);
 CREATE INDEX IF NOT EXISTS idx_lottery_records_created_at ON lottery_records(created_at);
@@ -52,3 +64,5 @@ CREATE INDEX IF NOT EXISTS idx_users_last_refresh_date ON users(last_refresh_dat
 CREATE INDEX IF NOT EXISTS idx_user_attempts_user_id ON user_attempts(attempt_user_id);
 CREATE INDEX IF NOT EXISTS idx_user_attempts_time ON user_attempts(attempt_time);
 CREATE INDEX IF NOT EXISTS idx_user_attempts_exists ON user_attempts(user_exists);
+CREATE INDEX IF NOT EXISTS idx_wishes_user_id ON wishes(user_id);
+CREATE INDEX IF NOT EXISTS idx_wishes_create_time ON wishes(create_time);

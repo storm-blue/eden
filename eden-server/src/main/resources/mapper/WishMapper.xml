@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eden.lottery.mapper.WishMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="BaseResultMap" type="com.eden.lottery.entity.Wish">
+        <id column="id" property="id" jdbcType="BIGINT"/>
+        <result column="user_id" property="userId" jdbcType="VARCHAR"/>
+        <result column="wish_content" property="wishContent" jdbcType="VARCHAR"/>
+        <result column="star_x" property="starX" jdbcType="DOUBLE"/>
+        <result column="star_y" property="starY" jdbcType="DOUBLE"/>
+        <result column="star_size" property="starSize" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="TIMESTAMP"/>
+        <result column="update_time" property="updateTime" jdbcType="TIMESTAMP"/>
+    </resultMap>
+
+    <!-- 基础列 -->
+    <sql id="Base_Column_List">
+        id, user_id, wish_content, star_x, star_y, star_size, create_time, update_time
+    </sql>
+
+    <!-- 插入许愿 -->
+    <insert id="insert" parameterType="com.eden.lottery.entity.Wish">
+        <selectKey keyProperty="id" resultType="long" order="AFTER">
+            SELECT LAST_INSERT_ROWID()
+        </selectKey>
+        INSERT INTO wishes (user_id, wish_content, star_x, star_y, star_size, create_time, update_time)
+        VALUES (#{userId}, #{wishContent}, #{starX}, #{starY}, #{starSize}, #{createTime}, #{updateTime})
+    </insert>
+
+    <!-- 根据ID查询 -->
+    <select id="selectById" parameterType="long" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM wishes
+        WHERE id = #{id}
+    </select>
+
+    <!-- 查询所有许愿 -->
+    <select id="selectAll" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM wishes
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 根据用户ID查询 -->
+    <select id="selectByUserId" parameterType="string" resultMap="BaseResultMap">
+        SELECT <include refid="Base_Column_List"/>
+        FROM wishes
+        WHERE user_id = #{userId}
+        ORDER BY create_time DESC
+    </select>
+
+    <!-- 统计总数 -->
+    <select id="count" resultType="long">
+        SELECT COUNT(*) FROM wishes
+    </select>
+
+    <!-- 统计用户许愿数 -->
+    <select id="countByUserId" parameterType="string" resultType="long">
+        SELECT COUNT(*) FROM wishes WHERE user_id = #{userId}
+    </select>
+
+    <!-- 删除许愿 -->
+    <delete id="deleteById" parameterType="long">
+        DELETE FROM wishes WHERE id = #{id}
+    </delete>
+
+    <!-- 更新许愿 -->
+    <update id="updateById" parameterType="com.eden.lottery.entity.Wish">
+        UPDATE wishes
+        SET wish_content = #{wishContent},
+            star_x = #{starX},
+            star_y = #{starY},
+            star_size = #{starSize},
+            update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+</mapper>

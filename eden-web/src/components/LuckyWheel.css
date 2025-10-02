@@ -1476,3 +1476,529 @@
         font-size: 11px;
     }
 }
+
+/* 许愿按钮样式 */
+.wish-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.wish-button {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.wish-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+}
+
+.give-up-button {
+    background: linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%);
+    color: white;
+    border: none;
+    padding: 12px 24px;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 15px rgba(255, 107, 107, 0.3);
+}
+
+.give-up-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 107, 107, 0.4);
+}
+
+/* 许愿页面样式 */
+.wish-page-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, #0c0c0c 0%, #1a1a2e 50%, #16213e 100%);
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    animation: wishPageFadeIn 0.8s ease-out;
+}
+
+.wish-page-container {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    overflow: hidden;
+}
+
+.night-sky {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    background: radial-gradient(ellipse at bottom, #1B2735 0%, #090A0F 100%);
+}
+
+/* 许愿星星样式 */
+.wish-star {
+    position: absolute;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    animation: starTwinkle 2s ease-in-out infinite alternate;
+    z-index: 100;
+}
+
+.wish-star:hover {
+    transform: scale(1.5);
+    filter: brightness(1.5);
+}
+
+.wish-star-size-2 { font-size: 16px; }
+.wish-star-size-3 { font-size: 20px; }
+.wish-star-size-4 { font-size: 24px; }
+.wish-star-size-5 { font-size: 28px; }
+
+/* 背景装饰星星 */
+.background-stars {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    top: 0;
+    left: 0;
+    z-index: 1;
+}
+
+.bg-star {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.3);
+    animation: backgroundStarTwinkle 3s ease-in-out infinite;
+    pointer-events: none;
+}
+
+/* 许愿页面标题 */
+.wish-page-title {
+    position: absolute;
+    top: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    text-align: center;
+    color: white;
+    z-index: 200;
+}
+
+.wish-page-title h2 {
+    font-size: 32px;
+    margin-bottom: 10px;
+    text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    animation: titleGlow 2s ease-in-out infinite alternate;
+}
+
+.wish-page-title p {
+    font-size: 16px;
+    opacity: 0.8;
+    margin: 0;
+}
+
+/* 关闭按钮 */
+.wish-close-button {
+    position: absolute;
+    top: 30px;
+    right: 30px;
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: none;
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    font-size: 20px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 200;
+    backdrop-filter: blur(10px);
+}
+
+.wish-close-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+/* 开始许愿按钮 */
+.start-wish-button {
+    position: absolute;
+    bottom: 50px;
+    left: 50%;
+    transform: translateX(-50%);
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border: none;
+    padding: 15px 30px;
+    border-radius: 30px;
+    font-size: 18px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    z-index: 200;
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    animation: startWishPulse 2s ease-in-out infinite;
+}
+
+.start-wish-button:hover {
+    transform: translateX(-50%) translateY(-3px);
+    box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6);
+}
+
+/* 许愿输入框样式 */
+.wish-input-modal {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.8);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 300;
+    animation: modalFadeIn 0.3s ease-out;
+}
+
+.wish-input-content {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+    max-width: 500px;
+    width: 90%;
+    text-align: center;
+    color: white;
+}
+
+.wish-input-content h3 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.wish-textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 15px;
+    border: none;
+    border-radius: 10px;
+    font-size: 16px;
+    font-family: inherit;
+    resize: vertical;
+    margin-bottom: 15px;
+    background: rgba(255, 255, 255, 0.95);
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.wish-textarea:focus {
+    outline: none;
+    box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.1), 0 0 0 3px rgba(255, 255, 255, 0.3);
+}
+
+.wish-input-buttons {
+    display: flex;
+    gap: 15px;
+    justify-content: center;
+    margin-bottom: 10px;
+}
+
+.wish-confirm-button, .wish-cancel-button {
+    padding: 12px 24px;
+    border: none;
+    border-radius: 25px;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.wish-confirm-button {
+    background: white;
+    color: #667eea;
+}
+
+.wish-confirm-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(255, 255, 255, 0.3);
+}
+
+.wish-cancel-button {
+    background: rgba(255, 255, 255, 0.2);
+    color: white;
+    border: 2px solid rgba(255, 255, 255, 0.3);
+}
+
+.wish-cancel-button:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+}
+
+.wish-char-count {
+    font-size: 14px;
+    opacity: 0.8;
+    text-align: right;
+}
+
+/* 许愿详情小弹框（气泡样式） */
+.wish-tooltip {
+    position: fixed;
+    width: 200px;
+    animation: tooltipFadeIn 0.2s ease-out;
+    filter: drop-shadow(0 8px 25px rgba(0, 0, 0, 0.3));
+}
+
+.wish-tooltip-content {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border-radius: 12px;
+    padding: 12px;
+    color: white;
+    position: relative;
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    backdrop-filter: blur(10px);
+}
+
+.wish-tooltip-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 8px;
+}
+
+.wish-tooltip-user {
+    font-weight: bold;
+    font-size: 14px;
+    color: #fff;
+}
+
+.wish-tooltip-close {
+    background: rgba(255, 255, 255, 0.2);
+    border: none;
+    color: white;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    font-size: 14px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.wish-tooltip-close:hover {
+    background: rgba(255, 255, 255, 0.3);
+    transform: scale(1.1);
+}
+
+.wish-tooltip-text {
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 8px;
+    word-wrap: break-word;
+    max-height: 80px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: rgba(255, 255, 255, 0.3) transparent;
+}
+
+/* 自定义滚动条样式 */
+.wish-tooltip-text::-webkit-scrollbar {
+    width: 4px;
+}
+
+.wish-tooltip-text::-webkit-scrollbar-track {
+    background: transparent;
+}
+
+.wish-tooltip-text::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.3);
+    border-radius: 2px;
+}
+
+.wish-tooltip-text::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.5);
+}
+
+.wish-tooltip-time {
+    font-size: 11px;
+    opacity: 0.8;
+    text-align: right;
+}
+
+/* 指向星星的小三角箭头 */
+.wish-tooltip-arrow {
+    position: absolute;
+    bottom: -23px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 18px solid #667eea;
+}
+
+.wish-tooltip-arrow::before {
+    content: '';
+    position: absolute;
+    bottom: 1px;
+    left: -9px;
+    width: 0;
+    height: 0;
+    border-left: 9px solid transparent;
+    border-right: 9px solid transparent;
+    border-top: 19px solid rgba(255, 255, 255, 0.2);
+}
+
+@keyframes tooltipFadeIn {
+    from {
+        opacity: 0;
+        transform: translate(-50%, calc(-100% - 30px)) scale(0.8);
+    }
+    to {
+        opacity: 1;
+        transform: translate(-50%, calc(-100% - 30px)) scale(1);
+    }
+}
+
+/* 响应式设计 - 小屏幕上的tooltip */
+@media (max-width: 768px) {
+    .wish-tooltip {
+        width: 140px;
+    }
+    
+    .wish-tooltip-content {
+        padding: 10px;
+    }
+    
+    .wish-tooltip-user {
+        font-size: 13px;
+    }
+    
+    .wish-tooltip-text {
+        font-size: 13px;
+        max-height: 70px;
+    }
+    
+    .wish-tooltip-time {
+        font-size: 10px;
+    }
+}
+
+/* 动画效果 */
+@keyframes wishPageFadeIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes starTwinkle {
+    0% {
+        opacity: 0.7;
+        transform: scale(1);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1.1);
+        filter: brightness(1.2);
+    }
+}
+
+@keyframes backgroundStarTwinkle {
+    0%, 100% {
+        opacity: 0.2;
+        transform: scale(1);
+    }
+    50% {
+        opacity: 0.5;
+        transform: scale(1.2);
+    }
+}
+
+@keyframes titleGlow {
+    0% {
+        text-shadow: 0 0 20px rgba(255, 255, 255, 0.5);
+    }
+    100% {
+        text-shadow: 0 0 30px rgba(255, 255, 255, 0.8), 0 0 40px rgba(102, 126, 234, 0.3);
+    }
+}
+
+@keyframes startWishPulse {
+    0%, 100% {
+        box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+    }
+    50% {
+        box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6), 0 0 30px rgba(102, 126, 234, 0.3);
+    }
+}
+
+@keyframes modalFadeIn {
+    from {
+        opacity: 0;
+        backdrop-filter: blur(0px);
+    }
+    to {
+        opacity: 1;
+        backdrop-filter: blur(5px);
+    }
+}
+
+/* 许愿页面响应式设计 */
+@media (max-width: 768px) {
+    .wish-page-title h2 {
+        font-size: 24px;
+    }
+    
+    .wish-page-title p {
+        font-size: 14px;
+    }
+    
+    .start-wish-button {
+        font-size: 16px;
+        padding: 12px 24px;
+    }
+    
+    .wish-input-content {
+        padding: 20px;
+        margin: 20px;
+    }
+    
+    .wish-input-content h3 {
+        font-size: 20px;
+    }
+    
+    .wish-textarea {
+        min-height: 60px;
+        font-size: 14px;
+    }
+    
+    .wish-detail-content {
+        padding: 20px;
+        margin: 20px;
+    }
+    
+    .wish-star-size-2 { font-size: 14px; }
+    .wish-star-size-3 { font-size: 16px; }
+    .wish-star-size-4 { font-size: 18px; }
+    .wish-star-size-5 { font-size: 20px; }
+}
