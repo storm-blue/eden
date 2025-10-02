@@ -1,50 +1,45 @@
 #!/bin/bash
 
-# Eden转盘抽奖系统部署脚本
-# 适用于 Ubuntu/Debian 系统
+# Eden抽奖系统服务器部署脚本
 
-set -e
+echo "🚀 开始部署Eden抽奖系统..."
 
-echo "🚀 开始部署 Eden 转盘抽奖系统..."
+# 1. 停止现有服务（如果在运行）
+echo "📋 停止现有服务..."
+pkill -f "eden-server" || true
 
-# 检查是否为root用户
-if [ "$EUID" -ne 0 ]; then 
-    echo "请使用 sudo 运行此脚本"
+# 2. 备份数据库（如果存在）
+if [ -f "eden_lottery.db" ]; then
+    echo "💾 备份现有数据库..."
+    cp eden_lottery.db eden_lottery.db.backup.$(date +%Y%m%d_%H%M%S)
+fi
+
+# 3. 编译项目
+echo "🔨 编译项目..."
+cd eden-server
+mvn clean package -DskipTests
+
+if [ $? -ne 0 ]; then
+    echo "❌ 编译失败！"
     exit 1
 fi
 
-# 更新系统包
-echo "📦 更新系统包..."
-apt update && apt upgrade -y
+# 4. 启动服务
+echo "🎯 启动服务..."
+nohup java -jar target/*.jar > ../server.log 2>&1 &
 
-# 安装基础依赖
-echo "🔧 安装基础依赖..."
-apt install -y curl wget unzip git nginx
+# 等待服务启动
+echo "⏳ 等待服务启动..."
+sleep 10
 
-# 安装 Node.js 18
-echo "📦 安装 Node.js..."
-curl -fsSL https://deb.nodesource.com/setup_18.x | bash -
-apt install -y nodejs
+# 5. 检查服务状态
+if curl -s http://localhost:5000/api/user/test > /dev/null; then
+    echo "✅ 服务启动成功！"
+    echo "📊 访问地址: http://localhost:5000"
+    echo "📝 日志文件: server.log"
+else
+    echo "❌ 服务启动失败，请检查日志文件 server.log"
+    exit 1
+fi
 
-# 安装 Java 17
-echo "☕ 安装 Java 17..."
-apt install -y openjdk-17-jdk
-
-# 安装 Maven
-echo "📦 安装 Maven..."
-apt install -y maven
-
-# 验证安装
-echo "✅ 验证安装..."
-node --version
-npm --version
-java -version
-mvn --version
-
-# 创建应用目录
-echo "📁 创建应用目录..."
-mkdir -p /opt/eden
-mkdir -p /var/log/eden
-
-echo "✅ 环境准备完成！"
-echo "请将项目文件上传到 /opt/eden 目录"
+echo "🎉 部署完成！"
