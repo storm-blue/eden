@@ -23,6 +23,11 @@ public class User {
     private Integer dailyDraws;
     
     /**
+     * 可用许愿次数
+     */
+    private Integer wishCount;
+    
+    /**
      * 创建时间
      */
     private LocalDateTime createTime;
@@ -43,6 +48,7 @@ public class User {
         this.userId = userId;
         this.dailyDraws = dailyDraws;
         this.remainingDraws = dailyDraws; // 初始剩余次数等于每日次数
+        this.wishCount = 0; // 初始许愿次数为0
         this.createTime = LocalDateTime.now();
         this.updateTime = LocalDateTime.now();
         this.lastRefreshDate = LocalDateTime.now();
@@ -71,6 +77,14 @@ public class User {
 
     public void setDailyDraws(Integer dailyDraws) {
         this.dailyDraws = dailyDraws;
+    }
+
+    public Integer getWishCount() {
+        return wishCount;
+    }
+
+    public void setWishCount(Integer wishCount) {
+        this.wishCount = wishCount;
     }
 
     public LocalDateTime getCreateTime() {
@@ -103,6 +117,7 @@ public class User {
                 "userId='" + userId + '\'' +
                 ", remainingDraws=" + remainingDraws +
                 ", dailyDraws=" + dailyDraws +
+                ", wishCount=" + wishCount +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 ", lastRefreshDate=" + lastRefreshDate +

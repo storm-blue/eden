@@ -34,6 +34,16 @@ public interface UserMapper {
     void decreaseRemainingDraws(@Param("userId") String userId);
     
     /**
+     * 增加用户许愿次数
+     */
+    void increaseWishCount(@Param("userId") String userId);
+    
+    /**
+     * 扣减用户许愿次数
+     */
+    void decreaseWishCount(@Param("userId") String userId);
+    
+    /**
      * 刷新用户每日抽奖次数
      */
     void refreshDailyDraws(@Param("userId") String userId, @Param("refreshTime") LocalDateTime refreshTime);

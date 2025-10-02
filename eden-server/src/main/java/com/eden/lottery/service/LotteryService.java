@@ -80,6 +80,16 @@ public class LotteryService {
                     logger.warn("用户 {} 抽中'再转一次'，但次数增加失败", userId);
                 }
             }
+            
+            // 检查是否抽到"许愿一次"，如果是则增加许愿次数
+            if ("✨ 许愿一次".equals(selectedPrize.getName())) {
+                boolean increased = userService.increaseWishCount(userId);
+                if (increased) {
+                    logger.info("用户 {} 抽中'许愿一次'，许愿次数+1", userId);
+                } else {
+                    logger.warn("用户 {} 抽中'许愿一次'，但许愿次数增加失败", userId);
+                }
+            }
 
             // 获取用户剩余抽奖次数
             int remainingDraws = userService.getRemainingDraws(userId);

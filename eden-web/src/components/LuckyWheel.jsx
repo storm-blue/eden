@@ -319,6 +319,7 @@ const LotteryLuckyWheel = () => {
                 setWishContent('')
                 setShowWishInput(false)
                 await fetchWishes() // 刷新许愿列表
+                await fetchUserInfo() // 刷新用户信息（包含许愿次数）
                 alert('✨ 你的愿望已化作星光，在夜空中闪耀！')
             } else {
                 alert('许愿失败: ' + data.message)
@@ -884,10 +885,16 @@ const LotteryLuckyWheel = () => {
 
                         {/* 开始许愿按钮 */}
                         <button
-                            className="start-wish-button"
-                            onClick={() => setShowWishInput(true)}
+                            className={`start-wish-button ${!userInfo || userInfo.wishCount <= 0 ? 'disabled' : ''}`}
+                            onClick={() => {
+                                if (!userInfo || userInfo.wishCount <= 0) {
+                                    alert('您没有可用的许愿次数，请先抽中"许愿一次"奖品！')
+                                } else {
+                                    setShowWishInput(true)
+                                }
+                            }}
                         >
-                            ✨ 开始许愿
+                            {userInfo && userInfo.wishCount > 0 ? `✨ 开始许愿 (${userInfo.wishCount}次)` : '✨ 暂无许愿机会'}
                         </button>
 
                         {/* 许愿输入框 */}

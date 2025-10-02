@@ -215,6 +215,50 @@ public class UserService {
     }
     
     /**
+     * 增加用户许愿次数
+     * @param userId 用户ID
+     * @return 是否成功
+     */
+    @Transactional
+    public boolean increaseWishCount(String userId) {
+        try {
+            userMapper.increaseWishCount(userId);
+            logger.info("用户 {} 许愿次数增加 1", userId);
+            return true;
+        } catch (Exception e) {
+            logger.error("增加用户 {} 许愿次数失败: {}", userId, e.getMessage(), e);
+            return false;
+        }
+    }
+    
+    /**
+     * 扣减用户许愿次数
+     * @param userId 用户ID
+     * @return 是否成功
+     */
+    @Transactional
+    public boolean decreaseWishCount(String userId) {
+        try {
+            userMapper.decreaseWishCount(userId);
+            logger.info("用户 {} 许愿次数扣减 1", userId);
+            return true;
+        } catch (Exception e) {
+            logger.error("扣减用户 {} 许愿次数失败: {}", userId, e.getMessage(), e);
+            return false;
+        }
+    }
+    
+    /**
+     * 获取用户许愿次数
+     * @param userId 用户ID
+     * @return 许愿次数，如果用户不存在返回0
+     */
+    public int getWishCount(String userId) {
+        User user = userMapper.selectByUserId(userId);
+        return user != null ? user.getWishCount() : 0;
+    }
+    
+    /**
      * 删除用户
      * @param userId 用户ID
      * @return 是否删除成功

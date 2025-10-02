@@ -165,6 +165,7 @@ public class LotteryController {
                     public final String userId = finalUserId;
                     public final Integer remainingDraws = 0;
                     public final Integer dailyDraws = 0;
+                    public final Integer wishCount = 0;
                     public final String message = "用户不存在";
                 };
                 return ApiResponse.success("用户不存在", userInfo);
@@ -175,6 +176,7 @@ public class LotteryController {
                 public final String userId = finalUser.getUserId();
                 public final Integer remainingDraws = finalUser.getRemainingDraws();
                 public final Integer dailyDraws = finalUser.getDailyDraws();
+                public final Integer wishCount = finalUser.getWishCount();
                 public final String createTime = finalUser.getCreateTime().toString();
                 public final String lastRefreshDate = finalUser.getLastRefreshDate().toString();
             };

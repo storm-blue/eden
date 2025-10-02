@@ -1658,6 +1658,17 @@
     box-shadow: 0 12px 35px rgba(102, 126, 234, 0.6);
 }
 
+.start-wish-button.disabled {
+    background: linear-gradient(135deg, #888 0%, #666 100%);
+    cursor: not-allowed;
+    opacity: 0.7;
+}
+
+.start-wish-button.disabled:hover {
+    transform: translateX(-50%);
+    box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
+}
+
 /* 许愿输入框样式 */
 .wish-input-modal {
     position: absolute;

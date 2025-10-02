@@ -7,6 +7,7 @@
         <id property="userId" column="user_id"/>
         <result property="remainingDraws" column="remaining_draws"/>
         <result property="dailyDraws" column="daily_draws"/>
+        <result property="wishCount" column="wish_count"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
         <result property="lastRefreshDate" column="last_refresh_date"/>
@@ -14,13 +15,13 @@
 
     <!-- 插入用户 -->
     <insert id="insert" parameterType="com.eden.lottery.entity.User">
-        INSERT INTO users (user_id, remaining_draws, daily_draws, create_time, update_time, last_refresh_date)
-        VALUES (#{userId}, #{remainingDraws}, #{dailyDraws}, #{createTime}, #{updateTime}, #{lastRefreshDate})
+        INSERT INTO users (user_id, remaining_draws, daily_draws, wish_count, create_time, update_time, last_refresh_date)
+        VALUES (#{userId}, #{remainingDraws}, #{dailyDraws}, #{wishCount}, #{createTime}, #{updateTime}, #{lastRefreshDate})
     </insert>
 
     <!-- 根据用户ID查询用户 -->
     <select id="selectByUserId" parameterType="string" resultMap="UserResultMap">
-        SELECT user_id, remaining_draws, daily_draws, create_time, update_time, last_refresh_date
+        SELECT user_id, remaining_draws, daily_draws, wish_count, create_time, update_time, last_refresh_date
         FROM users
         WHERE user_id = #{userId}
     </select>
@@ -30,6 +31,7 @@
         UPDATE users
         SET remaining_draws = #{remainingDraws},
             daily_draws = #{dailyDraws},
+            wish_count = #{wishCount},
             update_time = #{updateTime},
             last_refresh_date = #{lastRefreshDate}
         WHERE user_id = #{userId}
@@ -44,6 +46,23 @@
           AND remaining_draws > 0
     </update>
 
+    <!-- 增加用户许愿次数 -->
+    <update id="increaseWishCount">
+        UPDATE users
+        SET wish_count = wish_count + 1,
+            update_time = datetime('now', 'localtime')
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 扣减用户许愿次数 -->
+    <update id="decreaseWishCount">
+        UPDATE users
+        SET wish_count = wish_count - 1,
+            update_time = datetime('now', 'localtime')
+        WHERE user_id = #{userId}
+          AND wish_count > 0
+    </update>
+
     <!-- 刷新用户每日抽奖次数 -->
     <update id="refreshDailyDraws">
         UPDATE users
@@ -55,7 +74,7 @@
 
     <!-- 获取需要刷新的用户列表 -->
     <select id="selectUsersNeedRefresh" resultMap="UserResultMap">
-        SELECT user_id, remaining_draws, daily_draws, create_time, update_time, last_refresh_date
+        SELECT user_id, remaining_draws, daily_draws, wish_count, create_time, update_time, last_refresh_date
         FROM users
         WHERE date(last_refresh_date) &lt; date(#{todayStart})
     </select>
@@ -71,7 +90,7 @@
 
     <!-- 获取所有用户 -->
     <select id="selectAll" resultMap="UserResultMap">
-        SELECT user_id, remaining_draws, daily_draws, create_time, update_time, last_refresh_date
+        SELECT user_id, remaining_draws, daily_draws, wish_count, create_time, update_time, last_refresh_date
         FROM users
         ORDER BY create_time DESC
     </select>

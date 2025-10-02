@@ -24,6 +24,9 @@ public class WishController {
 
     @Autowired
     private WishService wishService;
+    
+    @Autowired
+    private UserService userService;
 
     /**
      * 获取所有许愿（星空显示）
@@ -68,6 +71,18 @@ public class WishController {
             
             if (request.getWishContent().length() > 30) {
                 return ApiResponse.error("许愿内容不能超过30个字符");
+            }
+
+            // 检查用户是否有可用的许愿次数
+            int wishCount = userService.getWishCount(request.getUserId());
+            if (wishCount <= 0) {
+                return ApiResponse.error("您没有可用的许愿次数，请先抽中'许愿一次'奖品！");
+            }
+
+            // 扣减许愿次数
+            boolean decreased = userService.decreaseWishCount(request.getUserId());
+            if (!decreased) {
+                return ApiResponse.error("许愿失败，无法扣减许愿次数");
             }
 
             Wish wish = wishService.createWish(request.getUserId(), request.getWishContent());
