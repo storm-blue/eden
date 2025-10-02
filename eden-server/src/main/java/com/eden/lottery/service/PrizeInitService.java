@@ -39,7 +39,6 @@ public class PrizeInitService implements ApplicationRunner {
      * 重新初始化奖品数据
      * 使用UPSERT模式：存在则更新，不存在则插入
      */
-    @Transactional
     private void reinitializePrizes() {
         logger.info("开始重新初始化奖品数据...");
 
@@ -53,12 +52,12 @@ public class PrizeInitService implements ApplicationRunner {
                 createPrizeWithId(1L, "🍰 吃的～", 0.05, "common"),      // 索引0: 8%
                 createPrizeWithId(2L, "🥤 喝的～", 0.05, "common"),      // 索引1: 8%
                 createPrizeWithId(3L, "❤️ 爱", 0.001, "epic"),           // 索引2: 0.2%
-                createPrizeWithId(4L, "💸 空空如也", 0.40, "common"),    // 索引3: 40%
+                createPrizeWithId(4L, "💸 空空如也", 0.38, "common"),    // 索引3: 40%
                 createPrizeWithId(5L, "🧧 红包", 0.05, "uncommon"),      // 索引4: 5%
-                createPrizeWithId(6L, "🔄 再转一次", 0.29, "special"),   // 索引5: 30%
+                createPrizeWithId(6L, "🔄 再转一次", 0.30, "special"),   // 索引5: 30%
                 createPrizeWithId(7L, "🎁 随机礼物", 0.029, "rare"),     // 索引6: 2.8%
                 createPrizeWithId(8L, "💬 陪聊服务", 0.05, "rare"),     // 索引7: 6%
-                createPrizeWithId(9L, "✨ 许愿一次", 0.08, "rare")
+                createPrizeWithId(9L, "✨ 许愿一次", 0.09, "rare")
         };
 
         // 验证概率总和
