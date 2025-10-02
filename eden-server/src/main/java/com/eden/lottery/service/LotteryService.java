@@ -14,7 +14,6 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.security.SecureRandom;
 import java.time.LocalDateTime;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 
@@ -38,22 +37,6 @@ public class LotteryService {
     private UserService userService;
 
     /**
-     * 静态奖品配置列表（包含概率）
-     * 注意：概率总和应该为1.0（100%）
-     * 顺序必须与前端LuckyWheel.jsx中的prizes数组顺序一致！
-     */
-    private static final List<Prize> STATIC_PRIZES = Arrays.asList(
-            new Prize("🍰 吃的～", 0.08, "common"),
-            new Prize("🥤 喝的～", 0.08, "common"),
-            new Prize("❤️ 爱", 0.002, "epic"),
-            new Prize("💸 空空如也", 0.40, "common"),
-            new Prize("🧧 红包", 0.05, "uncommon"),
-            new Prize("🔄 再转一次", 0.30, "special"),
-            new Prize("🎁 随机礼物", 0.028, "rare"),
-            new Prize("💬 陪聊服务", 0.06, "rare")
-    );
-
-    /**
      * 执行抽奖
      */
     @Transactional(timeout = 10)
@@ -70,19 +53,22 @@ public class LotteryService {
                 throw new RuntimeException("您的抽奖次数已用完，请明天再来！");
             }
 
+            // 获取所有有效奖品
+            List<Prize> prizes = prizeMapper.selectValidPrizes();
+            if (prizes.isEmpty()) {
+                throw new RuntimeException("暂无可用奖品");
+            }
+
             // 扣减用户抽奖次数
             if (!userService.decreaseDraws(userId)) {
                 throw new RuntimeException("抽奖次数扣减失败，请稍后再试");
             }
 
             // 基于概率选择奖品
-            Prize selectedPrize = selectPrizeByProbability();
+            Prize selectedPrize = selectPrizeByProbability(prizes);
 
             // 记录抽奖结果
-            // 由于现在使用静态奖品配置，我们将prizeId设为0（或者使用奖品在列表中的索引）
-            Long prizeIndex = (long) STATIC_PRIZES.indexOf(selectedPrize);
-            LotteryRecord record = new LotteryRecord(userId, prizeIndex, ipAddress, userAgent);
-            record.setPrize(selectedPrize); // 设置奖品对象，用于显示
+            LotteryRecord record = new LotteryRecord(userId, selectedPrize.getId(), ipAddress, userAgent);
             recordMapper.insert(record);
 
             // 检查是否抽到"再转一次"，如果是则增加抽奖次数
@@ -109,15 +95,15 @@ public class LotteryService {
     }
 
     /**
-     * 基于静态概率配置选择奖品
+     * 基于概率选择奖品
      */
-    private Prize selectPrizeByProbability() {
+    private Prize selectPrizeByProbability(List<Prize> prizes) {
         double randomValue = random.nextDouble();
         double cumulativeProbability = 0.0;
 
         logger.debug("随机数: {}", randomValue);
 
-        for (Prize prize : STATIC_PRIZES) {
+        for (Prize prize : prizes) {
             cumulativeProbability += prize.getProbability();
             logger.debug("奖品: {}, 累计概率: {}", prize.getName(), cumulativeProbability);
 
@@ -127,22 +113,14 @@ public class LotteryService {
         }
 
         // 如果没有选中任何奖品，返回最后一个奖品（通常是概率最小的）
-        return STATIC_PRIZES.get(STATIC_PRIZES.size() - 1);
+        return prizes.get(prizes.size() - 1);
     }
 
     /**
      * 获取所有奖品（不包含概率信息）
      */
     public List<Prize> getAllPrizes() {
-        // 返回静态奖品列表的副本，但不包含概率信息
-        return STATIC_PRIZES.stream()
-                .map(prize -> {
-                    Prize publicPrize = new Prize();
-                    publicPrize.setName(prize.getName());
-                    publicPrize.setLevel(prize.getLevel());
-                    return publicPrize;
-                })
-                .collect(java.util.stream.Collectors.toList());
+        return prizeMapper.selectValidPrizes();
     }
 
     /**
