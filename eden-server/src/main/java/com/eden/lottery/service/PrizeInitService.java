@@ -49,14 +49,14 @@ public class PrizeInitService implements ApplicationRunner {
         // 创建默认奖品配置（带固定ID）
         // 注意：顺序必须与前端LuckyWheel.jsx中的prizes数组顺序一致！
         Prize[] defaultPrizes = {
-                createPrizeWithId(1L, "🍰 吃的～", 0.05, "common"),      // 索引0: 8%
-                createPrizeWithId(2L, "🥤 喝的～", 0.05, "common"),      // 索引1: 8%
+                createPrizeWithId(1L, "🍰 吃的～", 0.04, "common"),      // 索引0: 8%
+                createPrizeWithId(2L, "🥤 喝的～", 0.04, "common"),      // 索引1: 8%
                 createPrizeWithId(3L, "❤️ 爱", 0.001, "epic"),           // 索引2: 0.2%
                 createPrizeWithId(4L, "💸 空空如也", 0.36, "common"),    // 索引3: 40%
-                createPrizeWithId(5L, "🧧 红包", 0.05, "uncommon"),      // 索引4: 5%
-                createPrizeWithId(6L, "🔄 再转一次", 0.26, "special"),   // 索引5: 30%
+                createPrizeWithId(5L, "🧧 红包", 0.04, "uncommon"),      // 索引4: 5%
+                createPrizeWithId(6L, "🔄 再转一次", 0.28, "special"),   // 索引5: 30%
                 createPrizeWithId(7L, "🎁 随机礼物", 0.029, "rare"),     // 索引6: 2.8%
-                createPrizeWithId(8L, "💬 陪聊服务", 0.05, "rare"),     // 索引7: 6%
+                createPrizeWithId(8L, "💬 陪聊服务", 0.06, "rare"),     // 索引7: 6%
                 createPrizeWithId(9L, "✨ 许愿一次", 0.15, "rare")
         };
 
