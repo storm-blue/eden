@@ -18,6 +18,67 @@
     position: relative;
 }
 
+/* 许愿入口按钮 - 内联样式（用户名右侧） */
+.wish-entrance-button-inline {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    border: none;
+    border-radius: 20px;
+    padding: 12px 16px; /* 与用户名的垂直padding保持一致 */
+    color: white;
+    font-size: 14px;
+    font-weight: 600;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    box-shadow: 0 2px 10px rgba(102, 126, 234, 0.3);
+    transition: all 0.3s ease;
+    margin-left: 12px;
+    height: auto; /* 让高度自适应内容 */
+    min-height: 40px; /* 设置最小高度与用户名一致 */
+}
+
+.wish-entrance-button-inline:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.5);
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+}
+
+.wish-entrance-button-inline:active {
+    transform: translateY(0px) scale(0.95);
+}
+
+.wish-entrance-text {
+    font-size: 14px;
+}
+
+/* 许愿次数徽章 */
+.wish-count-badge {
+    background: #ff4757;
+    color: white;
+    font-size: 12px;
+    font-weight: bold;
+    border-radius: 50%;
+    width: 20px;
+    height: 20px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    animation: wishBadgePulse 2s ease-in-out infinite;
+}
+
+@keyframes wishBadgePulse {
+    0%, 100% {
+        transform: scale(1);
+        box-shadow: 0 0 0 0 rgba(255, 71, 87, 0.7);
+    }
+    50% {
+        transform: scale(1.1);
+        box-shadow: 0 0 0 4px rgba(255, 71, 87, 0);
+    }
+}
+
 .title {
     font-size: 32px;
     font-weight: bold;
@@ -1888,6 +1949,18 @@
 
 /* 响应式设计 - 小屏幕上的tooltip */
 @media (max-width: 768px) {
+    /* 许愿入口按钮移动端适配 */
+    .wish-entrance-button-inline {
+        padding: 10px 12px; /* 与移动端用户名的垂直padding保持一致 */
+        font-size: 12px;
+        margin-left: 8px;
+        min-height: 34px; /* 与移动端用户名高度一致 */
+    }
+    
+    .wish-entrance-text {
+        font-size: 11px;
+    }
+
     .wish-tooltip {
         width: 140px;
     }
