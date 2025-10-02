@@ -11,28 +11,108 @@ import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.sql.DataSource;
+import java.sql.Connection;
+import java.sql.DatabaseMetaData;
+import java.sql.ResultSet;
+import java.sql.Statement;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * 奖品初始化服务
  * 每次应用启动时都会重新初始化奖品数据
+ * 同时负责数据库表结构迁移
  */
 @Service
-@Order(2) // 确保在数据库初始化之后执行
+@Order(1) // 确保最先执行
 public class PrizeInitService implements ApplicationRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(PrizeInitService.class);
 
     @Autowired
     private PrizeMapper prizeMapper;
+    
+    @Autowired
+    private DataSource dataSource;
 
     @Override
     public void run(ApplicationArguments args) {
         try {
-            reinitializePrizes();
+            // 首先执行数据库迁移
+            performDatabaseMigration();
+            
+            // 然后初始化奖品数据
+            initializePrizes();
         } catch (Exception e) {
-            logger.error("重新初始化奖品失败", e);
+            logger.error("服务初始化失败", e);
+            throw new RuntimeException("服务初始化失败", e);
         }
+    }
+    
+    /**
+     * 执行数据库迁移
+     */
+    private void performDatabaseMigration() {
+        logger.info("开始数据库迁移检查...");
+        
+        try (Connection connection = dataSource.getConnection()) {
+            // 检查并迁移users表
+            checkAndMigrateUsersTable(connection);
+            logger.info("数据库迁移检查完成");
+        } catch (Exception e) {
+            logger.error("数据库迁移失败", e);
+            throw new RuntimeException("数据库迁移失败", e);
+        }
+    }
+    
+    /**
+     * 检查并迁移users表
+     */
+    private void checkAndMigrateUsersTable(Connection connection) throws Exception {
+        // 检查wish_count列是否存在
+        List<String> columns = getTableColumns(connection, "users");
+        if (!columns.contains("wish_count")) {
+            logger.info("users表缺少wish_count列，添加列...");
+            addWishCountColumn(connection);
+        } else {
+            logger.info("users表结构检查通过");
+        }
+    }
+    
+    /**
+     * 获取表的所有列名
+     */
+    private List<String> getTableColumns(Connection connection, String tableName) throws Exception {
+        List<String> columns = new ArrayList<>();
+        DatabaseMetaData metaData = connection.getMetaData();
+        
+        try (ResultSet rs = metaData.getColumns(null, null, tableName, null)) {
+            while (rs.next()) {
+                columns.add(rs.getString("COLUMN_NAME").toLowerCase());
+            }
+        }
+        
+        return columns;
+    }
+    
+    /**
+     * 添加wish_count列到users表
+     */
+    private void addWishCountColumn(Connection connection) throws Exception {
+        String sql = "ALTER TABLE users ADD COLUMN wish_count INTEGER NOT NULL DEFAULT 0";
+        
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(sql);
+            logger.info("wish_count列添加成功");
+        }
+    }
+
+    /**
+     * 初始化奖品数据
+     */
+    private void initializePrizes() {
+        reinitializePrizes();
     }
 
     /**

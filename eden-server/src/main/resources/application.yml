@@ -20,6 +20,16 @@ spring:
       idle-timeout: 600000
       max-lifetime: 1800000
       leak-detection-threshold: 60000
+  
+  # 数据库初始化配置
+  sql:
+    init:
+      # 总是执行初始化脚本（如果需要）
+      mode: always
+      # 初始化脚本位置
+      schema-locations: classpath:sql/schema.sql
+      # 继续执行即使发生错误
+      continue-on-error: true
 
 # MyBatis配置
 mybatis:
