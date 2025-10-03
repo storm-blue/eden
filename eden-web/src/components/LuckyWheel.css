@@ -1888,7 +1888,7 @@
     cursor: pointer;
     transition: all 0.3s ease;
     animation: starTwinkle 2s ease-in-out infinite alternate;
-    z-index: 100;
+    z-index: 200;
 }
 
 .wish-star:hover {
@@ -1926,7 +1926,8 @@
     transform: translateX(-50%);
     text-align: center;
     color: white;
-    z-index: 200;
+    z-index: 50;
+    pointer-events: none;
 }
 
 .wish-page-title h2 {
@@ -1956,7 +1957,7 @@
     font-size: 20px;
     cursor: pointer;
     transition: all 0.3s ease;
-    z-index: 200;
+    z-index: 250;
     backdrop-filter: blur(10px);
 }
 
@@ -1980,7 +1981,7 @@
     font-weight: bold;
     cursor: pointer;
     transition: all 0.3s ease;
-    z-index: 200;
+    z-index: 250;
     box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);
     animation: startWishPulse 2s ease-in-out infinite;
 }
