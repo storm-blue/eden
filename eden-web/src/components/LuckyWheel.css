@@ -127,14 +127,14 @@
 }
 
 .prize-stats-modal {
-    background: linear-gradient(135deg, #F8E8F0 0%, #F0E8F8 50%, #F8F0F8 100%);
+    background: linear-gradient(135deg, #FFE8F5 0%, #F0E8FF 50%, #FFF0FF 100%);
     border-radius: 25px;
     padding: 0;
     max-width: 420px;
     width: 90%;
     max-height: 80vh;
     overflow: hidden;
-    box-shadow: 0 25px 80px rgba(200, 150, 180, 0.3), 
+    box-shadow: 0 25px 80px rgba(255, 150, 200, 0.4), 
                 0 0 0 3px rgba(255, 255, 255, 0.3),
                 inset 0 1px 0 rgba(255, 255, 255, 0.6);
     animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
@@ -142,7 +142,7 @@
 }
 
 .prize-stats-header {
-    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 240, 245, 0.9) 100%);
+    background: linear-gradient(135deg, rgba(255, 255, 255, 0.9) 0%, rgba(255, 230, 250, 0.9) 100%);
     padding: 25px;
     display: flex;
     justify-content: space-between;
@@ -151,24 +151,13 @@
     position: relative;
 }
 
-.prize-stats-header::before {
-    content: "🎁";
-    position: absolute;
-    left: 15px;
-    top: 50%;
-    transform: translateY(-50%);
-    font-size: 24px;
-    animation: bounceGently 2s infinite ease-in-out;
-}
-
 .prize-stats-header h3 {
     margin: 0;
-    color: #B8789F;
+    color: #E85BB8;
     font-size: 22px;
     font-weight: 700;
-    text-shadow: 0 2px 4px rgba(184, 120, 159, 0.2);
-    margin-left: 35px;
-    background: linear-gradient(45deg, #B8789F, #A86B8A, #B8789F);
+    text-shadow: 0 2px 4px rgba(232, 91, 184, 0.2);
+    background: linear-gradient(45deg, #E85BB8, #D548A7, #E85BB8);
     background-size: 200% 200%;
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
@@ -177,7 +166,7 @@
 }
 
 .prize-stats-close {
-    background: linear-gradient(135deg, #C8A2C8, #B8789F);
+    background: linear-gradient(135deg, #E85BB8, #D548A7);
     border: none;
     color: white;
     width: 35px;
@@ -190,13 +179,13 @@
     align-items: center;
     justify-content: center;
     transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-    box-shadow: 0 4px 15px rgba(184, 120, 159, 0.3);
+    box-shadow: 0 4px 15px rgba(232, 91, 184, 0.4);
 }
 
 .prize-stats-close:hover {
-    background: linear-gradient(135deg, #B8789F, #A86B8A);
+    background: linear-gradient(135deg, #D548A7, #C23596);
     transform: scale(1.15) rotate(90deg);
-    box-shadow: 0 6px 20px rgba(184, 120, 159, 0.5);
+    box-shadow: 0 6px 20px rgba(232, 91, 184, 0.6);
 }
 
 .prize-stats-content {
@@ -215,9 +204,9 @@
     right: 0;
     bottom: 0;
     background-image: 
-        radial-gradient(circle at 20% 30%, rgba(200, 150, 180, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(184, 120, 159, 0.05) 0%, transparent 50%),
-        radial-gradient(circle at 40% 80%, rgba(220, 180, 200, 0.05) 0%, transparent 50%);
+        radial-gradient(circle at 20% 30%, rgba(232, 91, 184, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 80% 70%, rgba(213, 72, 167, 0.08) 0%, transparent 50%),
+        radial-gradient(circle at 40% 80%, rgba(255, 150, 200, 0.08) 0%, transparent 50%);
     pointer-events: none;
 }
 
@@ -237,48 +226,41 @@
     position: relative;
 }
 
-.prize-stat-item:hover {
-    transform: translateX(5px);
-}
-
 .prize-stat-rank {
-    background: linear-gradient(135deg, #C8A2C8, #B8789F);
-    color: white;
+    color: #E85BB8;
     width: 30px;
     height: 30px;
-    border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 12px;
+    font-size: 16px;
     font-weight: bold;
     margin-right: 12px;
     flex-shrink: 0;
-    box-shadow: 0 2px 8px rgba(184, 120, 159, 0.3);
 }
 
 .prize-stat-name {
     flex: 1;
     font-size: 16px;
     font-weight: 600;
-    color: #8B6B8B;
+    color: #B85BB8;
     margin-right: 8px;
 }
 
 .prize-stat-count {
-    background: linear-gradient(135deg, #C8A2C8, #B8789F);
+    background: linear-gradient(135deg, #E85BB8, #D548A7);
     color: white;
     padding: 4px 12px;
     border-radius: 15px;
     font-size: 12px;
     font-weight: bold;
-    box-shadow: 0 2px 6px rgba(184, 120, 159, 0.3);
+    box-shadow: 0 2px 6px rgba(232, 91, 184, 0.4);
 }
 
 .prize-stats-empty {
     text-align: center;
     padding: 50px 20px;
-    color: #B8789F;
+    color: #E85BB8;
     position: relative;
 }
 
@@ -290,7 +272,7 @@
     transform: translateX(-50%);
     width: 100px;
     height: 100px;
-    background: radial-gradient(circle, rgba(184, 120, 159, 0.1) 0%, transparent 70%);
+    background: radial-gradient(circle, rgba(232, 91, 184, 0.15) 0%, transparent 70%);
     border-radius: 50%;
     animation: emptyGlow 3s infinite ease-in-out;
 }
@@ -312,7 +294,7 @@
 }
 
 .empty-hint {
-    color: #C8A2C8;
+    color: #E85BB8;
     font-size: 16px;
     position: relative;
     z-index: 1;
