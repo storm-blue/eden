@@ -775,17 +775,19 @@ const LotteryLuckyWheel = () => {
                             👤 {userName}
                         </div>
                         
-                        {/* 许愿入口按钮 - 用户姓名右侧 */}
-                        <button 
-                            className="wish-entrance-button-inline"
-                            onClick={() => setShowWishPage(true)}
-                            title={`进入许愿页面 ${userInfo && userInfo.wishCount > 0 ? `(${userInfo.wishCount}次许愿机会)` : '(暂无许愿机会)'}`}
-                        >
-                            <span className="wish-entrance-text">许愿</span>
-                            {userInfo && userInfo.wishCount > 0 && (
-                                <span className="wish-count-badge">{userInfo.wishCount}</span>
-                            )}
-                        </button>
+                        {/* 许愿入口按钮 - 用户姓名右侧，只对存在的用户显示 */}
+                        {userInfo && userInfo.message !== "用户不存在" && (
+                            <button 
+                                className="wish-entrance-button-inline"
+                                onClick={() => setShowWishPage(true)}
+                                title={`进入许愿页面 ${userInfo && userInfo.wishCount > 0 ? `(${userInfo.wishCount}次许愿机会)` : '(暂无许愿机会)'}`}
+                            >
+                                <span className="wish-entrance-text">许愿</span>
+                                {userInfo && userInfo.wishCount > 0 && (
+                                    <span className="wish-count-badge">{userInfo.wishCount}</span>
+                                )}
+                            </button>
+                        )}
                     </div>
                 )}
 
