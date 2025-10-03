@@ -125,6 +125,35 @@ public class LotteryController {
     }
 
     /**
+     * 获取用户抽奖历史（用于奖品统计）
+     */
+    @GetMapping("/lottery/history/{userId}")
+    public ApiResponse<List<Object>> getLotteryHistory(@PathVariable String userId) {
+        try {
+            if (!StringUtils.hasText(userId)) {
+                return ApiResponse.error("用户ID不能为空");
+            }
+
+            List<LotteryRecord> records = lotteryService.getUserRecords(userId, 200); // 获取更多记录用于统计
+
+            List<Object> historyList = records.stream()
+                    .map(record -> new Object() {
+                        public final Long id = record.getId();
+                        public final String userId = record.getUserId();
+                        public final String prizeName = record.getPrize() != null ? record.getPrize().getName() : "未知奖品";
+                        public final String prizeLevel = record.getPrize() != null ? record.getPrize().getLevel() : "未知";
+                        public final String timestamp = record.getCreatedAt().toString();
+                    })
+                    .collect(Collectors.toList());
+
+            return ApiResponse.success("获取抽奖历史成功", historyList);
+        } catch (Exception e) {
+            logger.error("获取用户抽奖历史失败", e);
+            return ApiResponse.error("获取抽奖历史失败");
+        }
+    }
+
+    /**
      * 获取统计信息
      */
     @GetMapping("/stats")

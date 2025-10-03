@@ -209,6 +209,8 @@ const LotteryLuckyWheel = () => {
     const [selectedWish, setSelectedWish] = useState(null) // 选中的许愿
     const [showWishAnimation, setShowWishAnimation] = useState(false) // 是否显示许愿变星星动画
     const [animatingWish, setAnimatingWish] = useState(null) // 正在动画的许愿数据
+    const [showPrizeStats, setShowPrizeStats] = useState(false) // 是否显示奖品统计
+    const [prizeStats, setPrizeStats] = useState([]) // 奖品统计数据
 
     // 奖品名称映射（与后端保持一致）
   const prizeNames = [
@@ -441,7 +443,40 @@ const LotteryLuckyWheel = () => {
         }
     }, [showWishPage])
 
-    // 获取用户信息
+    // 获取奖品统计
+    const fetchPrizeStats = async () => {
+        if (!userName) return
+        
+        try {
+            const response = await fetch(`/api/lottery/history/${userName}`)
+            const result = await response.json()
+            
+            if (result.success) {
+                // 统计每种奖品的获得次数
+                const stats = {}
+                result.data.forEach(record => {
+                    const prizeName = record.prizeName
+                    // 排除"空空如也"和"再转一次"
+                    if (prizeName !== '💸 空空如也' && prizeName !== '🔄 再转一次') {
+                        stats[prizeName] = (stats[prizeName] || 0) + 1
+                    }
+                })
+                
+                // 转换为数组格式，按获得次数排序
+                const statsArray = Object.entries(stats)
+                    .map(([name, count]) => ({ name, count }))
+                    .sort((a, b) => b.count - a.count)
+                
+                setPrizeStats(statsArray)
+            } else {
+                console.error('获取奖品统计失败:', result.message)
+                setPrizeStats([])
+            }
+        } catch (error) {
+            console.error('获取奖品统计网络错误:', error)
+            setPrizeStats([])
+        }
+    }
     const fetchUserInfo = async (userId) => {
         try {
             const response = await fetch(`/api/user/${userId}`)
@@ -676,6 +711,20 @@ const LotteryLuckyWheel = () => {
                     {userName ? `${userName}，转动转盘，好运连连！` : '转动转盘，好运连连！'}
                 </p>
       </div>
+      
+      {/* 帮助按钮 - 右上角 */}
+      {userName && (
+          <button 
+              className="help-button"
+              onClick={() => {
+                  fetchPrizeStats()
+                  setShowPrizeStats(true)
+              }}
+              title="查看我的奖品"
+          >
+              ?
+          </button>
+      )}
 
       {/* 转盘区域 */}
       <div className="wheel-container">
@@ -895,6 +944,42 @@ const LotteryLuckyWheel = () => {
                             <h1 className="love-title">亲爱的小猫咪</h1>
                             <p className="love-subtitle">✨ 你就是我的心脏 ✨</p>
                             <p className="love-continue-hint">点击继续 💕</p>
+                        </div>
+                    </div>
+                </div>
+            )}
+            
+            {/* 奖品统计弹窗 */}
+            {showPrizeStats && (
+                <div className="prize-stats-overlay">
+                    <div className="prize-stats-modal">
+                        <div className="prize-stats-header">
+                            <h3>🏆 我的奖品</h3>
+                            <button 
+                                className="prize-stats-close"
+                                onClick={() => setShowPrizeStats(false)}
+                            >
+                                ✕
+                            </button>
+                        </div>
+                        <div className="prize-stats-content">
+                            {prizeStats.length > 0 ? (
+                                <div className="prize-stats-list">
+                                    {prizeStats.map((stat, index) => (
+                                        <div key={stat.name} className="prize-stat-item">
+                                            <div className="prize-stat-rank">#{index + 1}</div>
+                                            <div className="prize-stat-name">{stat.name}</div>
+                                            <div className="prize-stat-count">×{stat.count}</div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div className="prize-stats-empty">
+                                    <div className="empty-icon">🎁</div>
+                                    <p>还没有获得任何奖品</p>
+                                    <p className="empty-hint">快去转动转盘试试运气吧！</p>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
