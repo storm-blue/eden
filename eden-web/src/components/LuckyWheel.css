@@ -2223,6 +2223,53 @@
     transform: translateY(-50%) translateX(-2px);
 }
 
+/* 星星城移动端优化 */
+.star-city-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    overflow: hidden;
+}
+
+/* 移动端强制横屏 */
+@media screen and (max-width: 768px) and (orientation: portrait) {
+    .star-city-container.force-landscape {
+        transform: rotate(90deg);
+        transform-origin: center center;
+        width: 100vh;
+        height: 100vw;
+    }
+    
+    /* 确保内容在旋转后正确显示 */
+    .star-city-container.force-landscape * {
+        max-width: 100vh;
+        max-height: 100vw;
+    }
+}
+
+/* 移动端横屏时的正常显示 */
+@media screen and (max-width: 768px) and (orientation: landscape) {
+    .star-city-container {
+        width: 100vw;
+        height: 100vh;
+        transform: none;
+    }
+}
+
+/* 关闭动画 */
+.star-city-container.closing {
+    transform: none !important;
+    width: 100vw !important;
+    height: 100vh !important;
+    transition: all 0.5s ease-in-out;
+    opacity: 0;
+}
+
 /* 开始许愿按钮 */
 .start-wish-button {
     position: absolute;

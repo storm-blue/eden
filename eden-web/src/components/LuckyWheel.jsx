@@ -204,7 +204,8 @@ const LotteryLuckyWheel = () => {
     const [showLoveEffect, setShowLoveEffect] = useState(false)
     const [showWishPage, setShowWishPage] = useState(false)
     const [showStarCity, setShowStarCity] = useState(false)
-  const [starCityClosing, setStarCityClosing] = useState(false) // 星星城关闭动画状态 // 星星城页面状态
+  const [starCityClosing, setStarCityClosing] = useState(false)
+  const [isPortraitMode, setIsPortraitMode] = useState(false) // 是否为竖屏模式 // 星星城关闭动画状态 // 星星城页面状态
     const [wishes, setWishes] = useState([]) // 所有许愿列表
     const [showWishInput, setShowWishInput] = useState(false) // 是否显示许愿输入框
     const [wishContent, setWishContent] = useState('') // 许愿内容
@@ -430,6 +431,31 @@ const LotteryLuckyWheel = () => {
         }
         return stars
     }, []) // 空依赖数组，只计算一次
+
+    // 监听屏幕方向变化（仅在星星城页面时）
+    useEffect(() => {
+        if (!showStarCity) return
+
+        const checkOrientation = () => {
+            const isPortrait = window.innerHeight > window.innerWidth
+            setIsPortraitMode(isPortrait)
+        }
+
+        // 初始检查
+        checkOrientation()
+
+        // 监听窗口大小变化
+        window.addEventListener('resize', checkOrientation)
+        window.addEventListener('orientationchange', () => {
+            // orientationchange事件有延迟，需要setTimeout
+            setTimeout(checkOrientation, 100)
+        })
+
+        return () => {
+            window.removeEventListener('resize', checkOrientation)
+            window.removeEventListener('orientationchange', checkOrientation)
+        }
+    }, [showStarCity])
 
     // 关闭星星城并恢复屏幕方向的函数
     const closeStarCity = () => {
@@ -689,28 +715,17 @@ const LotteryLuckyWheel = () => {
     <div className="lucky-lottery-container">
       {/* 星星城页面 */}
       {showStarCity && (
-        <div style={{
-          position: 'fixed',
-          top: '0',
-          left: '0',
-          width: starCityClosing ? '100vw' : (window.innerWidth < window.innerHeight ? '100vh' : '100vw'),
-          height: starCityClosing ? '100vh' : (window.innerWidth < window.innerHeight ? '100vw' : '100vh'),
-          backgroundImage: 'url(/picture/lv1.jpg)',
-          backgroundSize: 'cover',
-          backgroundPosition: 'center',
-          backgroundRepeat: 'no-repeat',
-          zIndex: 99999,
-          display: 'flex',
-          flexDirection: 'column',
-          alignItems: 'center',
-          justifyContent: 'center',
-          color: 'white',
-          overflow: 'hidden',
-          transform: starCityClosing ? 'none' : (window.innerWidth < window.innerHeight ? 'rotate(90deg)' : 'none'),
-          transformOrigin: 'center center',
-          transition: starCityClosing ? 'all 0.5s ease-in-out' : 'none',
-          opacity: starCityClosing ? 0 : 1
-        }}>
+        <div 
+          className={`star-city-container ${isPortraitMode && !starCityClosing ? 'force-landscape' : ''} ${starCityClosing ? 'closing' : ''}`}
+          style={{
+            backgroundImage: 'url(/picture/lv1.jpg)',
+            zIndex: 99999,
+            display: 'flex',
+            flexDirection: 'column',
+            alignItems: 'center',
+            justifyContent: 'center',
+            color: 'white'
+          }}>
           {/* 标题 */}
           <h2 style={{
             fontSize: '42px', 
