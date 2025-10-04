@@ -3,101 +3,101 @@ import {LuckyWheel} from '@lucky-canvas/react'
 import './LuckyWheel.css'
 
 const LotteryLuckyWheel = () => {
-    const [prizes, setPrizes] = useState([
-        {
+  const [prizes, setPrizes] = useState([
+    { 
             background: '#ffcdd2', // 浅粉红色 🌈
-            fonts: [{
-                text: '🍰',
+      fonts: [{ 
+        text: '🍰', 
                 top: '15%',
                 fontSize: '30px'
-            }, {
+      }, { 
                 text: '吃的～',
                 top: '55%',
-                fontSize: '16px',
+        fontSize: '16px',
                 fontColor: '#333',
-                fontWeight: 'bold'
-            }]
-        },
-        {
+        fontWeight: 'bold'
+      }] 
+    },
+    { 
             background: '#ffe0b2', // 浅橙色 🌈
-            fonts: [{
-                text: '🥤',
+      fonts: [{ 
+        text: '🥤', 
                 top: '15%',
-                fontSize: '35px'
-            }, {
+        fontSize: '35px'
+      }, { 
                 text: '喝的～',
                 top: '55%',
-                fontSize: '16px',
+        fontSize: '16px',
                 fontColor: '#333',
-                fontWeight: 'bold'
-            }]
-        },
-        {
+        fontWeight: 'bold'
+      }] 
+    },
+    { 
             background: '#fff9c4', // 浅黄色 🌈
-            fonts: [{
-                text: '❤️',
+      fonts: [{ 
+        text: '❤️', 
                 top: '15%',
-                fontSize: '35px'
-            }, {
+        fontSize: '35px'
+      }, { 
                 text: '爱',
                 top: '55%',
-                fontSize: '18px',
-                fontColor: '#333',
-                fontWeight: 'bold'
-            }]
-        },
-        {
+        fontSize: '18px',
+        fontColor: '#333',
+        fontWeight: 'bold'
+      }] 
+    },
+    { 
             background: '#c8e6c9', // 浅绿色 🌈
-            fonts: [{
-                text: '💸',
+      fonts: [{ 
+        text: '💸', 
                 top: '15%',
-                fontSize: '35px'
-            }, {
-                text: '空空如也',
+        fontSize: '35px'
+      }, { 
+        text: '空空如也', 
                 top: '55%',
-                fontSize: '14px',
+        fontSize: '14px',
                 fontColor: '#333',
-                fontWeight: 'bold'
-            }]
-        },
-        {
+        fontWeight: 'bold'
+      }] 
+    },
+    { 
             background: '#b3e5fc', // 浅青色 🌈
-            fonts: [{
-                text: '🧧',
+      fonts: [{ 
+        text: '🧧', 
                 top: '15%',
-                fontSize: '35px'
-            }, {
-                text: '红包',
+        fontSize: '35px'
+      }, { 
+        text: '红包', 
                 top: '55%',
-                fontSize: '18px',
-                fontColor: '#333',
-                fontWeight: 'bold'
-            }]
-        },
-        {
+        fontSize: '18px',
+        fontColor: '#333',
+        fontWeight: 'bold'
+      }] 
+    },
+    { 
             background: '#bbdefb', // 浅蓝色 🌈
-            fonts: [{
-                text: '🔄',
+      fonts: [{ 
+        text: '🔄', 
                 top: '15%',
                 fontSize: '30px'
-            }, {
-                text: '再转一次',
+      }, { 
+        text: '再转一次', 
                 top: '55%',
-                fontSize: '14px',
+        fontSize: '14px',
                 fontColor: '#333',
-                fontWeight: 'bold'
-            }]
-        },
-        {
+        fontWeight: 'bold'
+      }] 
+    },
+    { 
             background: '#e1bee7', // 浅紫色 🌈
-            fonts: [{
-                text: '🎁',
+      fonts: [{ 
+        text: '🎁', 
                 top: '15%',
                 fontSize: '30px'
-            }, {
-                text: '随机礼物',
+      }, { 
+        text: '随机礼物', 
                 top: '55%',
-                fontSize: '14px',
+        fontSize: '14px',
                 fontColor: '#333',
                 fontWeight: 'bold'
             }]
@@ -127,73 +127,73 @@ const LotteryLuckyWheel = () => {
                 top: '55%',
                 fontSize: '14px',
                 fontColor: '#333',
-                fontWeight: 'bold'
-            }]
-        },
-    ])
+        fontWeight: 'bold'
+      }] 
+    },
+  ])
 
-    const [blocks, setBlocks] = useState([
-        {
+  const [blocks, setBlocks] = useState([
+    { 
             padding: '10px',
-            background: '#ff6ec7', // 亮粉色外圈 🌈
-            paddingColor: '#ffea00'
-        },
-        {
+      background: '#ff6ec7', // 亮粉色外圈 🌈
+      paddingColor: '#ffea00'
+    },
+    { 
             padding: '10px',
-            background: '#ffffff', // 纯白色内圈
-            paddingColor: '#00e5ff'
-        }
-    ])
+      background: '#ffffff', // 纯白色内圈
+      paddingColor: '#00e5ff'
+    }
+  ])
 
-    const [buttons, setButtons] = useState([
-        {
-            radius: '55px',
+  const [buttons, setButtons] = useState([
+    { 
+      radius: '55px', 
             background: '#ff6ec7', // 明亮红色外圈 🌈
         },
         {
             radius: '50px',
             background: '#fff5ca' // 纯白中圈
-        },
-        {
-            radius: '45px',
+    },
+    { 
+      radius: '45px', 
             background: '#f0caff' // 纯白中圈
         },
         {
             radius: '40px',
             background: '#fdeeff' // 纯白中圈
-        },
-        {
-            radius: '35px',
+    },
+    { 
+      radius: '35px', 
             background: '#678cff', // 明亮蓝色内圈 🌈
-            pointer: true, // 官方指针配置
+      pointer: true, // 官方指针配置
             fonts: []
-        }
-    ])
+    }
+  ])
 
-    // 转盘配置
-    const [defaultConfig, setDefaultConfig] = useState({
-        gutter: 8,
-        offsetDegree: 0,
-        speed: 20,
-        accelerationTime: 3000,
-        decelerationTime: 3000
-    })
+  // 转盘配置
+  const [defaultConfig, setDefaultConfig] = useState({
+    gutter: 8,
+    offsetDegree: 0,
+    speed: 20,
+    accelerationTime: 3000,
+    decelerationTime: 3000
+  })
 
-    // 指针样式配置 - 让指针更细一些
-    const [defaultStyle, setDefaultStyle] = useState({
-        pointer: {
-            style: 'triangle',
-            background: '#ff1744',
-            borderColor: '#ffffff',
-            borderWidth: 0.5, // 更细的边框
-            width: 10, // 指针宽度
-            height: 20 // 保持长度
-        }
-    })
+  // 指针样式配置 - 让指针更细一些
+  const [defaultStyle, setDefaultStyle] = useState({
+    pointer: {
+      style: 'triangle',
+      background: '#ff1744',
+      borderColor: '#ffffff', 
+      borderWidth: 0.5, // 更细的边框
+      width: 10, // 指针宽度
+      height: 20 // 保持长度
+    }
+  })
 
-    const myLucky = useRef()
-    const [isSpinning, setIsSpinning] = useState(false)
-    const [result, setResult] = useState('')
+  const myLucky = useRef()
+  const [isSpinning, setIsSpinning] = useState(false)
+  const [result, setResult] = useState('')
     const [currentPrize, setCurrentPrize] = useState('') // 存储后端返回的奖品名称
     const [userName, setUserName] = useState('') // 用户姓名
     const [showNameInput, setShowNameInput] = useState(true) // 是否显示姓名输入框
@@ -219,13 +219,13 @@ const LotteryLuckyWheel = () => {
     const [prizeStats, setPrizeStats] = useState([]) // 奖品统计数据
 
     // 奖品名称映射（与后端保持一致）
-    const prizeNames = [
+  const prizeNames = [
         '🍰 吃的～',
         '🥤 喝的～',
         '❤️ 爱',
-        '💸 空空如也',
-        '🧧 红包',
-        '🔄 再转一次',
+    '💸 空空如也',
+    '🧧 红包',
+    '🔄 再转一次',
         '🎁 随机礼物',
         '💬 陪聊服务',
         '✨ 许愿一次'
@@ -646,8 +646,8 @@ const LotteryLuckyWheel = () => {
     }
 
     const startSpin = async () => {
-        if (isSpinning) return
-
+    if (isSpinning) return
+    
         // 检查是否已填写用户姓名
         if (!userName) {
             alert('请先填写用户姓名！')
@@ -702,11 +702,11 @@ const LotteryLuckyWheel = () => {
                 }
 
                 // 后端抽奖成功，开始转盘动画
-                myLucky.current.play()
-
+    myLucky.current.play()
+    
                 // 延迟停止转盘，让动画更自然
-                setTimeout(() => {
-                    myLucky.current.stop(selectedIndex)
+    setTimeout(() => {
+      myLucky.current.stop(selectedIndex)
                 }, 1500)
 
                 // 刷新用户信息以显示最新的剩余次数
@@ -724,7 +724,7 @@ const LotteryLuckyWheel = () => {
     }
 
     const onEnd = async (prize) => {
-        setIsSpinning(false)
+    setIsSpinning(false)
 
         // 优先使用后端返回的奖品名称，如果没有则尝试解析转盘返回的索引
         if (currentPrize) {
@@ -765,7 +765,7 @@ const LotteryLuckyWheel = () => {
                 setShowLoveEffect(true)
                 // 不自动隐藏，等待用户点击
             } else {
-                setResult(prizeText)
+    setResult(prizeText)
             }
 
             // 检查是否抽到"再转一次"
@@ -822,10 +822,10 @@ const LotteryLuckyWheel = () => {
     const handleLoveContinue = () => {
         setShowLoveEffect(false)
         // 爱心特效结束后不需要额外操作
-    }
+  }
 
-    return (
-        <div className="lucky-lottery-container">
+  return (
+    <div className="lucky-lottery-container">
             {/* 星星城页面 */}
             {showStarCity && (
                 <div
@@ -1033,7 +1033,7 @@ const LotteryLuckyWheel = () => {
                         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                         borderRadius: '20px',
                         padding: isMobileDevice ? '20px' : '30px',
-                        maxWidth: isMobileDevice ? '350px' : '400px',
+                        maxWidth: isMobileDevice ? '450px' : '700px',
                         width: '90%',
                         maxHeight: '80vh',
                         overflow: 'auto',
@@ -1063,110 +1063,121 @@ const LotteryLuckyWheel = () => {
                             </p>
                         </div>
 
-                        {/* 捐献效果说明 */}
+                        {/* 主要内容区域 - 响应式布局 */}
                         <div style={{
-                            background: 'rgba(255, 255, 255, 0.1)',
-                            borderRadius: '15px',
-                            padding: '15px',
-                            marginBottom: '20px',
-                            color: 'white',
-                            fontSize: isMobileDevice ? '12px' : '13px',
-                            lineHeight: '1.5'
+                            display: 'flex',
+                            flexDirection: isMobileDevice ? 'row' : 'column',
+                            gap: '20px',
+                            marginBottom: '20px'
                         }}>
-                            <div style={{fontWeight: 'bold', marginBottom: '8px', color: '#FFD700'}}>
-                                🎁 捐献效果：
-                            </div>
-                            <div>🍽️ 🍰 吃的～ → +1万食物</div>
-                            <div>🥤 🥤 喝的～ → +0.5万食物 +1幸福</div>
-                            <div>🎁 🎁 随机礼物 → +2幸福</div>
-                        </div>
-
-                        {/* 可捐献的奖品列表 */}
-                        <div style={{marginBottom: '20px'}}>
+                            {/* 左侧/上方：捐献效果说明 */}
                             <div style={{
+                                flex: isMobileDevice ? '1' : 'none',
+                                background: 'rgba(255, 255, 255, 0.1)',
+                                borderRadius: '15px',
+                                padding: '15px',
                                 color: 'white',
-                                fontSize: isMobileDevice ? '14px' : '16px',
-                                fontWeight: 'bold',
-                                marginBottom: '15px',
-                                textAlign: 'center'
+                                fontSize: isMobileDevice ? '12px' : '13px',
+                                lineHeight: '1.5'
                             }}>
-                                您的可捐献奖品：
+                                <div style={{fontWeight: 'bold', marginBottom: '8px', color: '#FFD700'}}>
+                                    🎁 捐献效果：
+                                </div>
+                                <div>🍽️ 🍰 吃的～ → +1万食物</div>
+                                <div>🥤 🥤 喝的～ → +0.5万食物 +1幸福</div>
+                                <div>🎁 🎁 随机礼物 → +2幸福</div>
                             </div>
 
-                            {userDonationPrizes.length > 0 ? (
+                            {/* 右侧/下方：可捐献的奖品列表 */}
+                            <div style={{
+                                flex: isMobileDevice ? '1' : 'none'
+                            }}>
                                 <div style={{
-                                    display: 'flex',
-                                    flexDirection: 'column',
-                                    gap: '10px'
-                                }}>
-                                    {userDonationPrizes.map((prize, index) => (
-                                        <div
-                                            key={index}
-                                            onClick={() => handleDonation(prize.name)}
-                                            style={{
-                                                background: 'rgba(255, 255, 255, 0.15)',
-                                                borderRadius: '12px',
-                                                padding: '15px',
-                                                cursor: 'pointer',
-                                                transition: 'all 0.3s ease',
-                                                border: '1px solid rgba(255, 255, 255, 0.2)',
-                                                display: 'flex',
-                                                justifyContent: 'space-between',
-                                                alignItems: 'center'
-                                            }}
-                                            onMouseEnter={(e) => {
-                                                e.target.style.background = 'rgba(255, 255, 255, 0.25)'
-                                                e.target.style.transform = 'scale(1.02)'
-                                            }}
-                                            onMouseLeave={(e) => {
-                                                e.target.style.background = 'rgba(255, 255, 255, 0.15)'
-                                                e.target.style.transform = 'scale(1)'
-                                            }}
-                                        >
-                                            <div style={{
-                                                color: 'white',
-                                                fontSize: isMobileDevice ? '14px' : '16px',
-                                                fontWeight: 'bold'
-                                            }}>
-                                                {prize.name === '🍰 吃的～' && '🍽️'}
-                                                {prize.name === '🥤 喝的～' && '🥤'}
-                                                {prize.name === '🎁 随机礼物' && '🎁'}
-                                                {' ' + prize.name}
-                                            </div>
-                                            <div style={{
-                                                background: 'rgba(255, 215, 0, 0.8)',
-                                                color: '#333',
-                                                borderRadius: '20px',
-                                                padding: '5px 12px',
-                                                fontSize: isMobileDevice ? '12px' : '14px',
-                                                fontWeight: 'bold'
-                                            }}>
-                                                x{prize.count}
-                                            </div>
-                                        </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <div style={{
-                                    textAlign: 'center',
-                                    color: 'rgba(255, 255, 255, 0.7)',
+                                    color: 'white',
                                     fontSize: isMobileDevice ? '14px' : '16px',
-                                    padding: '30px',
-                                    background: 'rgba(255, 255, 255, 0.1)',
-                                    borderRadius: '15px'
+                                    fontWeight: 'bold',
+                                    marginBottom: '15px',
+                                    textAlign: 'center'
                                 }}>
-                                    <div style={{
-                                        fontSize: isMobileDevice ? '40px' : '48px',
-                                        marginBottom: '15px',
-                                        opacity: 0.5
-                                    }}>📦
-                                    </div>
-                                    <div>您暂时没有可捐献的奖品</div>
-                                    <div style={{fontSize: isMobileDevice ? '12px' : '14px', marginTop: '8px'}}>
-                                        快去抽奖获得"🍰 吃的～"、"🥤 喝的～"或"🎁 随机礼物"吧！
-                                    </div>
+                                    您的可捐献奖品：
                                 </div>
-                            )}
+
+                                {userDonationPrizes.length > 0 ? (
+                                    <div style={{
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        gap: '8px'
+                                    }}>
+                                        {userDonationPrizes.map((prize, index) => (
+                                            <div
+                                                key={index}
+                                                onClick={() => handleDonation(prize.name)}
+                                                style={{
+                                                    background: 'rgba(255, 255, 255, 0.15)',
+                                                    borderRadius: '8px',
+                                                    padding: '10px 12px',
+                                                    cursor: 'pointer',
+                                                    transition: 'all 0.3s ease',
+                                                    border: '1px solid rgba(255, 255, 255, 0.2)',
+                                                    display: 'flex',
+                                                    justifyContent: 'space-between',
+                                                    alignItems: 'center',
+                                                    minHeight: '40px'
+                                                }}
+                                                onMouseEnter={(e) => {
+                                                    e.target.style.background = 'rgba(255, 255, 255, 0.25)'
+                                                    e.target.style.transform = 'scale(1.02)'
+                                                }}
+                                                onMouseLeave={(e) => {
+                                                    e.target.style.background = 'rgba(255, 255, 255, 0.15)'
+                                                    e.target.style.transform = 'scale(1)'
+                                                }}
+                                            >
+                                                <div style={{
+                                                    color: 'white',
+                                                    fontSize: isMobileDevice ? '14px' : '16px',
+                                                    fontWeight: 'bold'
+                                                }}>
+                                                    {prize.name === '🍰 吃的～' && '🍽️'}
+                                                    {prize.name === '🥤 喝的～' && '🥤'}
+                                                    {prize.name === '🎁 随机礼物' && '🎁'}
+                                                    {' ' + prize.name}
+                                                </div>
+                                                <div style={{
+                                                    background: 'rgba(255, 215, 0, 0.8)',
+                                                    color: '#333',
+                                                    borderRadius: '20px',
+                                                    padding: '5px 12px',
+                                                    fontSize: isMobileDevice ? '12px' : '14px',
+                                                    fontWeight: 'bold'
+                                                }}>
+                                                    x{prize.count}
+                                                </div>
+                                            </div>
+                                        ))}
+                                    </div>
+                                ) : (
+                                    <div style={{
+                                        textAlign: 'center',
+                                        color: 'rgba(255, 255, 255, 0.7)',
+                                        fontSize: isMobileDevice ? '14px' : '16px',
+                                        padding: '30px',
+                                        background: 'rgba(255, 255, 255, 0.1)',
+                                        borderRadius: '15px'
+                                    }}>
+                                        <div style={{
+                                            fontSize: isMobileDevice ? '40px' : '48px',
+                                            marginBottom: '15px',
+                                            opacity: 0.5
+                                        }}>📦
+                                        </div>
+                                        <div>您暂时没有可捐献的奖品</div>
+                                        <div style={{fontSize: isMobileDevice ? '12px' : '14px', marginTop: '8px'}}>
+                                            快去抽奖获得"🍰 吃的～"、"🥤 喝的～"或"🎁 随机礼物"吧！
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
                         </div>
 
                         {/* 关闭按钮 */}
@@ -1229,13 +1240,13 @@ const LotteryLuckyWheel = () => {
                 </div>
             )}
 
-            {/* 标题 */}
-            <div className="header">
-                <h1 className="title">🎪 Eden欢乐抽奖 🎪</h1>
+      {/* 标题 */}
+      <div className="header">
+        <h1 className="title">🎪 Eden欢乐抽奖 🎪</h1>
                 <p className="subtitle">
                     {userName ? `${userName}，转动转盘，好运连连！` : '转动转盘，好运连连！'}
                 </p>
-            </div>
+      </div>
 
             {/* 帮助按钮 - 右上角 */}
             {userName && (
@@ -1251,21 +1262,21 @@ const LotteryLuckyWheel = () => {
                 </button>
             )}
 
-            {/* 转盘区域 */}
-            <div className="wheel-container">
-                <LuckyWheel
-                    ref={myLucky}
-                    width="380px"
-                    height="380px"
-                    prizes={prizes}
-                    blocks={blocks}
-                    buttons={buttons}
-                    defaultConfig={defaultConfig}
-                    defaultStyle={defaultStyle}
+      {/* 转盘区域 */}
+      <div className="wheel-container">
+        <LuckyWheel
+          ref={myLucky}
+          width="380px"
+          height="380px"
+          prizes={prizes}
+          blocks={blocks}
+          buttons={buttons}
+          defaultConfig={defaultConfig}
+          defaultStyle={defaultStyle}
                     onStart={() => {
                     }} // 点击抽奖按钮会触发
-                    onEnd={onEnd}
-                />
+          onEnd={onEnd}
+        />
                 {/* 转盘中心显示剩余次数 */}
                 {userName && (
                     <div className="wheel-center-info">
@@ -1280,10 +1291,10 @@ const LotteryLuckyWheel = () => {
                         </div>
                     </div>
                 )}
-            </div>
+      </div>
 
-            {/* 控制按钮 */}
-            <div className="controls">
+      {/* 控制按钮 */}
+      <div className="controls">
                 {/* 用户信息行 */}
                 {userName && (
                     <div className="user-info-row">
@@ -1302,7 +1313,7 @@ const LotteryLuckyWheel = () => {
 
                         {/* 许愿入口按钮 - 用户姓名右侧，只对存在的用户显示 */}
                         {userInfo && userInfo.message !== "用户不存在" && (
-                            <button
+        <button 
                                 className="wish-entrance-button-inline"
                                 onClick={() => setShowWishPage(true)}
                                 title={`进入许愿页面 ${userInfo && userInfo.wishCount > 0 ? `(${userInfo.wishCount}次许愿机会)` : '(暂无许愿机会)'}`}
@@ -1311,13 +1322,13 @@ const LotteryLuckyWheel = () => {
                                 {userInfo && userInfo.wishCount > 0 && (
                                     <span className="wish-count-badge">{userInfo.wishCount}</span>
                                 )}
-                            </button>
+        </button>
                         )}
                     </div>
                 )}
-
+        
                 {/* 开始抽奖按钮 */}
-                <button
+        <button 
                     className={`spin-button ${isSpinning || !userName || !userInfo || showWelcomeEffect || !welcomeEffectFinished || userInfo.remainingDraws <= 0 ? 'disabled' : ''}`}
                     onClick={startSpin}
                     disabled={isSpinning || !userName || !userInfo || showWelcomeEffect || !welcomeEffectFinished || userInfo.remainingDraws <= 0}
@@ -1328,15 +1339,15 @@ const LotteryLuckyWheel = () => {
                                 (!userInfo || userInfo.message === "用户不存在") ? '👤 用户不存在' :
                                     (userInfo.remainingDraws <= 0) ? '🚫 次数已用完' :
                                         '🎲 转动命运'}
-                </button>
-            </div>
+        </button>
+      </div>
 
-            {/* 结果显示 */}
-            {result && (
-                <div className="result-modal">
-                    <div className="result-content">
-                        <h2 className="result-title">🎉 恭喜你获得 🎉</h2>
-                        <div className="result-prize">{result}</div>
+      {/* 结果显示 */}
+      {result && (
+        <div className="result-modal">
+          <div className="result-content">
+            <h2 className="result-title">🎉 恭喜你获得 🎉</h2>
+            <div className="result-prize">{result}</div>
                         <div className="result-description">
                             {getRandomPrizeDescription(result)}
                         </div>
@@ -1363,15 +1374,15 @@ const LotteryLuckyWheel = () => {
                                 </button>
                             </div>
                         ) : (
-                            <button
-                                className="continue-button"
+            <button 
+              className="continue-button"
                                 onClick={() => {
                                     setResult('')
                                     setCurrentPrize('')
                                 }}
-                            >
-                                继续游戏
-                            </button>
+            >
+              继续游戏
+            </button>
                         )}
                     </div>
                 </div>
@@ -1699,19 +1710,19 @@ const LotteryLuckyWheel = () => {
                                 <div className="wish-tooltip-arrow"></div>
                             </div>
                         )}
-                    </div>
-                </div>
-            )}
-
-            {/* 装饰元素 */}
-            <div className="decorations">
-                <div className="star star-1">⭐</div>
-                <div className="star star-2">🌟</div>
-                <div className="star star-3">✨</div>
-                <div className="star star-4">💫</div>
-            </div>
+          </div>
         </div>
-    )
+      )}
+
+      {/* 装饰元素 */}
+      <div className="decorations">
+        <div className="star star-1">⭐</div>
+        <div className="star star-2">🌟</div>
+        <div className="star star-3">✨</div>
+        <div className="star star-4">💫</div>
+      </div>
+    </div>
+  )
 }
 
 export default LotteryLuckyWheel

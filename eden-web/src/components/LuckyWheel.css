@@ -2556,8 +2556,8 @@
     /* 重置弹窗内容的定位，避免继承父级的transform */
     .donation-modal-overlay.force-landscape .donation-modal-content {
         position: relative !important;
-        max-width: 350px !important;
-        width: 85% !important;
+        max-width: 500px !important;
+        width: 95% !important;
         max-height: 75vh !important;
         padding: 20px !important;
         font-size: 14px !important;
