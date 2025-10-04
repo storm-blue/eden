@@ -654,9 +654,26 @@ const LotteryLuckyWheel = () => {
 
     // 检查是否是特殊情侣组合
     const isSpecialCouple = (residents) => {
-        if (residents.length !== 2) return false
-        const names = residents.map(r => r.userId).sort()
-        return names.includes('李星斗') && names.includes('秦小淮')
+        if (residents.length === 2) {
+            // 两人组合：李星斗 + 秦小淮
+            const names = residents.map(r => r.userId).sort()
+            return names.includes('李星斗') && names.includes('秦小淮')
+        } else if (residents.length === 3) {
+            // 三人组合：秦小淮 + 李星斗 + 存子
+            const names = residents.map(r => r.userId).sort()
+            return names.includes('秦小淮') && names.includes('李星斗') && names.includes('存子')
+        }
+        return false
+    }
+
+    // 获取特殊组合的显示文字
+    const getSpecialCoupleText = (residents) => {
+        if (residents.length === 2) {
+            return "💕 秦小淮和李星斗正在爱爱 💕"
+        } else if (residents.length === 3) {
+            return "💕 秦小淮、李星斗和存子正在疯狂爱爱 💕"
+        }
+        return ""
     }
 
     // 确认居住选择
@@ -1557,14 +1574,48 @@ const LotteryLuckyWheel = () => {
                         boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
                         border: '2px solid rgba(255, 255, 255, 0.2)',
                         color: 'white',
-                        fontSize: isMobileDevice ? '14px' : '16px'
+                        fontSize: isMobileDevice ? '14px' : '16px',
+                        position: 'relative',
+                        overflow: 'hidden'
                     }}>
+                        {/* 特殊情侣的爱心背景动画 - 覆盖整个弹框 */}
+                        {isSpecialCouple(buildingResidents) && (
+                            <div style={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                right: 0,
+                                bottom: '80px', // 避免出现在按钮区域，留出底部空间
+                                pointerEvents: 'none',
+                                zIndex: 1
+                            }}>
+                                {[...Array(15)].map((_, i) => (
+                                    <div
+                                        key={i}
+                                        style={{
+                                            position: 'absolute',
+                                            fontSize: `${Math.random() * 20 + 18}px`,
+                                            color: '#ff69b4',
+                                            left: `${Math.random() * 100}%`,
+                                            top: `${Math.random() * 100}%`,
+                                            animation: `heartFloat ${2 + Math.random() * 3}s ease-in-out infinite`,
+                                            animationDelay: `${Math.random() * 2}s`,
+                                            opacity: 0.7
+                                        }}
+                                    >
+                                        💖
+                                    </div>
+                                ))}
+                            </div>
+                        )}
                         {/* 建筑信息 */}
                         <div style={{
                             background: 'rgba(255, 255, 255, 0.1)',
                             borderRadius: '15px',
                             padding: '20px',
-                            marginBottom: '25px'
+                            marginBottom: '25px',
+                            position: 'relative',
+                            zIndex: 2
                         }}>
                             <div style={{
                                 fontSize: '48px',
@@ -1584,7 +1635,9 @@ const LotteryLuckyWheel = () => {
                             <div style={{
                                 fontSize: '14px',
                                 opacity: 0.9,
-                                marginBottom: '15px'
+                                marginBottom: '15px',
+                                position: 'relative',
+                                zIndex: 2
                             }}>
                                 {loadingResidents ? (
                                     <div style={{
@@ -1606,46 +1659,13 @@ const LotteryLuckyWheel = () => {
                                 ) : (
                                     <>
                                         {isSpecialCouple(buildingResidents) ? (
-                                            // 特殊情侣效果
+                                            // 特殊情侣文字显示
                                             <div style={{
                                                 textAlign: 'center',
-                                                position: 'relative',
-                                                padding: '20px',
-                                                overflow: 'hidden'
+                                                padding: '20px'
                                             }}>
-                                                {/* 爱心背景动画 */}
-                                                <div style={{
-                                                    position: 'absolute',
-                                                    top: 0,
-                                                    left: 0,
-                                                    right: 0,
-                                                    bottom: 0,
-                                                    pointerEvents: 'none',
-                                                    zIndex: 1
-                                                }}>
-                                                    {[...Array(20)].map((_, i) => (
-                                                        <div
-                                                            key={i}
-                                                            style={{
-                                                                position: 'absolute',
-                                                                fontSize: `${Math.random() * 20 + 15}px`,
-                                                                color: '#ff69b4',
-                                                                left: `${Math.random() * 100}%`,
-                                                                top: `${Math.random() * 100}%`,
-                                                                animation: `heartFloat ${2 + Math.random() * 3}s ease-in-out infinite`,
-                                                                animationDelay: `${Math.random() * 2}s`,
-                                                                opacity: 0.8
-                                                            }}
-                                                        >
-                                                            💖
-                                                        </div>
-                                                    ))}
-                                                </div>
-                                                
                                                 {/* 特殊文字 */}
                                                 <div style={{
-                                                    position: 'relative',
-                                                    zIndex: 2,
                                                     fontSize: '16px',
                                                     fontWeight: 'bold',
                                                     color: '#ff69b4',
@@ -1653,12 +1673,10 @@ const LotteryLuckyWheel = () => {
                                                     marginBottom: '10px',
                                                     animation: 'loveGlow 2s ease-in-out infinite alternate'
                                                 }}>
-                                                    💕 秦小淮和李星斗正在爱爱 💕
+                                                    {getSpecialCoupleText(buildingResidents)}
                                                 </div>
                                                 
                                                 <div style={{
-                                                    position: 'relative',
-                                                    zIndex: 2,
                                                     fontSize: '12px',
                                                     color: 'rgba(255, 255, 255, 0.8)'
                                                 }}>
@@ -1708,7 +1726,9 @@ const LotteryLuckyWheel = () => {
                         <div style={{
                             display: 'flex',
                             gap: '15px',
-                            justifyContent: 'center'
+                            justifyContent: 'center',
+                            position: 'relative',
+                            zIndex: 2
                         }}>
                             <button
                                 onClick={confirmResidence}
