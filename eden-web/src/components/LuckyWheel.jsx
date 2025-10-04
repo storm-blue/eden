@@ -205,7 +205,7 @@ const LotteryLuckyWheel = () => {
     const [showWishPage, setShowWishPage] = useState(false)
     const [showStarCity, setShowStarCity] = useState(false)
   const [starCityClosing, setStarCityClosing] = useState(false)
-  const [isPortraitMode, setIsPortraitMode] = useState(false) // 是否为竖屏模式 // 星星城关闭动画状态 // 星星城页面状态
+  const [isMobileDevice, setIsMobileDevice] = useState(false) // 是否为移动设备（需要强制横屏） // 星星城关闭动画状态 // 星星城页面状态
     const [wishes, setWishes] = useState([]) // 所有许愿列表
     const [showWishInput, setShowWishInput] = useState(false) // 是否显示许愿输入框
     const [wishContent, setWishContent] = useState('') // 许愿内容
@@ -432,28 +432,28 @@ const LotteryLuckyWheel = () => {
         return stars
     }, []) // 空依赖数组，只计算一次
 
-    // 监听屏幕方向变化（仅在星星城页面时）
+    // 监听屏幕尺寸变化（仅在星星城页面时）
     useEffect(() => {
         if (!showStarCity) return
 
-        const checkOrientation = () => {
-            const isPortrait = window.innerHeight > window.innerWidth
-            setIsPortraitMode(isPortrait)
+        const checkScreenSize = () => {
+            // 移动端设备始终强制横屏显示
+            const isMobile = window.innerWidth <= 768 || window.screen.width <= 768
+            setIsMobileDevice(isMobile)
         }
 
         // 初始检查
-        checkOrientation()
+        checkScreenSize()
 
         // 监听窗口大小变化
-        window.addEventListener('resize', checkOrientation)
+        window.addEventListener('resize', checkScreenSize)
         window.addEventListener('orientationchange', () => {
-            // orientationchange事件有延迟，需要setTimeout
-            setTimeout(checkOrientation, 100)
+            setTimeout(checkScreenSize, 200)
         })
 
         return () => {
-            window.removeEventListener('resize', checkOrientation)
-            window.removeEventListener('orientationchange', checkOrientation)
+            window.removeEventListener('resize', checkScreenSize)
+            window.removeEventListener('orientationchange', checkScreenSize)
         }
     }, [showStarCity])
 
@@ -716,7 +716,7 @@ const LotteryLuckyWheel = () => {
       {/* 星星城页面 */}
       {showStarCity && (
         <div 
-          className={`star-city-container ${isPortraitMode && !starCityClosing ? 'force-landscape' : ''} ${starCityClosing ? 'closing' : ''}`}
+          className={`star-city-container ${isMobileDevice && !starCityClosing ? 'force-landscape' : ''} ${starCityClosing ? 'closing' : ''}`}
           style={{
             backgroundImage: 'url(/picture/lv1.jpg)',
             zIndex: 99999,
@@ -732,7 +732,8 @@ const LotteryLuckyWheel = () => {
             marginBottom: '10px', 
             textShadow: '0 0 25px rgba(0,0,0,0.8), 0 0 50px rgba(255,255,255,0.6)',
             position: 'absolute',
-            top: '50px',
+            top: '30px',
+            left: '30px',
             zIndex: 10,
             color: 'white'
           }}>
@@ -741,6 +742,7 @@ const LotteryLuckyWheel = () => {
 
           {/* 关闭按钮 */}
           <button
+            className="star-city-close-btn"
             style={{
               position: 'absolute',
               top: '30px',
@@ -771,30 +773,6 @@ const LotteryLuckyWheel = () => {
             ✕
           </button>
 
-          {/* CSS动画样式 */}
-          <style jsx>{`
-            @keyframes orbit1 {
-              0% { transform: rotate(0deg) translateX(100px) rotate(0deg); }
-              100% { transform: rotate(360deg) translateX(100px) rotate(-360deg); }
-            }
-            @keyframes orbit2 {
-              0% { transform: rotate(0deg) translateX(80px) rotate(0deg); }
-              100% { transform: rotate(-360deg) translateX(80px) rotate(360deg); }
-            }
-            @keyframes orbit3 {
-              0% { transform: rotate(0deg) translateX(120px) rotate(0deg); }
-              100% { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
-            }
-            @keyframes orbit4 {
-              0% { transform: rotate(0deg) translateX(90px) rotate(0deg); }
-              100% { transform: rotate(-360deg) translateX(90px) rotate(360deg); }
-            }
-            @keyframes wave {
-              0%, 100% { transform: rotate(0deg); }
-              25% { transform: rotate(5deg); }
-              75% { transform: rotate(-5deg); }
-            }
-          `}</style>
         </div>
       )}
             {/* 用户姓名输入模态框 */}
