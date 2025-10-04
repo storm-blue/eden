@@ -1,2 +1,5 @@
 /target/
 /.idea/
+/eden_lottery.db
+/eden_lottery.db-shm
+/eden_lottery.db-wal

@@ -968,7 +968,13 @@ const LotteryLuckyWheel = () => {
                             cursor: 'pointer',
                             backdropFilter: 'blur(10px)',
                             transition: 'all 0.3s ease',
-                            boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
+                            boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            lineHeight: '1',
+                            fontFamily: 'Arial, sans-serif',
+                            fontWeight: 'normal'
                         }}
                         onClick={() => closeStarCity()}
                         onMouseEnter={(e) => {
