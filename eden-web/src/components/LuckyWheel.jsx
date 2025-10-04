@@ -666,10 +666,22 @@ const LotteryLuckyWheel = () => {
         return false
     }
 
+    // 检查是否是危险居住组合（秦小淮要住进只有李星斗的地方）
+    const isDangerousResidence = (residents, currentUser) => {
+        if (!currentUser || !residents) return false
+        
+        // 如果当前用户是秦小淮，且居所只有李星斗一个人
+        if (currentUser === '秦小淮' && residents.length === 1) {
+            return residents[0].userId === '李星斗'
+        }
+        
+        return false
+    }
+
     // 获取特殊组合的显示文字
     const getSpecialCoupleText = (residents) => {
         if (residents.length === 2) {
-            return "💕 秦小淮和李星斗正在爱爱 💕"
+            return "💕 秦小淮和李星斗正在爱爱 💕 \n💕 被日得腿都软了～ 💕"
         } else if (residents.length === 3) {
             return "💕 秦小淮、李星斗和存子正在疯狂爱爱 💕"
         }
@@ -1671,7 +1683,9 @@ const LotteryLuckyWheel = () => {
                                                     color: '#ff69b4',
                                                     textShadow: '0 0 10px rgba(255, 105, 180, 0.5)',
                                                     marginBottom: '10px',
-                                                    animation: 'loveGlow 2s ease-in-out infinite alternate'
+                                                    animation: 'loveGlow 2s ease-in-out infinite alternate',
+                                                    whiteSpace: 'pre-line',
+                                                    lineHeight: '1.4'
                                                 }}>
                                                     {getSpecialCoupleText(buildingResidents)}
                                                 </div>
@@ -1730,10 +1744,28 @@ const LotteryLuckyWheel = () => {
                             position: 'relative',
                             zIndex: 2
                         }}>
+                            {/* 危险警告文字 */}
+                            {isDangerousResidence(buildingResidents, userName) && (
+                                <div style={{
+                                    position: 'absolute',
+                                    top: '-25px',
+                                    left: '50%',
+                                    transform: 'translateX(-50%)',
+                                    fontSize: '12px',
+                                    color: '#ff6b6b',
+                                    fontWeight: 'bold',
+                                    textAlign: 'center',
+                                    whiteSpace: 'nowrap'
+                                }}>
+                                    ⚠️警告！真的要住进来吗？
+                                </div>
+                            )}
                             <button
                                 onClick={confirmResidence}
                                 style={{
-                                    background: 'rgba(255, 255, 255, 0.2)',
+                                    background: isDangerousResidence(buildingResidents, userName) 
+                                        ? 'linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)' 
+                                        : 'rgba(255, 255, 255, 0.2)',
                                     color: 'white',
                                     borderRadius: '25px',
                                     padding: '12px 25px',
@@ -1741,15 +1773,30 @@ const LotteryLuckyWheel = () => {
                                     cursor: 'pointer',
                                     transition: 'all 0.3s ease',
                                     backdropFilter: 'blur(10px)',
-                                    border: '1px solid rgba(255, 255, 255, 0.3)',
-                                    fontWeight: 'bold'
+                                    border: isDangerousResidence(buildingResidents, userName)
+                                        ? '1px solid rgba(255, 107, 107, 0.5)'
+                                        : '1px solid rgba(255, 255, 255, 0.3)',
+                                    fontWeight: 'bold',
+                                    boxShadow: isDangerousResidence(buildingResidents, userName)
+                                        ? '0 4px 15px rgba(255, 107, 107, 0.3)'
+                                        : 'none'
                                 }}
                                 onMouseEnter={(e) => {
-                                    e.target.style.background = 'rgba(255, 255, 255, 0.3)'
+                                    if (isDangerousResidence(buildingResidents, userName)) {
+                                        e.target.style.background = 'linear-gradient(135deg, #ff5252 0%, #d32f2f 100%)'
+                                        e.target.style.boxShadow = '0 6px 20px rgba(255, 107, 107, 0.4)'
+                                    } else {
+                                        e.target.style.background = 'rgba(255, 255, 255, 0.3)'
+                                    }
                                     e.target.style.transform = 'scale(1.05)'
                                 }}
                                 onMouseLeave={(e) => {
-                                    e.target.style.background = 'rgba(255, 255, 255, 0.2)'
+                                    if (isDangerousResidence(buildingResidents, userName)) {
+                                        e.target.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)'
+                                        e.target.style.boxShadow = '0 4px 15px rgba(255, 107, 107, 0.3)'
+                                    } else {
+                                        e.target.style.background = 'rgba(255, 255, 255, 0.2)'
+                                    }
                                     e.target.style.transform = 'scale(1)'
                                 }}
                             >
