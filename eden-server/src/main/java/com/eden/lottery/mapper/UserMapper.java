@@ -49,6 +49,11 @@ public interface UserMapper {
     void updateResidence(@Param("userId") String userId, @Param("residence") String residence);
     
     /**
+     * 根据居住地点查询用户列表
+     */
+    List<User> selectByResidence(@Param("residence") String residence);
+    
+    /**
      * 刷新用户每日抽奖次数
      */
     void refreshDailyDraws(@Param("userId") String userId, @Param("refreshTime") LocalDateTime refreshTime);

@@ -73,6 +73,14 @@
         WHERE user_id = #{userId}
     </update>
 
+    <!-- 根据居住地点查询用户列表 -->
+    <select id="selectByResidence" parameterType="string" resultMap="UserResultMap">
+        SELECT user_id, remaining_draws, daily_draws, wish_count, residence, create_time, update_time, last_refresh_date
+        FROM users
+        WHERE residence = #{residence}
+        ORDER BY create_time ASC
+    </select>
+
     <!-- 刷新用户每日抽奖次数 -->
     <update id="refreshDailyDraws">
         UPDATE users

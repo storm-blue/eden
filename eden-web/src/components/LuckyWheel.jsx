@@ -213,7 +213,9 @@ const LotteryLuckyWheel = () => {
     const [userDonationPrizes, setUserDonationPrizes] = useState([]) // 用户可捐献的奖品
     const [donationEffect, setDonationEffect] = useState('') // 捐献效果提示
     const [showResidenceModal, setShowResidenceModal] = useState(false) // 显示居住选择弹窗
-    const [selectedBuilding, setSelectedBuilding] = useState(null) // 选中的建筑 // 星星城关闭动画状态 // 星星城页面状态
+    const [selectedBuilding, setSelectedBuilding] = useState(null) // 选中的建筑
+    const [buildingResidents, setBuildingResidents] = useState([]) // 建筑的居住人员
+    const [loadingResidents, setLoadingResidents] = useState(false) // 加载居住人员状态 // 星星城关闭动画状态 // 星星城页面状态
     const [wishes, setWishes] = useState([]) // 所有许愿列表
     const [showWishInput, setShowWishInput] = useState(false) // 是否显示许愿输入框
     const [wishContent, setWishContent] = useState('') // 许愿内容
@@ -620,13 +622,34 @@ const LotteryLuckyWheel = () => {
     }
 
     // 处理建筑点击
-    const handleBuildingClick = (buildingType) => {
+    const handleBuildingClick = async (buildingType) => {
         if (!userName) {
             alert('请先输入用户名')
             return
         }
+        
         setSelectedBuilding(buildingInfo[buildingType])
+        setLoadingResidents(true)
+        setBuildingResidents([])
         setShowResidenceModal(true)
+        
+        // 获取该建筑的居住人员
+        try {
+            const response = await fetch(`/api/residence/residents/${buildingType}`)
+            const data = await response.json()
+            
+            if (data.success) {
+                setBuildingResidents(data.data.residents || [])
+            } else {
+                console.error('获取居住人员失败:', data.message)
+                setBuildingResidents([])
+            }
+        } catch (error) {
+            console.error('获取居住人员失败:', error)
+            setBuildingResidents([])
+        } finally {
+            setLoadingResidents(false)
+        }
     }
 
     // 确认居住选择
@@ -1555,6 +1578,65 @@ const LotteryLuckyWheel = () => {
                             }}>
                                 {selectedBuilding.name}
                             </div>
+                            
+                            {/* 当前居住人员 */}
+                            <div style={{
+                                fontSize: '14px',
+                                opacity: 0.9,
+                                marginBottom: '15px'
+                            }}>
+                                {loadingResidents ? (
+                                    <div style={{
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        gap: '8px'
+                                    }}>
+                                        <div style={{
+                                            width: '16px',
+                                            height: '16px',
+                                            border: '2px solid rgba(255,255,255,0.3)',
+                                            borderTop: '2px solid white',
+                                            borderRadius: '50%',
+                                            animation: 'spin 1s linear infinite'
+                                        }}></div>
+                                        正在获取居住人员...
+                                    </div>
+                                ) : (
+                                    <>
+                                        <div style={{ marginBottom: '8px' }}>
+                                            当前居住人员：{buildingResidents.length} 人
+                                        </div>
+                                        {buildingResidents.length > 0 ? (
+                                            <div style={{
+                                                maxHeight: '100px',
+                                                overflowY: 'auto',
+                                                background: 'rgba(0, 0, 0, 0.2)',
+                                                borderRadius: '8px',
+                                                padding: '8px',
+                                                fontSize: '12px'
+                                            }}>
+                                                {buildingResidents.map((resident, index) => (
+                                                    <div key={index} style={{
+                                                        padding: '2px 0',
+                                                        borderBottom: index < buildingResidents.length - 1 ? '1px solid rgba(255,255,255,0.1)' : 'none'
+                                                    }}>
+                                                        👤 {resident.userId}
+                                                    </div>
+                                                ))}
+                                            </div>
+                                        ) : (
+                                            <div style={{
+                                                color: 'rgba(255, 255, 255, 0.6)',
+                                                fontSize: '12px'
+                                            }}>
+                                                暂无居住人员
+                                            </div>
+                                        )}
+                                    </>
+                                )}
+                            </div>
+                            
                             <div style={{
                                 fontSize: '14px',
                                 opacity: 0.9

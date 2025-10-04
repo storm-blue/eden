@@ -2574,6 +2574,16 @@
     }
 }
 
+/* 加载旋转动画 */
+@keyframes spin {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
+    }
+}
+
 /* 捐献弹窗强制横屏样式 */
 @media screen and (max-width: 768px) {
     .donation-modal-overlay.force-landscape {
