@@ -211,7 +211,9 @@ const LotteryLuckyWheel = () => {
     const [starCityData, setStarCityData] = useState(null) // 星星城数据
     const [showDonationModal, setShowDonationModal] = useState(false) // 显示捐献弹窗
     const [userDonationPrizes, setUserDonationPrizes] = useState([]) // 用户可捐献的奖品
-    const [donationEffect, setDonationEffect] = useState('') // 捐献效果提示 // 星星城关闭动画状态 // 星星城页面状态
+    const [donationEffect, setDonationEffect] = useState('') // 捐献效果提示
+    const [showResidenceModal, setShowResidenceModal] = useState(false) // 显示居住选择弹窗
+    const [selectedBuilding, setSelectedBuilding] = useState(null) // 选中的建筑 // 星星城关闭动画状态 // 星星城页面状态
     const [wishes, setWishes] = useState([]) // 所有许愿列表
     const [showWishInput, setShowWishInput] = useState(false) // 是否显示许愿输入框
     const [wishContent, setWishContent] = useState('') // 许愿内容
@@ -608,6 +610,60 @@ const LotteryLuckyWheel = () => {
         }
     }
 
+    // 建筑信息映射
+    const buildingInfo = {
+        castle: { name: '城堡', emoji: '🏰', key: 'castle' },
+        city_hall: { name: '市政厅', emoji: '🏛️', key: 'city_hall' },
+        palace: { name: '行宫', emoji: '🏯', key: 'palace' },
+        dove_house: { name: '小白鸽家', emoji: '🕊️', key: 'dove_house' },
+        park: { name: '公园', emoji: '🌳', key: 'park' }
+    }
+
+    // 处理建筑点击
+    const handleBuildingClick = (buildingType) => {
+        if (!userName) {
+            alert('请先输入用户名')
+            return
+        }
+        setSelectedBuilding(buildingInfo[buildingType])
+        setShowResidenceModal(true)
+    }
+
+    // 确认居住选择
+    const confirmResidence = async () => {
+        if (!selectedBuilding || !userName) {
+            return
+        }
+
+        try {
+            const response = await fetch('/api/residence/set', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    userId: userName,
+                    residence: selectedBuilding.key
+                })
+            })
+
+            const data = await response.json()
+            if (data.success) {
+                alert(data.data.message)
+                // 重新获取用户信息以更新居住地点
+                fetchUserInfo(userName)
+            } else {
+                alert(data.message)
+            }
+        } catch (error) {
+            console.error('设置居住地点失败:', error)
+            alert('设置居住地点失败，请稍后重试')
+        }
+
+        setShowResidenceModal(false)
+        setSelectedBuilding(null)
+    }
+
     // 关闭星星城并恢复屏幕方向的函数
     const closeStarCity = () => {
         setStarCityClosing(true)
@@ -916,8 +972,9 @@ const LotteryLuckyWheel = () => {
                         ✨ 星星城 LV{starCityData?.level || 1} ✨
                     </h2>
 
-                    {/* 神秘白点 - 保留但不触发捐献 */}
+                    {/* 城堡 - 中心白点 */}
                     <div
+                        onClick={() => handleBuildingClick('castle')}
                         style={{
                             position: 'absolute',
                             top: '23%',
@@ -927,16 +984,161 @@ const LotteryLuckyWheel = () => {
                             height: '15px',
                             borderRadius: '50%',
                             background: 'rgba(255, 255, 255, 0.9)',
-                            cursor: 'default',
+                            cursor: 'pointer',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
                             transition: 'all 0.3s ease',
                             backdropFilter: 'blur(5px)',
                             animation: 'castlePulse 3s ease-in-out infinite',
-                            boxShadow: '0 4px 15px rgba(255, 255, 255, 0.3)'
+                            boxShadow: '0 4px 15px rgba(255, 255, 255, 0.3)',
+                            zIndex: 12
                         }}
-                        title="神秘的白点"
+                        onMouseEnter={(e) => {
+                            e.target.style.transform = 'translate(-50%, -50%) scale(1.2)'
+                            e.target.style.background = 'rgba(255, 255, 255, 1)'
+                        }}
+                        onMouseLeave={(e) => {
+                            e.target.style.transform = 'translate(-50%, -50%) scale(1)'
+                            e.target.style.background = 'rgba(255, 255, 255, 0.9)'
+                        }}
+                        title="城堡 🏰 - 点击选择居住"
+                    >
+                    </div>
+
+                    {/* 市政厅 - 左上方 */}
+                    <div
+                        onClick={() => handleBuildingClick('city_hall')}
+                        style={{
+                            position: 'absolute',
+                            top: '15%',
+                            left: '35%',
+                            transform: 'translate(-50%, -50%)',
+                            width: '12px',
+                            height: '12px',
+                            borderRadius: '50%',
+                            background: 'rgba(255, 255, 255, 0.8)',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'all 0.3s ease',
+                            backdropFilter: 'blur(5px)',
+                            animation: 'castlePulse 3.5s ease-in-out infinite',
+                            boxShadow: '0 3px 12px rgba(255, 255, 255, 0.25)',
+                            zIndex: 11
+                        }}
+                        onMouseEnter={(e) => {
+                            e.target.style.transform = 'translate(-50%, -50%) scale(1.3)'
+                            e.target.style.background = 'rgba(255, 255, 255, 1)'
+                        }}
+                        onMouseLeave={(e) => {
+                            e.target.style.transform = 'translate(-50%, -50%) scale(1)'
+                            e.target.style.background = 'rgba(255, 255, 255, 0.8)'
+                        }}
+                        title="市政厅 🏛️ - 点击选择居住"
+                    >
+                    </div>
+
+                    {/* 行宫 - 右上方 */}
+                    <div
+                        onClick={() => handleBuildingClick('palace')}
+                        style={{
+                            position: 'absolute',
+                            top: '15%',
+                            left: '61%',
+                            transform: 'translate(-50%, -50%)',
+                            width: '12px',
+                            height: '12px',
+                            borderRadius: '50%',
+                            background: 'rgba(255, 255, 255, 0.8)',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'all 0.3s ease',
+                            backdropFilter: 'blur(5px)',
+                            animation: 'castlePulse 4s ease-in-out infinite',
+                            boxShadow: '0 3px 12px rgba(255, 255, 255, 0.25)',
+                            zIndex: 11
+                        }}
+                        onMouseEnter={(e) => {
+                            e.target.style.transform = 'translate(-50%, -50%) scale(1.3)'
+                            e.target.style.background = 'rgba(255, 255, 255, 1)'
+                        }}
+                        onMouseLeave={(e) => {
+                            e.target.style.transform = 'translate(-50%, -50%) scale(1)'
+                            e.target.style.background = 'rgba(255, 255, 255, 0.8)'
+                        }}
+                        title="行宫 🏯 - 点击选择居住"
+                    >
+                    </div>
+
+                    {/* 小白鸽家 - 左下方 */}
+                    <div
+                        onClick={() => handleBuildingClick('dove_house')}
+                        style={{
+                            position: 'absolute',
+                            top: '31%',
+                            left: '35%',
+                            transform: 'translate(-50%, -50%)',
+                            width: '12px',
+                            height: '12px',
+                            borderRadius: '50%',
+                            background: 'rgba(255, 255, 255, 0.8)',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'all 0.3s ease',
+                            backdropFilter: 'blur(5px)',
+                            animation: 'castlePulse 2.8s ease-in-out infinite',
+                            boxShadow: '0 3px 12px rgba(255, 255, 255, 0.25)',
+                            zIndex: 11
+                        }}
+                        onMouseEnter={(e) => {
+                            e.target.style.transform = 'translate(-50%, -50%) scale(1.3)'
+                            e.target.style.background = 'rgba(255, 255, 255, 1)'
+                        }}
+                        onMouseLeave={(e) => {
+                            e.target.style.transform = 'translate(-50%, -50%) scale(1)'
+                            e.target.style.background = 'rgba(255, 255, 255, 0.8)'
+                        }}
+                        title="小白鸽家 🕊️ - 点击选择居住"
+                    >
+                    </div>
+
+                    {/* 公园 - 右下方 */}
+                    <div
+                        onClick={() => handleBuildingClick('park')}
+                        style={{
+                            position: 'absolute',
+                            top: '31%',
+                            left: '61%',
+                            transform: 'translate(-50%, -50%)',
+                            width: '12px',
+                            height: '12px',
+                            borderRadius: '50%',
+                            background: 'rgba(255, 255, 255, 0.8)',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'all 0.3s ease',
+                            backdropFilter: 'blur(5px)',
+                            animation: 'castlePulse 3.2s ease-in-out infinite',
+                            boxShadow: '0 3px 12px rgba(255, 255, 255, 0.25)',
+                            zIndex: 11
+                        }}
+                        onMouseEnter={(e) => {
+                            e.target.style.transform = 'translate(-50%, -50%) scale(1.3)'
+                            e.target.style.background = 'rgba(255, 255, 255, 1)'
+                        }}
+                        onMouseLeave={(e) => {
+                            e.target.style.transform = 'translate(-50%, -50%) scale(1)'
+                            e.target.style.background = 'rgba(255, 255, 255, 0.8)'
+                        }}
+                        title="公园 🌳 - 点击选择居住"
                     >
                     </div>
 
@@ -1291,6 +1493,133 @@ const LotteryLuckyWheel = () => {
                                 }}
                             >
                                 关闭
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
+            {/* 居住选择弹窗 */}
+            {showResidenceModal && selectedBuilding && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100vw',
+                        height: '100vh',
+                        background: 'rgba(0, 0, 0, 0.8)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 100000
+                    }}>
+                    <div style={{
+                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        borderRadius: '20px',
+                        padding: '30px',
+                        maxWidth: '400px',
+                        width: '90%',
+                        textAlign: 'center',
+                        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+                        border: '2px solid rgba(255, 255, 255, 0.2)',
+                        color: 'white'
+                    }}>
+                        {/* 标题 */}
+                        <div style={{
+                            fontSize: '24px',
+                            fontWeight: 'bold',
+                            marginBottom: '20px',
+                            textShadow: '0 0 15px rgba(255, 255, 255, 0.5)'
+                        }}>
+                            选择居住地点
+                        </div>
+
+                        {/* 建筑信息 */}
+                        <div style={{
+                            background: 'rgba(255, 255, 255, 0.1)',
+                            borderRadius: '15px',
+                            padding: '20px',
+                            marginBottom: '25px'
+                        }}>
+                            <div style={{
+                                fontSize: '48px',
+                                marginBottom: '10px'
+                            }}>
+                                {selectedBuilding.emoji}
+                            </div>
+                            <div style={{
+                                fontSize: '20px',
+                                fontWeight: 'bold',
+                                marginBottom: '8px'
+                            }}>
+                                {selectedBuilding.name}
+                            </div>
+                            <div style={{
+                                fontSize: '14px',
+                                opacity: 0.9
+                            }}>
+                                您确定要在这里居住吗？
+                            </div>
+                        </div>
+
+                        {/* 按钮区域 */}
+                        <div style={{
+                            display: 'flex',
+                            gap: '15px',
+                            justifyContent: 'center'
+                        }}>
+                            <button
+                                onClick={confirmResidence}
+                                style={{
+                                    background: 'rgba(255, 255, 255, 0.2)',
+                                    color: 'white',
+                                    borderRadius: '25px',
+                                    padding: '12px 25px',
+                                    fontSize: '16px',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.3s ease',
+                                    backdropFilter: 'blur(10px)',
+                                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                                    fontWeight: 'bold'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.target.style.background = 'rgba(255, 255, 255, 0.3)'
+                                    e.target.style.transform = 'scale(1.05)'
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.target.style.background = 'rgba(255, 255, 255, 0.2)'
+                                    e.target.style.transform = 'scale(1)'
+                                }}
+                            >
+                                确认居住
+                            </button>
+                            <button
+                                onClick={() => {
+                                    setShowResidenceModal(false)
+                                    setSelectedBuilding(null)
+                                }}
+                                style={{
+                                    background: 'rgba(255, 255, 255, 0.1)',
+                                    color: 'rgba(255, 255, 255, 0.8)',
+                                    borderRadius: '25px',
+                                    padding: '12px 25px',
+                                    fontSize: '16px',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.3s ease',
+                                    backdropFilter: 'blur(10px)',
+                                    border: '1px solid rgba(255, 255, 255, 0.2)'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.target.style.background = 'rgba(255, 255, 255, 0.2)'
+                                    e.target.style.color = 'white'
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.target.style.background = 'rgba(255, 255, 255, 0.1)'
+                                    e.target.style.color = 'rgba(255, 255, 255, 0.8)'
+                                }}
+                            >
+                                取消
                             </button>
                         </div>
                     </div>

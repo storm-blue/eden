@@ -44,6 +44,11 @@ public interface UserMapper {
     void decreaseWishCount(@Param("userId") String userId);
     
     /**
+     * 更新用户居住地点
+     */
+    void updateResidence(@Param("userId") String userId, @Param("residence") String residence);
+    
+    /**
      * 刷新用户每日抽奖次数
      */
     void refreshDailyDraws(@Param("userId") String userId, @Param("refreshTime") LocalDateTime refreshTime);

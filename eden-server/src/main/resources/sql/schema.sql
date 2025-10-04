@@ -28,6 +28,7 @@ CREATE TABLE IF NOT EXISTS users (
     remaining_draws INTEGER NOT NULL DEFAULT 0,
     daily_draws INTEGER NOT NULL DEFAULT 3,
     wish_count INTEGER NOT NULL DEFAULT 0,  -- 可用许愿次数
+    residence VARCHAR(20) DEFAULT NULL,     -- 居住地点: 'castle', 'city_hall', 'palace', 'dove_house', 'park'
     create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_refresh_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP

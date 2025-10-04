@@ -28,6 +28,11 @@ public class User {
     private Integer wishCount;
     
     /**
+     * 居住地点
+     */
+    private String residence;
+    
+    /**
      * 创建时间
      */
     private LocalDateTime createTime;
@@ -87,6 +92,14 @@ public class User {
         this.wishCount = wishCount;
     }
 
+    public String getResidence() {
+        return residence;
+    }
+
+    public void setResidence(String residence) {
+        this.residence = residence;
+    }
+
     public LocalDateTime getCreateTime() {
         return createTime;
     }
@@ -118,6 +131,7 @@ public class User {
                 ", remainingDraws=" + remainingDraws +
                 ", dailyDraws=" + dailyDraws +
                 ", wishCount=" + wishCount +
+                ", residence='" + residence + '\'' +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 ", lastRefreshDate=" + lastRefreshDate +
