@@ -614,11 +614,11 @@ const LotteryLuckyWheel = () => {
 
     // 建筑信息映射
     const buildingInfo = {
-        castle: { name: '城堡', emoji: '🏰', key: 'castle' },
-        city_hall: { name: '市政厅', emoji: '🏛️', key: 'city_hall' },
-        palace: { name: '行宫', emoji: '🏯', key: 'palace' },
-        dove_house: { name: '小白鸽家', emoji: '🕊️', key: 'dove_house' },
-        park: { name: '公园', emoji: '🌳', key: 'park' }
+        castle: {name: '城堡', emoji: '🏰', key: 'castle'},
+        city_hall: {name: '市政厅', emoji: '🏛️', key: 'city_hall'},
+        palace: {name: '行宫', emoji: '🏯', key: 'palace'},
+        dove_house: {name: '小白鸽家', emoji: '🕊️', key: 'dove_house'},
+        park: {name: '公园', emoji: '🌳', key: 'park'}
     }
 
     // 处理建筑点击
@@ -627,17 +627,17 @@ const LotteryLuckyWheel = () => {
             alert('请先输入用户名')
             return
         }
-        
+
         setSelectedBuilding(buildingInfo[buildingType])
         setLoadingResidents(true)
         setBuildingResidents([])
         setShowResidenceModal(true)
-        
+
         // 获取该建筑的居住人员
         try {
             const response = await fetch(`/api/residence/residents/${buildingType}`)
             const data = await response.json()
-            
+
             if (data.success) {
                 setBuildingResidents(data.data.residents || [])
             } else {
@@ -961,10 +961,10 @@ const LotteryLuckyWheel = () => {
                 ref={starCityAudioRef}
                 loop
                 preload="auto"
-                style={{ display: 'none' }}
+                style={{display: 'none'}}
             >
-                <source src="/audio/star-city-bg.mp3" type="audio/mpeg" />
-                <source src="/audio/star-city-bg.ogg" type="audio/ogg" />
+                <source src="/audio/star-city-bg.mp3" type="audio/mpeg"/>
+                <source src="/audio/star-city-bg.ogg" type="audio/ogg"/>
                 您的浏览器不支持音频播放。
             </audio>
 
@@ -987,12 +987,12 @@ const LotteryLuckyWheel = () => {
                         marginBottom: '10px',
                         textShadow: '0 0 25px rgba(0,0,0,0.8), 0 0 50px rgba(255,255,255,0.6)',
                         position: 'absolute',
-                        top: '30px',
-                        left: '30px',
+                        top: '80%',
+                        left: '30%',
                         zIndex: 10,
                         color: 'white'
                     }}>
-                        ✨ 星星城 LV{starCityData?.level || 1} ✨
+                        ✨星星城 LV{starCityData?.level || 1}✨
                     </h2>
 
                     {/* 城堡 - 中心白点 */}
@@ -1034,8 +1034,8 @@ const LotteryLuckyWheel = () => {
                         onClick={() => handleBuildingClick('city_hall')}
                         style={{
                             position: 'absolute',
-                            top: '15%',
-                            left: '35%',
+                            top: '12%',
+                            left: '72%',
                             transform: 'translate(-50%, -50%)',
                             width: '12px',
                             height: '12px',
@@ -1068,8 +1068,8 @@ const LotteryLuckyWheel = () => {
                         onClick={() => handleBuildingClick('palace')}
                         style={{
                             position: 'absolute',
-                            top: '15%',
-                            left: '61%',
+                            top: '8%',
+                            left: '23%',
                             transform: 'translate(-50%, -50%)',
                             width: '12px',
                             height: '12px',
@@ -1103,7 +1103,7 @@ const LotteryLuckyWheel = () => {
                         style={{
                             position: 'absolute',
                             top: '31%',
-                            left: '35%',
+                            left: '61%',
                             transform: 'translate(-50%, -50%)',
                             width: '12px',
                             height: '12px',
@@ -1136,8 +1136,8 @@ const LotteryLuckyWheel = () => {
                         onClick={() => handleBuildingClick('park')}
                         style={{
                             position: 'absolute',
-                            top: '31%',
-                            left: '61%',
+                            top: '50%',
+                            left: '40%',
                             transform: 'translate(-50%, -50%)',
                             width: '12px',
                             height: '12px',
@@ -1206,8 +1206,8 @@ const LotteryLuckyWheel = () => {
 
                     {/* 星星城数据显示 - 右下角 */}
                     {starCityData && (
-                        <div 
-                            className="star-city-data" 
+                        <div
+                            className="star-city-data"
                             onClick={openDonationModal}
                             style={{
                                 position: 'absolute',
@@ -1525,39 +1525,33 @@ const LotteryLuckyWheel = () => {
             {/* 居住选择弹窗 */}
             {showResidenceModal && selectedBuilding && (
                 <div
+                    className={`residence-modal-overlay ${isMobileDevice ? 'force-landscape' : ''}`}
                     style={{
                         position: 'fixed',
-                        top: 0,
-                        left: 0,
-                        width: '100vw',
-                        height: '100vh',
+                        top: isMobileDevice ? '50%' : 0,
+                        left: isMobileDevice ? '50%' : 0,
+                        width: isMobileDevice ? '100vh' : '100vw',
+                        height: isMobileDevice ? '100vw' : '100vh',
                         background: 'rgba(0, 0, 0, 0.8)',
                         display: 'flex',
                         alignItems: 'center',
                         justifyContent: 'center',
-                        zIndex: 100000
+                        zIndex: 100000,
+                        transform: isMobileDevice ? 'translate(-50%, -50%) rotate(90deg)' : 'none',
+                        transformOrigin: 'center center'
                     }}>
-                    <div style={{
+                    <div className="residence-modal-content" style={{
                         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                         borderRadius: '20px',
                         padding: '30px',
-                        maxWidth: '400px',
+                        maxWidth: isMobileDevice ? '450px' : '400px',
                         width: '90%',
                         textAlign: 'center',
                         boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
                         border: '2px solid rgba(255, 255, 255, 0.2)',
-                        color: 'white'
+                        color: 'white',
+                        fontSize: isMobileDevice ? '14px' : '16px'
                     }}>
-                        {/* 标题 */}
-                        <div style={{
-                            fontSize: '24px',
-                            fontWeight: 'bold',
-                            marginBottom: '20px',
-                            textShadow: '0 0 15px rgba(255, 255, 255, 0.5)'
-                        }}>
-                            选择居住地点
-                        </div>
-
                         {/* 建筑信息 */}
                         <div style={{
                             background: 'rgba(255, 255, 255, 0.1)',
@@ -1578,7 +1572,7 @@ const LotteryLuckyWheel = () => {
                             }}>
                                 {selectedBuilding.name}
                             </div>
-                            
+
                             {/* 当前居住人员 */}
                             <div style={{
                                 fontSize: '14px',
@@ -1604,7 +1598,7 @@ const LotteryLuckyWheel = () => {
                                     </div>
                                 ) : (
                                     <>
-                                        <div style={{ marginBottom: '8px' }}>
+                                        <div style={{marginBottom: '8px'}}>
                                             当前居住人员：{buildingResidents.length} 人
                                         </div>
                                         {buildingResidents.length > 0 ? (
@@ -1636,7 +1630,7 @@ const LotteryLuckyWheel = () => {
                                     </>
                                 )}
                             </div>
-                            
+
                             <div style={{
                                 fontSize: '14px',
                                 opacity: 0.9

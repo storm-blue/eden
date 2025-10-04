@@ -2639,6 +2639,41 @@
         max-width: none !important;
         max-height: none !important;
     }
+
+    /* 居住选择弹窗强制横屏样式 */
+    .residence-modal-overlay.force-landscape {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) rotate(90deg) !important;
+        transform-origin: center center !important;
+        width: 100vh !important;
+        height: 100vw !important;
+        max-width: 100vh !important;
+        max-height: 100vw !important;
+        /* 确保弹窗在最顶层 */
+        z-index: 100001 !important;
+    }
+
+    /* 重置居住选择弹窗内容的定位，避免继承父级的transform */
+    .residence-modal-overlay.force-landscape .residence-modal-content {
+        position: relative !important;
+        max-width: 450px !important;
+        width: 90% !important;
+        max-height: 80vh !important;
+        padding: 20px !important;
+        font-size: 14px !important;
+        /* 确保内容居中 */
+        margin: 0 auto !important;
+        /* 防止内容被旋转 */
+        transform: none !important;
+    }
+
+    /* 确保居住选择弹窗内的所有元素都不会被额外旋转 */
+    .residence-modal-overlay.force-landscape * {
+        max-width: none !important;
+        max-height: none !important;
+    }
 }
 
 /* 桌面端和大屏设备的正常显示 */
