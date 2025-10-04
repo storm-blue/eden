@@ -5,9 +5,11 @@ import com.eden.lottery.dto.ApiResponse;
 import com.eden.lottery.dto.UserManagementRequest;
 import com.eden.lottery.entity.LotteryRecord;
 import com.eden.lottery.entity.User;
+import com.eden.lottery.entity.Wish;
 import com.eden.lottery.service.AdminService;
 import com.eden.lottery.service.LotteryService;
 import com.eden.lottery.service.UserAttemptService;
+import com.eden.lottery.service.WishService;
 import com.eden.lottery.entity.UserAttempt;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -31,11 +33,13 @@ public class AdminController {
     private final AdminService adminService;
     private final LotteryService lotteryService;
     private final UserAttemptService userAttemptService;
+    private final WishService wishService;
     
-    public AdminController(AdminService adminService, LotteryService lotteryService, UserAttemptService userAttemptService) {
+    public AdminController(AdminService adminService, LotteryService lotteryService, UserAttemptService userAttemptService, WishService wishService) {
         this.adminService = adminService;
         this.lotteryService = lotteryService;
         this.userAttemptService = userAttemptService;
+        this.wishService = wishService;
     }
 
     /**
@@ -430,6 +434,97 @@ public class AdminController {
         } catch (Exception e) {
             logger.error("清理用户尝试记录失败", e);
             return ApiResponse.error("清理失败");
+        }
+    }
+
+    /**
+     * 获取所有愿望列表（管理员查看）
+     */
+    @GetMapping("/wishes")
+    public ApiResponse<List<Object>> getAllWishes(HttpServletRequest request) {
+        try {
+            if (!validateAdmin(request)) {
+                return ApiResponse.error("未授权访问");
+            }
+
+            List<Wish> wishes = wishService.getAllWishesForAdmin();
+            List<Object> wishList = wishes.stream()
+                    .map(wish -> new Object() {
+                        public final Long id = wish.getId();
+                        public final String userId = wish.getUserId();
+                        public final String wishContent = wish.getWishContent();
+                        public final Double starX = wish.getStarX();
+                        public final Double starY = wish.getStarY();
+                        public final Integer starSize = wish.getStarSize();
+                        public final String createTime = wish.getCreateTime().toString();
+                    })
+                    .collect(Collectors.toList());
+
+            return ApiResponse.success("获取愿望列表成功", wishList);
+        } catch (Exception e) {
+            logger.error("获取愿望列表失败", e);
+            return ApiResponse.error("获取愿望列表失败");
+        }
+    }
+
+    /**
+     * 删除指定愿望
+     */
+    @DeleteMapping("/wishes/{wishId}")
+    public ApiResponse<Object> deleteWish(HttpServletRequest request,
+                                         @PathVariable Long wishId) {
+        try {
+            if (!validateAdmin(request)) {
+                return ApiResponse.error("未授权访问");
+            }
+
+            if (wishId == null || wishId <= 0) {
+                return ApiResponse.error("愿望ID不能为空");
+            }
+
+            // 先检查愿望是否存在
+            Wish wish = wishService.getWishById(wishId);
+            if (wish == null) {
+                return ApiResponse.error("愿望不存在");
+            }
+
+            boolean success = wishService.deleteWish(wishId);
+            if (success) {
+                final Long finalWishId = wishId;
+                final String finalUserId = wish.getUserId();
+                final String finalWishContent = wish.getWishContent();
+                Object result = new Object() {
+                    public final Long wishId = finalWishId;
+                    public final String userId = finalUserId;
+                    public final String wishContent = finalWishContent;
+                    public final String message = "愿望删除成功";
+                };
+                logger.info("管理员删除了愿望：ID={}, 用户={}, 内容={}", wishId, wish.getUserId(), wish.getWishContent());
+                return ApiResponse.success("删除成功", result);
+            } else {
+                return ApiResponse.error("愿望删除失败");
+            }
+        } catch (Exception e) {
+            logger.error("删除愿望失败", e);
+            return ApiResponse.error("删除愿望失败");
+        }
+    }
+
+    /**
+     * 获取愿望统计信息
+     */
+    @GetMapping("/wishes/stats")
+    public ApiResponse<Object> getWishStats(HttpServletRequest request) {
+        try {
+            if (!validateAdmin(request)) {
+                return ApiResponse.error("未授权访问");
+            }
+
+            Object stats = wishService.getWishStatistics();
+            return ApiResponse.success("获取愿望统计成功", stats);
+        } catch (Exception e) {
+            logger.error("获取愿望统计失败", e);
+            return ApiResponse.error("获取愿望统计失败");
         }
     }
 

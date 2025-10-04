@@ -2,6 +2,8 @@ package com.eden.lottery.service;
 
 import com.eden.lottery.entity.Wish;
 import com.eden.lottery.mapper.WishMapper;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -15,6 +17,8 @@ import java.util.Random;
  */
 @Service
 public class WishService {
+    
+    private static final Logger logger = LoggerFactory.getLogger(WishService.class);
     
     @Autowired
     private WishMapper wishMapper;
@@ -77,6 +81,30 @@ public class WishService {
             public final long totalWishes = wishMapper.count();
             public final String message = "共有 " + totalWishes + " 个美好愿望在星空中闪耀";
         };
+    }
+    
+    /**
+     * 删除许愿（管理员功能）
+     * @param id 许愿ID
+     * @return 是否删除成功
+     */
+    @Transactional
+    public boolean deleteWish(Long id) {
+        try {
+            int result = wishMapper.deleteById(id);
+            return result > 0;
+        } catch (Exception e) {
+            logger.error("删除许愿失败", e);
+            return false;
+        }
+    }
+    
+    /**
+     * 获取所有许愿（管理员查看）
+     * @return 许愿列表（包含完整信息）
+     */
+    public List<Wish> getAllWishesForAdmin() {
+        return wishMapper.selectAll();
     }
     
     /**

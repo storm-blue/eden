@@ -508,6 +508,7 @@
             <div class="tabs">
                 <button class="tab active" data-tab="users">用户管理</button>
                 <button class="tab" data-tab="history">抽奖历史</button>
+                <button class="tab" data-tab="wishes">愿望管理</button>
                 <button class="tab" data-tab="attempts">用户尝试记录</button>
                 <button class="tab" data-tab="actions">用户操作</button>
             </div>
@@ -588,6 +589,52 @@
                         <span class="page-numbers" id="historyPageNumbers"></span>
                         <button id="historyNextPage" onclick="loadHistoryNextPage()" class="btn btn-sm">下一页</button>
                         <button id="historyLastPage" onclick="loadHistoryLastPage()" class="btn btn-sm">末页</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 愿望管理标签页 -->
+            <div id="wishes" class="tab-content">
+                <!-- 愿望统计信息 -->
+                <div class="stats-section">
+                    <h4>✨ 愿望统计</h4>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3 id="totalWishes">-</h3>
+                            <p>总愿望数</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="wishStatsMessage">-</h3>
+                            <p>星空状态</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 愿望列表 -->
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>用户ID</th>
+                                <th>愿望内容</th>
+                                <th>星星位置</th>
+                                <th>星星大小</th>
+                                <th>创建时间</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="wishesTable">
+                            <tr><td colspan="7" style="text-align: center; padding: 20px;">点击加载愿望数据</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 加载按钮 -->
+                <div class="action-form">
+                    <div class="form-row">
+                        <button onclick="loadWishes()" class="action-btn">🔄 刷新愿望列表</button>
+                        <button onclick="loadWishStats()" class="action-btn">📊 更新统计</button>
                     </div>
                 </div>
             </div>
@@ -877,6 +924,9 @@
                 loadHistory();
             } else if (tabName === 'attempts') {
                 loadAttempts();
+            } else if (tabName === 'wishes') {
+                loadWishes();
+                loadWishStats();
             }
         }
 
@@ -1316,6 +1366,113 @@
             } catch (error) {
                 console.error('清理用户尝试记录错误:', error);
                 showMessage('adminMessage', '清理失败', 'error');
+            }
+        }
+
+        // 加载愿望列表
+        async function loadWishes() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/wishes`, {
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    const tbody = document.getElementById('wishesTable');
+                    tbody.innerHTML = '';
+
+                    if (result.data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: #999;">暂无愿望数据</td></tr>';
+                        return;
+                    }
+
+                    result.data.forEach(wish => {
+                        const row = tbody.insertRow();
+                        row.innerHTML = `
+                            <td>${wish.id}</td>
+                            <td><strong>${wish.userId}</strong></td>
+                            <td style="max-width: 200px; word-break: break-all; line-height: 1.4;">
+                                <span title="${wish.wishContent}">${wish.wishContent}</span>
+                            </td>
+                            <td>
+                                <small>X: ${wish.starX.toFixed(1)}%<br>Y: ${wish.starY.toFixed(1)}%</small>
+                            </td>
+                            <td>
+                                <span class="badge badge-primary">⭐ ${wish.starSize}</span>
+                            </td>
+                            <td>
+                                <small>${new Date(wish.createTime).toLocaleString()}</small>
+                            </td>
+                            <td>
+                                <button class="delete-btn" onclick="deleteWish(${wish.id}, '${wish.userId}', '${wish.wishContent.replace(/'/g, "\\'")}')" title="删除愿望">
+                                    🗑️ 删除
+                                </button>
+                            </td>
+                        `;
+                    });
+                } else {
+                    showMessage('adminMessage', result.message || '加载愿望列表失败', 'error');
+                }
+            } catch (error) {
+                console.error('加载愿望列表错误:', error);
+                showMessage('adminMessage', '加载愿望列表失败', 'error');
+            }
+        }
+
+        // 加载愿望统计信息
+        async function loadWishStats() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/wishes/stats`, {
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    document.getElementById('totalWishes').textContent = result.data.totalWishes || 0;
+                    document.getElementById('wishStatsMessage').textContent = '✨闪耀中';
+                } else {
+                    document.getElementById('totalWishes').textContent = '?';
+                    document.getElementById('wishStatsMessage').textContent = '加载失败';
+                }
+            } catch (error) {
+                console.error('加载愿望统计错误:', error);
+                document.getElementById('totalWishes').textContent = '?';
+                document.getElementById('wishStatsMessage').textContent = '网络错误';
+            }
+        }
+
+        // 删除愿望
+        async function deleteWish(wishId, userId, wishContent) {
+            // 截断过长的愿望内容用于显示
+            const displayContent = wishContent.length > 20 ? wishContent.substring(0, 20) + '...' : wishContent;
+            
+            if (!confirm(`确定要删除这个愿望吗？\n\n用户：${userId}\n内容：${displayContent}\n\n⚠️ 警告：删除后无法恢复，星空中的星星也会消失！`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/admin/wishes/${wishId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showMessage('adminMessage', `愿望删除成功！用户 ${userId} 的愿望已从星空中移除。`, 'success');
+                    loadWishes(); // 刷新愿望列表
+                    loadWishStats(); // 刷新统计信息
+                } else {
+                    showMessage('adminMessage', result.message || '删除愿望失败', 'error');
+                }
+            } catch (error) {
+                console.error('删除愿望错误:', error);
+                showMessage('adminMessage', '删除愿望失败', 'error');
             }
         }
 
