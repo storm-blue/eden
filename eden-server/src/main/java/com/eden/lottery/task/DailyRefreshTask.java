@@ -38,7 +38,7 @@ public class DailyRefreshTask {
             userService.batchRefreshDailyDraws();
             logger.info("用户抽奖次数刷新完成");
             
-            // 2. 更新星星城数据
+            // 2. 更新星星城数据 (人口增长为当前食物的1/8，食物+5000，幸福-1)
             starCityService.dailyUpdate();
             logger.info("星星城数据更新完成");
             

@@ -1047,13 +1047,12 @@ const LotteryLuckyWheel = () => {
                             marginBottom: '25px',
                             color: 'white'
                         }}>
-                            <div style={{fontSize: isMobileDevice ? '28px' : '32px', marginBottom: '10px'}}>🏰</div>
                             <h3 style={{
                                 fontSize: isMobileDevice ? '20px' : '24px',
                                 margin: '0',
                                 textShadow: '0 0 15px rgba(255, 255, 255, 0.5)'
                             }}>
-                                城堡捐献
+                                城市捐献
                             </h3>
                             <p style={{
                                 fontSize: isMobileDevice ? '12px' : '14px',
