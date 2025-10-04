@@ -2586,6 +2586,32 @@
     }
 }
 
+/* 爱心浮动动画 */
+@keyframes heartFloat {
+    0% {
+        transform: translateY(0px) scale(1);
+        opacity: 0.8;
+    }
+    50% {
+        transform: translateY(-20px) scale(1.2);
+        opacity: 1;
+    }
+    100% {
+        transform: translateY(0px) scale(1);
+        opacity: 0.8;
+    }
+}
+
+/* 爱心文字发光动画 */
+@keyframes loveGlow {
+    0% {
+        text-shadow: 0 0 10px rgba(255, 105, 180, 0.5);
+    }
+    100% {
+        text-shadow: 0 0 20px rgba(255, 105, 180, 0.8), 0 0 30px rgba(255, 105, 180, 0.6);
+    }
+}
+
 /* 捐献弹窗强制横屏样式 */
 @media screen and (max-width: 768px) {
     .donation-modal-overlay.force-landscape {

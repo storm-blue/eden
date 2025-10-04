@@ -652,6 +652,13 @@ const LotteryLuckyWheel = () => {
         }
     }
 
+    // 检查是否是特殊情侣组合
+    const isSpecialCouple = (residents) => {
+        if (residents.length !== 2) return false
+        const names = residents.map(r => r.userId).sort()
+        return names.includes('李星斗') && names.includes('秦小淮')
+    }
+
     // 确认居住选择
     const confirmResidence = async () => {
         if (!selectedBuilding || !userName) {
@@ -672,7 +679,6 @@ const LotteryLuckyWheel = () => {
 
             const data = await response.json()
             if (data.success) {
-                alert(data.data.message)
                 // 重新获取用户信息以更新居住地点
                 fetchUserInfo(userName)
             } else {
@@ -1599,27 +1605,92 @@ const LotteryLuckyWheel = () => {
                                     </div>
                                 ) : (
                                     <>
-                                        <div style={{marginBottom: '8px'}}>
-                                            当前居住人员：{buildingResidents.length} 人
-                                        </div>
-                                        {buildingResidents.length > 0 ? (
+                                        {isSpecialCouple(buildingResidents) ? (
+                                            // 特殊情侣效果
                                             <div style={{
-                                                background: 'rgba(0, 0, 0, 0.2)',
-                                                borderRadius: '8px',
-                                                padding: '8px',
-                                                fontSize: '12px',
-                                                wordBreak: 'break-all',
-                                                lineHeight: '1.4'
+                                                textAlign: 'center',
+                                                position: 'relative',
+                                                padding: '20px',
+                                                overflow: 'hidden'
                                             }}>
-                                                👤 {buildingResidents.map(resident => resident.userId).join(', ')}
+                                                {/* 爱心背景动画 */}
+                                                <div style={{
+                                                    position: 'absolute',
+                                                    top: 0,
+                                                    left: 0,
+                                                    right: 0,
+                                                    bottom: 0,
+                                                    pointerEvents: 'none',
+                                                    zIndex: 1
+                                                }}>
+                                                    {[...Array(20)].map((_, i) => (
+                                                        <div
+                                                            key={i}
+                                                            style={{
+                                                                position: 'absolute',
+                                                                fontSize: `${Math.random() * 20 + 15}px`,
+                                                                color: '#ff69b4',
+                                                                left: `${Math.random() * 100}%`,
+                                                                top: `${Math.random() * 100}%`,
+                                                                animation: `heartFloat ${2 + Math.random() * 3}s ease-in-out infinite`,
+                                                                animationDelay: `${Math.random() * 2}s`,
+                                                                opacity: 0.8
+                                                            }}
+                                                        >
+                                                            💖
+                                                        </div>
+                                                    ))}
+                                                </div>
+                                                
+                                                {/* 特殊文字 */}
+                                                <div style={{
+                                                    position: 'relative',
+                                                    zIndex: 2,
+                                                    fontSize: '16px',
+                                                    fontWeight: 'bold',
+                                                    color: '#ff69b4',
+                                                    textShadow: '0 0 10px rgba(255, 105, 180, 0.5)',
+                                                    marginBottom: '10px',
+                                                    animation: 'loveGlow 2s ease-in-out infinite alternate'
+                                                }}>
+                                                    💕 秦小淮和李星斗正在爱爱 💕
+                                                </div>
+                                                
+                                                <div style={{
+                                                    position: 'relative',
+                                                    zIndex: 2,
+                                                    fontSize: '12px',
+                                                    color: 'rgba(255, 255, 255, 0.8)'
+                                                }}>
+                                                    当前居住人员：{buildingResidents.length} 人
+                                                </div>
                                             </div>
                                         ) : (
-                                            <div style={{
-                                                color: 'rgba(255, 255, 255, 0.6)',
-                                                fontSize: '12px'
-                                            }}>
-                                                暂无居住人员
-                                            </div>
+                                            // 普通显示
+                                            <>
+                                                <div style={{marginBottom: '8px'}}>
+                                                    当前居住人员：{buildingResidents.length} 人
+                                                </div>
+                                                {buildingResidents.length > 0 ? (
+                                                    <div style={{
+                                                        background: 'rgba(0, 0, 0, 0.2)',
+                                                        borderRadius: '8px',
+                                                        padding: '8px',
+                                                        fontSize: '12px',
+                                                        wordBreak: 'break-all',
+                                                        lineHeight: '1.4'
+                                                    }}>
+                                                        👤 {buildingResidents.map(resident => resident.userId).join(', ')}
+                                                    </div>
+                                                ) : (
+                                                    <div style={{
+                                                        color: 'rgba(255, 255, 255, 0.6)',
+                                                        fontSize: '12px'
+                                                    }}>
+                                                        暂无居住人员
+                                                    </div>
+                                                )}
+                                            </>
                                         )}
                                     </>
                                 )}
