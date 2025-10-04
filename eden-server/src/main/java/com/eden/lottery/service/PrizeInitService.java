@@ -70,14 +70,21 @@ public class PrizeInitService implements ApplicationRunner {
      * 检查并迁移users表
      */
     private void checkAndMigrateUsersTable(Connection connection) throws Exception {
-        // 检查wish_count列是否存在
         List<String> columns = getTableColumns(connection, "users");
+        
+        // 检查wish_count列是否存在
         if (!columns.contains("wish_count")) {
             logger.info("users表缺少wish_count列，添加列...");
             addWishCountColumn(connection);
-        } else {
-            logger.info("users表结构检查通过");
         }
+        
+        // 检查residence列是否存在
+        if (!columns.contains("residence")) {
+            logger.info("users表缺少residence列，添加列...");
+            addResidenceColumn(connection);
+        }
+        
+        logger.info("users表结构检查完成");
     }
     
     /**
@@ -105,6 +112,18 @@ public class PrizeInitService implements ApplicationRunner {
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(sql);
             logger.info("wish_count列添加成功");
+        }
+    }
+    
+    /**
+     * 添加residence列到users表
+     */
+    private void addResidenceColumn(Connection connection) throws Exception {
+        String sql = "ALTER TABLE users ADD COLUMN residence VARCHAR(20) DEFAULT NULL";
+        
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(sql);
+            logger.info("residence列添加成功");
         }
     }
 
