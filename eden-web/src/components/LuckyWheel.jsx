@@ -916,9 +916,8 @@ const LotteryLuckyWheel = () => {
                         ✨ 星星城 LV{starCityData?.level || 1} ✨
                     </h2>
 
-                    {/* 可点击的捐献区域 - 简化版 */}
+                    {/* 神秘白点 - 保留但不触发捐献 */}
                     <div
-                        onClick={openDonationModal}
                         style={{
                             position: 'absolute',
                             top: '23%',
@@ -928,7 +927,7 @@ const LotteryLuckyWheel = () => {
                             height: '15px',
                             borderRadius: '50%',
                             background: 'rgba(255, 255, 255, 0.9)',
-                            cursor: 'pointer',
+                            cursor: 'default',
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
@@ -937,17 +936,7 @@ const LotteryLuckyWheel = () => {
                             animation: 'castlePulse 3s ease-in-out infinite',
                             boxShadow: '0 4px 15px rgba(255, 255, 255, 0.3)'
                         }}
-                        onMouseEnter={(e) => {
-                            e.target.style.background = 'rgba(255, 255, 255, 1)'
-                            e.target.style.transform = 'translate(-50%, -50%) scale(1.5)'
-                            e.target.style.boxShadow = '0 6px 20px rgba(255, 255, 255, 0.5)'
-                        }}
-                        onMouseLeave={(e) => {
-                            e.target.style.background = 'rgba(255, 255, 255, 0.9)'
-                            e.target.style.transform = 'translate(-50%, -50%) scale(1)'
-                            e.target.style.boxShadow = '0 4px 15px rgba(255, 255, 255, 0.3)'
-                        }}
-                        title="点击进行捐献"
+                        title="神秘的白点"
                     >
                     </div>
 
@@ -992,20 +981,40 @@ const LotteryLuckyWheel = () => {
 
                     {/* 星星城数据显示 - 右下角 */}
                     {starCityData && (
-                        <div className="star-city-data" style={{
-                            position: 'absolute',
-                            bottom: '30px',
-                            right: '30px',
-                            background: 'rgba(0, 0, 0, 0.7)',
-                            color: 'white',
-                            padding: '15px 20px',
-                            borderRadius: '15px',
-                            backdropFilter: 'blur(10px)',
-                            border: '1px solid rgba(255, 255, 255, 0.2)',
-                            minWidth: '200px',
-                            textAlign: 'center',
-                            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
-                        }}>
+                        <div 
+                            className="star-city-data" 
+                            onClick={openDonationModal}
+                            style={{
+                                position: 'absolute',
+                                bottom: '30px',
+                                right: '30px',
+                                background: 'rgba(0, 0, 0, 0.7)',
+                                color: 'white',
+                                padding: '15px 20px',
+                                borderRadius: '15px',
+                                backdropFilter: 'blur(10px)',
+                                border: '1px solid rgba(255, 255, 255, 0.2)',
+                                minWidth: '200px',
+                                textAlign: 'center',
+                                boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+                                cursor: 'pointer',
+                                transition: 'all 0.3s ease',
+                                animation: 'cityDataPulse 3s ease-in-out infinite'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.currentTarget.style.background = 'rgba(0, 0, 0, 0.8)'
+                                e.currentTarget.style.transform = 'scale(1.05)'
+                                e.currentTarget.style.animation = 'none'
+                                e.currentTarget.style.boxShadow = '0 12px 40px rgba(0, 0, 0, 0.4), 0 0 0 8px rgba(255, 215, 0, 0.3)'
+                            }}
+                            onMouseLeave={(e) => {
+                                e.currentTarget.style.background = 'rgba(0, 0, 0, 0.7)'
+                                e.currentTarget.style.transform = 'scale(1)'
+                                e.currentTarget.style.animation = 'cityDataPulse 3s ease-in-out infinite'
+                                e.currentTarget.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.3)'
+                            }}
+                            title="点击进行城市捐献"
+                        >
                             <div className="data-title" style={{
                                 fontSize: '16px',
                                 fontWeight: 'bold',
