@@ -84,4 +84,19 @@ public interface LotteryRecordMapper {
      * 统计总抽奖次数
      */
     long count();
+    
+    /**
+     * 查询用户拥有的特定奖品数量
+     */
+    int countUserPrizeByName(@Param("userId") String userId, @Param("prizeName") String prizeName);
+    
+    /**
+     * 删除用户的一个特定奖品记录（用于捐献）
+     */
+    int deleteUserPrizeByName(@Param("userId") String userId, @Param("prizeName") String prizeName);
+    
+    /**
+     * 获取用户的奖品统计（用于显示可捐献的奖品）
+     */
+    List<Map<String, Object>> getUserPrizeStatistics(@Param("userId") String userId);
 }

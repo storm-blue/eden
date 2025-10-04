@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eden.lottery.mapper.StarCityMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="StarCityResultMap" type="com.eden.lottery.entity.StarCity">
+        <id column="id" property="id"/>
+        <result column="population" property="population"/>
+        <result column="food" property="food"/>
+        <result column="happiness" property="happiness"/>
+        <result column="level" property="level"/>
+        <result column="last_update_time" property="lastUpdateTime"/>
+        <result column="create_time" property="createTime"/>
+        <result column="update_time" property="updateTime"/>
+    </resultMap>
+
+    <!-- 获取星星城数据 -->
+    <select id="getStarCity" resultMap="StarCityResultMap">
+        SELECT id, population, food, happiness, level, last_update_time, create_time, update_time
+        FROM star_city 
+        ORDER BY id DESC 
+        LIMIT 1
+    </select>
+
+    <!-- 插入星星城数据 -->
+    <insert id="insertStarCity" parameterType="com.eden.lottery.entity.StarCity">
+        INSERT INTO star_city (population, food, happiness, level, last_update_time, create_time, update_time)
+        VALUES (#{population}, #{food}, #{happiness}, #{level}, #{lastUpdateTime}, #{createTime}, #{updateTime})
+    </insert>
+
+    <!-- 更新星星城数据 -->
+    <update id="updateStarCity" parameterType="com.eden.lottery.entity.StarCity">
+        UPDATE star_city 
+        SET population = #{population},
+            food = #{food},
+            happiness = #{happiness},
+            level = #{level},
+            last_update_time = #{lastUpdateTime},
+            update_time = #{updateTime}
+        WHERE id = #{id}
+    </update>
+
+    <!-- 每日更新：人口+10000，食物+5000，幸福指数-1 -->
+    <update id="dailyUpdate">
+        UPDATE star_city 
+        SET population = population + 10000,
+            food = food + 5000,
+            happiness = CASE 
+                WHEN happiness > 1 THEN happiness - 1 
+                ELSE 1 
+            END,
+            last_update_time = datetime('now', 'localtime'),
+            update_time = datetime('now', 'localtime')
+        WHERE id = (SELECT id FROM star_city ORDER BY id DESC LIMIT 1)
+    </update>
+
+</mapper>

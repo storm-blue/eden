@@ -67,3 +67,19 @@ CREATE INDEX IF NOT EXISTS idx_user_attempts_time ON user_attempts(attempt_time)
 CREATE INDEX IF NOT EXISTS idx_user_attempts_exists ON user_attempts(user_exists);
 CREATE INDEX IF NOT EXISTS idx_wishes_user_id ON wishes(user_id);
 CREATE INDEX IF NOT EXISTS idx_wishes_create_time ON wishes(create_time);
+
+-- 星星城数据表
+CREATE TABLE IF NOT EXISTS star_city (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    population INTEGER NOT NULL DEFAULT 100000,        -- 人口数量
+    food INTEGER NOT NULL DEFAULT 100000,              -- 食物数量
+    happiness INTEGER NOT NULL DEFAULT 20,             -- 幸福指数
+    level INTEGER NOT NULL DEFAULT 1,                  -- 当前等级
+    last_update_time DATETIME DEFAULT CURRENT_TIMESTAMP, -- 最后更新时间
+    create_time DATETIME DEFAULT CURRENT_TIMESTAMP,
+    update_time DATETIME DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 星星城相关索引
+CREATE INDEX IF NOT EXISTS idx_star_city_level ON star_city(level);
+CREATE INDEX IF NOT EXISTS idx_star_city_last_update ON star_city(last_update_time);

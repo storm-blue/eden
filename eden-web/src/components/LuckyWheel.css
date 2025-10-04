@@ -2278,6 +2278,101 @@
         height: 32px !important;
         font-size: 16px !important;
     }
+    
+    /* 星星城数据显示在移动端的调整 */
+    .star-city-container.force-landscape .star-city-data {
+        bottom: 20px !important;
+        right: 20px !important;
+        min-width: 160px !important;
+        padding: 10px 15px !important;
+        font-size: 12px !important;
+    }
+    
+    .star-city-container.force-landscape .star-city-data .data-title {
+        font-size: 14px !important;
+        margin-bottom: 8px !important;
+    }
+    
+    .star-city-container.force-landscape .star-city-data .data-item {
+        font-size: 11px !important;
+        gap: 6px !important;
+    }
+    
+    .star-city-container.force-landscape .star-city-data .upgrade-info {
+        margin-top: 8px !important;
+        padding: 6px !important;
+        font-size: 10px !important;
+    }
+}
+
+/* 捐献按钮脉冲动画 - 白色光圈 */
+@keyframes castlePulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.7);
+    }
+    70% {
+        box-shadow: 0 0 0 20px rgba(255, 255, 255, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(255, 255, 255, 0);
+    }
+}
+
+/* 捐献弹窗强制横屏样式 */
+@media screen and (max-width: 768px) {
+    .donation-modal-overlay.force-landscape {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) rotate(90deg) !important;
+        transform-origin: center center !important;
+        width: 100vh !important;
+        height: 100vw !important;
+        max-width: 100vh !important;
+        max-height: 100vw !important;
+        /* 确保弹窗在最顶层 */
+        z-index: 100001 !important;
+    }
+
+    /* 重置弹窗内容的定位，避免继承父级的transform */
+    .donation-modal-overlay.force-landscape .donation-modal-content {
+        position: relative !important;
+        max-width: 350px !important;
+        width: 85% !important;
+        max-height: 75vh !important;
+        padding: 20px !important;
+        font-size: 14px !important;
+        /* 确保内容居中 */
+        margin: 0 auto !important;
+        /* 防止内容被旋转 */
+        transform: none !important;
+    }
+
+    .donation-modal-overlay.force-landscape .donation-modal-content h3 {
+        font-size: 20px !important;
+        margin-bottom: 15px !important;
+    }
+
+    .donation-modal-overlay.force-landscape .donation-modal-content p {
+        font-size: 12px !important;
+        margin: 8px 0 !important;
+    }
+
+    .donation-modal-overlay.force-landscape .donation-modal-content .data-item {
+        font-size: 12px !important;
+        padding: 12px !important;
+    }
+
+    .donation-modal-overlay.force-landscape .donation-modal-content button {
+        padding: 10px 25px !important;
+        font-size: 14px !important;
+    }
+
+    /* 确保弹窗内的所有元素都不会被额外旋转 */
+    .donation-modal-overlay.force-landscape * {
+        max-width: none !important;
+        max-height: none !important;
+    }
 }
 
 /* 桌面端和大屏设备的正常显示 */
