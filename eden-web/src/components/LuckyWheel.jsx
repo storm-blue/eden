@@ -203,6 +203,8 @@ const LotteryLuckyWheel = () => {
     const [welcomeEffectFinished, setWelcomeEffectFinished] = useState(true) // 欢迎特效是否播放完成，默认为true
     const [showLoveEffect, setShowLoveEffect] = useState(false)
     const [showWishPage, setShowWishPage] = useState(false)
+    const [showStarCity, setShowStarCity] = useState(false)
+  const [starCityClosing, setStarCityClosing] = useState(false) // 星星城关闭动画状态 // 星星城页面状态
     const [wishes, setWishes] = useState([]) // 所有许愿列表
     const [showWishInput, setShowWishInput] = useState(false) // 是否显示许愿输入框
     const [wishContent, setWishContent] = useState('') // 许愿内容
@@ -428,6 +430,17 @@ const LotteryLuckyWheel = () => {
         }
         return stars
     }, []) // 空依赖数组，只计算一次
+
+    // 关闭星星城并恢复屏幕方向的函数
+    const closeStarCity = () => {
+        setStarCityClosing(true)
+        
+        // 500ms后完全关闭
+        setTimeout(() => {
+            setShowStarCity(false)
+            setStarCityClosing(false)
+        }, 500)
+    }
 
     // 当用户名改变时，重新获取用户信息
     useEffect(() => {
@@ -674,6 +687,101 @@ const LotteryLuckyWheel = () => {
 
   return (
     <div className="lucky-lottery-container">
+      {/* 星星城页面 */}
+      {showStarCity && (
+        <div style={{
+          position: 'fixed',
+          top: '0',
+          left: '0',
+          width: starCityClosing ? '100vw' : (window.innerWidth < window.innerHeight ? '100vh' : '100vw'),
+          height: starCityClosing ? '100vh' : (window.innerWidth < window.innerHeight ? '100vw' : '100vh'),
+          backgroundImage: 'url(/src/picture/lv1.png)',
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+          zIndex: 99999,
+          display: 'flex',
+          flexDirection: 'column',
+          alignItems: 'center',
+          justifyContent: 'center',
+          color: 'white',
+          overflow: 'hidden',
+          transform: starCityClosing ? 'none' : (window.innerWidth < window.innerHeight ? 'rotate(90deg)' : 'none'),
+          transformOrigin: 'center center',
+          transition: starCityClosing ? 'all 0.5s ease-in-out' : 'none',
+          opacity: starCityClosing ? 0 : 1
+        }}>
+          {/* 标题 */}
+          <h2 style={{
+            fontSize: '42px', 
+            marginBottom: '10px', 
+            textShadow: '0 0 25px rgba(0,0,0,0.8), 0 0 50px rgba(255,255,255,0.6)',
+            position: 'absolute',
+            top: '50px',
+            zIndex: 10,
+            color: 'white'
+          }}>
+            ✨ 星星城 LV1 ✨
+          </h2>
+
+          {/* 关闭按钮 */}
+          <button
+            style={{
+              position: 'absolute',
+              top: '30px',
+              right: '30px',
+              background: 'rgba(255, 255, 255, 0.3)',
+              color: 'white',
+              border: 'none',
+              width: '40px',
+              height: '40px',
+              borderRadius: '50%',
+              fontSize: '20px',
+              cursor: 'pointer',
+              backdropFilter: 'blur(10px)',
+              transition: 'all 0.3s ease',
+              boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
+            }}
+            onClick={() => closeStarCity()}
+            onMouseEnter={(e) => {
+              e.target.style.background = 'rgba(255, 255, 255, 0.5)'
+              e.target.style.transform = 'scale(1.1)'
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.background = 'rgba(255, 255, 255, 0.3)'
+              e.target.style.transform = 'scale(1)'
+            }}
+            title="返回愿望星空"
+          >
+            ✕
+          </button>
+
+          {/* CSS动画样式 */}
+          <style jsx>{`
+            @keyframes orbit1 {
+              0% { transform: rotate(0deg) translateX(100px) rotate(0deg); }
+              100% { transform: rotate(360deg) translateX(100px) rotate(-360deg); }
+            }
+            @keyframes orbit2 {
+              0% { transform: rotate(0deg) translateX(80px) rotate(0deg); }
+              100% { transform: rotate(-360deg) translateX(80px) rotate(360deg); }
+            }
+            @keyframes orbit3 {
+              0% { transform: rotate(0deg) translateX(120px) rotate(0deg); }
+              100% { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
+            }
+            @keyframes orbit4 {
+              0% { transform: rotate(0deg) translateX(90px) rotate(0deg); }
+              100% { transform: rotate(-360deg) translateX(90px) rotate(360deg); }
+            }
+            @keyframes wave {
+              0%, 100% { transform: rotate(0deg); }
+              25% { transform: rotate(5deg); }
+              75% { transform: rotate(-5deg); }
+            }
+          `}</style>
+        </div>
+      )}
             {/* 用户姓名输入模态框 */}
             {showNameInput && (
                 <div className="name-input-modal">
@@ -1042,11 +1150,25 @@ const LotteryLuckyWheel = () => {
                         </div>
 
                         {/* 关闭按钮 */}
-                        <button 
+                        <button
                             className="wish-close-button"
                             onClick={() => setShowWishPage(false)}
                         >
                             ✕
+                        </button>
+
+                        {/* 进入星星城按钮 */}
+                        <button
+                            className="star-city-entrance-button"
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                console.log('星星城按钮被点击了！')
+                                console.log('当前 showStarCity 状态:', showStarCity)
+                                setShowStarCity(true)
+                                console.log('设置 showStarCity 为 true')
+                            }}
+                            title="进入星星城"
+                        >
                         </button>
 
                         {/* 开始许愿按钮 */}
