@@ -695,7 +695,7 @@ const LotteryLuckyWheel = () => {
           left: '0',
           width: starCityClosing ? '100vw' : (window.innerWidth < window.innerHeight ? '100vh' : '100vw'),
           height: starCityClosing ? '100vh' : (window.innerWidth < window.innerHeight ? '100vw' : '100vh'),
-          backgroundImage: 'url(/src/picture/lv1.png)',
+          backgroundImage: 'url(/picture/lv1.jpg)',
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           backgroundRepeat: 'no-repeat',
