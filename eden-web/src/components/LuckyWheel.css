@@ -134,9 +134,9 @@
     width: 90%;
     max-height: 80vh;
     overflow: hidden;
-    box-shadow: 0 25px 80px rgba(255, 150, 200, 0.4), 
-                0 0 0 3px rgba(255, 255, 255, 0.3),
-                inset 0 1px 0 rgba(255, 255, 255, 0.6);
+    box-shadow: 0 25px 80px rgba(255, 150, 200, 0.4),
+    0 0 0 3px rgba(255, 255, 255, 0.3),
+    inset 0 1px 0 rgba(255, 255, 255, 0.6);
     animation: modalSlideIn 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
     position: relative;
 }
@@ -203,10 +203,9 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background-image: 
-        radial-gradient(circle at 20% 30%, rgba(232, 91, 184, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(213, 72, 167, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 40% 80%, rgba(255, 150, 200, 0.08) 0%, transparent 50%);
+    background-image: radial-gradient(circle at 20% 30%, rgba(232, 91, 184, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(213, 72, 167, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(255, 150, 200, 0.08) 0%, transparent 50%);
     pointer-events: none;
 }
 
@@ -314,48 +313,70 @@
 
 /* 可爱的动画效果 */
 @keyframes bounceGently {
-    0%, 100% { transform: translateY(-50%) scale(1); }
-    50% { transform: translateY(-50%) scale(1.1) rotate(10deg); }
+    0%, 100% {
+        transform: translateY(-50%) scale(1);
+    }
+    50% {
+        transform: translateY(-50%) scale(1.1) rotate(10deg);
+    }
 }
 
 @keyframes gradientShift {
-    0%, 100% { background-position: 0% 50%; }
-    50% { background-position: 100% 50%; }
+    0%, 100% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
 }
 
 @keyframes rankPulse {
-    0%, 100% { transform: scale(1); }
-    50% { transform: scale(1.05); }
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.05);
+    }
 }
 
 @keyframes trophyFloat {
-    0%, 100% { transform: translateY(0) rotate(0deg); }
-    50% { transform: translateY(-3px) rotate(15deg); }
+    0%, 100% {
+        transform: translateY(0) rotate(0deg);
+    }
+    50% {
+        transform: translateY(-3px) rotate(15deg);
+    }
 }
 
 @keyframes emptyGlow {
-    0%, 100% { 
+    0%, 100% {
         opacity: 0.3;
         transform: translateX(-50%) scale(1);
     }
-    50% { 
+    50% {
         opacity: 0.6;
         transform: translateX(-50%) scale(1.1);
     }
 }
 
 @keyframes emptyIconFloat {
-    0%, 100% { transform: translateY(0); }
-    25% { transform: translateY(-5px) rotate(2deg); }
-    75% { transform: translateY(-2px) rotate(-2deg); }
+    0%, 100% {
+        transform: translateY(0);
+    }
+    25% {
+        transform: translateY(-5px) rotate(2deg);
+    }
+    75% {
+        transform: translateY(-2px) rotate(-2deg);
+    }
 }
 
 @keyframes arrowPulse {
-    0%, 100% { 
+    0%, 100% {
         opacity: 0.8;
         transform: scale(1);
     }
-    50% { 
+    50% {
         opacity: 1;
         transform: scale(1.1);
     }
@@ -388,10 +409,9 @@
     height: 100%;
     position: relative;
     background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-    background-image: 
-        radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
-        radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
-        radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
+    background-image: radial-gradient(circle at 20% 30%, rgba(255, 255, 255, 0.1) 0%, transparent 50%),
+    radial-gradient(circle at 80% 70%, rgba(255, 255, 255, 0.08) 0%, transparent 50%),
+    radial-gradient(circle at 40% 80%, rgba(255, 255, 255, 0.05) 0%, transparent 50%);
     display: block;
     border: 5px solid red; /* 临时调试边框 */
 }
@@ -466,10 +486,21 @@
     filter: drop-shadow(0 0 10px rgba(255, 255, 255, 0.3));
 }
 
-.building-1 { animation-delay: 0s; }
-.building-2 { animation-delay: 0.5s; }
-.building-3 { animation-delay: 1s; }
-.building-4 { animation-delay: 1.5s; }
+.building-1 {
+    animation-delay: 0s;
+}
+
+.building-2 {
+    animation-delay: 0.5s;
+}
+
+.building-3 {
+    animation-delay: 1s;
+}
+
+.building-4 {
+    animation-delay: 1.5s;
+}
 
 .city-stars {
     display: flex;
@@ -490,11 +521,25 @@
     filter: brightness(1.5);
 }
 
-.city-star-1 { animation-delay: 0s; }
-.city-star-2 { animation-delay: 0.6s; }
-.city-star-3 { animation-delay: 1.2s; }
-.city-star-4 { animation-delay: 1.8s; }
-.city-star-5 { animation-delay: 2.4s; }
+.city-star-1 {
+    animation-delay: 0s;
+}
+
+.city-star-2 {
+    animation-delay: 0.6s;
+}
+
+.city-star-3 {
+    animation-delay: 1.2s;
+}
+
+.city-star-4 {
+    animation-delay: 1.8s;
+}
+
+.city-star-5 {
+    animation-delay: 2.4s;
+}
 
 .city-message {
     color: white;
@@ -509,17 +554,21 @@
 }
 
 @keyframes buildingFloat {
-    0%, 100% { transform: translateY(0); }
-    50% { transform: translateY(-10px); }
+    0%, 100% {
+        transform: translateY(0);
+    }
+    50% {
+        transform: translateY(-10px);
+    }
 }
 
 @keyframes cityStarTwinkle {
-    0%, 100% { 
+    0%, 100% {
         opacity: 0.7;
         transform: scale(1);
         filter: brightness(1);
     }
-    50% { 
+    50% {
         opacity: 1;
         transform: scale(1.1);
         filter: brightness(1.3);
@@ -527,10 +576,10 @@
 }
 
 @keyframes messageGlow {
-    0%, 100% { 
+    0%, 100% {
         text-shadow: 0 0 15px rgba(255, 255, 255, 0.4);
     }
-    50% { 
+    50% {
         text-shadow: 0 0 25px rgba(255, 255, 255, 0.8);
     }
 }
@@ -1074,7 +1123,7 @@
     font-size: 48px;
     font-weight: bold;
     color: white;
-    text-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    text-shadow: 0 4px 8px rgba(0, 0, 0, 0.3);
     margin-bottom: 20px;
     animation: welcomeTitleBounce 2s ease infinite;
 }
@@ -1082,15 +1131,15 @@
 .welcome-subtitle {
     font-size: 32px;
     color: #ffeb3b;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     margin-bottom: 15px;
     animation: welcomeSubtitleGlow 2s ease-in-out infinite alternate;
 }
 
 .welcome-message {
     font-size: 18px;
-    color: rgba(255,255,255,0.9);
-    text-shadow: 0 1px 2px rgba(0,0,0,0.3);
+    color: rgba(255, 255, 255, 0.9);
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.3);
     animation: welcomeMessageFade 3s ease;
 }
 
@@ -1121,10 +1170,10 @@
     left: 0;
     right: 0;
     bottom: 0;
-    background: linear-gradient(135deg, 
-        rgba(255, 182, 193, 0.95), 
-        rgba(255, 20, 147, 0.9), 
-        rgba(255, 105, 180, 0.95)
+    background: linear-gradient(135deg,
+    rgba(255, 182, 193, 0.95),
+    rgba(255, 20, 147, 0.9),
+    rgba(255, 105, 180, 0.95)
     );
     z-index: 3000;
     display: flex;
@@ -1163,14 +1212,53 @@
     opacity: 0.8;
 }
 
-.love-drop-1 { left: 10%; animation-delay: 0s; animation-duration: 3s; }
-.love-drop-2 { left: 20%; animation-delay: 0.5s; animation-duration: 3.5s; }
-.love-drop-3 { left: 30%; animation-delay: 1s; animation-duration: 4s; }
-.love-drop-4 { left: 40%; animation-delay: 1.5s; animation-duration: 3.2s; }
-.love-drop-5 { left: 60%; animation-delay: 2s; animation-duration: 3.8s; }
-.love-drop-6 { left: 70%; animation-delay: 0.8s; animation-duration: 3.3s; }
-.love-drop-7 { left: 80%; animation-delay: 1.2s; animation-duration: 3.7s; }
-.love-drop-8 { left: 90%; animation-delay: 1.8s; animation-duration: 3.4s; }
+.love-drop-1 {
+    left: 10%;
+    animation-delay: 0s;
+    animation-duration: 3s;
+}
+
+.love-drop-2 {
+    left: 20%;
+    animation-delay: 0.5s;
+    animation-duration: 3.5s;
+}
+
+.love-drop-3 {
+    left: 30%;
+    animation-delay: 1s;
+    animation-duration: 4s;
+}
+
+.love-drop-4 {
+    left: 40%;
+    animation-delay: 1.5s;
+    animation-duration: 3.2s;
+}
+
+.love-drop-5 {
+    left: 60%;
+    animation-delay: 2s;
+    animation-duration: 3.8s;
+}
+
+.love-drop-6 {
+    left: 70%;
+    animation-delay: 0.8s;
+    animation-duration: 3.3s;
+}
+
+.love-drop-7 {
+    left: 80%;
+    animation-delay: 1.2s;
+    animation-duration: 3.7s;
+}
+
+.love-drop-8 {
+    left: 90%;
+    animation-delay: 1.8s;
+    animation-duration: 3.4s;
+}
 
 /* 中心立体爱心 */
 .love-heart-container {
@@ -1212,10 +1300,9 @@
     border-radius: 50px 50px 0 0;
     transform: rotate(-45deg);
     transform-origin: 0 100%;
-    box-shadow: 
-        0 0 20px rgba(255, 23, 68, 0.8),
-        0 0 40px rgba(255, 64, 129, 0.6),
-        inset 0 0 20px rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 20px rgba(255, 23, 68, 0.8),
+    0 0 40px rgba(255, 64, 129, 0.6),
+    inset 0 0 20px rgba(255, 255, 255, 0.3);
 }
 
 .css-heart::after {
@@ -1231,10 +1318,9 @@
     height: 80px;
     background: linear-gradient(135deg, #ff1744, #ff4081, #e91e63);
     border-radius: 50px 50px 0 0;
-    box-shadow: 
-        0 0 20px rgba(255, 23, 68, 0.8),
-        0 0 40px rgba(255, 64, 129, 0.6),
-        inset 0 0 20px rgba(255, 255, 255, 0.3);
+    box-shadow: 0 0 20px rgba(255, 23, 68, 0.8),
+    0 0 40px rgba(255, 64, 129, 0.6),
+    inset 0 0 20px rgba(255, 255, 255, 0.3);
 }
 
 .heart-left {
@@ -1292,34 +1378,45 @@
     opacity: 0.9;
 }
 
-.floating-heart-1 { 
-    top: 20%; left: 15%; 
-    animation-delay: 0s; 
+.floating-heart-1 {
+    top: 20%;
+    left: 15%;
+    animation-delay: 0s;
     animation-duration: 4s;
 }
-.floating-heart-2 { 
-    top: 30%; right: 20%; 
-    animation-delay: 1s; 
+
+.floating-heart-2 {
+    top: 30%;
+    right: 20%;
+    animation-delay: 1s;
     animation-duration: 4.5s;
 }
-.floating-heart-3 { 
-    bottom: 30%; left: 25%; 
-    animation-delay: 2s; 
+
+.floating-heart-3 {
+    bottom: 30%;
+    left: 25%;
+    animation-delay: 2s;
     animation-duration: 3.8s;
 }
-.floating-heart-4 { 
-    bottom: 20%; right: 15%; 
-    animation-delay: 0.5s; 
+
+.floating-heart-4 {
+    bottom: 20%;
+    right: 15%;
+    animation-delay: 0.5s;
     animation-duration: 4.2s;
 }
-.floating-heart-5 { 
-    top: 50%; left: 10%; 
-    animation-delay: 1.5s; 
+
+.floating-heart-5 {
+    top: 50%;
+    left: 10%;
+    animation-delay: 1.5s;
     animation-duration: 3.5s;
 }
-.floating-heart-6 { 
-    top: 60%; right: 10%; 
-    animation-delay: 2.5s; 
+
+.floating-heart-6 {
+    top: 60%;
+    right: 10%;
+    animation-delay: 2.5s;
     animation-duration: 4.3s;
 }
 
@@ -1341,8 +1438,8 @@
 
 .love-subtitle {
     font-size: 20px;
-    color: rgba(255,255,255,0.95);
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    color: rgba(255, 255, 255, 0.95);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
     animation: loveSubtitleFloat 3s ease-in-out infinite;
 }
 
@@ -1499,11 +1596,30 @@
     animation: fireworkLaunch 3s ease-out infinite;
 }
 
-.firework-1 { left: 20%; animation-delay: 0s; }
-.firework-2 { left: 40%; animation-delay: 0.5s; }
-.firework-3 { left: 60%; animation-delay: 1s; }
-.firework-4 { left: 80%; animation-delay: 1.5s; }
-.firework-5 { left: 30%; animation-delay: 2s; }
+.firework-1 {
+    left: 20%;
+    animation-delay: 0s;
+}
+
+.firework-2 {
+    left: 40%;
+    animation-delay: 0.5s;
+}
+
+.firework-3 {
+    left: 60%;
+    animation-delay: 1s;
+}
+
+.firework-4 {
+    left: 80%;
+    animation-delay: 1.5s;
+}
+
+.firework-5 {
+    left: 30%;
+    animation-delay: 2s;
+}
 
 .explosion {
     position: absolute;
@@ -1515,47 +1631,42 @@
 
 .explosion-1 {
     background: #ff4757;
-    box-shadow: 
-        0 0 0 20px #ff4757,
-        0 0 0 40px transparent,
-        0 0 0 60px #ff4757,
-        0 0 0 80px transparent;
+    box-shadow: 0 0 0 20px #ff4757,
+    0 0 0 40px transparent,
+    0 0 0 60px #ff4757,
+    0 0 0 80px transparent;
 }
 
 .explosion-2 {
     background: #ffa502;
-    box-shadow: 
-        0 0 0 15px #ffa502,
-        0 0 0 35px transparent,
-        0 0 0 55px #ffa502,
-        0 0 0 75px transparent;
+    box-shadow: 0 0 0 15px #ffa502,
+    0 0 0 35px transparent,
+    0 0 0 55px #ffa502,
+    0 0 0 75px transparent;
 }
 
 .explosion-3 {
     background: #3742fa;
-    box-shadow: 
-        0 0 0 25px #3742fa,
-        0 0 0 45px transparent,
-        0 0 0 65px #3742fa,
-        0 0 0 85px transparent;
+    box-shadow: 0 0 0 25px #3742fa,
+    0 0 0 45px transparent,
+    0 0 0 65px #3742fa,
+    0 0 0 85px transparent;
 }
 
 .explosion-4 {
     background: #2ed573;
-    box-shadow: 
-        0 0 0 18px #2ed573,
-        0 0 0 38px transparent,
-        0 0 0 58px #2ed573,
-        0 0 0 78px transparent;
+    box-shadow: 0 0 0 18px #2ed573,
+    0 0 0 38px transparent,
+    0 0 0 58px #2ed573,
+    0 0 0 78px transparent;
 }
 
 .explosion-5 {
     background: #ff6b9d;
-    box-shadow: 
-        0 0 0 22px #ff6b9d,
-        0 0 0 42px transparent,
-        0 0 0 62px #ff6b9d,
-        0 0 0 82px transparent;
+    box-shadow: 0 0 0 22px #ff6b9d,
+    0 0 0 42px transparent,
+    0 0 0 62px #ff6b9d,
+    0 0 0 82px transparent;
 }
 
 /* 闪烁星星 */
@@ -1572,14 +1683,53 @@
     animation: sparkleTwinkle 2s ease-in-out infinite;
 }
 
-.sparkle-1 { top: 10%; left: 15%; animation-delay: 0s; }
-.sparkle-2 { top: 20%; right: 20%; animation-delay: 0.3s; }
-.sparkle-3 { top: 70%; left: 10%; animation-delay: 0.6s; }
-.sparkle-4 { bottom: 20%; right: 15%; animation-delay: 0.9s; }
-.sparkle-5 { top: 30%; left: 70%; animation-delay: 1.2s; }
-.sparkle-6 { bottom: 40%; left: 30%; animation-delay: 1.5s; }
-.sparkle-7 { top: 60%; right: 30%; animation-delay: 1.8s; }
-.sparkle-8 { bottom: 10%; left: 60%; animation-delay: 2.1s; }
+.sparkle-1 {
+    top: 10%;
+    left: 15%;
+    animation-delay: 0s;
+}
+
+.sparkle-2 {
+    top: 20%;
+    right: 20%;
+    animation-delay: 0.3s;
+}
+
+.sparkle-3 {
+    top: 70%;
+    left: 10%;
+    animation-delay: 0.6s;
+}
+
+.sparkle-4 {
+    bottom: 20%;
+    right: 15%;
+    animation-delay: 0.9s;
+}
+
+.sparkle-5 {
+    top: 30%;
+    left: 70%;
+    animation-delay: 1.2s;
+}
+
+.sparkle-6 {
+    bottom: 40%;
+    left: 30%;
+    animation-delay: 1.5s;
+}
+
+.sparkle-7 {
+    top: 60%;
+    right: 30%;
+    animation-delay: 1.8s;
+}
+
+.sparkle-8 {
+    bottom: 10%;
+    left: 60%;
+    animation-delay: 2.1s;
+}
 
 /* 彩带效果 */
 .confetti {
@@ -1597,57 +1747,115 @@
     animation: confettiFall 3s linear infinite;
 }
 
-.confetti-1 { left: 10%; background: #ff4757; animation-delay: 0s; }
-.confetti-2 { left: 20%; background: #ffa502; animation-delay: 0.2s; }
-.confetti-3 { left: 30%; background: #3742fa; animation-delay: 0.4s; }
-.confetti-4 { left: 40%; background: #2ed573; animation-delay: 0.6s; }
-.confetti-5 { left: 60%; background: #ff6b9d; animation-delay: 0.8s; }
-.confetti-6 { left: 70%; background: #ffeb3b; animation-delay: 1s; }
-.confetti-7 { left: 80%; background: #a55eea; animation-delay: 1.2s; }
-.confetti-8 { left: 90%; background: #26d0ce; animation-delay: 1.4s; }
+.confetti-1 {
+    left: 10%;
+    background: #ff4757;
+    animation-delay: 0s;
+}
+
+.confetti-2 {
+    left: 20%;
+    background: #ffa502;
+    animation-delay: 0.2s;
+}
+
+.confetti-3 {
+    left: 30%;
+    background: #3742fa;
+    animation-delay: 0.4s;
+}
+
+.confetti-4 {
+    left: 40%;
+    background: #2ed573;
+    animation-delay: 0.6s;
+}
+
+.confetti-5 {
+    left: 60%;
+    background: #ff6b9d;
+    animation-delay: 0.8s;
+}
+
+.confetti-6 {
+    left: 70%;
+    background: #ffeb3b;
+    animation-delay: 1s;
+}
+
+.confetti-7 {
+    left: 80%;
+    background: #a55eea;
+    animation-delay: 1.2s;
+}
+
+.confetti-8 {
+    left: 90%;
+    background: #26d0ce;
+    animation-delay: 1.4s;
+}
 
 /* 动画定义 */
 @keyframes welcomeOverlayFadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
 }
 
 @keyframes welcomeTitleBounce {
-    0%, 20%, 50%, 80%, 100% { transform: translateY(0); }
-    40% { transform: translateY(-10px); }
-    60% { transform: translateY(-5px); }
+    0%, 20%, 50%, 80%, 100% {
+        transform: translateY(0);
+    }
+    40% {
+        transform: translateY(-10px);
+    }
+    60% {
+        transform: translateY(-5px);
+    }
 }
 
 @keyframes welcomeSubtitleGlow {
-    from { 
-        text-shadow: 0 2px 4px rgba(0,0,0,0.3), 0 0 10px #ffeb3b; 
+    from {
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 10px #ffeb3b;
     }
-    to { 
-        text-shadow: 0 2px 4px rgba(0,0,0,0.3), 0 0 20px #ffeb3b, 0 0 30px #ffeb3b; 
+    to {
+        text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3), 0 0 20px #ffeb3b, 0 0 30px #ffeb3b;
     }
 }
 
 @keyframes welcomeMessageFade {
-    0% { opacity: 0; transform: translateY(20px); }
-    50% { opacity: 1; transform: translateY(0); }
-    100% { opacity: 0.9; transform: translateY(0); }
+    0% {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(0);
+    }
+    100% {
+        opacity: 0.9;
+        transform: translateY(0);
+    }
 }
 
 @keyframes fireworkLaunch {
-    0% { 
-        bottom: 0; 
-        opacity: 1; 
-        transform: scale(1); 
+    0% {
+        bottom: 0;
+        opacity: 1;
+        transform: scale(1);
     }
-    50% { 
-        bottom: 50%; 
-        opacity: 1; 
-        transform: scale(1); 
+    50% {
+        bottom: 50%;
+        opacity: 1;
+        transform: scale(1);
     }
-    100% { 
-        bottom: 60%; 
-        opacity: 0; 
-        transform: scale(1.5); 
+    100% {
+        bottom: 60%;
+        opacity: 0;
+        transform: scale(1.5);
     }
 }
 
@@ -1667,13 +1875,13 @@
 }
 
 @keyframes sparkleTwinkle {
-    0%, 100% { 
-        opacity: 0.3; 
-        transform: scale(0.8) rotate(0deg); 
+    0%, 100% {
+        opacity: 0.3;
+        transform: scale(0.8) rotate(0deg);
     }
-    50% { 
-        opacity: 1; 
-        transform: scale(1.2) rotate(180deg); 
+    50% {
+        opacity: 1;
+        transform: scale(1.2) rotate(180deg);
     }
 }
 
@@ -1695,81 +1903,81 @@
     .welcome-title {
         font-size: 32px;
     }
-    
+
     .welcome-subtitle {
         font-size: 24px;
     }
-    
+
     .welcome-message {
         font-size: 16px;
     }
-    
+
     .welcome-continue-hint {
         font-size: 14px;
         margin-top: 20px;
     }
-    
+
     /* 爱心特效响应式 */
     .love-heart-3d {
         width: 80px;
         height: 80px;
     }
-    
+
     .css-heart {
         width: 70px;
         height: 56px;
     }
-    
+
     .heart-left,
     .heart-right {
         width: 35px;
         height: 56px;
     }
-    
+
     .heart-left {
         left: 0px;
     }
-    
+
     .heart-right {
         left: 35px;
     }
-    
+
     .love-halo-1 {
         width: 100px;
         height: 100px;
     }
-    
+
     .love-halo-2 {
         width: 130px;
         height: 130px;
     }
-    
+
     .love-halo-3 {
         width: 160px;
         height: 160px;
     }
-    
+
     .love-title {
         font-size: 28px;
     }
-    
+
     .love-subtitle {
         font-size: 16px;
     }
-    
+
     .love-continue-hint {
         font-size: 14px;
         margin-top: 20px;
     }
-    
+
     .floating-heart {
         font-size: 18px;
     }
-    
+
     .love-drop {
         font-size: 16px;
     }
-    
+
     .sparkle {
         font-size: 20px;
     }
@@ -2081,10 +2289,21 @@
     filter: brightness(1.5);
 }
 
-.wish-star-size-2 { font-size: 16px; }
-.wish-star-size-3 { font-size: 20px; }
-.wish-star-size-4 { font-size: 24px; }
-.wish-star-size-5 { font-size: 28px; }
+.wish-star-size-2 {
+    font-size: 16px;
+}
+
+.wish-star-size-3 {
+    font-size: 20px;
+}
+
+.wish-star-size-4 {
+    font-size: 24px;
+}
+
+.wish-star-size-5 {
+    font-size: 28px;
+}
 
 /* 背景装饰星星 */
 .background-stars {
@@ -2171,7 +2390,7 @@
     animation: arrowPulse 2s ease-in-out infinite;
     pointer-events: auto;
     user-select: none;
-    text-shadow: 0 0 10px rgba(0,0,0,0.8), 0 0 20px rgba(255,255,255,0.6);
+    text-shadow: 0 0 10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 255, 255, 0.6);
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2187,7 +2406,7 @@
     border-top: 8px solid transparent;
     border-bottom: 8px solid transparent;
     border-radius: 2px;
-    filter: drop-shadow(0 0 8px rgba(255,255,255,0.6)) drop-shadow(0 0 4px rgba(0,0,0,0.8));
+    filter: drop-shadow(0 0 8px rgba(255, 255, 255, 0.6)) drop-shadow(0 0 4px rgba(0, 0, 0, 0.8));
     transition: all 0.3s ease;
 }
 
@@ -2200,9 +2419,9 @@
     transform: translateY(-50%);
     width: 6px;
     height: 3px;
-    background: linear-gradient(90deg, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0.4) 100%);
+    background: linear-gradient(90deg, rgba(255, 255, 255, 0.8) 0%, rgba(255, 255, 255, 0.4) 100%);
     border-radius: 2px;
-    filter: drop-shadow(0 0 4px rgba(255,255,255,0.4));
+    filter: drop-shadow(0 0 4px rgba(255, 255, 255, 0.4));
     transition: all 0.3s ease;
 }
 
@@ -2213,13 +2432,13 @@
 
 .star-city-entrance-button:hover::before {
     border-left-color: #FFD700;
-    filter: drop-shadow(0 0 12px rgba(255,215,0,0.8)) drop-shadow(0 0 6px rgba(0,0,0,1));
+    filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.8)) drop-shadow(0 0 6px rgba(0, 0, 0, 1));
     transform: translateX(2px);
 }
 
 .star-city-entrance-button:hover::after {
-    background: linear-gradient(90deg, rgba(255,215,0,0.9) 0%, rgba(255,215,0,0.5) 100%);
-    filter: drop-shadow(0 0 6px rgba(255,215,0,0.6));
+    background: linear-gradient(90deg, rgba(255, 215, 0, 0.9) 0%, rgba(255, 215, 0, 0.5) 100%);
+    filter: drop-shadow(0 0 6px rgba(255, 215, 0, 0.6));
     transform: translateY(-50%) translateX(-2px);
 }
 
@@ -2250,26 +2469,26 @@
         max-width: 100vh;
         max-height: 100vw;
     }
-    
+
     /* 确保内容在旋转后正确显示 */
     .star-city-container.force-landscape * {
         max-width: none;
         max-height: none;
     }
-    
+
     /* 标题在强制横屏时的调整 */
     .star-city-container.force-landscape h2 {
         font-size: 32px !important;
         top: 20px !important;
         left: 20px !important;
     }
-    
+
     /* 按钮在强制横屏时的调整 */
     .star-city-container.force-landscape button {
         font-size: 14px !important;
         padding: 6px 12px !important;
     }
-    
+
     /* 关闭按钮特殊定位 */
     .star-city-container.force-landscape .star-city-close-btn {
         top: 20px !important;
@@ -2278,7 +2497,7 @@
         height: 32px !important;
         font-size: 16px !important;
     }
-    
+
     /* 星星城数据显示在移动端的调整 */
     .star-city-container.force-landscape .star-city-data {
         bottom: 20px !important;
@@ -2287,17 +2506,17 @@
         padding: 10px 15px !important;
         font-size: 12px !important;
     }
-    
+
     .star-city-container.force-landscape .star-city-data .data-title {
         font-size: 14px !important;
         margin-bottom: 8px !important;
     }
-    
+
     .star-city-container.force-landscape .star-city-data .data-item {
         font-size: 11px !important;
         gap: 6px !important;
     }
-    
+
     .star-city-container.force-landscape .star-city-data .upgrade-info {
         margin-top: 8px !important;
         padding: 6px !important;
@@ -2397,29 +2616,51 @@
 
 /* 星星城动画效果 */
 @keyframes orbit1 {
-    0% { transform: rotate(0deg) translateX(100px) rotate(0deg); }
-    100% { transform: rotate(360deg) translateX(100px) rotate(-360deg); }
+    0% {
+        transform: rotate(0deg) translateX(100px) rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg) translateX(100px) rotate(-360deg);
+    }
 }
 
 @keyframes orbit2 {
-    0% { transform: rotate(0deg) translateX(80px) rotate(0deg); }
-    100% { transform: rotate(-360deg) translateX(80px) rotate(360deg); }
+    0% {
+        transform: rotate(0deg) translateX(80px) rotate(0deg);
+    }
+    100% {
+        transform: rotate(-360deg) translateX(80px) rotate(360deg);
+    }
 }
 
 @keyframes orbit3 {
-    0% { transform: rotate(0deg) translateX(120px) rotate(0deg); }
-    100% { transform: rotate(360deg) translateX(120px) rotate(-360deg); }
+    0% {
+        transform: rotate(0deg) translateX(120px) rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg) translateX(120px) rotate(-360deg);
+    }
 }
 
 @keyframes orbit4 {
-    0% { transform: rotate(0deg) translateX(90px) rotate(0deg); }
-    100% { transform: rotate(-360deg) translateX(90px) rotate(360deg); }
+    0% {
+        transform: rotate(0deg) translateX(90px) rotate(0deg);
+    }
+    100% {
+        transform: rotate(-360deg) translateX(90px) rotate(360deg);
+    }
 }
 
 @keyframes wave {
-    0%, 100% { transform: rotate(0deg); }
-    25% { transform: rotate(5deg); }
-    75% { transform: rotate(-5deg); }
+    0%, 100% {
+        transform: rotate(0deg);
+    }
+    25% {
+        transform: rotate(5deg);
+    }
+    75% {
+        transform: rotate(-5deg);
+    }
 }
 
 /* 开始许愿按钮 */
@@ -2685,33 +2926,33 @@
         height: 35px;
         font-size: 16px;
     }
-    
+
     /* 奖品统计弹窗移动端适配 */
     .prize-stats-modal {
         max-width: 95%;
         margin: 20px;
     }
-    
+
     .prize-stats-header {
         padding: 15px;
     }
-    
+
     .prize-stats-header h3 {
         font-size: 18px;
     }
-    
+
     .prize-stats-content {
         padding: 15px;
     }
-    
+
     .prize-stat-item {
         padding: 8px 6px;
     }
-    
+
     .prize-stat-name {
         font-size: 14px;
     }
-    
+
     .prize-stat-count {
         font-size: 11px;
         padding: 3px 8px;
@@ -2724,7 +2965,7 @@
         margin-left: 8px;
         min-height: 34px; /* 与移动端用户名高度一致 */
     }
-    
+
     .wish-entrance-text {
         font-size: 11px;
     }
@@ -2732,20 +2973,20 @@
     .wish-tooltip {
         width: 140px;
     }
-    
+
     .wish-tooltip-content {
         padding: 10px;
     }
-    
+
     .wish-tooltip-user {
         font-size: 13px;
     }
-    
+
     .wish-tooltip-text {
         font-size: 13px;
         max-height: 70px;
     }
-    
+
     .wish-tooltip-time {
         font-size: 10px;
     }
@@ -2820,65 +3061,76 @@
     .wish-page-title h2 {
         font-size: 24px;
     }
-    
+
     .wish-page-title p {
         font-size: 14px;
     }
-    
+
     .start-wish-button {
         font-size: 16px;
         padding: 12px 24px;
     }
-    
+
     .wish-input-content {
         padding: 20px;
         margin: 20px;
     }
-    
+
     .wish-input-content h3 {
         font-size: 20px;
     }
-    
+
     .wish-textarea {
         min-height: 60px;
         font-size: 14px;
     }
-    
+
     .wish-detail-content {
         padding: 20px;
         margin: 20px;
     }
-    
-    .wish-star-size-2 { font-size: 14px; }
-    .wish-star-size-3 { font-size: 16px; }
-    .wish-star-size-4 { font-size: 18px; }
-    .wish-star-size-5 { font-size: 20px; }
+
+    .wish-star-size-2 {
+        font-size: 14px;
+    }
+
+    .wish-star-size-3 {
+        font-size: 16px;
+    }
+
+    .wish-star-size-4 {
+        font-size: 18px;
+    }
+
+    .wish-star-size-5 {
+        font-size: 20px;
+    }
 
     /* 星星城移动端适配 */
     .star-city-title h2 {
         font-size: 28px;
     }
-    
+
     .star-city-title p {
         font-size: 14px;
     }
-    
+
     .star-city-content {
         width: 90%;
     }
-    
+
     .building {
         font-size: 36px;
     }
-    
+
     .city-star {
         font-size: 24px;
     }
-    
+
     .city-message p {
         font-size: 16px;
     }
-    
+
     .star-city-entrance-button {
         width: 45px;
         height: 45px;
@@ -2944,49 +3196,88 @@
     animation: particleFloat 3s ease-out forwards;
 }
 
-.particle-0 { animation-delay: 0.3s; --dx: -30px; --dy: -40px; }
-.particle-1 { animation-delay: 0.4s; --dx: 30px; --dy: -35px; }
-.particle-2 { animation-delay: 0.5s; --dx: -25px; --dy: -50px; }
-.particle-3 { animation-delay: 0.6s; --dx: 25px; --dy: -45px; }
-.particle-4 { animation-delay: 0.7s; --dx: -40px; --dy: -30px; }
-.particle-5 { animation-delay: 0.8s; --dx: 40px; --dy: -25px; }
-.particle-6 { animation-delay: 0.9s; --dx: -20px; --dy: -60px; }
-.particle-7 { animation-delay: 1.0s; --dx: 20px; --dy: -55px; }
+.particle-0 {
+    animation-delay: 0.3s;
+    --dx: -30px;
+    --dy: -40px;
+}
+
+.particle-1 {
+    animation-delay: 0.4s;
+    --dx: 30px;
+    --dy: -35px;
+}
+
+.particle-2 {
+    animation-delay: 0.5s;
+    --dx: -25px;
+    --dy: -50px;
+}
+
+.particle-3 {
+    animation-delay: 0.6s;
+    --dx: 25px;
+    --dy: -45px;
+}
+
+.particle-4 {
+    animation-delay: 0.7s;
+    --dx: -40px;
+    --dy: -30px;
+}
+
+.particle-5 {
+    animation-delay: 0.8s;
+    --dx: 40px;
+    --dy: -25px;
+}
+
+.particle-6 {
+    animation-delay: 0.9s;
+    --dx: -20px;
+    --dy: -60px;
+}
+
+.particle-7 {
+    animation-delay: 1.0s;
+    --dx: 20px;
+    --dy: -55px;
+}
 
 @keyframes newStarHighlight {
-    0% { 
+    0% {
         transform: scale(1);
         filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
     }
-    10% { 
+    10% {
         transform: scale(2.5);
         filter: drop-shadow(0 0 40px rgba(255, 215, 0, 1)) brightness(3);
     }
-    20% { 
+    20% {
         transform: scale(1);
         filter: drop-shadow(0 0 15px rgba(255, 215, 0, 0.8));
     }
-    30% { 
+    30% {
         transform: scale(2);
         filter: drop-shadow(0 0 30px rgba(255, 215, 0, 1)) brightness(2.5);
     }
-    40% { 
+    40% {
         transform: scale(1);
         filter: drop-shadow(0 0 12px rgba(255, 215, 0, 0.7));
     }
-    50% { 
+    50% {
         transform: scale(1.8);
         filter: drop-shadow(0 0 25px rgba(255, 215, 0, 0.9)) brightness(2);
     }
-    60% { 
+    60% {
         transform: scale(1);
         filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.6));
     }
-    70% { 
+    70% {
         transform: scale(1.5);
         filter: drop-shadow(0 0 20px rgba(255, 215, 0, 0.8)) brightness(1.5);
     }
-    100% { 
+    100% {
         transform: scale(1);
         filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
     }
@@ -3103,11 +3394,11 @@
         font-size: 14px;
         max-width: 240px;
     }
-    
+
     .animating-star {
         top: calc(100% - 100px);
     }
-    
+
     @keyframes starFlyToPosition {
         0% {
             opacity: 0;

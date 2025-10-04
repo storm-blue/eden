@@ -1,103 +1,103 @@
-import React, {useRef, useState, useEffect, useMemo} from 'react'
+import React, {useEffect, useMemo, useRef, useState} from 'react'
 import {LuckyWheel} from '@lucky-canvas/react'
 import './LuckyWheel.css'
 
 const LotteryLuckyWheel = () => {
-  const [prizes, setPrizes] = useState([
-    { 
+    const [prizes, setPrizes] = useState([
+        {
             background: '#ffcdd2', // 浅粉红色 🌈
-      fonts: [{ 
-        text: '🍰', 
+            fonts: [{
+                text: '🍰',
                 top: '15%',
                 fontSize: '30px'
-      }, { 
+            }, {
                 text: '吃的～',
                 top: '55%',
-        fontSize: '16px',
+                fontSize: '16px',
                 fontColor: '#333',
-        fontWeight: 'bold'
-      }] 
-    },
-    { 
+                fontWeight: 'bold'
+            }]
+        },
+        {
             background: '#ffe0b2', // 浅橙色 🌈
-      fonts: [{ 
-        text: '🥤', 
+            fonts: [{
+                text: '🥤',
                 top: '15%',
-        fontSize: '35px'
-      }, { 
+                fontSize: '35px'
+            }, {
                 text: '喝的～',
                 top: '55%',
-        fontSize: '16px',
+                fontSize: '16px',
                 fontColor: '#333',
-        fontWeight: 'bold'
-      }] 
-    },
-    { 
+                fontWeight: 'bold'
+            }]
+        },
+        {
             background: '#fff9c4', // 浅黄色 🌈
-      fonts: [{ 
-        text: '❤️', 
+            fonts: [{
+                text: '❤️',
                 top: '15%',
-        fontSize: '35px'
-      }, { 
+                fontSize: '35px'
+            }, {
                 text: '爱',
                 top: '55%',
-        fontSize: '18px',
-        fontColor: '#333',
-        fontWeight: 'bold'
-      }] 
-    },
-    { 
+                fontSize: '18px',
+                fontColor: '#333',
+                fontWeight: 'bold'
+            }]
+        },
+        {
             background: '#c8e6c9', // 浅绿色 🌈
-      fonts: [{ 
-        text: '💸', 
+            fonts: [{
+                text: '💸',
                 top: '15%',
-        fontSize: '35px'
-      }, { 
-        text: '空空如也', 
+                fontSize: '35px'
+            }, {
+                text: '空空如也',
                 top: '55%',
-        fontSize: '14px',
+                fontSize: '14px',
                 fontColor: '#333',
-        fontWeight: 'bold'
-      }] 
-    },
-    { 
+                fontWeight: 'bold'
+            }]
+        },
+        {
             background: '#b3e5fc', // 浅青色 🌈
-      fonts: [{ 
-        text: '🧧', 
+            fonts: [{
+                text: '🧧',
                 top: '15%',
-        fontSize: '35px'
-      }, { 
-        text: '红包', 
+                fontSize: '35px'
+            }, {
+                text: '红包',
                 top: '55%',
-        fontSize: '18px',
-        fontColor: '#333',
-        fontWeight: 'bold'
-      }] 
-    },
-    { 
-            background: '#bbdefb', // 浅蓝色 🌈
-      fonts: [{ 
-        text: '🔄', 
-                top: '15%',
-                fontSize: '30px'
-      }, { 
-        text: '再转一次', 
-                top: '55%',
-        fontSize: '14px',
+                fontSize: '18px',
                 fontColor: '#333',
-        fontWeight: 'bold'
-      }] 
-    },
-    { 
-            background: '#e1bee7', // 浅紫色 🌈
-      fonts: [{ 
-        text: '🎁', 
+                fontWeight: 'bold'
+            }]
+        },
+        {
+            background: '#bbdefb', // 浅蓝色 🌈
+            fonts: [{
+                text: '🔄',
                 top: '15%',
                 fontSize: '30px'
-      }, { 
-        text: '随机礼物', 
+            }, {
+                text: '再转一次',
                 top: '55%',
-        fontSize: '14px',
+                fontSize: '14px',
+                fontColor: '#333',
+                fontWeight: 'bold'
+            }]
+        },
+        {
+            background: '#e1bee7', // 浅紫色 🌈
+            fonts: [{
+                text: '🎁',
+                top: '15%',
+                fontSize: '30px'
+            }, {
+                text: '随机礼物',
+                top: '55%',
+                fontSize: '14px',
                 fontColor: '#333',
                 fontWeight: 'bold'
             }]
@@ -125,75 +125,75 @@ const LotteryLuckyWheel = () => {
             }, {
                 text: '许愿一次',
                 top: '55%',
-        fontSize: '14px',
+                fontSize: '14px',
                 fontColor: '#333',
-        fontWeight: 'bold'
-      }] 
-    },
-  ])
+                fontWeight: 'bold'
+            }]
+        },
+    ])
 
-  const [blocks, setBlocks] = useState([
-    { 
+    const [blocks, setBlocks] = useState([
+        {
             padding: '10px',
-      background: '#ff6ec7', // 亮粉色外圈 🌈
-      paddingColor: '#ffea00'
-    },
-    { 
+            background: '#ff6ec7', // 亮粉色外圈 🌈
+            paddingColor: '#ffea00'
+        },
+        {
             padding: '10px',
-      background: '#ffffff', // 纯白色内圈
-      paddingColor: '#00e5ff'
-    }
-  ])
+            background: '#ffffff', // 纯白色内圈
+            paddingColor: '#00e5ff'
+        }
+    ])
 
-  const [buttons, setButtons] = useState([
-    { 
-      radius: '55px', 
+    const [buttons, setButtons] = useState([
+        {
+            radius: '55px',
             background: '#ff6ec7', // 明亮红色外圈 🌈
         },
         {
             radius: '50px',
             background: '#fff5ca' // 纯白中圈
-    },
-    { 
-      radius: '45px', 
+        },
+        {
+            radius: '45px',
             background: '#f0caff' // 纯白中圈
         },
         {
             radius: '40px',
             background: '#fdeeff' // 纯白中圈
-    },
-    { 
-      radius: '35px', 
+        },
+        {
+            radius: '35px',
             background: '#678cff', // 明亮蓝色内圈 🌈
-      pointer: true, // 官方指针配置
+            pointer: true, // 官方指针配置
             fonts: []
-    }
-  ])
+        }
+    ])
 
-  // 转盘配置
-  const [defaultConfig, setDefaultConfig] = useState({
-    gutter: 8,
-    offsetDegree: 0,
-    speed: 20,
-    accelerationTime: 3000,
-    decelerationTime: 3000
-  })
+    // 转盘配置
+    const [defaultConfig, setDefaultConfig] = useState({
+        gutter: 8,
+        offsetDegree: 0,
+        speed: 20,
+        accelerationTime: 3000,
+        decelerationTime: 3000
+    })
 
-  // 指针样式配置 - 让指针更细一些
-  const [defaultStyle, setDefaultStyle] = useState({
-    pointer: {
-      style: 'triangle',
-      background: '#ff1744',
-      borderColor: '#ffffff', 
-      borderWidth: 0.5, // 更细的边框
-      width: 10, // 指针宽度
-      height: 20 // 保持长度
-    }
-  })
+    // 指针样式配置 - 让指针更细一些
+    const [defaultStyle, setDefaultStyle] = useState({
+        pointer: {
+            style: 'triangle',
+            background: '#ff1744',
+            borderColor: '#ffffff',
+            borderWidth: 0.5, // 更细的边框
+            width: 10, // 指针宽度
+            height: 20 // 保持长度
+        }
+    })
 
-  const myLucky = useRef()
-  const [isSpinning, setIsSpinning] = useState(false)
-  const [result, setResult] = useState('')
+    const myLucky = useRef()
+    const [isSpinning, setIsSpinning] = useState(false)
+    const [result, setResult] = useState('')
     const [currentPrize, setCurrentPrize] = useState('') // 存储后端返回的奖品名称
     const [userName, setUserName] = useState('') // 用户姓名
     const [showNameInput, setShowNameInput] = useState(true) // 是否显示姓名输入框
@@ -204,11 +204,11 @@ const LotteryLuckyWheel = () => {
     const [showLoveEffect, setShowLoveEffect] = useState(false)
     const [showWishPage, setShowWishPage] = useState(false)
     const [showStarCity, setShowStarCity] = useState(false)
-  const [starCityClosing, setStarCityClosing] = useState(false)
-  const [isMobileDevice, setIsMobileDevice] = useState(false) // 是否为移动设备（需要强制横屏）
-  const [starCityData, setStarCityData] = useState(null) // 星星城数据
-  const [showDonationModal, setShowDonationModal] = useState(false) // 显示捐献弹窗
-  const [userDonationPrizes, setUserDonationPrizes] = useState([]) // 用户可捐献的奖品 // 星星城关闭动画状态 // 星星城页面状态
+    const [starCityClosing, setStarCityClosing] = useState(false)
+    const [isMobileDevice, setIsMobileDevice] = useState(false) // 是否为移动设备（需要强制横屏）
+    const [starCityData, setStarCityData] = useState(null) // 星星城数据
+    const [showDonationModal, setShowDonationModal] = useState(false) // 显示捐献弹窗
+    const [userDonationPrizes, setUserDonationPrizes] = useState([]) // 用户可捐献的奖品 // 星星城关闭动画状态 // 星星城页面状态
     const [wishes, setWishes] = useState([]) // 所有许愿列表
     const [showWishInput, setShowWishInput] = useState(false) // 是否显示许愿输入框
     const [wishContent, setWishContent] = useState('') // 许愿内容
@@ -219,13 +219,13 @@ const LotteryLuckyWheel = () => {
     const [prizeStats, setPrizeStats] = useState([]) // 奖品统计数据
 
     // 奖品名称映射（与后端保持一致）
-  const prizeNames = [
+    const prizeNames = [
         '🍰 吃的～',
         '🥤 喝的～',
         '❤️ 爱',
-    '💸 空空如也',
-    '🧧 红包',
-    '🔄 再转一次',
+        '💸 空空如也',
+        '🧧 红包',
+        '🔄 再转一次',
         '🎁 随机礼物',
         '💬 陪聊服务',
         '✨ 许愿一次'
@@ -306,7 +306,7 @@ const LotteryLuckyWheel = () => {
             alert('请输入许愿内容')
             return
         }
-        
+
         if (wishContent.length > 30) {
             alert('许愿内容不能超过30个字符')
             return
@@ -323,7 +323,7 @@ const LotteryLuckyWheel = () => {
                     wishContent: wishContent.trim()
                 })
             })
-            
+
             const data = await response.json()
             if (data.success) {
                 // 准备动画数据
@@ -336,14 +336,14 @@ const LotteryLuckyWheel = () => {
                     starSize: data.data.starSize,
                     createTime: data.data.createTime
                 }
-                
+
                 // 设置动画状态
                 setAnimatingWish(newWish)
                 setShowWishAnimation(true)
-                
+
                 // 隐藏输入框但保持内容显示
                 setShowWishInput(false)
-                
+
                 // 3秒后完成动画
                 setTimeout(async () => {
                     setShowWishAnimation(false)
@@ -351,7 +351,7 @@ const LotteryLuckyWheel = () => {
                     setWishContent('')
                     await fetchWishes() // 刷新许愿列表
                     await fetchUserInfo(userName) // 刷新用户信息（包含许愿次数）
-                    
+
                     // 显示成功提示
                     const successMsg = document.createElement('div')
                     successMsg.textContent = '✨ 你的愿望已化作星光，在夜空中闪耀！'
@@ -372,7 +372,7 @@ const LotteryLuckyWheel = () => {
                         animation: successFadeInOut 2s ease-in-out forwards;
                     `
                     document.body.appendChild(successMsg)
-                    
+
                     // 让新创建的星星继续闪烁几次以突出显示
                     setTimeout(() => {
                         const newStar = document.querySelector(`[data-wish-id="${newWish.id}"]`)
@@ -380,7 +380,7 @@ const LotteryLuckyWheel = () => {
                             newStar.style.animation = 'newStarHighlight 2s ease-in-out'
                         }
                     }, 100)
-                    
+
                     // 2秒后移除提示
                     setTimeout(() => {
                         if (successMsg.parentNode) {
@@ -404,7 +404,7 @@ const LotteryLuckyWheel = () => {
             setSelectedWish(null)
             return
         }
-        
+
         // 获取点击位置相对于页面的坐标
         const rect = event.currentTarget.getBoundingClientRect()
         const wishWithPosition = {
@@ -516,7 +516,7 @@ const LotteryLuckyWheel = () => {
             const data = await response.json()
             if (data.success) {
                 console.log('捐献成功，返回的数据:', data.data)
-                
+
                 // 处理两种可能的数据格式
                 let updatedStarCityData;
                 if (data.data.starCity) {
@@ -533,10 +533,10 @@ const LotteryLuckyWheel = () => {
                     console.log('使用新格式数据结构')
                     updatedStarCityData = data.data
                 }
-                
+
                 console.log('最终星星城数据:', updatedStarCityData)
                 console.log('幸福度数据:', updatedStarCityData.happiness)
-                
+
                 alert(data.data.message)
                 // 更新星星城数据
                 setStarCityData(updatedStarCityData)
@@ -566,7 +566,7 @@ const LotteryLuckyWheel = () => {
     // 关闭星星城并恢复屏幕方向的函数
     const closeStarCity = () => {
         setStarCityClosing(true)
-        
+
         // 500ms后完全关闭
         setTimeout(() => {
             setShowStarCity(false)
@@ -598,11 +598,11 @@ const LotteryLuckyWheel = () => {
     // 获取奖品统计
     const fetchPrizeStats = async () => {
         if (!userName) return
-        
+
         try {
             const response = await fetch(`/api/lottery/history/${userName}`)
             const result = await response.json()
-            
+
             if (result.success) {
                 // 统计每种奖品的获得次数
                 const stats = {}
@@ -613,12 +613,12 @@ const LotteryLuckyWheel = () => {
                         stats[prizeName] = (stats[prizeName] || 0) + 1
                     }
                 })
-                
+
                 // 转换为数组格式，按获得次数排序
                 const statsArray = Object.entries(stats)
-                    .map(([name, count]) => ({ name, count }))
+                    .map(([name, count]) => ({name, count}))
                     .sort((a, b) => b.count - a.count)
-                
+
                 setPrizeStats(statsArray)
             } else {
                 console.error('获取奖品统计失败:', result.message)
@@ -646,8 +646,8 @@ const LotteryLuckyWheel = () => {
     }
 
     const startSpin = async () => {
-    if (isSpinning) return
-    
+        if (isSpinning) return
+
         // 检查是否已填写用户姓名
         if (!userName) {
             alert('请先填写用户姓名！')
@@ -702,11 +702,11 @@ const LotteryLuckyWheel = () => {
                 }
 
                 // 后端抽奖成功，开始转盘动画
-    myLucky.current.play()
-    
+                myLucky.current.play()
+
                 // 延迟停止转盘，让动画更自然
-    setTimeout(() => {
-      myLucky.current.stop(selectedIndex)
+                setTimeout(() => {
+                    myLucky.current.stop(selectedIndex)
                 }, 1500)
 
                 // 刷新用户信息以显示最新的剩余次数
@@ -724,7 +724,7 @@ const LotteryLuckyWheel = () => {
     }
 
     const onEnd = async (prize) => {
-    setIsSpinning(false)
+        setIsSpinning(false)
 
         // 优先使用后端返回的奖品名称，如果没有则尝试解析转盘返回的索引
         if (currentPrize) {
@@ -765,7 +765,7 @@ const LotteryLuckyWheel = () => {
                 setShowLoveEffect(true)
                 // 不自动隐藏，等待用户点击
             } else {
-    setResult(prizeText)
+                setResult(prizeText)
             }
 
             // 检查是否抽到"再转一次"
@@ -822,380 +822,384 @@ const LotteryLuckyWheel = () => {
     const handleLoveContinue = () => {
         setShowLoveEffect(false)
         // 爱心特效结束后不需要额外操作
-  }
+    }
 
-  return (
-    <div className="lucky-lottery-container">
-      {/* 星星城页面 */}
-      {showStarCity && (
-        <div 
-          className={`star-city-container ${isMobileDevice && !starCityClosing ? 'force-landscape' : ''} ${starCityClosing ? 'closing' : ''}`}
-          style={{
-            backgroundImage: `url(/picture/lv${starCityData?.level || 1}.jpg)`,
-            zIndex: 99999,
-            display: 'flex',
-            flexDirection: 'column',
-            alignItems: 'center',
-            justifyContent: 'center',
-            color: 'white'
-          }}>
-          {/* 标题 */}
-          <h2 style={{
-            fontSize: '42px', 
-            marginBottom: '10px', 
-            textShadow: '0 0 25px rgba(0,0,0,0.8), 0 0 50px rgba(255,255,255,0.6)',
-            position: 'absolute',
-            top: '30px',
-            left: '30px',
-            zIndex: 10,
-            color: 'white'
-          }}>
-            ✨ 星星城 LV{starCityData?.level || 1} ✨
-          </h2>
+    return (
+        <div className="lucky-lottery-container">
+            {/* 星星城页面 */}
+            {showStarCity && (
+                <div
+                    className={`star-city-container ${isMobileDevice && !starCityClosing ? 'force-landscape' : ''} ${starCityClosing ? 'closing' : ''}`}
+                    style={{
+                        backgroundImage: `url(/picture/lv${starCityData?.level || 1}.jpg)`,
+                        zIndex: 99999,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        color: 'white'
+                    }}>
+                    {/* 标题 */}
+                    <h2 style={{
+                        fontSize: '42px',
+                        marginBottom: '10px',
+                        textShadow: '0 0 25px rgba(0,0,0,0.8), 0 0 50px rgba(255,255,255,0.6)',
+                        position: 'absolute',
+                        top: '30px',
+                        left: '30px',
+                        zIndex: 10,
+                        color: 'white'
+                    }}>
+                        ✨ 星星城 LV{starCityData?.level || 1} ✨
+                    </h2>
 
-          {/* 可点击的捐献区域 - 简化版 */}
-          <div 
-            onClick={openDonationModal}
-            style={{
-              position: 'absolute',
-              top: '23%',
-              left: '48%',
-              transform: 'translate(-50%, -50%)',
-              width: '15px',
-              height: '15px',
-              borderRadius: '50%',
-              background: 'rgba(255, 255, 255, 0.9)',
-              cursor: 'pointer',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center',
-              transition: 'all 0.3s ease',
-              backdropFilter: 'blur(5px)',
-              animation: 'castlePulse 3s ease-in-out infinite',
-              boxShadow: '0 4px 15px rgba(255, 255, 255, 0.3)'
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.background = 'rgba(255, 255, 255, 1)'
-              e.target.style.transform = 'translate(-50%, -50%) scale(1.5)'
-              e.target.style.boxShadow = '0 6px 20px rgba(255, 255, 255, 0.5)'
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.background = 'rgba(255, 255, 255, 0.9)'
-              e.target.style.transform = 'translate(-50%, -50%) scale(1)'
-              e.target.style.boxShadow = '0 4px 15px rgba(255, 255, 255, 0.3)'
-            }}
-            title="点击进行捐献"
-          >
-          </div>
+                    {/* 可点击的捐献区域 - 简化版 */}
+                    <div
+                        onClick={openDonationModal}
+                        style={{
+                            position: 'absolute',
+                            top: '23%',
+                            left: '48%',
+                            transform: 'translate(-50%, -50%)',
+                            width: '15px',
+                            height: '15px',
+                            borderRadius: '50%',
+                            background: 'rgba(255, 255, 255, 0.9)',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            transition: 'all 0.3s ease',
+                            backdropFilter: 'blur(5px)',
+                            animation: 'castlePulse 3s ease-in-out infinite',
+                            boxShadow: '0 4px 15px rgba(255, 255, 255, 0.3)'
+                        }}
+                        onMouseEnter={(e) => {
+                            e.target.style.background = 'rgba(255, 255, 255, 1)'
+                            e.target.style.transform = 'translate(-50%, -50%) scale(1.5)'
+                            e.target.style.boxShadow = '0 6px 20px rgba(255, 255, 255, 0.5)'
+                        }}
+                        onMouseLeave={(e) => {
+                            e.target.style.background = 'rgba(255, 255, 255, 0.9)'
+                            e.target.style.transform = 'translate(-50%, -50%) scale(1)'
+                            e.target.style.boxShadow = '0 4px 15px rgba(255, 255, 255, 0.3)'
+                        }}
+                        title="点击进行捐献"
+                    >
+                    </div>
 
-          {/* 关闭按钮 */}
-          <button
-            className="star-city-close-btn"
-            style={{
-              position: 'absolute',
-              top: '30px',
-              right: '30px',
-              background: 'rgba(255, 255, 255, 0.3)',
-              color: 'white',
-              border: 'none',
-              width: '40px',
-              height: '40px',
-              borderRadius: '50%',
-              fontSize: '20px',
-              cursor: 'pointer',
-              backdropFilter: 'blur(10px)',
-              transition: 'all 0.3s ease',
-              boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
-            }}
-            onClick={() => closeStarCity()}
-            onMouseEnter={(e) => {
-              e.target.style.background = 'rgba(255, 255, 255, 0.5)'
-              e.target.style.transform = 'scale(1.1)'
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.background = 'rgba(255, 255, 255, 0.3)'
-              e.target.style.transform = 'scale(1)'
-            }}
-            title="返回愿望星空"
-          >
-            ✕
-          </button>
+                    {/* 关闭按钮 */}
+                    <button
+                        className="star-city-close-btn"
+                        style={{
+                            position: 'absolute',
+                            top: '30px',
+                            right: '30px',
+                            background: 'rgba(255, 255, 255, 0.3)',
+                            color: 'white',
+                            border: 'none',
+                            width: '40px',
+                            height: '40px',
+                            borderRadius: '50%',
+                            fontSize: '20px',
+                            cursor: 'pointer',
+                            backdropFilter: 'blur(10px)',
+                            transition: 'all 0.3s ease',
+                            boxShadow: '0 4px 15px rgba(0,0,0,0.2)'
+                        }}
+                        onClick={() => closeStarCity()}
+                        onMouseEnter={(e) => {
+                            e.target.style.background = 'rgba(255, 255, 255, 0.5)'
+                            e.target.style.transform = 'scale(1.1)'
+                        }}
+                        onMouseLeave={(e) => {
+                            e.target.style.background = 'rgba(255, 255, 255, 0.3)'
+                            e.target.style.transform = 'scale(1)'
+                        }}
+                        title="返回愿望星空"
+                    >
+                        ✕
+                    </button>
 
-          {/* 星星城数据显示 - 右下角 */}
-          {starCityData && (
-            <div className="star-city-data" style={{
-              position: 'absolute',
-              bottom: '30px',
-              right: '30px',
-              background: 'rgba(0, 0, 0, 0.7)',
-              color: 'white',
-              padding: '15px 20px',
-              borderRadius: '15px',
-              backdropFilter: 'blur(10px)',
-              border: '1px solid rgba(255, 255, 255, 0.2)',
-              minWidth: '200px',
-              textAlign: 'center',
-              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
-            }}>
-              <div className="data-title" style={{
-                fontSize: '16px',
-                fontWeight: 'bold',
-                marginBottom: '10px',
-                color: '#FFD700',
-                textShadow: '0 0 10px rgba(255, 215, 0, 0.5)'
-              }}>
-                城市数据
-              </div>
-              
-              <div style={{
-                display: 'flex',
-                flexDirection: 'column',
-                gap: '8px',
-                fontSize: '14px'
-              }}>
-                <div className="data-item" style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}>
-                  <span>👥 人口:</span>
-                  <span style={{color: '#87CEEB', fontWeight: 'bold'}}>
+                    {/* 星星城数据显示 - 右下角 */}
+                    {starCityData && (
+                        <div className="star-city-data" style={{
+                            position: 'absolute',
+                            bottom: '30px',
+                            right: '30px',
+                            background: 'rgba(0, 0, 0, 0.7)',
+                            color: 'white',
+                            padding: '15px 20px',
+                            borderRadius: '15px',
+                            backdropFilter: 'blur(10px)',
+                            border: '1px solid rgba(255, 255, 255, 0.2)',
+                            minWidth: '200px',
+                            textAlign: 'center',
+                            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)'
+                        }}>
+                            <div className="data-title" style={{
+                                fontSize: '16px',
+                                fontWeight: 'bold',
+                                marginBottom: '10px',
+                                color: '#FFD700',
+                                textShadow: '0 0 10px rgba(255, 215, 0, 0.5)'
+                            }}>
+                                城市数据
+                            </div>
+
+                            <div style={{
+                                display: 'flex',
+                                flexDirection: 'column',
+                                gap: '8px',
+                                fontSize: '14px'
+                            }}>
+                                <div className="data-item" style={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center'
+                                }}>
+                                    <span>👥 人口:</span>
+                                    <span style={{color: '#87CEEB', fontWeight: 'bold'}}>
                     {starCityData.populationFormatted}
                   </span>
-                </div>
-                
-                <div className="data-item" style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}>
-                  <span>🍎 食物:</span>
-                  <span style={{color: '#90EE90', fontWeight: 'bold'}}>
+                                </div>
+
+                                <div className="data-item" style={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center'
+                                }}>
+                                    <span>🍎 食物:</span>
+                                    <span style={{color: '#90EE90', fontWeight: 'bold'}}>
                     {starCityData.foodFormatted}
                   </span>
-                </div>
-                
-                <div className="data-item" style={{
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  alignItems: 'center'
-                }}>
-                  <span>😊 幸福:</span>
-                  <span style={{color: '#FFB6C1', fontWeight: 'bold'}}>
+                                </div>
+
+                                <div className="data-item" style={{
+                                    display: 'flex',
+                                    justifyContent: 'space-between',
+                                    alignItems: 'center'
+                                }}>
+                                    <span>😊 幸福:</span>
+                                    <span style={{color: '#FFB6C1', fontWeight: 'bold'}}>
                     {starCityData.happiness !== undefined && starCityData.happiness !== null ? starCityData.happiness : '?'}
                   </span>
+                                </div>
+                            </div>
+
+                            {starCityData.canUpgrade && starCityData.nextLevelRequirements && (
+                                <div className="upgrade-info" style={{
+                                    marginTop: '10px',
+                                    padding: '8px',
+                                    background: 'rgba(255, 215, 0, 0.2)',
+                                    borderRadius: '8px',
+                                    border: '1px solid rgba(255, 215, 0, 0.3)'
+                                }}>
+                                    <div style={{fontSize: '12px', color: '#FFD700', marginBottom: '4px'}}>
+                                        🎯 升级条件 (LV{starCityData.level + 1}):
+                                    </div>
+                                    <div style={{fontSize: '11px', lineHeight: '1.3'}}>
+                                        人口{starCityData.nextLevelRequirements.populationFormatted} |
+                                        食物{starCityData.nextLevelRequirements.foodFormatted} |
+                                        幸福{starCityData.nextLevelRequirements.happiness}
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    )}
+
                 </div>
-              </div>
-              
-              {starCityData.canUpgrade && starCityData.nextLevelRequirements && (
-                <div className="upgrade-info" style={{
-                  marginTop: '10px',
-                  padding: '8px',
-                  background: 'rgba(255, 215, 0, 0.2)',
-                  borderRadius: '8px',
-                  border: '1px solid rgba(255, 215, 0, 0.3)'
-                }}>
-                  <div style={{fontSize: '12px', color: '#FFD700', marginBottom: '4px'}}>
-                    🎯 升级条件 (LV{starCityData.level + 1}):
-                  </div>
-                  <div style={{fontSize: '11px', lineHeight: '1.3'}}>
-                    人口{starCityData.nextLevelRequirements.populationFormatted} | 
-                    食物{starCityData.nextLevelRequirements.foodFormatted} | 
-                    幸福{starCityData.nextLevelRequirements.happiness}
-                  </div>
-                </div>
-              )}
-            </div>
-          )}
+            )}
 
-        </div>
-      )}
-
-      {/* 捐献弹窗 */}
-      {showDonationModal && (
-        <div 
-          className={`donation-modal-overlay ${isMobileDevice ? 'force-landscape' : ''}`} 
-          style={{
-            position: 'fixed',
-            top: isMobileDevice ? '50%' : 0,
-            left: isMobileDevice ? '50%' : 0,
-            width: isMobileDevice ? '100vh' : '100vw',
-            height: isMobileDevice ? '100vw' : '100vh',
-            background: 'rgba(0, 0, 0, 0.8)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 100000,
-            transform: isMobileDevice ? 'translate(-50%, -50%) rotate(90deg)' : 'none',
-            transformOrigin: 'center center'
-          }}>
-          <div className="donation-modal-content" style={{
-            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-            borderRadius: '20px',
-            padding: isMobileDevice ? '20px' : '30px',
-            maxWidth: isMobileDevice ? '350px' : '400px',
-            width: '90%',
-            maxHeight: '80vh',
-            overflow: 'auto',
-            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-            border: '2px solid rgba(255, 255, 255, 0.2)',
-            fontSize: isMobileDevice ? '14px' : '16px'
-          }}>
-            {/* 标题 */}
-            <div style={{
-              textAlign: 'center',
-              marginBottom: '25px',
-              color: 'white'
-            }}>
-              <div style={{fontSize: isMobileDevice ? '28px' : '32px', marginBottom: '10px'}}>🏰</div>
-              <h3 style={{
-                fontSize: isMobileDevice ? '20px' : '24px',
-                margin: '0',
-                textShadow: '0 0 15px rgba(255, 255, 255, 0.5)'
-              }}>
-                城堡捐献
-              </h3>
-              <p style={{
-                fontSize: isMobileDevice ? '12px' : '14px',
-                margin: '10px 0 0 0',
-                opacity: 0.9
-              }}>
-                为星星城的发展贡献您的奖品！
-              </p>
-            </div>
-
-            {/* 捐献效果说明 */}
-            <div style={{
-              background: 'rgba(255, 255, 255, 0.1)',
-              borderRadius: '15px',
-              padding: '15px',
-              marginBottom: '20px',
-              color: 'white',
-              fontSize: isMobileDevice ? '12px' : '13px',
-              lineHeight: '1.5'
-            }}>
-              <div style={{fontWeight: 'bold', marginBottom: '8px', color: '#FFD700'}}>
-                🎁 捐献效果：
-              </div>
-              <div>🍽️ 🍰 吃的～ → +1万食物</div>
-              <div>🥤 🥤 喝的～ → +0.5万食物 +1幸福</div>
-              <div>🎁 🎁 随机礼物 → +2幸福</div>
-            </div>
-
-            {/* 可捐献的奖品列表 */}
-            <div style={{marginBottom: '20px'}}>
-              <div style={{
-                color: 'white',
-                fontSize: isMobileDevice ? '14px' : '16px',
-                fontWeight: 'bold',
-                marginBottom: '15px',
-                textAlign: 'center'
-              }}>
-                您的可捐献奖品：
-              </div>
-              
-              {userDonationPrizes.length > 0 ? (
-                <div style={{
-                  display: 'flex',
-                  flexDirection: 'column',
-                  gap: '10px'
-                }}>
-                  {userDonationPrizes.map((prize, index) => (
-                    <div
-                      key={index}
-                      onClick={() => handleDonation(prize.name)}
-                      style={{
-                        background: 'rgba(255, 255, 255, 0.15)',
-                        borderRadius: '12px',
-                        padding: '15px',
-                        cursor: 'pointer',
-                        transition: 'all 0.3s ease',
-                        border: '1px solid rgba(255, 255, 255, 0.2)',
+            {/* 捐献弹窗 */}
+            {showDonationModal && (
+                <div
+                    className={`donation-modal-overlay ${isMobileDevice ? 'force-landscape' : ''}`}
+                    style={{
+                        position: 'fixed',
+                        top: isMobileDevice ? '50%' : 0,
+                        left: isMobileDevice ? '50%' : 0,
+                        width: isMobileDevice ? '100vh' : '100vw',
+                        height: isMobileDevice ? '100vw' : '100vh',
+                        background: 'rgba(0, 0, 0, 0.8)',
                         display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'center'
-                      }}
-                      onMouseEnter={(e) => {
-                        e.target.style.background = 'rgba(255, 255, 255, 0.25)'
-                        e.target.style.transform = 'scale(1.02)'
-                      }}
-                      onMouseLeave={(e) => {
-                        e.target.style.background = 'rgba(255, 255, 255, 0.15)'
-                        e.target.style.transform = 'scale(1)'
-                      }}
-                    >
-                      <div style={{
-                        color: 'white',
-                        fontSize: isMobileDevice ? '14px' : '16px',
-                        fontWeight: 'bold'
-                      }}>
-                        {prize.name === '🍰 吃的～' && '🍽️'} 
-                        {prize.name === '🥤 喝的～' && '🥤'} 
-                        {prize.name === '🎁 随机礼物' && '🎁'} 
-                        {' ' + prize.name}
-                      </div>
-                      <div style={{
-                        background: 'rgba(255, 215, 0, 0.8)',
-                        color: '#333',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 100000,
+                        transform: isMobileDevice ? 'translate(-50%, -50%) rotate(90deg)' : 'none',
+                        transformOrigin: 'center center'
+                    }}>
+                    <div className="donation-modal-content" style={{
+                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                         borderRadius: '20px',
-                        padding: '5px 12px',
-                        fontSize: isMobileDevice ? '12px' : '14px',
-                        fontWeight: 'bold'
-                      }}>
-                        x{prize.count}
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              ) : (
-                <div style={{
-                  textAlign: 'center',
-                  color: 'rgba(255, 255, 255, 0.7)',
-                  fontSize: isMobileDevice ? '14px' : '16px',
-                  padding: '30px',
-                  background: 'rgba(255, 255, 255, 0.1)',
-                  borderRadius: '15px'
-                }}>
-                  <div style={{fontSize: isMobileDevice ? '40px' : '48px', marginBottom: '15px', opacity: 0.5}}>📦</div>
-                  <div>您暂时没有可捐献的奖品</div>
-                  <div style={{fontSize: isMobileDevice ? '12px' : '14px', marginTop: '8px'}}>
-                    快去抽奖获得"🍰 吃的～"、"🥤 喝的～"或"🎁 随机礼物"吧！
-                  </div>
-                </div>
-              )}
-            </div>
+                        padding: isMobileDevice ? '20px' : '30px',
+                        maxWidth: isMobileDevice ? '350px' : '400px',
+                        width: '90%',
+                        maxHeight: '80vh',
+                        overflow: 'auto',
+                        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+                        border: '2px solid rgba(255, 255, 255, 0.2)',
+                        fontSize: isMobileDevice ? '14px' : '16px'
+                    }}>
+                        {/* 标题 */}
+                        <div style={{
+                            textAlign: 'center',
+                            marginBottom: '25px',
+                            color: 'white'
+                        }}>
+                            <div style={{fontSize: isMobileDevice ? '28px' : '32px', marginBottom: '10px'}}>🏰</div>
+                            <h3 style={{
+                                fontSize: isMobileDevice ? '20px' : '24px',
+                                margin: '0',
+                                textShadow: '0 0 15px rgba(255, 255, 255, 0.5)'
+                            }}>
+                                城堡捐献
+                            </h3>
+                            <p style={{
+                                fontSize: isMobileDevice ? '12px' : '14px',
+                                margin: '10px 0 0 0',
+                                opacity: 0.9
+                            }}>
+                                为星星城的发展贡献您的奖品！
+                            </p>
+                        </div>
 
-            {/* 关闭按钮 */}
-            <div style={{textAlign: 'center'}}>
-              <button
-                onClick={() => setShowDonationModal(false)}
-                style={{
-                  background: 'rgba(255, 255, 255, 0.2)',
-                  color: 'white',
-                  border: 'none',
-                  borderRadius: '25px',
-                  padding: isMobileDevice ? '10px 25px' : '12px 30px',
-                  fontSize: isMobileDevice ? '14px' : '16px',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  backdropFilter: 'blur(10px)',
-                  border: '1px solid rgba(255, 255, 255, 0.3)'
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.background = 'rgba(255, 255, 255, 0.3)'
-                  e.target.style.transform = 'scale(1.05)'
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.background = 'rgba(255, 255, 255, 0.2)'
-                  e.target.style.transform = 'scale(1)'
-                }}
-              >
-                关闭
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+                        {/* 捐献效果说明 */}
+                        <div style={{
+                            background: 'rgba(255, 255, 255, 0.1)',
+                            borderRadius: '15px',
+                            padding: '15px',
+                            marginBottom: '20px',
+                            color: 'white',
+                            fontSize: isMobileDevice ? '12px' : '13px',
+                            lineHeight: '1.5'
+                        }}>
+                            <div style={{fontWeight: 'bold', marginBottom: '8px', color: '#FFD700'}}>
+                                🎁 捐献效果：
+                            </div>
+                            <div>🍽️ 🍰 吃的～ → +1万食物</div>
+                            <div>🥤 🥤 喝的～ → +0.5万食物 +1幸福</div>
+                            <div>🎁 🎁 随机礼物 → +2幸福</div>
+                        </div>
+
+                        {/* 可捐献的奖品列表 */}
+                        <div style={{marginBottom: '20px'}}>
+                            <div style={{
+                                color: 'white',
+                                fontSize: isMobileDevice ? '14px' : '16px',
+                                fontWeight: 'bold',
+                                marginBottom: '15px',
+                                textAlign: 'center'
+                            }}>
+                                您的可捐献奖品：
+                            </div>
+
+                            {userDonationPrizes.length > 0 ? (
+                                <div style={{
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    gap: '10px'
+                                }}>
+                                    {userDonationPrizes.map((prize, index) => (
+                                        <div
+                                            key={index}
+                                            onClick={() => handleDonation(prize.name)}
+                                            style={{
+                                                background: 'rgba(255, 255, 255, 0.15)',
+                                                borderRadius: '12px',
+                                                padding: '15px',
+                                                cursor: 'pointer',
+                                                transition: 'all 0.3s ease',
+                                                border: '1px solid rgba(255, 255, 255, 0.2)',
+                                                display: 'flex',
+                                                justifyContent: 'space-between',
+                                                alignItems: 'center'
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                e.target.style.background = 'rgba(255, 255, 255, 0.25)'
+                                                e.target.style.transform = 'scale(1.02)'
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.target.style.background = 'rgba(255, 255, 255, 0.15)'
+                                                e.target.style.transform = 'scale(1)'
+                                            }}
+                                        >
+                                            <div style={{
+                                                color: 'white',
+                                                fontSize: isMobileDevice ? '14px' : '16px',
+                                                fontWeight: 'bold'
+                                            }}>
+                                                {prize.name === '🍰 吃的～' && '🍽️'}
+                                                {prize.name === '🥤 喝的～' && '🥤'}
+                                                {prize.name === '🎁 随机礼物' && '🎁'}
+                                                {' ' + prize.name}
+                                            </div>
+                                            <div style={{
+                                                background: 'rgba(255, 215, 0, 0.8)',
+                                                color: '#333',
+                                                borderRadius: '20px',
+                                                padding: '5px 12px',
+                                                fontSize: isMobileDevice ? '12px' : '14px',
+                                                fontWeight: 'bold'
+                                            }}>
+                                                x{prize.count}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            ) : (
+                                <div style={{
+                                    textAlign: 'center',
+                                    color: 'rgba(255, 255, 255, 0.7)',
+                                    fontSize: isMobileDevice ? '14px' : '16px',
+                                    padding: '30px',
+                                    background: 'rgba(255, 255, 255, 0.1)',
+                                    borderRadius: '15px'
+                                }}>
+                                    <div style={{
+                                        fontSize: isMobileDevice ? '40px' : '48px',
+                                        marginBottom: '15px',
+                                        opacity: 0.5
+                                    }}>📦
+                                    </div>
+                                    <div>您暂时没有可捐献的奖品</div>
+                                    <div style={{fontSize: isMobileDevice ? '12px' : '14px', marginTop: '8px'}}>
+                                        快去抽奖获得"🍰 吃的～"、"🥤 喝的～"或"🎁 随机礼物"吧！
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+
+                        {/* 关闭按钮 */}
+                        <div style={{textAlign: 'center'}}>
+                            <button
+                                onClick={() => setShowDonationModal(false)}
+                                style={{
+                                    background: 'rgba(255, 255, 255, 0.2)',
+                                    color: 'white',
+                                    borderRadius: '25px',
+                                    padding: isMobileDevice ? '10px 25px' : '12px 30px',
+                                    fontSize: isMobileDevice ? '14px' : '16px',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.3s ease',
+                                    backdropFilter: 'blur(10px)',
+                                    border: '1px solid rgba(255, 255, 255, 0.3)'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.target.style.background = 'rgba(255, 255, 255, 0.3)'
+                                    e.target.style.transform = 'scale(1.05)'
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.target.style.background = 'rgba(255, 255, 255, 0.2)'
+                                    e.target.style.transform = 'scale(1)'
+                                }}
+                            >
+                                关闭
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
             {/* 用户姓名输入模态框 */}
             {showNameInput && (
                 <div className="name-input-modal">
@@ -1226,43 +1230,43 @@ const LotteryLuckyWheel = () => {
                 </div>
             )}
 
-      {/* 标题 */}
-      <div className="header">
-        <h1 className="title">🎪 Eden欢乐抽奖 🎪</h1>
+            {/* 标题 */}
+            <div className="header">
+                <h1 className="title">🎪 Eden欢乐抽奖 🎪</h1>
                 <p className="subtitle">
                     {userName ? `${userName}，转动转盘，好运连连！` : '转动转盘，好运连连！'}
                 </p>
-      </div>
-      
-      {/* 帮助按钮 - 右上角 */}
-      {userName && (
-          <button 
-              className="help-button"
-              onClick={() => {
-                  fetchPrizeStats()
-                  setShowPrizeStats(true)
-              }}
-              title="查看我的奖品"
-          >
-              ?
-          </button>
-      )}
+            </div>
 
-      {/* 转盘区域 */}
-      <div className="wheel-container">
-        <LuckyWheel
-          ref={myLucky}
-          width="380px"
-          height="380px"
-          prizes={prizes}
-          blocks={blocks}
-          buttons={buttons}
-          defaultConfig={defaultConfig}
-          defaultStyle={defaultStyle}
+            {/* 帮助按钮 - 右上角 */}
+            {userName && (
+                <button
+                    className="help-button"
+                    onClick={() => {
+                        fetchPrizeStats()
+                        setShowPrizeStats(true)
+                    }}
+                    title="查看我的奖品"
+                >
+                    ?
+                </button>
+            )}
+
+            {/* 转盘区域 */}
+            <div className="wheel-container">
+                <LuckyWheel
+                    ref={myLucky}
+                    width="380px"
+                    height="380px"
+                    prizes={prizes}
+                    blocks={blocks}
+                    buttons={buttons}
+                    defaultConfig={defaultConfig}
+                    defaultStyle={defaultStyle}
                     onStart={() => {
                     }} // 点击抽奖按钮会触发
-          onEnd={onEnd}
-        />
+                    onEnd={onEnd}
+                />
                 {/* 转盘中心显示剩余次数 */}
                 {userName && (
                     <div className="wheel-center-info">
@@ -1277,10 +1281,10 @@ const LotteryLuckyWheel = () => {
                         </div>
                     </div>
                 )}
-      </div>
+            </div>
 
-      {/* 控制按钮 */}
-      <div className="controls">
+            {/* 控制按钮 */}
+            <div className="controls">
                 {/* 用户信息行 */}
                 {userName && (
                     <div className="user-info-row">
@@ -1296,10 +1300,10 @@ const LotteryLuckyWheel = () => {
                         >
                             👤 {userName}
                         </div>
-                        
+
                         {/* 许愿入口按钮 - 用户姓名右侧，只对存在的用户显示 */}
                         {userInfo && userInfo.message !== "用户不存在" && (
-        <button 
+                            <button
                                 className="wish-entrance-button-inline"
                                 onClick={() => setShowWishPage(true)}
                                 title={`进入许愿页面 ${userInfo && userInfo.wishCount > 0 ? `(${userInfo.wishCount}次许愿机会)` : '(暂无许愿机会)'}`}
@@ -1308,13 +1312,13 @@ const LotteryLuckyWheel = () => {
                                 {userInfo && userInfo.wishCount > 0 && (
                                     <span className="wish-count-badge">{userInfo.wishCount}</span>
                                 )}
-        </button>
+                            </button>
                         )}
                     </div>
                 )}
-        
+
                 {/* 开始抽奖按钮 */}
-        <button 
+                <button
                     className={`spin-button ${isSpinning || !userName || !userInfo || showWelcomeEffect || !welcomeEffectFinished || userInfo.remainingDraws <= 0 ? 'disabled' : ''}`}
                     onClick={startSpin}
                     disabled={isSpinning || !userName || !userInfo || showWelcomeEffect || !welcomeEffectFinished || userInfo.remainingDraws <= 0}
@@ -1325,15 +1329,15 @@ const LotteryLuckyWheel = () => {
                                 (!userInfo || userInfo.message === "用户不存在") ? '👤 用户不存在' :
                                     (userInfo.remainingDraws <= 0) ? '🚫 次数已用完' :
                                         '🎲 转动命运'}
-        </button>
-      </div>
+                </button>
+            </div>
 
-      {/* 结果显示 */}
-      {result && (
-        <div className="result-modal">
-          <div className="result-content">
-            <h2 className="result-title">🎉 恭喜你获得 🎉</h2>
-            <div className="result-prize">{result}</div>
+            {/* 结果显示 */}
+            {result && (
+                <div className="result-modal">
+                    <div className="result-content">
+                        <h2 className="result-title">🎉 恭喜你获得 🎉</h2>
+                        <div className="result-prize">{result}</div>
                         <div className="result-description">
                             {getRandomPrizeDescription(result)}
                         </div>
@@ -1360,15 +1364,15 @@ const LotteryLuckyWheel = () => {
                                 </button>
                             </div>
                         ) : (
-            <button 
-              className="continue-button"
+                            <button
+                                className="continue-button"
                                 onClick={() => {
                                     setResult('')
                                     setCurrentPrize('')
                                 }}
-            >
-              继续游戏
-            </button>
+                            >
+                                继续游戏
+                            </button>
                         )}
                     </div>
                 </div>
@@ -1472,14 +1476,14 @@ const LotteryLuckyWheel = () => {
                     </div>
                 </div>
             )}
-            
+
             {/* 奖品统计弹窗 */}
             {showPrizeStats && (
                 <div className="prize-stats-overlay">
                     <div className="prize-stats-modal">
                         <div className="prize-stats-header">
                             <h3>🏆 我的奖品</h3>
-                            <button 
+                            <button
                                 className="prize-stats-close"
                                 onClick={() => setShowPrizeStats(false)}
                             >
@@ -1514,7 +1518,7 @@ const LotteryLuckyWheel = () => {
                 <div className="wish-page-overlay">
                     <div className="wish-page-container">
                         {/* 夜空背景 */}
-                        <div 
+                        <div
                             className="night-sky"
                             onClick={() => setSelectedWish(null)}
                         >
@@ -1537,7 +1541,7 @@ const LotteryLuckyWheel = () => {
                                     ✨
                                 </div>
                             ))}
-                            
+
                             {/* 背景装饰星星 */}
                             <div className="background-stars">
                                 {backgroundStars.map((star) => (
@@ -1607,7 +1611,7 @@ const LotteryLuckyWheel = () => {
                                     {animatingWish.wishContent}
                                 </div>
                                 {/* 变成星星并飞到目标位置 */}
-                                <div 
+                                <div
                                     className="animating-star"
                                     style={{
                                         '--target-x': `${animatingWish.starX}%`,
@@ -1639,13 +1643,13 @@ const LotteryLuckyWheel = () => {
                                         maxLength={30}
                                     />
                                     <div className="wish-input-buttons">
-                                        <button 
+                                        <button
                                             className="wish-confirm-button"
                                             onClick={createWish}
                                         >
                                             许愿
                                         </button>
-                                        <button 
+                                        <button
                                             className="wish-cancel-button"
                                             onClick={() => {
                                                 setShowWishInput(false)
@@ -1664,7 +1668,7 @@ const LotteryLuckyWheel = () => {
 
                         {/* 许愿详情小弹框 */}
                         {selectedWish && (
-                            <div 
+                            <div
                                 className="wish-tooltip"
                                 style={{
                                     position: 'fixed',
@@ -1678,7 +1682,7 @@ const LotteryLuckyWheel = () => {
                                 <div className="wish-tooltip-content">
                                     <div className="wish-tooltip-header">
                                         <span className="wish-tooltip-user">✨ {selectedWish.userId}</span>
-                                        <button 
+                                        <button
                                             className="wish-tooltip-close"
                                             onClick={closeWishDetail}
                                         >
@@ -1696,19 +1700,19 @@ const LotteryLuckyWheel = () => {
                                 <div className="wish-tooltip-arrow"></div>
                             </div>
                         )}
-          </div>
-        </div>
-      )}
+                    </div>
+                </div>
+            )}
 
-      {/* 装饰元素 */}
-      <div className="decorations">
-        <div className="star star-1">⭐</div>
-        <div className="star star-2">🌟</div>
-        <div className="star star-3">✨</div>
-        <div className="star star-4">💫</div>
-      </div>
-    </div>
-  )
+            {/* 装饰元素 */}
+            <div className="decorations">
+                <div className="star star-1">⭐</div>
+                <div className="star star-2">🌟</div>
+                <div className="star star-3">✨</div>
+                <div className="star star-4">💫</div>
+            </div>
+        </div>
+    )
 }
 
 export default LotteryLuckyWheel
