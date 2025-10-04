@@ -2524,6 +2524,22 @@
     }
 }
 
+/* 捐献效果提示动画 */
+@keyframes donationEffectPulse {
+    0% {
+        opacity: 0;
+        transform: translateY(-50%) scale(0.8);
+    }
+    50% {
+        opacity: 1;
+        transform: translateY(-50%) scale(1.1);
+    }
+    100% {
+        opacity: 1;
+        transform: translateY(-50%) scale(1);
+    }
+}
+
 /* 捐献按钮脉冲动画 - 白色光圈 */
 @keyframes castlePulse {
     0% {
