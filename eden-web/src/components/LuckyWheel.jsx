@@ -192,9 +192,11 @@ const LotteryLuckyWheel = () => {
     })
 
     const myLucky = useRef()
+    const starCityAudioRef = useRef() // 星星城背景音乐引用
     const [isSpinning, setIsSpinning] = useState(false)
     const [result, setResult] = useState('')
     const [currentPrize, setCurrentPrize] = useState('') // 存储后端返回的奖品名称
+    const [isMusicPlaying, setIsMusicPlaying] = useState(false) // 音乐播放状态
     const [userName, setUserName] = useState('') // 用户姓名
     const [showNameInput, setShowNameInput] = useState(true) // 是否显示姓名输入框
     const [tempName, setTempName] = useState('') // 临时存储输入的姓名
@@ -583,9 +585,34 @@ const LotteryLuckyWheel = () => {
         setShowDonationModal(true)
     }
 
+    // 播放星星城背景音乐
+    const playStarCityMusic = () => {
+        if (starCityAudioRef.current && !isMusicPlaying) {
+            starCityAudioRef.current.currentTime = 0
+            starCityAudioRef.current.play().then(() => {
+                setIsMusicPlaying(true)
+                console.log('星星城背景音乐开始播放')
+            }).catch(error => {
+                console.log('背景音乐播放失败:', error)
+            })
+        }
+    }
+
+    // 停止星星城背景音乐
+    const stopStarCityMusic = () => {
+        if (starCityAudioRef.current && isMusicPlaying) {
+            starCityAudioRef.current.pause()
+            starCityAudioRef.current.currentTime = 0
+            setIsMusicPlaying(false)
+            console.log('星星城背景音乐已停止')
+        }
+    }
+
     // 关闭星星城并恢复屏幕方向的函数
     const closeStarCity = () => {
         setStarCityClosing(true)
+        // 停止背景音乐
+        stopStarCityMusic()
 
         // 500ms后完全关闭
         setTimeout(() => {
@@ -598,6 +625,10 @@ const LotteryLuckyWheel = () => {
     useEffect(() => {
         if (showStarCity) {
             fetchStarCityData()
+            // 播放背景音乐
+            setTimeout(() => {
+                playStarCityMusic()
+            }, 500) // 延迟500ms播放，确保页面已加载
         }
     }, [showStarCity])
 
@@ -846,6 +877,18 @@ const LotteryLuckyWheel = () => {
 
     return (
         <div className="lucky-lottery-container">
+            {/* 星星城背景音乐 */}
+            <audio
+                ref={starCityAudioRef}
+                loop
+                preload="auto"
+                style={{ display: 'none' }}
+            >
+                <source src="/audio/star-city-bg.mp3" type="audio/mpeg" />
+                <source src="/audio/star-city-bg.ogg" type="audio/ogg" />
+                您的浏览器不支持音频播放。
+            </audio>
+
             {/* 星星城页面 */}
             {showStarCity && (
                 <div
