@@ -6,10 +6,12 @@ import com.eden.lottery.dto.UserManagementRequest;
 import com.eden.lottery.entity.LotteryRecord;
 import com.eden.lottery.entity.User;
 import com.eden.lottery.entity.Wish;
+import com.eden.lottery.entity.ResidenceHistory;
 import com.eden.lottery.service.AdminService;
 import com.eden.lottery.service.LotteryService;
 import com.eden.lottery.service.UserAttemptService;
 import com.eden.lottery.service.WishService;
+import com.eden.lottery.service.ResidenceHistoryService;
 import com.eden.lottery.entity.UserAttempt;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -19,6 +21,7 @@ import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 /**
@@ -34,12 +37,14 @@ public class AdminController {
     private final LotteryService lotteryService;
     private final UserAttemptService userAttemptService;
     private final WishService wishService;
+    private final ResidenceHistoryService residenceHistoryService;
     
-    public AdminController(AdminService adminService, LotteryService lotteryService, UserAttemptService userAttemptService, WishService wishService) {
+    public AdminController(AdminService adminService, LotteryService lotteryService, UserAttemptService userAttemptService, WishService wishService, ResidenceHistoryService residenceHistoryService) {
         this.adminService = adminService;
         this.lotteryService = lotteryService;
         this.userAttemptService = userAttemptService;
         this.wishService = wishService;
+        this.residenceHistoryService = residenceHistoryService;
     }
 
     /**
@@ -525,6 +530,126 @@ public class AdminController {
         } catch (Exception e) {
             logger.error("获取愿望统计失败", e);
             return ApiResponse.error("获取愿望统计失败");
+        }
+    }
+
+    /**
+     * 获取所有居住历史记录（分页）
+     */
+    @GetMapping("/residence-history")
+    public ApiResponse<Map<String, Object>> getAllResidenceHistory(HttpServletRequest request,
+                                                                  @RequestParam(defaultValue = "1") int page,
+                                                                  @RequestParam(defaultValue = "20") int size) {
+        try {
+            if (!validateAdmin(request)) {
+                return ApiResponse.error("未授权访问");
+            }
+
+            if (page < 1) page = 1;
+            if (size < 1 || size > 100) size = 20;
+
+            Map<String, Object> result = residenceHistoryService.getAllResidenceHistory(page, size);
+            return ApiResponse.success("获取居住历史成功", result);
+        } catch (Exception e) {
+            logger.error("获取居住历史失败", e);
+            return ApiResponse.error("获取居住历史失败");
+        }
+    }
+
+    /**
+     * 获取指定用户的居住历史
+     */
+    @GetMapping("/residence-history/user/{userId}")
+    public ApiResponse<List<ResidenceHistory>> getUserResidenceHistory(HttpServletRequest request,
+                                                                      @PathVariable String userId) {
+        try {
+            if (!validateAdmin(request)) {
+                return ApiResponse.error("未授权访问");
+            }
+
+            if (userId == null || userId.trim().isEmpty()) {
+                return ApiResponse.error("用户ID不能为空");
+            }
+
+            List<ResidenceHistory> history = residenceHistoryService.getUserResidenceHistory(userId);
+            return ApiResponse.success("获取用户居住历史成功", history);
+        } catch (Exception e) {
+            logger.error("获取用户居住历史失败", e);
+            return ApiResponse.error("获取用户居住历史失败");
+        }
+    }
+
+    /**
+     * 获取指定地点的居住历史
+     */
+    @GetMapping("/residence-history/location/{residence}")
+    public ApiResponse<List<ResidenceHistory>> getLocationResidenceHistory(HttpServletRequest request,
+                                                                          @PathVariable String residence) {
+        try {
+            if (!validateAdmin(request)) {
+                return ApiResponse.error("未授权访问");
+            }
+
+            if (residence == null || residence.trim().isEmpty()) {
+                return ApiResponse.error("居住地点不能为空");
+            }
+
+            List<ResidenceHistory> history = residenceHistoryService.getResidenceHistory(residence);
+            return ApiResponse.success("获取地点居住历史成功", history);
+        } catch (Exception e) {
+            logger.error("获取地点居住历史失败", e);
+            return ApiResponse.error("获取地点居住历史失败");
+        }
+    }
+
+    /**
+     * 获取居住历史统计信息
+     */
+    @GetMapping("/residence-history/stats")
+    public ApiResponse<Map<String, Object>> getResidenceHistoryStats(HttpServletRequest request) {
+        try {
+            if (!validateAdmin(request)) {
+                return ApiResponse.error("未授权访问");
+            }
+
+            Map<String, Object> stats = residenceHistoryService.getResidenceStatistics();
+            return ApiResponse.success("获取居住历史统计成功", stats);
+        } catch (Exception e) {
+            logger.error("获取居住历史统计失败", e);
+            return ApiResponse.error("获取居住历史统计失败");
+        }
+    }
+
+    /**
+     * 删除居住历史记录
+     */
+    @DeleteMapping("/residence-history/{historyId}")
+    public ApiResponse<Object> deleteResidenceHistory(HttpServletRequest request,
+                                                     @PathVariable Long historyId) {
+        try {
+            if (!validateAdmin(request)) {
+                return ApiResponse.error("未授权访问");
+            }
+
+            if (historyId == null || historyId <= 0) {
+                return ApiResponse.error("历史记录ID不能为空");
+            }
+
+            boolean success = residenceHistoryService.deleteResidenceHistory(historyId);
+            if (success) {
+                final Long finalHistoryId = historyId;
+                Object result = new Object() {
+                    public final Long historyId = finalHistoryId;
+                    public final String message = "居住历史记录删除成功";
+                };
+                logger.info("管理员删除了居住历史记录：ID={}", historyId);
+                return ApiResponse.success("删除成功", result);
+            } else {
+                return ApiResponse.error("居住历史记录删除失败");
+            }
+        } catch (Exception e) {
+            logger.error("删除居住历史记录失败", e);
+            return ApiResponse.error("删除居住历史记录失败");
         }
     }
 

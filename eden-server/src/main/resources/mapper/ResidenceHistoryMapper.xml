@@ -1,0 +1,87 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eden.lottery.mapper.ResidenceHistoryMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="ResidenceHistoryResultMap" type="com.eden.lottery.entity.ResidenceHistory">
+        <id column="id" property="id"/>
+        <result column="user_id" property="userId"/>
+        <result column="residence" property="residence"/>
+        <result column="previous_residence" property="previousResidence"/>
+        <result column="change_time" property="changeTime"/>
+        <result column="ip_address" property="ipAddress"/>
+        <result column="user_agent" property="userAgent"/>
+    </resultMap>
+
+    <!-- 插入居住历史记录 -->
+    <insert id="insert" parameterType="com.eden.lottery.entity.ResidenceHistory" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO residence_history (
+            user_id, 
+            residence, 
+            previous_residence, 
+            change_time,
+            ip_address,
+            user_agent
+        ) VALUES (
+            #{userId}, 
+            #{residence}, 
+            #{previousResidence}, 
+            #{changeTime},
+            #{ipAddress},
+            #{userAgent}
+        )
+    </insert>
+
+    <!-- 根据用户ID查询居住历史 -->
+    <select id="selectByUserId" resultMap="ResidenceHistoryResultMap">
+        SELECT * FROM residence_history 
+        WHERE user_id = #{userId} 
+        ORDER BY change_time DESC
+    </select>
+
+    <!-- 根据居住地点查询历史记录 -->
+    <select id="selectByResidence" resultMap="ResidenceHistoryResultMap">
+        SELECT * FROM residence_history 
+        WHERE residence = #{residence} 
+        ORDER BY change_time DESC
+    </select>
+
+    <!-- 查询所有居住历史记录（分页） -->
+    <select id="selectAll" resultMap="ResidenceHistoryResultMap">
+        SELECT * FROM residence_history 
+        ORDER BY change_time DESC 
+        LIMIT #{limit} OFFSET #{offset}
+    </select>
+
+    <!-- 统计总记录数 -->
+    <select id="countAll" resultType="int">
+        SELECT COUNT(*) FROM residence_history
+    </select>
+
+    <!-- 根据用户ID统计记录数 -->
+    <select id="countByUserId" resultType="int">
+        SELECT COUNT(*) FROM residence_history 
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 根据居住地点统计记录数 -->
+    <select id="countByResidence" resultType="int">
+        SELECT COUNT(*) FROM residence_history 
+        WHERE residence = #{residence}
+    </select>
+
+    <!-- 获取用户的最新居住记录 -->
+    <select id="selectLatestByUserId" resultMap="ResidenceHistoryResultMap">
+        SELECT * FROM residence_history 
+        WHERE user_id = #{userId} 
+        ORDER BY change_time DESC 
+        LIMIT 1
+    </select>
+
+    <!-- 删除指定ID的记录 -->
+    <delete id="deleteById">
+        DELETE FROM residence_history 
+        WHERE id = #{id}
+    </delete>
+
+</mapper>

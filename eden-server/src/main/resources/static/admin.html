@@ -509,6 +509,7 @@
                 <button class="tab active" data-tab="users">用户管理</button>
                 <button class="tab" data-tab="history">抽奖历史</button>
                 <button class="tab" data-tab="wishes">愿望管理</button>
+                <button class="tab" data-tab="residence">居住历史</button>
                 <button class="tab" data-tab="attempts">用户尝试记录</button>
                 <button class="tab" data-tab="actions">用户操作</button>
             </div>
@@ -635,6 +636,85 @@
                     <div class="form-row">
                         <button onclick="loadWishes()" class="action-btn">🔄 刷新愿望列表</button>
                         <button onclick="loadWishStats()" class="action-btn">📊 更新统计</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 居住历史标签页 -->
+            <div id="residence" class="tab-content">
+                <!-- 居住历史统计信息 -->
+                <div class="stats-section">
+                    <h4>🏠 居住历史统计</h4>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3 id="totalMoves">-</h3>
+                            <p>总搬迁次数</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="residenceStatsMessage">-</h3>
+                            <p>活跃状态</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 过滤选项 -->
+                <div class="filter-section">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="residenceUserId">用户ID筛选:</label>
+                            <input type="text" id="residenceUserId" placeholder="输入用户ID进行筛选">
+                        </div>
+                        <div class="form-group">
+                            <label for="residenceLocation">居住地点筛选:</label>
+                            <select id="residenceLocation">
+                                <option value="">全部地点</option>
+                                <option value="castle">🏰 城堡</option>
+                                <option value="city_hall">🏛️ 市政厅</option>
+                                <option value="palace">🏯 行宫</option>
+                                <option value="dove_house">🕊️ 小白鸽家</option>
+                                <option value="park">🌳 公园</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 居住历史列表 -->
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>ID</th>
+                                <th>用户ID</th>
+                                <th>搬迁前</th>
+                                <th>搬迁后</th>
+                                <th>搬迁时间</th>
+                                <th>IP地址</th>
+                                <th>操作</th>
+                            </tr>
+                        </thead>
+                        <tbody id="residenceHistoryTable">
+                            <tr><td colspan="7" style="text-align: center; padding: 20px;">点击加载居住历史数据</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- 分页控件 -->
+                <div class="pagination-section">
+                    <div class="pagination-info">
+                        <span id="residencePageInfo">第 1 页，共 0 条记录</span>
+                    </div>
+                    <div class="pagination-controls">
+                        <button id="residencePrevPage" onclick="changeResidencePage(-1)" disabled>上一页</button>
+                        <span id="residenceCurrentPage">1</span>
+                        <button id="residenceNextPage" onclick="changeResidencePage(1)" disabled>下一页</button>
+                    </div>
+                </div>
+
+                <!-- 加载按钮 -->
+                <div class="action-form">
+                    <div class="form-row">
+                        <button onclick="loadResidenceHistory()" class="action-btn">🔄 刷新居住历史</button>
+                        <button onclick="loadResidenceStats()" class="action-btn">📊 更新统计</button>
                     </div>
                 </div>
             </div>
@@ -927,6 +1007,9 @@
             } else if (tabName === 'wishes') {
                 loadWishes();
                 loadWishStats();
+            } else if (tabName === 'residence') {
+                loadResidenceHistory();
+                loadResidenceStats();
             }
         }
 
@@ -1474,6 +1557,151 @@
                 console.error('删除愿望错误:', error);
                 showMessage('adminMessage', '删除愿望失败', 'error');
             }
+        }
+
+        // 居住历史管理相关变量
+        let residenceCurrentPage = 1;
+        let residencePageSize = 20;
+        let residenceTotalPages = 0;
+
+        // 加载居住历史记录
+        async function loadResidenceHistory(page = 1) {
+            try {
+                residenceCurrentPage = page;
+                const response = await fetch(`${API_BASE}/admin/residence-history?page=${page}&size=${residencePageSize}`, {
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    const tbody = document.getElementById('residenceHistoryTable');
+                    tbody.innerHTML = '';
+
+                    if (result.data.records.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="7" style="text-align: center; padding: 20px; color: #999;">暂无居住历史数据</td></tr>';
+                        return;
+                    }
+
+                    result.data.records.forEach(record => {
+                        const row = tbody.insertRow();
+                        row.innerHTML = `
+                            <td>${record.id}</td>
+                            <td><strong>${record.userId}</strong></td>
+                            <td>
+                                <span class="badge badge-secondary">${getResidenceName(record.previousResidence)}</span>
+                            </td>
+                            <td>
+                                <span class="badge badge-primary">${getResidenceName(record.residence)}</span>
+                            </td>
+                            <td>
+                                <small>${new Date(record.changeTime).toLocaleString()}</small>
+                            </td>
+                            <td>
+                                <small title="${record.userAgent || 'N/A'}">${record.ipAddress || 'N/A'}</small>
+                            </td>
+                            <td>
+                                <button class="delete-btn" onclick="deleteResidenceHistory(${record.id}, '${record.userId}')" title="删除记录">
+                                    🗑️ 删除
+                                </button>
+                            </td>
+                        `;
+                    });
+
+                    // 更新分页信息
+                    residenceTotalPages = result.data.totalPages;
+                    document.getElementById('residencePageInfo').textContent = 
+                        `第 ${page} 页，共 ${result.data.total} 条记录`;
+                    document.getElementById('residenceCurrentPage').textContent = page;
+                    
+                    // 更新分页按钮状态
+                    document.getElementById('residencePrevPage').disabled = page <= 1;
+                    document.getElementById('residenceNextPage').disabled = page >= residenceTotalPages;
+                } else {
+                    showMessage('adminMessage', result.message || '加载居住历史失败', 'error');
+                }
+            } catch (error) {
+                console.error('加载居住历史错误:', error);
+                showMessage('adminMessage', '加载居住历史失败', 'error');
+            }
+        }
+
+        // 加载居住历史统计信息
+        async function loadResidenceStats() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/residence-history/stats`, {
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    document.getElementById('totalMoves').textContent = result.data.totalMoves || 0;
+                    document.getElementById('residenceStatsMessage').textContent = '🏠活跃中';
+                } else {
+                    document.getElementById('totalMoves').textContent = '?';
+                    document.getElementById('residenceStatsMessage').textContent = '加载失败';
+                }
+            } catch (error) {
+                console.error('加载居住历史统计错误:', error);
+                document.getElementById('totalMoves').textContent = '?';
+                document.getElementById('residenceStatsMessage').textContent = '网络错误';
+            }
+        }
+
+        // 删除居住历史记录
+        async function deleteResidenceHistory(historyId, userId) {
+            if (!confirm(`确定要删除用户 ${userId} 的这条居住历史记录吗？\n\n⚠️ 警告：删除后无法恢复！`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/admin/residence-history/${historyId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showMessage('adminMessage', `居住历史记录删除成功！用户 ${userId} 的记录已移除。`, 'success');
+                    loadResidenceHistory(residenceCurrentPage); // 刷新当前页
+                    loadResidenceStats(); // 刷新统计信息
+                } else {
+                    showMessage('adminMessage', result.message || '删除居住历史记录失败', 'error');
+                }
+            } catch (error) {
+                console.error('删除居住历史记录错误:', error);
+                showMessage('adminMessage', '删除居住历史记录失败', 'error');
+            }
+        }
+
+        // 改变居住历史页码
+        function changeResidencePage(direction) {
+            const newPage = residenceCurrentPage + direction;
+            if (newPage >= 1 && newPage <= residenceTotalPages) {
+                loadResidenceHistory(newPage);
+            }
+        }
+
+        // 获取居住地点的中文名称
+        function getResidenceName(residence) {
+            if (!residence) {
+                return '未选择';
+            }
+            
+            const residenceNames = {
+                'castle': '🏰 城堡',
+                'city_hall': '🏛️ 市政厅',
+                'palace': '🏯 行宫',
+                'dove_house': '🕊️ 小白鸽家',
+                'park': '🌳 公园'
+            };
+            
+            return residenceNames[residence] || '未知地点';
         }
 
         // 显示消息

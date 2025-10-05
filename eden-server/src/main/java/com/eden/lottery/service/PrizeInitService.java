@@ -59,6 +59,10 @@ public class PrizeInitService implements ApplicationRunner {
         try (Connection connection = dataSource.getConnection()) {
             // 检查并迁移users表
             checkAndMigrateUsersTable(connection);
+            
+            // 检查并创建居住历史表
+            checkAndCreateResidenceHistoryTable(connection);
+            
             logger.info("数据库迁移检查完成");
         } catch (Exception e) {
             logger.error("数据库迁移失败", e);
@@ -124,6 +128,72 @@ public class PrizeInitService implements ApplicationRunner {
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(sql);
             logger.info("residence列添加成功");
+        }
+    }
+    
+    /**
+     * 检查并创建居住历史表
+     */
+    private void checkAndCreateResidenceHistoryTable(Connection connection) throws Exception {
+        // 检查表是否存在
+        if (!tableExists(connection, "residence_history")) {
+            logger.info("residence_history表不存在，创建表...");
+            createResidenceHistoryTable(connection);
+        } else {
+            logger.info("residence_history表已存在");
+        }
+    }
+    
+    /**
+     * 检查表是否存在
+     */
+    private boolean tableExists(Connection connection, String tableName) throws Exception {
+        DatabaseMetaData metaData = connection.getMetaData();
+        try (ResultSet rs = metaData.getTables(null, null, tableName, null)) {
+            return rs.next();
+        }
+    }
+    
+    /**
+     * 创建居住历史表
+     */
+    private void createResidenceHistoryTable(Connection connection) throws Exception {
+        String sql = """
+            CREATE TABLE residence_history (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id VARCHAR(50) NOT NULL,
+                residence VARCHAR(20) NOT NULL,
+                previous_residence VARCHAR(20) DEFAULT NULL,
+                change_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                ip_address VARCHAR(45),
+                user_agent VARCHAR(500)
+            )
+            """;
+        
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(sql);
+            logger.info("residence_history表创建成功");
+            
+            // 创建索引
+            createResidenceHistoryIndexes(connection);
+        }
+    }
+    
+    /**
+     * 创建居住历史表的索引
+     */
+    private void createResidenceHistoryIndexes(Connection connection) throws Exception {
+        String[] indexSqls = {
+            "CREATE INDEX IF NOT EXISTS idx_residence_history_user_id ON residence_history(user_id)",
+            "CREATE INDEX IF NOT EXISTS idx_residence_history_residence ON residence_history(residence)",
+            "CREATE INDEX IF NOT EXISTS idx_residence_history_change_time ON residence_history(change_time)"
+        };
+        
+        try (Statement stmt = connection.createStatement()) {
+            for (String indexSql : indexSqls) {
+                stmt.execute(indexSql);
+            }
+            logger.info("residence_history表索引创建成功");
         }
     }
 

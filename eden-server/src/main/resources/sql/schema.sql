@@ -84,3 +84,19 @@ CREATE TABLE IF NOT EXISTS star_city (
 -- 星星城相关索引
 CREATE INDEX IF NOT EXISTS idx_star_city_level ON star_city(level);
 CREATE INDEX IF NOT EXISTS idx_star_city_last_update ON star_city(last_update_time);
+
+-- 居住历史记录表
+CREATE TABLE IF NOT EXISTS residence_history (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    user_id VARCHAR(50) NOT NULL,                          -- 用户ID
+    residence VARCHAR(20) NOT NULL,                        -- 居住地点: 'castle', 'city_hall', 'palace', 'dove_house', 'park'
+    previous_residence VARCHAR(20) DEFAULT NULL,           -- 之前的居住地点
+    change_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,       -- 搬迁时间
+    ip_address VARCHAR(45),                                -- 用户IP地址
+    user_agent VARCHAR(500)                                -- 用户代理信息
+);
+
+-- 居住历史相关索引
+CREATE INDEX IF NOT EXISTS idx_residence_history_user_id ON residence_history(user_id);
+CREATE INDEX IF NOT EXISTS idx_residence_history_residence ON residence_history(residence);
+CREATE INDEX IF NOT EXISTS idx_residence_history_change_time ON residence_history(change_time);
