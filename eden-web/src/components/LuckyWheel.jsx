@@ -1479,15 +1479,6 @@ const LotteryLuckyWheel = () => {
                                         <div style={{color: '#FFB6C1', marginBottom: '2px'}}>
                                             每小时人口 +{specialCombos.totalHourlyBonus}
                                         </div>
-                                        {specialCombos.activeCombos.map((combo, index) => (
-                                            <div key={index} style={{
-                                                fontSize: '10px',
-                                                color: 'rgba(255, 255, 255, 0.8)',
-                                                marginTop: '2px'
-                                            }}>
-                                                {combo.residenceName}: {combo.description}
-                                            </div>
-                                        ))}
                                     </div>
                                 </div>
                             )}
