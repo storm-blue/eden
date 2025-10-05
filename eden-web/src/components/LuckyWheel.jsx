@@ -215,7 +215,8 @@ const LotteryLuckyWheel = () => {
     const [showResidenceModal, setShowResidenceModal] = useState(false) // 显示居住选择弹窗
     const [selectedBuilding, setSelectedBuilding] = useState(null) // 选中的建筑
     const [buildingResidents, setBuildingResidents] = useState([]) // 建筑的居住人员
-    const [loadingResidents, setLoadingResidents] = useState(false) // 加载居住人员状态 // 星星城关闭动画状态 // 星星城页面状态
+    const [loadingResidents, setLoadingResidents] = useState(false) // 加载居住人员状态
+    const [allBuildingResidents, setAllBuildingResidents] = useState({}) // 所有建筑的居住人员 // 星星城关闭动画状态 // 星星城页面状态
     const [wishes, setWishes] = useState([]) // 所有许愿列表
     const [showWishInput, setShowWishInput] = useState(false) // 是否显示许愿输入框
     const [wishContent, setWishContent] = useState('') // 许愿内容
@@ -652,6 +653,28 @@ const LotteryLuckyWheel = () => {
         }
     }
 
+    // 加载所有建筑的居住人员信息
+    const loadAllBuildingResidents = async () => {
+        const buildings = ['castle', 'city_hall', 'palace', 'dove_house', 'park']
+        const residentsData = {}
+        
+        try {
+            for (const building of buildings) {
+                const response = await fetch(`/api/residence/residents/${building}`)
+                const data = await response.json()
+                
+                if (data.success) {
+                    residentsData[building] = data.data.residents || []
+                } else {
+                    residentsData[building] = []
+                }
+            }
+            setAllBuildingResidents(residentsData)
+        } catch (error) {
+            console.error('加载建筑居住人员失败:', error)
+        }
+    }
+
     // 检查是否是特殊情侣组合
     const isSpecialCouple = (residents) => {
         if (residents.length === 2) {
@@ -681,7 +704,7 @@ const LotteryLuckyWheel = () => {
     // 获取特殊组合的显示文字
     const getSpecialCoupleText = (residents) => {
         if (residents.length === 2) {
-            return "💕 秦小淮和李星斗正在爱爱 💕 \n💕 被日得胡言乱语了～ 💕"
+            return "💕 秦小淮和李星斗正在爱爱 💕 \n💕 她被日得胡言乱语了～ 💕"
         } else if (residents.length === 3) {
             return "💕 秦小淮、李星斗和存子正在疯狂爱爱 💕"
         }
@@ -710,6 +733,8 @@ const LotteryLuckyWheel = () => {
             if (data.success) {
                 // 重新获取用户信息以更新居住地点
                 fetchUserInfo(userName)
+                // 刷新所有建筑的居住人员信息以更新爱心显示状态
+                loadAllBuildingResidents()
             } else {
                 alert(data.message)
             }
@@ -739,6 +764,7 @@ const LotteryLuckyWheel = () => {
     useEffect(() => {
         if (showStarCity) {
             fetchStarCityData()
+            loadAllBuildingResidents() // 加载所有建筑的居住人员信息
             // 播放背景音乐
             setTimeout(() => {
                 playStarCityMusic()
@@ -1063,6 +1089,22 @@ const LotteryLuckyWheel = () => {
                         }}
                         title="城堡 🏰 - 点击选择居住"
                     >
+                        {/* 特殊情侣飘动爱心 */}
+                        {allBuildingResidents.castle && isSpecialCouple(allBuildingResidents.castle) && (
+                            <div style={{
+                                position: 'absolute',
+                                top: '-35px',
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                                fontSize: '18px',
+                                color: '#ff1744',
+                                animation: 'floatingHeart 3s ease-in-out infinite',
+                                zIndex: 15,
+                                pointerEvents: 'none'
+                            }}>
+                                💗
+                            </div>
+                        )}
                     </div>
 
                     {/* 市政厅 - 左上方 */}
@@ -1097,6 +1139,22 @@ const LotteryLuckyWheel = () => {
                         }}
                         title="市政厅 🏛️ - 点击选择居住"
                     >
+                        {/* 特殊情侣飘动爱心 */}
+                        {allBuildingResidents.city_hall && isSpecialCouple(allBuildingResidents.city_hall) && (
+                            <div style={{
+                                position: 'absolute',
+                                top: '-35px',
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                                fontSize: '18px',
+                                color: '#ff1744',
+                                animation: 'floatingHeart 3s ease-in-out infinite',
+                                zIndex: 15,
+                                pointerEvents: 'none'
+                            }}>
+                                💗
+                            </div>
+                        )}
                     </div>
 
                     {/* 行宫 - 右上方 */}
@@ -1131,6 +1189,22 @@ const LotteryLuckyWheel = () => {
                         }}
                         title="行宫 🏯 - 点击选择居住"
                     >
+                        {/* 特殊情侣飘动爱心 */}
+                        {allBuildingResidents.palace && isSpecialCouple(allBuildingResidents.palace) && (
+                            <div style={{
+                                position: 'absolute',
+                                top: '-35px',
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                                fontSize: '18px',
+                                color: '#ff1744',
+                                animation: 'floatingHeart 3s ease-in-out infinite',
+                                zIndex: 15,
+                                pointerEvents: 'none'
+                            }}>
+                                💗
+                            </div>
+                        )}
                     </div>
 
                     {/* 小白鸽家 - 左下方 */}
@@ -1165,6 +1239,22 @@ const LotteryLuckyWheel = () => {
                         }}
                         title="小白鸽家 🕊️ - 点击选择居住"
                     >
+                        {/* 特殊情侣飘动爱心 */}
+                        {allBuildingResidents.dove_house && isSpecialCouple(allBuildingResidents.dove_house) && (
+                            <div style={{
+                                position: 'absolute',
+                                top: '-35px',
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                                fontSize: '18px',
+                                color: '#ff1744',
+                                animation: 'floatingHeart 3s ease-in-out infinite',
+                                zIndex: 15,
+                                pointerEvents: 'none'
+                            }}>
+                                💗
+                            </div>
+                        )}
                     </div>
 
                     {/* 公园 - 右下方 */}
@@ -1199,6 +1289,22 @@ const LotteryLuckyWheel = () => {
                         }}
                         title="公园 🌳 - 点击选择居住"
                     >
+                        {/* 特殊情侣飘动爱心 */}
+                        {allBuildingResidents.park && isSpecialCouple(allBuildingResidents.park) && (
+                            <div style={{
+                                position: 'absolute',
+                                top: '-35px',
+                                left: '50%',
+                                transform: 'translateX(-50%)',
+                                fontSize: '18px',
+                                color: '#ff1744',
+                                animation: 'floatingHeart 3s ease-in-out infinite',
+                                zIndex: 15,
+                                pointerEvents: 'none'
+                            }}>
+                                💗
+                            </div>
+                        )}
                     </div>
 
                     {/* 关闭按钮 */}
