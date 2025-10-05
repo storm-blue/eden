@@ -7,26 +7,26 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
+import java.util.concurrent.TimeUnit;
+
 /**
  * 居所事件定时刷新任务
  */
 @Component
 public class ResidenceEventRefreshTask {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(ResidenceEventRefreshTask.class);
-    
+
     @Autowired
     private ResidenceEventService residenceEventService;
-    
+
     /**
      * 每小时刷新居所事件
-     * 执行时间：每小时的5分钟（避免与其他任务冲突）
-     * Cron表达式：0 5 * * * ? （秒 分 时 日 月 周）
      */
-    @Scheduled(cron = "0 5 * * * ?")
+    @Scheduled(fixedDelay = 3600, timeUnit = TimeUnit.SECONDS)
     public void refreshResidenceEvents() {
         logger.info("开始执行居所事件定时刷新任务");
-        
+
         try {
             int successCount = residenceEventService.refreshAllResidenceEvents();
             logger.info("居所事件定时刷新完成，成功刷新 {}/5 个居所", successCount);
@@ -34,7 +34,7 @@ public class ResidenceEventRefreshTask {
             logger.error("居所事件定时刷新任务执行失败", e);
         }
     }
-    
+
     /**
      * 手动触发居所事件刷新（用于测试）
      */

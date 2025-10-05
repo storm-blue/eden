@@ -16,6 +16,7 @@ import java.lang.reflect.Type;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * 居所事件服务
@@ -114,9 +115,7 @@ public class ResidenceEventService {
                 events.add(new ResidenceEventItem("空气中充满了甜蜜的气息💕", "special"));
             } else {
                 // 两人组合
-                events.add(new ResidenceEventItem("💕 秦小淮和李星斗正在爱爱 💕", "special"));
-                events.add(new ResidenceEventItem("💕 她被日得胡言乱语了～ 💕", "special"));
-                events.add(new ResidenceEventItem(getResidenceDisplayName(residence) + "中弥漫着爱情的芬芳～", "special"));
+                events.addAll(Scenes.TWO__CB__03);
             }
 
             // 使用Gson序列化为JSON
