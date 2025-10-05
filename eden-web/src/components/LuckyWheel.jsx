@@ -2339,7 +2339,7 @@ const LotteryLuckyWheel = () => {
                                     e.target.style.transform = 'scale(1)'
                                 }}
                             >
-                                确认居住
+                                居住
                             </button>
                             <button
                                 onClick={() => {

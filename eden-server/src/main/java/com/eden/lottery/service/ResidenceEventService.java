@@ -114,8 +114,11 @@ public class ResidenceEventService {
                 events.add(new ResidenceEventItem(getResidenceDisplayName(residence) + "中弥漫着爱情的芬芳～", "special"));
                 events.add(new ResidenceEventItem("空气中充满了甜蜜的气息💕", "special"));
             } else {
-                // 两人组合
-                events.addAll(Scenes.TWO__CB__03);
+                // 两人组合 - 随机选择一个场景
+                List<ResidenceEventItem> randomScene = Scenes.twoCoupleScenes.get(
+                    (int) (Math.random() * Scenes.twoCoupleScenes.size())
+                );
+                events.addAll(randomScene);
             }
 
             // 使用Gson序列化为JSON
