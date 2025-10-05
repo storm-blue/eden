@@ -1,0 +1,271 @@
+/* 头像裁剪弹窗 */
+.avatar-crop-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100000;
+    padding: 20px;
+}
+
+.avatar-crop-modal {
+    background: white;
+    border-radius: 12px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+}
+
+.avatar-crop-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 24px;
+    border-bottom: 1px solid #e5e5e5;
+}
+
+.avatar-crop-header h3 {
+    margin: 0;
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+}
+
+.avatar-crop-close {
+    background: none;
+    border: none;
+    font-size: 24px;
+    color: #999;
+    cursor: pointer;
+    padding: 0;
+    width: 32px;
+    height: 32px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+}
+
+.avatar-crop-close:hover {
+    background: #f5f5f5;
+    color: #666;
+}
+
+.avatar-crop-content {
+    padding: 24px;
+}
+
+/* 上传区域 */
+.avatar-crop-upload {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+}
+
+.avatar-crop-upload-area {
+    border: 2px dashed #d9d9d9;
+    border-radius: 12px;
+    padding: 60px 40px;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    background: #fafafa;
+    min-width: 300px;
+}
+
+.avatar-crop-upload-area:hover {
+    border-color: #40a9ff;
+    background: #f0f8ff;
+}
+
+.avatar-crop-upload-icon {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.6;
+}
+
+.avatar-crop-upload-text {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 8px;
+    font-weight: 500;
+}
+
+.avatar-crop-upload-hint {
+    font-size: 14px;
+    color: #999;
+}
+
+/* 编辑区域 */
+.avatar-crop-editor {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+}
+
+.avatar-crop-main {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    flex-direction: column;
+}
+
+.avatar-crop-image-container {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 300px;
+    width: 100%;
+}
+
+/* 自定义ReactCrop样式 */
+.ReactCrop {
+    display: inline-block;
+    position: relative;
+    cursor: crosshair;
+    max-width: 100%;
+    max-height: 400px;
+}
+
+.ReactCrop__crop-selection {
+    border: 2px solid #40a9ff;
+    box-shadow: 0 0 0 9999em rgba(0, 0, 0, 0.5);
+}
+
+.ReactCrop__drag-handle {
+    background: #40a9ff;
+    border: 1px solid #fff;
+    box-shadow: 0 0 2px rgba(0, 0, 0, 0.3);
+}
+
+.ReactCrop__drag-handle::after {
+    background: #40a9ff;
+}
+
+/* 预览区域 */
+.avatar-crop-preview {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 12px;
+    width: 100%;
+    margin-top: 20px;
+}
+
+.avatar-crop-preview-title {
+    font-size: 14px;
+    color: #666;
+    font-weight: 500;
+}
+
+.avatar-crop-preview-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    background: #f8f8f8;
+    border-radius: 12px;
+}
+
+/* 操作按钮 */
+.avatar-crop-actions {
+    display: flex;
+    justify-content: center;
+    gap: 16px;
+    padding-top: 20px;
+    border-top: 1px solid #e5e5e5;
+}
+
+.avatar-crop-btn {
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    border: none;
+    min-width: 100px;
+}
+
+.avatar-crop-btn:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.avatar-crop-btn-secondary {
+    background: #f5f5f5;
+    color: #666;
+}
+
+.avatar-crop-btn-secondary:hover:not(:disabled) {
+    background: #e8e8e8;
+}
+
+.avatar-crop-btn-primary {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.avatar-crop-btn-primary:hover:not(:disabled) {
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+/* 移动端适配 */
+@media screen and (max-width: 768px) {
+    .avatar-crop-overlay {
+        padding: 10px;
+    }
+    
+    .avatar-crop-modal {
+        max-height: 95vh;
+        width: 95%;
+        max-width: none;
+    }
+    
+    .avatar-crop-header {
+        padding: 16px 20px;
+    }
+    
+    .avatar-crop-content {
+        padding: 20px;
+    }
+    
+    .avatar-crop-main {
+        gap: 20px;
+    }
+    
+    .avatar-crop-image-container {
+        width: 100%;
+        min-height: 250px;
+    }
+    
+    .avatar-crop-upload-area {
+        padding: 40px 20px;
+        min-width: auto;
+        width: 100%;
+    }
+    
+    .avatar-crop-actions {
+        flex-direction: column;
+        gap: 12px;
+    }
+    
+    .avatar-crop-btn {
+        width: 100%;
+    }
+    
+    .ReactCrop {
+        max-height: 300px;
+    }
+}
