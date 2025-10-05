@@ -198,8 +198,14 @@ const LotteryLuckyWheel = () => {
   const [result, setResult] = useState('')
     const [currentPrize, setCurrentPrize] = useState('') // 存储后端返回的奖品名称
     const [isMusicPlaying, setIsMusicPlaying] = useState(false) // 音乐播放状态
-    const [userName, setUserName] = useState('') // 用户姓名
-    const [showNameInput, setShowNameInput] = useState(true) // 是否显示姓名输入框
+    const [userName, setUserName] = useState(() => {
+        // 从localStorage读取保存的用户名
+        return localStorage.getItem('eden_userName') || ''
+    }) // 用户姓名
+    const [showNameInput, setShowNameInput] = useState(() => {
+        // 如果localStorage中有用户名，则不显示输入框
+        return !localStorage.getItem('eden_userName')
+    }) // 是否显示姓名输入框
     const [tempName, setTempName] = useState('') // 临时存储输入的姓名
     const [userInfo, setUserInfo] = useState(null) // 用户信息（包含剩余抽奖次数）
     const [showWelcomeEffect, setShowWelcomeEffect] = useState(false) // 是否显示欢迎特效
@@ -806,6 +812,17 @@ const LotteryLuckyWheel = () => {
         }
     }, [showStarCity])
 
+    // 页面加载时自动获取已保存用户的信息
+    useEffect(() => {
+        const savedUserName = localStorage.getItem('eden_userName')
+        if (savedUserName && savedUserName.trim()) {
+            // 如果有保存的用户名，自动获取用户信息
+            console.log('自动加载保存的用户:', savedUserName)
+            fetchUserInfo(savedUserName)
+            fetchUserAvatar(savedUserName)
+        }
+    }, [])
+
     // 当用户名改变时，重新获取用户信息
     useEffect(() => {
         if (userName && !showWishPage) {
@@ -1182,6 +1199,9 @@ const LotteryLuckyWheel = () => {
         const newUserName = tempName.trim()
         setUserName(newUserName)
         setShowNameInput(false)
+        
+        // 保存用户名到localStorage
+        localStorage.setItem('eden_userName', newUserName)
 
         // 先获取用户信息，判断用户是否存在
         const response = await fetch(`/api/user/${newUserName}`)
