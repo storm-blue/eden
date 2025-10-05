@@ -1,6 +1,7 @@
 import React, {useEffect, useMemo, useRef, useState} from 'react'
 import {LuckyWheel} from '@lucky-canvas/react'
 import './LuckyWheel.css'
+import AvatarCrop from './AvatarCrop'
 
 const LotteryLuckyWheel = () => {
   const [prizes, setPrizes] = useState([
@@ -226,6 +227,9 @@ const LotteryLuckyWheel = () => {
     const [animatingWish, setAnimatingWish] = useState(null) // 正在动画的许愿数据
     const [showPrizeStats, setShowPrizeStats] = useState(false) // 是否显示奖品统计
     const [prizeStats, setPrizeStats] = useState([]) // 奖品统计数据
+    const [showAvatarCrop, setShowAvatarCrop] = useState(false) // 是否显示头像裁剪弹窗
+    const [userAvatar, setUserAvatar] = useState(null) // 用户头像路径
+    const [userAvatars, setUserAvatars] = useState({}) // 缓存所有用户头像 {userId: avatarPath}
 
     // 奖品名称映射（与后端保持一致）
   const prizeNames = [
@@ -674,6 +678,7 @@ const LotteryLuckyWheel = () => {
     const loadAllBuildingResidents = async () => {
         const buildings = ['castle', 'city_hall', 'palace', 'dove_house', 'park']
         const residentsData = {}
+        const allUserIds = []
         
         try {
             for (const building of buildings) {
@@ -682,11 +687,20 @@ const LotteryLuckyWheel = () => {
                 
                 if (data.success) {
                     residentsData[building] = data.data.residents || []
+                    // 收集所有用户ID用于批量获取头像
+                    const userIds = (data.data.residents || []).map(resident => resident.userId)
+                    allUserIds.push(...userIds)
                 } else {
                     residentsData[building] = []
                 }
             }
             setAllBuildingResidents(residentsData)
+            
+            // 批量获取所有居民的头像
+            if (allUserIds.length > 0) {
+                await fetchMultipleUserAvatars([...new Set(allUserIds)]) // 去重
+            }
+            
         } catch (error) {
             console.error('加载建筑居住人员失败:', error)
         }
@@ -848,12 +862,182 @@ const LotteryLuckyWheel = () => {
             if (result.success) {
                 setUserInfo(result.data)
                 console.log('获取用户信息成功:', result.data)
+                
+                // 同时获取用户头像信息
+                fetchUserAvatar(userId)
             } else {
                 console.error('获取用户信息失败:', result.message)
             }
         } catch (error) {
             console.error('获取用户信息网络错误:', error)
         }
+    }
+
+    // 获取用户头像信息
+    const fetchUserAvatar = async (userId) => {
+        try {
+            const response = await fetch(`/api/avatar/${userId}`)
+            const result = await response.json()
+
+            if (result.success) {
+                setUserAvatar(result.data.avatarPath)
+                console.log('获取用户头像成功:', result.data)
+            } else {
+                setUserAvatar(null)
+                console.log('用户暂无头像')
+            }
+        } catch (error) {
+            console.error('获取用户头像网络错误:', error)
+            setUserAvatar(null)
+        }
+    }
+
+    // 批量获取多个用户的头像
+    const fetchMultipleUserAvatars = async (userIds) => {
+        const newAvatars = {}
+        
+        // 过滤出还没有缓存的用户ID
+        const uncachedUserIds = userIds.filter(userId => !userAvatars[userId])
+        
+        if (uncachedUserIds.length === 0) {
+            return // 所有头像都已缓存
+        }
+        
+        try {
+            // 并发获取所有未缓存的用户头像
+            const promises = uncachedUserIds.map(async (userId) => {
+                try {
+                    const response = await fetch(`/api/avatar/${userId}`)
+                    const result = await response.json()
+                    
+                    if (result.success) {
+                        newAvatars[userId] = result.data.avatarPath
+                    } else {
+                        newAvatars[userId] = null // 用户暂无头像
+                    }
+                } catch (error) {
+                    console.error(`获取用户 ${userId} 头像失败:`, error)
+                    newAvatars[userId] = null
+                }
+            })
+            
+            await Promise.all(promises)
+            
+            // 更新头像缓存
+            setUserAvatars(prev => ({...prev, ...newAvatars}))
+            
+        } catch (error) {
+            console.error('批量获取用户头像失败:', error)
+        }
+    }
+
+    // 头像上传成功回调
+    const handleAvatarSave = (avatarPath) => {
+        setUserAvatar(avatarPath)
+        console.log('头像上传成功:', avatarPath)
+    }
+
+    // 打开头像裁剪弹窗
+    const handleAvatarClick = () => {
+        if (userName && userInfo && userInfo.message !== '用户不存在') {
+            setShowAvatarCrop(true)
+        } else {
+            if (!userName) {
+                alert('请先输入用户姓名！')
+            } else if (!userInfo) {
+                alert('正在获取用户信息，请稍后再试...')
+            } else if (userInfo.message === '用户不存在') {
+                alert('用户不存在，无法上传头像。请联系管理员添加用户。')
+            }
+        }
+    }
+
+    // 渲染居民头像列表
+    const renderResidentAvatars = (buildingType, residents) => {
+        if (!residents || residents.length === 0) {
+            return null
+        }
+
+        // 根据建筑类型确定位置
+        const buildingPositions = {
+            castle: { top: '23%', left: '48%' },
+            city_hall: { top: '12%', left: '72%' },
+            palace: { top: '8%', left: '23%' },
+            dove_house: { top: '31%', left: '61%' },
+            park: { top: '50%', left: '40%' }
+        }
+
+        const position = buildingPositions[buildingType]
+        if (!position) return null
+
+        return (
+            <div className="resident-avatars" style={{
+                position: 'absolute',
+                top: `calc(${position.top} + 18px)`, // 在白圈下方18px，更贴近
+                left: position.left,
+                transform: 'translateX(-50%)',
+                display: 'flex',
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: '4px', // 稍微增加间距
+                zIndex: 10,
+                pointerEvents: 'none' // 不阻挡白圈点击
+            }}>
+                {residents.slice(0, 3).map((resident, index) => { // 最多显示3个头像
+                    const avatarPath = userAvatars[resident.userId]
+                    return (
+                        <div
+                            key={resident.userId}
+                            className="resident-avatar-small"
+                            style={{
+                                width: '20px', // 从16px增加到20px
+                                height: '20px',
+                                borderRadius: '50%',
+                                border: '1px solid rgba(255, 255, 255, 0.8)',
+                                overflow: 'hidden',
+                                backgroundColor: 'rgba(255, 255, 255, 0.2)',
+                                backgroundImage: avatarPath ? `url(${avatarPath})` : 'none',
+                                backgroundSize: 'cover',
+                                backgroundPosition: 'center',
+                                backgroundRepeat: 'no-repeat',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: '10px', // 从8px增加到10px
+                                color: 'white',
+                                textShadow: '0 1px 2px rgba(0,0,0,0.8)',
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.3)'
+                            }}
+                            title={resident.userId}
+                        >
+                            {!avatarPath && '👤'}
+                        </div>
+                    )
+                })}
+                {residents.length > 3 && (
+                    <div
+                        className="resident-count-more"
+                        style={{
+                            width: '20px', // 从16px增加到20px
+                            height: '20px',
+                            borderRadius: '50%',
+                            border: '1px solid rgba(255, 255, 255, 0.8)',
+                            backgroundColor: 'rgba(0, 0, 0, 0.6)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            fontSize: '9px', // 从8px增加到9px
+                            color: 'white',
+                            textShadow: '0 1px 2px rgba(0,0,0,0.8)',
+                            boxShadow: '0 1px 3px rgba(0,0,0,0.3)'
+                        }}
+                        title={`还有${residents.length - 3}人`}
+                    >
+                        +{residents.length - 3}
+                    </div>
+                )}
+            </div>
+        )
     }
 
     const startSpin = async () => {
@@ -1062,6 +1246,7 @@ const LotteryLuckyWheel = () => {
                         justifyContent: 'center',
                         color: 'white'
                     }}>
+                    
                     {/* 标题 */}
                     <h2 style={{
                         fontSize: '42px',
@@ -1113,7 +1298,7 @@ const LotteryLuckyWheel = () => {
                         {allBuildingResidents.castle && isSpecialCouple(allBuildingResidents.castle) && (
                             <div style={{
                                 position: 'absolute',
-                                top: '-35px',
+                                top: '-25px', // 从-35px调整到-25px，更贴近白圈
                                 left: '50%',
                                 transform: 'translateX(-50%)',
                                 fontSize: '18px',
@@ -1127,6 +1312,9 @@ const LotteryLuckyWheel = () => {
                         )}
                     </div>
 
+                    {/* 城堡居民头像列表 */}
+                    {allBuildingResidents.castle && renderResidentAvatars('castle', allBuildingResidents.castle)}
+
                     {/* 市政厅 - 左上方 */}
                     <div
                         onClick={() => handleBuildingClick('city_hall')}
@@ -1135,8 +1323,8 @@ const LotteryLuckyWheel = () => {
                             top: '12%',
                             left: '72%',
                             transform: 'translate(-50%, -50%)',
-                            width: '12px',
-                            height: '12px',
+                            width: '15px', // 从12px调整为15px
+                            height: '15px', // 从12px调整为15px
                             borderRadius: '50%',
                             background: 'rgba(255, 255, 255, 0.8)',
                             cursor: 'pointer',
@@ -1163,7 +1351,7 @@ const LotteryLuckyWheel = () => {
                         {allBuildingResidents.city_hall && isSpecialCouple(allBuildingResidents.city_hall) && (
                             <div style={{
                                 position: 'absolute',
-                                top: '-35px',
+                                top: '-25px', // 从-35px调整到-25px，更贴近白圈
                                 left: '50%',
                                 transform: 'translateX(-50%)',
                                 fontSize: '18px',
@@ -1177,6 +1365,9 @@ const LotteryLuckyWheel = () => {
                         )}
                     </div>
 
+                    {/* 市政厅居民头像列表 */}
+                    {allBuildingResidents.city_hall && renderResidentAvatars('city_hall', allBuildingResidents.city_hall)}
+
                     {/* 行宫 - 右上方 */}
                     <div
                         onClick={() => handleBuildingClick('palace')}
@@ -1185,8 +1376,8 @@ const LotteryLuckyWheel = () => {
                             top: '8%',
                             left: '23%',
                             transform: 'translate(-50%, -50%)',
-                            width: '12px',
-                            height: '12px',
+                            width: '15px', // 从12px调整为15px
+                            height: '15px', // 从12px调整为15px
                             borderRadius: '50%',
                             background: 'rgba(255, 255, 255, 0.8)',
                             cursor: 'pointer',
@@ -1213,7 +1404,7 @@ const LotteryLuckyWheel = () => {
                         {allBuildingResidents.palace && isSpecialCouple(allBuildingResidents.palace) && (
                             <div style={{
                                 position: 'absolute',
-                                top: '-35px',
+                                top: '-25px', // 从-35px调整到-25px，更贴近白圈
                                 left: '50%',
                                 transform: 'translateX(-50%)',
                                 fontSize: '18px',
@@ -1227,6 +1418,9 @@ const LotteryLuckyWheel = () => {
                         )}
                     </div>
 
+                    {/* 行宫居民头像列表 */}
+                    {allBuildingResidents.palace && renderResidentAvatars('palace', allBuildingResidents.palace)}
+
                     {/* 小白鸽家 - 左下方 */}
                     <div
                         onClick={() => handleBuildingClick('dove_house')}
@@ -1235,8 +1429,8 @@ const LotteryLuckyWheel = () => {
                             top: '31%',
                             left: '61%',
                             transform: 'translate(-50%, -50%)',
-                            width: '12px',
-                            height: '12px',
+                            width: '15px', // 从12px调整为15px
+                            height: '15px', // 从12px调整为15px
                             borderRadius: '50%',
                             background: 'rgba(255, 255, 255, 0.8)',
                             cursor: 'pointer',
@@ -1263,7 +1457,7 @@ const LotteryLuckyWheel = () => {
                         {allBuildingResidents.dove_house && isSpecialCouple(allBuildingResidents.dove_house) && (
                             <div style={{
                                 position: 'absolute',
-                                top: '-35px',
+                                top: '-25px', // 从-35px调整到-25px，更贴近白圈
                                 left: '50%',
                                 transform: 'translateX(-50%)',
                                 fontSize: '18px',
@@ -1277,6 +1471,9 @@ const LotteryLuckyWheel = () => {
                         )}
                     </div>
 
+                    {/* 小白鸽家居民头像列表 */}
+                    {allBuildingResidents.dove_house && renderResidentAvatars('dove_house', allBuildingResidents.dove_house)}
+
                     {/* 公园 - 右下方 */}
                     <div
                         onClick={() => handleBuildingClick('park')}
@@ -1285,8 +1482,8 @@ const LotteryLuckyWheel = () => {
                             top: '50%',
                             left: '40%',
                             transform: 'translate(-50%, -50%)',
-                            width: '12px',
-                            height: '12px',
+                            width: '15px', // 从12px调整为15px
+                            height: '15px', // 从12px调整为15px
                             borderRadius: '50%',
                             background: 'rgba(255, 255, 255, 0.8)',
                             cursor: 'pointer',
@@ -1313,7 +1510,7 @@ const LotteryLuckyWheel = () => {
                         {allBuildingResidents.park && isSpecialCouple(allBuildingResidents.park) && (
                             <div style={{
                                 position: 'absolute',
-                                top: '-35px',
+                                top: '-25px', // 从-35px调整到-25px，更贴近白圈
                                 left: '50%',
                                 transform: 'translateX(-50%)',
                                 fontSize: '18px',
@@ -1326,6 +1523,9 @@ const LotteryLuckyWheel = () => {
                             </div>
                         )}
                     </div>
+
+                    {/* 公园居民头像列表 */}
+                    {allBuildingResidents.park && renderResidentAvatars('park', allBuildingResidents.park)}
 
                     {/* 关闭按钮 */}
                     <button
@@ -2019,6 +2219,64 @@ const LotteryLuckyWheel = () => {
                 </div>
             )}
 
+      {/* 用户头像 - 左上角 */}
+      {userName && userInfo && userInfo.message !== '用户不存在' && (
+          <div 
+              className="main-page-avatar"
+              onClick={(e) => {
+                  e.stopPropagation()
+                  handleAvatarClick()
+              }}
+              style={{
+                  position: 'fixed',
+                  top: '20px',
+                  left: '20px',
+                  width: '60px',
+                  height: '60px',
+                  borderRadius: '50%',
+                  backgroundImage: userAvatar ? `url(${userAvatar})` : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                  backgroundSize: 'cover',
+                  backgroundPosition: 'center',
+                  backgroundRepeat: 'no-repeat',
+                  border: '3px solid rgba(255, 255, 255, 0.8)',
+                  cursor: 'pointer',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
+                  zIndex: 1000,
+                  pointerEvents: 'auto',
+                  overflow: 'hidden', // 确保内容不会溢出圆形边界
+                  boxSizing: 'border-box' // 确保边框包含在尺寸内
+              }}
+              onMouseEnter={(e) => {
+                  e.target.style.transform = 'scale(1.1)';
+                  e.target.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.4)';
+              }}
+              onMouseLeave={(e) => {
+                  e.target.style.transform = 'scale(1)';
+                  e.target.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
+              }}
+          >
+              {!userAvatar && (
+                  <div style={{
+                      fontSize: '24px',
+                      color: 'white',
+                      textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'center',
+                      width: '100%',
+                      height: '100%',
+                      marginTop: '-4px'
+                  }}>
+                      📷
+                  </div>
+              )}
+          </div>
+      )}
+
       {/* 标题 */}
       <div className="header">
         <h1 className="title">🎪 Eden欢乐抽奖 🎪</h1>
@@ -2500,6 +2758,14 @@ const LotteryLuckyWheel = () => {
         <div className="star star-3">✨</div>
         <div className="star star-4">💫</div>
       </div>
+      
+      {/* 头像裁剪弹窗 */}
+      <AvatarCrop
+        isOpen={showAvatarCrop}
+        onClose={() => setShowAvatarCrop(false)}
+        onSave={handleAvatarSave}
+        userName={userName}
+      />
     </div>
   )
 }

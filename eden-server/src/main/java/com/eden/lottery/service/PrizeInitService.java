@@ -88,6 +88,12 @@ public class PrizeInitService implements ApplicationRunner {
             addResidenceColumn(connection);
         }
         
+        // 检查avatar_path列是否存在
+        if (!columns.contains("avatar_path")) {
+            logger.info("users表缺少avatar_path列，添加列...");
+            addAvatarPathColumn(connection);
+        }
+        
         logger.info("users表结构检查完成");
     }
     
@@ -128,6 +134,18 @@ public class PrizeInitService implements ApplicationRunner {
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(sql);
             logger.info("residence列添加成功");
+        }
+    }
+    
+    /**
+     * 添加avatar_path列到users表
+     */
+    private void addAvatarPathColumn(Connection connection) throws Exception {
+        String sql = "ALTER TABLE users ADD COLUMN avatar_path VARCHAR(255) DEFAULT NULL";
+        
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(sql);
+            logger.info("avatar_path列添加成功");
         }
     }
     

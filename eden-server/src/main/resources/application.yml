@@ -31,6 +31,12 @@ spring:
       # 继续执行即使发生错误
       continue-on-error: true
 
+  # 文件上传配置
+  servlet:
+    multipart:
+      max-file-size: 5MB
+      max-request-size: 5MB
+
 # MyBatis配置
 mybatis:
   mapper-locations: classpath:mapper/*.xml
@@ -85,3 +91,12 @@ app:
       - name: "🎁 随机礼物"
         probability: 0.04
         level: "rare"
+
+# 头像上传配置
+avatar:
+  upload:
+    path: ./uploads/avatars/
+  url:
+    prefix: /uploads/avatars/
+  server:
+    base-url: http://localhost:5000

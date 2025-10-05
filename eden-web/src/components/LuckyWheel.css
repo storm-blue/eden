@@ -2506,16 +2506,43 @@
         font-weight: normal !important;
     }
 
+    /* 头像在强制横屏时的调整 */
+    .star-city-container.force-landscape .star-city-avatar {
+        top: 10px !important;
+        left: 10px !important;
+        width: 60px !important;
+        height: 60px !important;
+        z-index: 1000 !important;
+        pointer-events: auto !important;
+    }
+
+    .star-city-container.force-landscape .star-city-avatar .avatar-upload-hint {
+        width: 18px !important;
+        height: 18px !important;
+        font-size: 10px !important;
+        bottom: -3px !important;
+        right: -3px !important;
+    }
+
     /* 星星城数据显示在移动端的调整 */
     .star-city-container.force-landscape .star-city-data {
         bottom: 20px !important;
         right: 20px !important;
-        min-width: 160px !important;
-        padding: 10px 15px !important;
-        font-size: 12px !important;
-        /* 保持光晕动画 */
-        animation: cityDataPulse 3s ease-in-out infinite !important;
+        font-size: 10px !important;
+        padding: 8px 10px !important;
+        min-width: 120px !important;
     }
+}
+
+/* 移动端主页头像样式 */
+@media screen and (max-width: 768px) {
+    .main-page-avatar {
+        width: 50px !important;
+        height: 50px !important;
+        top: 15px !important;
+        left: 15px !important;
+    }
+}
 
     .star-city-container.force-landscape .star-city-data .data-title {
         font-size: 14px !important;
@@ -3573,5 +3600,51 @@
             left: var(--target-x);
             filter: drop-shadow(0 0 8px rgba(255, 215, 0, 0.6));
         }
+    }
+}
+
+/* 居民头像列表样式 */
+.resident-avatars {
+    transition: all 0.3s ease;
+}
+
+.resident-avatar-small {
+    transition: all 0.2s ease;
+}
+
+.resident-avatar-small:hover {
+    transform: scale(1.1);
+    border-color: rgba(255, 255, 255, 1);
+    box-shadow: 0 2px 8px rgba(255, 255, 255, 0.4);
+}
+
+.resident-count-more {
+    font-weight: bold;
+    transition: all 0.2s ease;
+}
+
+.resident-count-more:hover {
+    transform: scale(1.1);
+    background-color: rgba(0, 0, 0, 0.8);
+    border-color: rgba(255, 255, 255, 1);
+}
+
+/* 移动端星星城居民头像适配 */
+@media screen and (max-width: 768px) {
+    .star-city-container.force-landscape .resident-avatars {
+        /* 在强制横屏模式下，头像列表也需要适配 */
+        transform: translateX(-50%);
+    }
+    
+    .star-city-container.force-landscape .resident-avatar-small {
+        width: 18px; /* 从14px增加到18px */
+        height: 18px;
+        font-size: 9px; /* 从7px增加到9px */
+    }
+    
+    .star-city-container.force-landscape .resident-count-more {
+        width: 18px; /* 从14px增加到18px */
+        height: 18px;
+        font-size: 8px; /* 从7px增加到8px */
     }
 }

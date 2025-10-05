@@ -33,6 +33,11 @@ public class User {
     private String residence;
     
     /**
+     * 头像文件路径
+     */
+    private String avatarPath;
+    
+    /**
      * 创建时间
      */
     private LocalDateTime createTime;
@@ -100,6 +105,14 @@ public class User {
         this.residence = residence;
     }
 
+    public String getAvatarPath() {
+        return avatarPath;
+    }
+
+    public void setAvatarPath(String avatarPath) {
+        this.avatarPath = avatarPath;
+    }
+
     public LocalDateTime getCreateTime() {
         return createTime;
     }
@@ -132,6 +145,7 @@ public class User {
                 ", dailyDraws=" + dailyDraws +
                 ", wishCount=" + wishCount +
                 ", residence='" + residence + '\'' +
+                ", avatarPath='" + avatarPath + '\'' +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 ", lastRefreshDate=" + lastRefreshDate +
