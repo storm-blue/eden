@@ -896,8 +896,12 @@ const LotteryLuckyWheel = () => {
             const response = await fetch(`/api/avatar/${userId}`)
             const result = await response.json()
 
-            if (result.success) {
-                setUserAvatar(result.data.avatarPath)
+            if (result.success && result.data.avatarPath) {
+                // 后端返回相对路径，前端拼接完整地址
+                const fullAvatarUrl = result.data.avatarPath.startsWith('http') 
+                    ? result.data.avatarPath 
+                    : window.location.origin + result.data.avatarPath
+                setUserAvatar(fullAvatarUrl)
                 console.log('获取用户头像成功:', result.data)
             } else {
                 setUserAvatar(null)
@@ -927,8 +931,12 @@ const LotteryLuckyWheel = () => {
                     const response = await fetch(`/api/avatar/${userId}`)
                     const result = await response.json()
                     
-                    if (result.success) {
-                        newAvatars[userId] = result.data.avatarPath
+                    if (result.success && result.data.avatarPath) {
+                        // 后端返回相对路径，前端拼接完整地址
+                        const fullAvatarUrl = result.data.avatarPath.startsWith('http') 
+                            ? result.data.avatarPath 
+                            : window.location.origin + result.data.avatarPath
+                        newAvatars[userId] = fullAvatarUrl
                     } else {
                         newAvatars[userId] = null // 用户暂无头像
                     }
@@ -950,7 +958,11 @@ const LotteryLuckyWheel = () => {
 
     // 头像上传成功回调
     const handleAvatarSave = (avatarPath) => {
-        setUserAvatar(avatarPath)
+        // 后端返回相对路径，前端拼接完整地址
+        const fullAvatarUrl = avatarPath.startsWith('http') 
+            ? avatarPath 
+            : window.location.origin + avatarPath
+        setUserAvatar(fullAvatarUrl)
         console.log('头像上传成功:', avatarPath)
     }
 

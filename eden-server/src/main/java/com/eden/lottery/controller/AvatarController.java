@@ -43,10 +43,6 @@ public class AvatarController {
     @Value("${avatar.url.prefix:/uploads/avatars/}")
     private String avatarUrlPrefix;
 
-    // 服务器基础URL
-    @Value("${avatar.server.base-url:http://localhost:5000}")
-    private String serverBaseUrl;
-
     /**
      * 上传并裁剪用户头像
      */
@@ -142,7 +138,7 @@ public class AvatarController {
 
             Map<String, Object> result = new HashMap<>();
             result.put("userId", userId);
-            result.put("avatarPath", serverBaseUrl + avatarPath); // 使用配置的服务器URL
+            result.put("avatarPath", avatarPath); // 只返回相对路径，由前端拼接完整地址
             result.put("message", "头像上传成功");
 
             logger.info("用户 {} 头像上传成功: {}", userId, avatarPath);
@@ -171,10 +167,10 @@ public class AvatarController {
             Map<String, Object> result = new HashMap<>();
             result.put("userId", userId);
             
-            // 如果用户有头像，返回完整的URL
+            // 只返回相对路径，由前端拼接完整地址
             String avatarPath = user.getAvatarPath();
             if (avatarPath != null && !avatarPath.isEmpty()) {
-                result.put("avatarPath", serverBaseUrl + avatarPath);
+                result.put("avatarPath", avatarPath); // 返回相对路径
                 result.put("hasAvatar", true);
             } else {
                 result.put("avatarPath", null);

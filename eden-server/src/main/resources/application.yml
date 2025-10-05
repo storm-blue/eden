@@ -98,5 +98,3 @@ avatar:
     path: ./uploads/avatars/
   url:
     prefix: /uploads/avatars/
-  server:
-    base-url: http://localhost:5000
