@@ -101,3 +101,19 @@ CREATE TABLE IF NOT EXISTS residence_history (
 CREATE INDEX IF NOT EXISTS idx_residence_history_user_id ON residence_history(user_id);
 CREATE INDEX IF NOT EXISTS idx_residence_history_residence ON residence_history(residence);
 CREATE INDEX IF NOT EXISTS idx_residence_history_change_time ON residence_history(change_time);
+
+-- 居所事件表
+CREATE TABLE IF NOT EXISTS residence_events (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    residence VARCHAR(20) NOT NULL UNIQUE,                     -- 居所类型：castle, city_hall, palace, dove_house, park
+    event_data TEXT NOT NULL DEFAULT '[]',                     -- 事件数据（JSON数组格式，包含多条事件描述和对应颜色）
+    show_heart_effect INTEGER NOT NULL DEFAULT 0,              -- 是否显示爱心特效 (0: false, 1: true)
+    special_text TEXT,                                         -- 特殊文字（如情侣组合文字）
+    show_special_effect INTEGER DEFAULT 0,                     -- 是否显示特殊特效（爱心飞舞和粉红色特效）(0: false, 1: true)
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+-- 居所事件相关索引
+CREATE INDEX IF NOT EXISTS idx_residence_events_residence ON residence_events(residence);
+CREATE INDEX IF NOT EXISTS idx_residence_events_updated_at ON residence_events(updated_at);

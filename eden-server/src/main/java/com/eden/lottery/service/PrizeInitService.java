@@ -27,15 +27,15 @@ import java.util.List;
 @Service
 @Order(1) // 确保最先执行
 public class PrizeInitService implements ApplicationRunner {
-
+    
     private static final Logger logger = LoggerFactory.getLogger(PrizeInitService.class);
-
+    
     @Autowired
     private PrizeMapper prizeMapper;
     
     @Autowired
     private DataSource dataSource;
-
+    
     @Override
     public void run(ApplicationArguments args) {
         try {
@@ -62,6 +62,12 @@ public class PrizeInitService implements ApplicationRunner {
             
             // 检查并创建居住历史表
             checkAndCreateResidenceHistoryTable(connection);
+            
+            // 检查并创建居所事件表
+            checkAndCreateResidenceEventsTable(connection);
+            
+            // 检查并迁移居所事件表字段
+            checkAndMigrateResidenceEventsTable(connection);
             
             logger.info("数据库迁移检查完成");
         } catch (Exception e) {
@@ -286,5 +292,124 @@ public class PrizeInitService implements ApplicationRunner {
         Prize prize = new Prize(name, probability, level);
         prize.setId(id);
         return prize;
+    }
+    
+    /**
+     * 检查并创建居所事件表
+     */
+    private void checkAndCreateResidenceEventsTable(Connection connection) throws Exception {
+        DatabaseMetaData metaData = connection.getMetaData();
+        ResultSet tables = metaData.getTables(null, null, "residence_events", null);
+        
+        if (!tables.next()) {
+            logger.info("residence_events表不存在，创建表...");
+            createResidenceEventsTable(connection);
+        } else {
+            logger.info("residence_events表已存在");
+        }
+        
+        tables.close();
+    }
+    
+    /**
+     * 创建居所事件表
+     */
+    private void createResidenceEventsTable(Connection connection) throws Exception {
+        String createTableSql = """
+            CREATE TABLE residence_events (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                residence VARCHAR(20) NOT NULL UNIQUE,
+                event_data TEXT NOT NULL DEFAULT '[]',
+                show_heart_effect INTEGER NOT NULL DEFAULT 0,
+                special_text TEXT,
+                show_special_effect INTEGER NOT NULL DEFAULT 0,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+            """;
+        
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(createTableSql);
+            logger.info("residence_events表创建成功");
+            
+            // 创建索引
+            statement.execute("CREATE INDEX IF NOT EXISTS idx_residence_events_residence ON residence_events(residence)");
+            statement.execute("CREATE INDEX IF NOT EXISTS idx_residence_events_updated_at ON residence_events(updated_at)");
+            logger.info("residence_events表索引创建成功");
+            
+            // 初始化默认事件数据
+            initializeDefaultResidenceEvents(connection);
+        }
+    }
+    
+    /**
+     * 初始化默认居所事件数据
+     */
+    private void initializeDefaultResidenceEvents(Connection connection) throws Exception {
+        String[] residences = {"castle", "city_hall", "palace", "dove_house", "park"};
+        String[] residenceNames = {"🏰 城堡", "🏛️ 市政厅", "🏯 行宫", "🕊️ 小白鸽家", "🌳 公园"};
+        
+        String insertSql = """
+            INSERT OR REPLACE INTO residence_events (residence, event_data, show_heart_effect, special_text, show_special_effect, created_at, updated_at)
+            VALUES (?, ?, ?, ?, ?, datetime('now'), datetime('now'))
+            """;
+        
+        try (var preparedStatement = connection.prepareStatement(insertSql)) {
+            for (int i = 0; i < residences.length; i++) {
+                // 创建默认的多条事件数据
+                String eventData = String.format("""
+                    [
+                        {
+                            "description": "%s 平静如常...",
+                            "colors": ["#888888", "#aaaaaa"]
+                        },
+                        {
+                            "description": "微风轻拂过%s",
+                            "colors": ["#87CEEB", "#B0E0E6"]
+                        }
+                    ]
+                    """, residenceNames[i], residenceNames[i]);
+                
+                preparedStatement.setString(1, residences[i]);
+                preparedStatement.setString(2, eventData);
+                preparedStatement.setInt(3, 0); // 不显示爱心特效
+                preparedStatement.setString(4, null); // 无特殊文字
+                preparedStatement.setInt(5, 0); // 不显示特殊特效
+                preparedStatement.executeUpdate();
+            }
+            logger.info("默认居所事件数据初始化完成");
+        }
+    }
+    
+    /**
+     * 检查并迁移居所事件表
+     */
+    private void checkAndMigrateResidenceEventsTable(Connection connection) throws Exception {
+        DatabaseMetaData metaData = connection.getMetaData();
+        
+        // 检查special_text字段是否存在
+        ResultSet columns = metaData.getColumns(null, null, "residence_events", "special_text");
+        if (!columns.next()) {
+            logger.info("residence_events表缺少special_text字段，添加字段...");
+            try (Statement statement = connection.createStatement()) {
+                statement.execute("ALTER TABLE residence_events ADD COLUMN special_text TEXT");
+                logger.info("special_text字段添加成功");
+            }
+        }
+        columns.close();
+        
+        // 检查show_special_effect字段是否存在
+        columns = metaData.getColumns(null, null, "residence_events", "show_special_effect");
+        if (!columns.next()) {
+            logger.info("residence_events表缺少show_special_effect字段，添加字段...");
+            try (Statement statement = connection.createStatement()) {
+                // 先添加可空字段
+                statement.execute("ALTER TABLE residence_events ADD COLUMN show_special_effect INTEGER");
+                // 然后更新所有现有记录为默认值0
+                statement.execute("UPDATE residence_events SET show_special_effect = 0 WHERE show_special_effect IS NULL");
+                logger.info("show_special_effect字段添加成功");
+            }
+        }
+        columns.close();
     }
 }

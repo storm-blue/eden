@@ -57,6 +57,13 @@
             <artifactId>jackson-databind</artifactId>
         </dependency>
 
+        <!-- Gson for JSON serialization/deserialization -->
+        <dependency>
+            <groupId>com.google.code.gson</groupId>
+            <artifactId>gson</artifactId>
+            <version>2.10.1</version>
+        </dependency>
+
         <!-- Spring Boot Actuator (健康检查等) -->
         <dependency>
             <groupId>org.springframework.boot</groupId>

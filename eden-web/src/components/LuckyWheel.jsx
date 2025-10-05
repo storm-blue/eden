@@ -243,6 +243,9 @@ const LotteryLuckyWheel = () => {
     
     // 用户头像预览弹框状态
     const [showAvatarPreview, setShowAvatarPreview] = useState(false)
+    
+    // 居所事件状态
+    const [residenceEvents, setResidenceEvents] = useState({})
 
     // 奖品名称映射（与后端保持一致）
   const prizeNames = [
@@ -516,6 +519,44 @@ const LotteryLuckyWheel = () => {
             }
         } catch (error) {
             console.error('获取特殊居住组合状态出错:', error)
+        }
+    }
+
+    // 获取居所事件
+    const fetchResidenceEvent = async (residence) => {
+        try {
+            const response = await fetch(`/api/residence-events/${residence}`)
+            const result = await response.json()
+            
+            if (result.success) {
+                return result.data
+            } else {
+                console.error('获取居所事件失败:', result.message)
+                return null
+            }
+        } catch (error) {
+            console.error('获取居所事件网络错误:', error)
+            return null
+        }
+    }
+
+    // 加载所有居所的事件
+    const loadAllResidenceEvents = async () => {
+        const residences = ['castle', 'city_hall', 'palace', 'dove_house', 'park']
+        const events = {}
+        
+        try {
+            await Promise.all(residences.map(async (residence) => {
+                const eventData = await fetchResidenceEvent(residence)
+                if (eventData) {
+                    events[residence] = eventData
+                }
+            }))
+            
+            setResidenceEvents(events)
+            console.log('所有居所事件加载完成:', events)
+        } catch (error) {
+            console.error('加载居所事件失败:', error)
         }
     }
 
@@ -812,6 +853,7 @@ const LotteryLuckyWheel = () => {
             fetchStarCityData()
             fetchSpecialCombos() // 获取特殊居住组合状态
             loadAllBuildingResidents() // 加载所有建筑的居住人员信息
+            loadAllResidenceEvents() // 加载所有居所事件
             // 播放背景音乐
             setTimeout(() => {
                 playStarCityMusic()
@@ -2034,8 +2076,8 @@ const LotteryLuckyWheel = () => {
                         position: 'relative',
                         overflow: 'hidden'
                     }}>
-                        {/* 特殊情侣的爱心背景动画 - 覆盖整个弹框 */}
-                        {isSpecialCouple(buildingResidents) && (
+                        {/* 特殊情侣的爱心背景动画 - 覆盖整个弹框（从事件接口控制） */}
+                        {selectedBuilding && residenceEvents[selectedBuilding.key] && residenceEvents[selectedBuilding.key].showSpecialEffect && (
                             <div style={{
                                 position: 'absolute',
                                 top: 0,
@@ -2043,55 +2085,99 @@ const LotteryLuckyWheel = () => {
                                 right: 0,
                                 bottom: '80px', // 避免出现在按钮区域，留出底部空间
                                 pointerEvents: 'none',
-                                zIndex: 1
+                                zIndex: 0 // 降低到最底层，不遮挡任何内容
                             }}>
-                                {[...Array(15)].map((_, i) => (
-                                    <div
-                                        key={i}
-                                        style={{
-                                            position: 'absolute',
-                                            fontSize: `${Math.random() * 20 + 18}px`,
-                                            color: '#ff69b4',
-                                            left: `${Math.random() * 100}%`,
-                                            top: `${Math.random() * 100}%`,
-                                            animation: `heartFloat ${2 + Math.random() * 3}s ease-in-out infinite`,
-                                            animationDelay: `${Math.random() * 2}s`,
-                                            opacity: 0.7
-                                        }}
-                                    >
-                                        💖
-                                    </div>
-                                ))}
+                                {[...Array(12)].map((_, i) => {
+                                    // 计算爱心位置，避开中间的事件文字区域
+                                    const isLeftSide = i % 2 === 0;
+                                    const leftPosition = isLeftSide 
+                                        ? Math.random() * 25 // 左侧 0-25%
+                                        : 75 + Math.random() * 25; // 右侧 75-100%
+                                    
+                                    // 垂直位置分布在整个高度
+                                    const topPosition = Math.random() * 100;
+                                    
+                                    return (
+                                        <div
+                                            key={i}
+                                            style={{
+                                                position: 'absolute',
+                                                fontSize: `${Math.random() * 16 + 14}px`, // 稍微缩小爱心尺寸
+                                                color: '#ff69b4',
+                                                left: `${leftPosition}%`,
+                                                top: `${topPosition}%`,
+                                                animation: `heartFloat ${2 + Math.random() * 3}s ease-in-out infinite`,
+                                                animationDelay: `${Math.random() * 2}s`,
+                                                opacity: 0.4 // 适中的透明度
+                                            }}
+                                        >
+                                            💖
+                                        </div>
+                                    );
+                                })}
+                                
+                                {/* 在顶部和底部区域添加一些装饰性爱心 */}
+                                {[...Array(6)].map((_, i) => {
+                                    // 顶部区域的爱心
+                                    const isTopArea = i < 3;
+                                    const topPosition = isTopArea 
+                                        ? Math.random() * 20 // 顶部 0-20%
+                                        : 80 + Math.random() * 15; // 底部 80-95%
+                                    
+                                    return (
+                                        <div
+                                            key={`decoration-${i}`}
+                                            style={{
+                                                position: 'absolute',
+                                                fontSize: `${Math.random() * 12 + 10}px`, // 更小的装饰性爱心
+                                                color: '#ff69b4',
+                                                left: `${20 + Math.random() * 60}%`, // 中间区域 20-80%
+                                                top: `${topPosition}%`,
+                                                animation: `heartFloat ${3 + Math.random() * 2}s ease-in-out infinite`,
+                                                animationDelay: `${Math.random() * 3}s`,
+                                                opacity: 0.25 // 更淡的装饰性爱心
+                                            }}
+                                        >
+                                            💕
+                                        </div>
+                                    );
+                                })}
                             </div>
                         )}
                         {/* 建筑信息 */}
                         <div style={{
                             background: 'rgba(255, 255, 255, 0.1)',
                             borderRadius: '15px',
-                            padding: '20px',
-                            marginBottom: '25px',
+                            padding: '15px', // 从20px减少到15px
+                            marginBottom: '15px', // 从25px减少到15px
                             position: 'relative',
                             zIndex: 2
                         }}>
                             <div style={{
-                                fontSize: '48px',
-                                marginBottom: '10px'
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                gap: '12px',
+                                marginBottom: '6px' // 从8px减少到6px
                             }}>
-                                {selectedBuilding.emoji}
-                            </div>
-                            <div style={{
-                                fontSize: '20px',
-                                fontWeight: 'bold',
-                                marginBottom: '8px'
-                            }}>
-                                {selectedBuilding.name}
+                                <div style={{
+                                    fontSize: '48px'
+                                }}>
+                                    {selectedBuilding.emoji}
+                                </div>
+                                <div style={{
+                                    fontSize: '20px',
+                                    fontWeight: 'bold'
+                                }}>
+                                    {selectedBuilding.name}
+                                </div>
                             </div>
 
                             {/* 当前居住人员 */}
                             <div style={{
                                 fontSize: '14px',
                                 opacity: 0.9,
-                                marginBottom: '15px',
+                                marginBottom: '12px', // 从15px减少到12px
                                 position: 'relative',
                                 zIndex: 2
                             }}>
@@ -2114,69 +2200,78 @@ const LotteryLuckyWheel = () => {
                                     </div>
                                 ) : (
                                     <>
-                                        {isSpecialCouple(buildingResidents) ? (
-                                            // 特殊情侣文字显示
+                                        {/* 普通显示 - 现在统一处理 */}
+                                        {buildingResidents.length > 0 ? (
                                             <div style={{
-                                                textAlign: 'center',
-                                                padding: '20px'
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                gap: '8px',
+                                                marginBottom: '6px', // 从8px减少到6px
+                                                flexWrap: 'wrap'
                                             }}>
-                                                {/* 特殊文字 */}
+                                                <span style={{fontSize: '14px'}}>
+                                                    当前居住人员：
+                                                </span>
                                                 <div style={{
-                                                    fontSize: '16px',
-                                                    fontWeight: 'bold',
-                                                    color: '#ff69b4',
-                                                    textShadow: '0 0 10px rgba(255, 105, 180, 0.5)',
-                                                    marginBottom: '10px',
-                                                    animation: 'loveGlow 2s ease-in-out infinite alternate',
-                                                    whiteSpace: 'pre-line',
+                                                    background: 'rgba(0, 0, 0, 0.2)',
+                                                    borderRadius: '8px',
+                                                    padding: '4px 8px',
+                                                    fontSize: '12px',
+                                                    wordBreak: 'break-all',
                                                     lineHeight: '1.4'
                                                 }}>
-                                                    {getSpecialCoupleText(buildingResidents)}
-                                                </div>
-                                                
-                                                <div style={{
-                                                    fontSize: '12px',
-                                                    color: 'rgba(255, 255, 255, 0.8)'
-                                                }}>
-                                                    当前居住人员：{buildingResidents.length} 人
+                                                    👤 {buildingResidents.map(resident => resident.userId).join(', ')}
                                                 </div>
                                             </div>
                                         ) : (
-                                            // 普通显示
-                                            <>
-                                                <div style={{marginBottom: '8px'}}>
-                                                    当前居住人员：{buildingResidents.length} 人
-                                                </div>
-                                                {buildingResidents.length > 0 ? (
-                                                    <div style={{
-                                                        background: 'rgba(0, 0, 0, 0.2)',
-                                                        borderRadius: '8px',
-                                                        padding: '8px',
-                                                        fontSize: '12px',
-                                                        wordBreak: 'break-all',
-                                                        lineHeight: '1.4'
+                                            <div style={{
+                                                color: 'rgba(255, 255, 255, 0.6)',
+                                                fontSize: '12px',
+                                                marginBottom: '6px', // 从8px减少到6px
+                                                textAlign: 'center'
+                                            }}>
+                                                当前居住人员：暂无居住人员
+                                            </div>
+                                        )}
+
+                                        {/* 居所事件显示 */}
+                                        {selectedBuilding && residenceEvents[selectedBuilding.key] && (
+                                            <div 
+                                                className="residence-event-scroll"
+                                                style={{
+                                                    marginTop: '10px',
+                                                    maxHeight: '90px', // 限制最大高度，约3行事件的高度
+                                                    overflowY: 'auto', // 超出时显示垂直滚动条
+                                                    paddingRight: '5px' // 为滚动条留出空间
+                                                }}
+                                            >
+                                                {/* 渲染多条事件 */}
+                                                {residenceEvents[selectedBuilding.key].events && residenceEvents[selectedBuilding.key].events.map((event, index) => (
+                                                    <div key={index} style={{
+                                                        marginBottom: index < residenceEvents[selectedBuilding.key].events.length - 1 ? '6px' : '0',
+                                                        textAlign: 'center'
                                                     }}>
-                                                        👤 {buildingResidents.map(resident => resident.userId).join(', ')}
+                                                        <div style={{
+                                                            fontSize: event.type === 'special' ? '16px' : '14px',
+                                                            fontWeight: event.type === 'special' ? 'bold' : '500',
+                                                            lineHeight: '1.4',
+                                                            color: event.type === 'special' ? '#ff69b4' : 'rgba(255, 255, 255, 0.9)',
+                                                            textShadow: event.type === 'special' 
+                                                                ? '0 0 10px rgba(255, 105, 180, 0.5)' 
+                                                                : 'none',
+                                                            animation: event.type === 'special' 
+                                                                ? 'loveGlow 2s ease-in-out infinite alternate' 
+                                                                : 'none'
+                                                        }}>
+                                                            {event.description || '未知事件'}
+                                                        </div>
                                                     </div>
-                                                ) : (
-                                                    <div style={{
-                                                        color: 'rgba(255, 255, 255, 0.6)',
-                                                        fontSize: '12px'
-                                                    }}>
-                                                        暂无居住人员
-                                                    </div>
-                                                )}
-                                            </>
+                                                ))}
+                                            </div>
                                         )}
                                     </>
                                 )}
-                            </div>
-
-                            <div style={{
-                                fontSize: '14px',
-                                opacity: 0.9
-                            }}>
-                                您确定要在这里居住吗？
                             </div>
                         </div>
 

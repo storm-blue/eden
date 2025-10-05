@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eden.lottery.mapper.ResidenceEventMapper">
+    
+    <!-- 结果映射 -->
+    <resultMap id="ResidenceEventResultMap" type="com.eden.lottery.entity.ResidenceEvent">
+        <id column="id" property="id"/>
+        <result column="residence" property="residence"/>
+        <result column="event_data" property="eventData"/>
+        <result column="show_heart_effect" property="showHeartEffect"/>
+        <result column="special_text" property="specialText"/>
+        <result column="show_special_effect" property="showSpecialEffect"/>
+        <result column="created_at" property="createdAt"/>
+        <result column="updated_at" property="updatedAt"/>
+    </resultMap>
+    
+    <!-- 根据居所类型查询最新的事件 -->
+    <select id="selectByResidence" resultMap="ResidenceEventResultMap">
+        SELECT id, residence, event_data, show_heart_effect, special_text, show_special_effect, created_at, updated_at
+        FROM residence_events
+        WHERE residence = #{residence}
+        ORDER BY updated_at DESC
+        LIMIT 1
+    </select>
+    
+    <!-- 插入新的居所事件 -->
+    <insert id="insert" parameterType="com.eden.lottery.entity.ResidenceEvent" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO residence_events (residence, event_data, show_heart_effect, special_text, show_special_effect, created_at, updated_at)
+        VALUES (#{residence}, #{eventData}, #{showHeartEffect}, #{specialText}, #{showSpecialEffect}, #{createdAt}, #{updatedAt})
+    </insert>
+    
+    <!-- 更新居所事件 -->
+    <update id="update" parameterType="com.eden.lottery.entity.ResidenceEvent">
+        UPDATE residence_events
+        SET event_data = #{eventData},
+            show_heart_effect = #{showHeartEffect},
+            special_text = #{specialText},
+            show_special_effect = #{showSpecialEffect},
+            updated_at = #{updatedAt}
+        WHERE residence = #{residence}
+    </update>
+    
+    <!-- 根据居所类型删除事件 -->
+    <delete id="deleteByResidence">
+        DELETE FROM residence_events WHERE residence = #{residence}
+    </delete>
+    
+    <!-- 插入或更新居所事件（UPSERT操作） -->
+    <insert id="upsert" parameterType="com.eden.lottery.entity.ResidenceEvent">
+        INSERT INTO residence_events (residence, event_data, show_heart_effect, special_text, show_special_effect, created_at, updated_at)
+        VALUES (#{residence}, #{eventData}, #{showHeartEffect}, #{specialText}, #{showSpecialEffect}, #{createdAt}, #{updatedAt})
+        ON CONFLICT(residence) DO UPDATE SET
+            event_data = #{eventData},
+            show_heart_effect = #{showHeartEffect},
+            special_text = #{specialText},
+            show_special_effect = #{showSpecialEffect},
+            updated_at = #{updatedAt}
+    </insert>
+    
+</mapper>
