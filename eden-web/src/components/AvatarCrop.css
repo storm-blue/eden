@@ -126,6 +126,13 @@
     align-items: center;
     min-height: 300px;
     width: 100%;
+    /* 添加背景色和边界，限制蒙版范围 */
+    background: #f8f8f8;
+    border-radius: 8px;
+    padding: 20px;
+    /* 重要：限制蒙版范围，防止扩展到整个屏幕 */
+    overflow: hidden;
+    position: relative;
 }
 
 /* 自定义ReactCrop样式 */
@@ -135,11 +142,17 @@
     cursor: crosshair;
     max-width: 100%;
     max-height: 400px;
+    /* 允许蒙版显示，但会被父容器的overflow:hidden限制 */
+    overflow: visible;
 }
 
+/* 裁剪选择区域样式 - 恢复标准蒙版效果 */
 .ReactCrop__crop-selection {
     border: 2px solid #40a9ff;
+    /* 恢复标准的蒙版效果，父容器的overflow:hidden会限制蒙版范围 */
     box-shadow: 0 0 0 9999em rgba(0, 0, 0, 0.5);
+    background: transparent;
+    z-index: 2;
 }
 
 .ReactCrop__drag-handle {
@@ -150,31 +163,6 @@
 
 .ReactCrop__drag-handle::after {
     background: #40a9ff;
-}
-
-/* 预览区域 */
-.avatar-crop-preview {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 12px;
-    width: 100%;
-    margin-top: 20px;
-}
-
-.avatar-crop-preview-title {
-    font-size: 14px;
-    color: #666;
-    font-weight: 500;
-}
-
-.avatar-crop-preview-container {
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    padding: 10px;
-    background: #f8f8f8;
-    border-radius: 12px;
 }
 
 /* 操作按钮 */

@@ -236,6 +236,13 @@ const LotteryLuckyWheel = () => {
     const [showAvatarCrop, setShowAvatarCrop] = useState(false) // 是否显示头像裁剪弹窗
     const [userAvatar, setUserAvatar] = useState(null) // 用户头像路径
     const [userAvatars, setUserAvatars] = useState({}) // 缓存所有用户头像 {userId: avatarPath}
+    
+    // 居民头像详情弹框状态
+    const [showResidentDetail, setShowResidentDetail] = useState(false)
+    const [selectedResident, setSelectedResident] = useState(null)
+    
+    // 用户头像预览弹框状态
+    const [showAvatarPreview, setShowAvatarPreview] = useState(false)
 
     // 奖品名称映射（与后端保持一致）
   const prizeNames = [
@@ -966,10 +973,16 @@ const LotteryLuckyWheel = () => {
         console.log('头像上传成功:', avatarPath)
     }
 
-    // 打开头像裁剪弹窗
+    // 打开头像裁剪弹窗或预览弹窗
     const handleAvatarClick = () => {
         if (userName && userInfo && userInfo.message !== '用户不存在') {
-            setShowAvatarCrop(true)
+            // 如果用户已有头像，先显示预览弹框
+            if (userAvatar) {
+                setShowAvatarPreview(true)
+            } else {
+                // 如果没有头像，直接打开裁剪弹窗
+                setShowAvatarCrop(true)
+            }
         } else {
             if (!userName) {
                 alert('请先输入用户姓名！')
@@ -979,6 +992,33 @@ const LotteryLuckyWheel = () => {
                 alert('用户不存在，无法上传头像。请联系管理员添加用户。')
             }
         }
+    }
+
+    // 关闭头像预览弹框
+    const closeAvatarPreview = () => {
+        setShowAvatarPreview(false)
+    }
+
+    // 从预览弹框打开裁剪弹窗
+    const openAvatarCropFromPreview = () => {
+        setShowAvatarPreview(false)
+        setShowAvatarCrop(true)
+    }
+
+    // 处理居民头像点击
+    const handleResidentAvatarClick = (userId, avatarPath) => {
+        console.log('点击居民头像:', userId, avatarPath)
+        setSelectedResident({
+            userId: userId,
+            avatarPath: avatarPath
+        })
+        setShowResidentDetail(true)
+    }
+
+    // 关闭居民详情弹框
+    const closeResidentDetail = () => {
+        setShowResidentDetail(false)
+        setSelectedResident(null)
     }
 
     // 渲染居民头像列表
@@ -1010,7 +1050,7 @@ const LotteryLuckyWheel = () => {
                 alignItems: 'center',
                 gap: '4px', // 稍微增加间距
                 zIndex: 10,
-                pointerEvents: 'none' // 不阻挡白圈点击
+                pointerEvents: 'auto' // 允许点击头像
             }}>
                 {residents.slice(0, 3).map((resident, index) => { // 最多显示3个头像
                     const avatarPath = userAvatars[resident.userId]
@@ -1035,9 +1075,25 @@ const LotteryLuckyWheel = () => {
                                 fontSize: '10px', // 从8px增加到10px
                                 color: 'white',
                                 textShadow: '0 1px 2px rgba(0,0,0,0.8)',
-                                boxShadow: '0 1px 3px rgba(0,0,0,0.3)'
+                                boxShadow: '0 1px 3px rgba(0,0,0,0.3)',
+                                cursor: 'pointer', // 添加点击指针
+                                transition: 'all 0.2s ease'
                             }}
                             title={resident.userId}
+                            onClick={(e) => {
+                                e.stopPropagation()
+                                handleResidentAvatarClick(resident.userId, avatarPath)
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.transform = 'scale(1.2)'
+                                e.target.style.borderColor = 'rgba(255, 255, 255, 1)'
+                                e.target.style.boxShadow = '0 2px 8px rgba(255, 255, 255, 0.4)'
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.transform = 'scale(1)'
+                                e.target.style.borderColor = 'rgba(255, 255, 255, 0.8)'
+                                e.target.style.boxShadow = '0 1px 3px rgba(0,0,0,0.3)'
+                            }}
                         >
                             {!avatarPath && '👤'}
                         </div>
@@ -1302,8 +1358,8 @@ const LotteryLuckyWheel = () => {
                             top: '23%',
                             left: '48%',
                             transform: 'translate(-50%, -50%)',
-                            width: '15px',
-                            height: '15px',
+                            width: '12px', // 从15px缩小到12px
+                            height: '12px', // 从15px缩小到12px
                             borderRadius: '50%',
                             background: 'rgba(255, 255, 255, 0.9)',
                             cursor: 'pointer',
@@ -1355,8 +1411,8 @@ const LotteryLuckyWheel = () => {
                             top: '12%',
                             left: '72%',
                             transform: 'translate(-50%, -50%)',
-                            width: '15px', // 从12px调整为15px
-                            height: '15px', // 从12px调整为15px
+                            width: '12px', // 保持12px
+                            height: '12px', // 保持12px
                             borderRadius: '50%',
                             background: 'rgba(255, 255, 255, 0.8)',
                             cursor: 'pointer',
@@ -1408,8 +1464,8 @@ const LotteryLuckyWheel = () => {
                             top: '8%',
                             left: '23%',
                             transform: 'translate(-50%, -50%)',
-                            width: '15px', // 从12px调整为15px
-                            height: '15px', // 从12px调整为15px
+                            width: '12px', // 从15px缩小到12px
+                            height: '12px', // 从15px缩小到12px
                             borderRadius: '50%',
                             background: 'rgba(255, 255, 255, 0.8)',
                             cursor: 'pointer',
@@ -1461,8 +1517,8 @@ const LotteryLuckyWheel = () => {
                             top: '31%',
                             left: '61%',
                             transform: 'translate(-50%, -50%)',
-                            width: '15px', // 从12px调整为15px
-                            height: '15px', // 从12px调整为15px
+                            width: '12px', // 从15px缩小到12px
+                            height: '12px', // 从15px缩小到12px
                             borderRadius: '50%',
                             background: 'rgba(255, 255, 255, 0.8)',
                             cursor: 'pointer',
@@ -1514,8 +1570,8 @@ const LotteryLuckyWheel = () => {
                             top: '50%',
                             left: '40%',
                             transform: 'translate(-50%, -50%)',
-                            width: '15px', // 从12px调整为15px
-                            height: '15px', // 从12px调整为15px
+                            width: '12px', // 从15px缩小到12px
+                            height: '12px', // 从15px缩小到12px
                             borderRadius: '50%',
                             background: 'rgba(255, 255, 255, 0.8)',
                             cursor: 'pointer',
@@ -2798,6 +2854,339 @@ const LotteryLuckyWheel = () => {
         onSave={handleAvatarSave}
         userName={userName}
       />
+
+      {/* 用户头像预览弹框 */}
+      {showAvatarPreview && userAvatar && (
+        <div 
+          className={`avatar-preview-overlay ${isMobileDevice ? 'force-landscape' : ''}`}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.8)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 100000,
+            backdropFilter: 'blur(8px)'
+          }}
+          onClick={closeAvatarPreview}
+        >
+          <div 
+            className="avatar-preview-content"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 248, 255, 0.95))',
+              borderRadius: '25px',
+              padding: '40px',
+              maxWidth: '450px',
+              width: '90%',
+              textAlign: 'center',
+              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.2)',
+              border: '2px solid rgba(255, 255, 255, 0.3)',
+              backdropFilter: 'blur(15px)',
+              position: 'relative',
+              animation: 'fadeInScale 0.3s ease-out'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* 关闭按钮 */}
+            <button
+              onClick={closeAvatarPreview}
+              style={{
+                position: 'absolute',
+                top: '20px',
+                right: '20px',
+                width: '35px',
+                height: '35px',
+                borderRadius: '50%',
+                border: 'none',
+                background: 'rgba(255, 255, 255, 0.8)',
+                color: '#666',
+                fontSize: '18px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'all 0.2s ease',
+                boxShadow: '0 3px 10px rgba(0, 0, 0, 0.15)'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = 'rgba(255, 255, 255, 1)'
+                e.target.style.color = '#333'
+                e.target.style.transform = 'scale(1.1)'
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = 'rgba(255, 255, 255, 0.8)'
+                e.target.style.color = '#666'
+                e.target.style.transform = 'scale(1)'
+              }}
+            >
+              ✕
+            </button>
+
+            {/* 标题 */}
+            <h3 style={{
+              margin: '0 0 25px',
+              fontSize: '28px',
+              fontWeight: '600',
+              color: '#333',
+              textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+              background: 'linear-gradient(135deg, #667eea, #764ba2)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}>
+              我的头像
+            </h3>
+
+            {/* 头像显示 */}
+            <div style={{
+              width: '200px',
+              height: '200px',
+              borderRadius: '50%',
+              margin: '0 auto 30px',
+              overflow: 'hidden',
+              border: '5px solid rgba(255, 255, 255, 0.9)',
+              boxShadow: '0 15px 40px rgba(0, 0, 0, 0.3), inset 0 0 0 2px rgba(255, 255, 255, 0.4)',
+              background: `url(${userAvatar})`,
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+              position: 'relative',
+              transition: 'all 0.3s ease'
+            }}
+            onMouseEnter={(e) => {
+              e.target.style.transform = 'scale(1.05)'
+              e.target.style.boxShadow = '0 20px 50px rgba(0, 0, 0, 0.4), inset 0 0 0 2px rgba(255, 255, 255, 0.6)'
+            }}
+            onMouseLeave={(e) => {
+              e.target.style.transform = 'scale(1)'
+              e.target.style.boxShadow = '0 15px 40px rgba(0, 0, 0, 0.3), inset 0 0 0 2px rgba(255, 255, 255, 0.4)'
+            }}
+            />
+
+            {/* 用户名显示 */}
+            <div style={{
+              margin: '0 0 25px',
+              fontSize: '20px',
+              fontWeight: '500',
+              color: '#555',
+              background: 'rgba(255, 255, 255, 0.7)',
+              padding: '12px 20px',
+              borderRadius: '15px',
+              border: '1px solid rgba(255, 255, 255, 0.8)',
+              boxShadow: '0 3px 10px rgba(0, 0, 0, 0.1)'
+            }}>
+              👤 {userName}
+            </div>
+
+            {/* 操作按钮 */}
+            <div style={{
+              display: 'flex',
+              gap: '15px',
+              justifyContent: 'center',
+              flexWrap: 'wrap'
+            }}>
+              <button
+                onClick={openAvatarCropFromPreview}
+                style={{
+                  padding: '12px 25px',
+                  borderRadius: '25px',
+                  border: 'none',
+                  background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                  color: 'white',
+                  fontSize: '16px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 5px 15px rgba(102, 126, 234, 0.4)',
+                  minWidth: '120px'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.transform = 'translateY(-2px)'
+                  e.target.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.6)'
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.transform = 'translateY(0)'
+                  e.target.style.boxShadow = '0 5px 15px rgba(102, 126, 234, 0.4)'
+                }}
+              >
+                替换头像
+              </button>
+              
+              <button
+                onClick={closeAvatarPreview}
+                style={{
+                  padding: '12px 25px',
+                  borderRadius: '25px',
+                  border: '2px solid rgba(255, 255, 255, 0.8)',
+                  background: 'rgba(255, 255, 255, 0.8)',
+                  color: '#666',
+                  fontSize: '16px',
+                  fontWeight: '500',
+                  cursor: 'pointer',
+                  transition: 'all 0.3s ease',
+                  boxShadow: '0 3px 10px rgba(0, 0, 0, 0.1)',
+                  minWidth: '120px'
+                }}
+                onMouseEnter={(e) => {
+                  e.target.style.background = 'rgba(255, 255, 255, 1)'
+                  e.target.style.color = '#333'
+                  e.target.style.transform = 'translateY(-2px)'
+                  e.target.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.2)'
+                }}
+                onMouseLeave={(e) => {
+                  e.target.style.background = 'rgba(255, 255, 255, 0.8)'
+                  e.target.style.color = '#666'
+                  e.target.style.transform = 'translateY(0)'
+                  e.target.style.boxShadow = '0 3px 10px rgba(0, 0, 0, 0.1)'
+                }}
+              >
+                保持当前
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {/* 居民头像详情弹框 */}
+      {showResidentDetail && selectedResident && (
+        <div 
+          className={`resident-detail-overlay ${isMobileDevice ? 'force-landscape' : ''}`}
+          style={{
+            position: 'fixed',
+            top: 0,
+            left: 0,
+            width: '100%',
+            height: '100%',
+            backgroundColor: 'rgba(0, 0, 0, 0.7)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 100000,
+            backdropFilter: 'blur(5px)'
+          }}
+          onClick={closeResidentDetail}
+        >
+          <div 
+            className="resident-detail-content"
+            style={{
+              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 248, 255, 0.95))',
+              borderRadius: '20px',
+              padding: '30px',
+              maxWidth: '400px',
+              width: '90%',
+              textAlign: 'center',
+              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.2)',
+              border: '2px solid rgba(255, 255, 255, 0.3)',
+              backdropFilter: 'blur(10px)',
+              position: 'relative',
+              animation: 'fadeInScale 0.3s ease-out'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* 关闭按钮 */}
+            <button
+              onClick={closeResidentDetail}
+              style={{
+                position: 'absolute',
+                top: '15px',
+                right: '15px',
+                width: '30px',
+                height: '30px',
+                borderRadius: '50%',
+                border: 'none',
+                background: 'rgba(255, 255, 255, 0.8)',
+                color: '#666',
+                fontSize: '16px',
+                cursor: 'pointer',
+                display: 'flex',
+                alignItems: 'center',
+                justifyContent: 'center',
+                transition: 'all 0.2s ease',
+                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = 'rgba(255, 255, 255, 1)'
+                e.target.style.color = '#333'
+                e.target.style.transform = 'scale(1.1)'
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = 'rgba(255, 255, 255, 0.8)'
+                e.target.style.color = '#666'
+                e.target.style.transform = 'scale(1)'
+              }}
+            >
+              ✕
+            </button>
+
+            {/* 头像显示 */}
+            <div style={{
+              width: '200px',
+              height: '200px',
+              borderRadius: '50%',
+              margin: '0 auto 20px',
+              overflow: 'hidden',
+              border: '4px solid rgba(255, 255, 255, 0.8)',
+              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.3)',
+              background: selectedResident.avatarPath 
+                ? `url(${selectedResident.avatarPath})` 
+                : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              backgroundSize: 'cover',
+              backgroundPosition: 'center',
+              backgroundRepeat: 'no-repeat',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}>
+              {!selectedResident.avatarPath && (
+                <div style={{
+                  fontSize: '80px',
+                  color: 'rgba(255, 255, 255, 0.8)',
+                  textShadow: '0 2px 10px rgba(0, 0, 0, 0.3)'
+                }}>
+                  👤
+                </div>
+              )}
+            </div>
+
+            {/* 用户名显示 */}
+            <h3 style={{
+              margin: '0 0 15px',
+              fontSize: '24px',
+              fontWeight: '600',
+              color: '#333',
+              textShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+              background: 'linear-gradient(135deg, #667eea, #764ba2)',
+              WebkitBackgroundClip: 'text',
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}>
+              {selectedResident.userId}
+            </h3>
+
+            {/* 装饰性信息 */}
+            <div style={{
+              padding: '15px 20px',
+              background: 'rgba(255, 255, 255, 0.6)',
+              borderRadius: '15px',
+              border: '1px solid rgba(255, 255, 255, 0.8)',
+              color: '#666',
+              fontSize: '14px',
+              lineHeight: '1.6'
+            }}>
+              <div style={{ marginBottom: '5px' }}>
+                ✨ 星星城居民
+              </div>
+              <div>
+                🏠 安居乐业中
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   )
 }

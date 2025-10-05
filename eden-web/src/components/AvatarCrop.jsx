@@ -16,7 +16,6 @@ const AvatarCrop = ({ isOpen, onClose, onSave, userName }) => {
     const [uploading, setUploading] = useState(false);
     const [selectedFile, setSelectedFile] = useState(null); // 新增：存储选择的文件
     const imgRef = useRef(null);
-    const previewCanvasRef = useRef(null);
     const fileInputRef = useRef(null);
 
     // 选择文件
@@ -26,7 +25,9 @@ const AvatarCrop = ({ isOpen, onClose, onSave, userName }) => {
             setSelectedFile(file); // 存储选择的文件
             
             const reader = new FileReader();
-            reader.addEventListener('load', () => setImageSrc(reader.result));
+            reader.addEventListener('load', () => {
+                setImageSrc(reader.result);
+            });
             reader.readAsDataURL(file);
         }
     }, []);
@@ -54,43 +55,10 @@ const AvatarCrop = ({ isOpen, onClose, onSave, userName }) => {
         }
     }, []);
 
-    // 生成预览
-    const generatePreview = useCallback((image, crop, canvas) => {
-        if (!crop || !canvas || !image) {
-            return;
-        }
-
-        const scaleX = image.naturalWidth / image.width;
-        const scaleY = image.naturalHeight / image.height;
-        const ctx = canvas.getContext('2d');
-        const pixelRatio = window.devicePixelRatio;
-
-        canvas.width = 200 * pixelRatio;
-        canvas.height = 200 * pixelRatio;
-
-        ctx.setTransform(pixelRatio, 0, 0, pixelRatio, 0, 0);
-        ctx.imageSmoothingQuality = 'high';
-
-        ctx.drawImage(
-            image,
-            crop.x * scaleX,
-            crop.y * scaleY,
-            crop.width * scaleX,
-            crop.height * scaleY,
-            0,
-            0,
-            200,
-            200,
-        );
-    }, []);
-
     // 裁剪完成
     const onCropComplete = useCallback((crop) => {
         setCompletedCrop(crop);
-        if (imgRef.current && previewCanvasRef.current && crop.width && crop.height) {
-            generatePreview(imgRef.current, crop, previewCanvasRef.current);
-        }
-    }, [generatePreview]);
+    }, []);
 
     // 关闭弹窗
     const handleClose = useCallback(() => {
@@ -113,7 +81,7 @@ const AvatarCrop = ({ isOpen, onClose, onSave, userName }) => {
 
     // 保存头像
     const handleSave = useCallback(async () => {
-        if (!completedCrop || !imgRef.current || !previewCanvasRef.current) {
+        if (!completedCrop || !imgRef.current) {
             alert('请先选择并裁剪图片');
             return;
         }
@@ -176,6 +144,16 @@ const AvatarCrop = ({ isOpen, onClose, onSave, userName }) => {
         }
     }, [completedCrop, selectedFile, userName, onSave, handleClose]);
 
+    // 重新选择文件
+    const handleReselect = useCallback(() => {
+        // 重置文件输入框的值，确保可以选择相同的文件
+        if (fileInputRef.current) {
+            fileInputRef.current.value = '';
+        }
+        // 触发文件选择
+        fileInputRef.current?.click();
+    }, []);
+
     if (!isOpen) return null;
 
     return (
@@ -189,15 +167,17 @@ const AvatarCrop = ({ isOpen, onClose, onSave, userName }) => {
                 </div>
 
                 <div className="avatar-crop-content">
+                    {/* 文件输入框 - 始终存在但隐藏 */}
+                    <input
+                        ref={fileInputRef}
+                        type="file"
+                        accept="image/*"
+                        onChange={onSelectFile}
+                        style={{ display: 'none' }}
+                    />
+                    
                     {!imageSrc ? (
                         <div className="avatar-crop-upload">
-                            <input
-                                ref={fileInputRef}
-                                type="file"
-                                accept="image/*"
-                                onChange={onSelectFile}
-                                style={{ display: 'none' }}
-                            />
                             <div 
                                 className="avatar-crop-upload-area"
                                 onClick={() => fileInputRef.current?.click()}
@@ -228,28 +208,12 @@ const AvatarCrop = ({ isOpen, onClose, onSave, userName }) => {
                                         />
                                     </ReactCrop>
                                 </div>
-                                
-                                <div className="avatar-crop-preview">
-                                    <div className="avatar-crop-preview-title">预览</div>
-                                    <div className="avatar-crop-preview-container">
-                                        <canvas
-                                            ref={previewCanvasRef}
-                                            style={{
-                                                width: '120px',
-                                                height: '120px',
-                                                border: '1px solid #ddd',
-                                                borderRadius: '50%',
-                                                objectFit: 'cover',
-                                            }}
-                                        />
-                                    </div>
-                                </div>
                             </div>
 
                             <div className="avatar-crop-actions">
                                 <button 
                                     className="avatar-crop-btn avatar-crop-btn-secondary"
-                                    onClick={() => fileInputRef.current?.click()}
+                                    onClick={handleReselect}
                                     disabled={uploading}
                                 >
                                     重新选择

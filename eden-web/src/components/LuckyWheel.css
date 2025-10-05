@@ -2745,6 +2745,100 @@
         max-width: none !important;
         max-height: none !important;
     }
+
+    /* 居民详情弹窗强制横屏样式 */
+    .resident-detail-overlay.force-landscape {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) rotate(90deg) !important;
+        transform-origin: center center !important;
+        width: 100vh !important;
+        height: 100vw !important;
+        max-width: 100vh !important;
+        max-height: 100vw !important;
+        /* 确保弹窗在最顶层 */
+        z-index: 100001 !important;
+    }
+
+    /* 重置居民详情弹窗内容的定位，避免继承父级的transform */
+    .resident-detail-overlay.force-landscape .resident-detail-content {
+        position: relative !important;
+        max-width: 350px !important;
+        width: 85% !important;
+        max-height: 80vh !important;
+        padding: 25px !important;
+        font-size: 14px !important;
+        /* 确保内容居中 */
+        margin: 0 auto !important;
+        /* 防止内容被旋转 */
+        transform: none !important;
+    }
+
+    /* 确保居民详情弹窗内的所有元素都不会被额外旋转 */
+    .resident-detail-overlay.force-landscape * {
+        max-width: none !important;
+        max-height: none !important;
+    }
+
+    /* 用户头像预览弹窗强制横屏样式 */
+    .avatar-preview-overlay.force-landscape {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) rotate(90deg) !important;
+        transform-origin: center center !important;
+        width: 100vh !important;
+        height: 100vw !important;
+        max-width: 100vh !important;
+        max-height: 100vw !important;
+        /* 确保弹窗在最顶层 */
+        z-index: 100001 !important;
+    }
+
+    /* 重置头像预览弹窗内容的定位，避免继承父级的transform */
+    .avatar-preview-overlay.force-landscape .avatar-preview-content {
+        position: relative !important;
+        max-width: 380px !important;
+        width: 90% !important;
+        max-height: 85vh !important;
+        padding: 30px !important;
+        font-size: 14px !important;
+        /* 确保内容居中 */
+        margin: 0 auto !important;
+        /* 防止内容被旋转 */
+        transform: none !important;
+    }
+
+    /* 移动端头像预览弹窗内容调整 */
+    .avatar-preview-overlay.force-landscape .avatar-preview-content h3 {
+        font-size: 22px !important;
+        margin-bottom: 20px !important;
+    }
+
+    .avatar-preview-overlay.force-landscape .avatar-preview-content button {
+        padding: 10px 20px !important;
+        font-size: 14px !important;
+        min-width: 100px !important;
+    }
+
+    /* 确保头像预览弹窗内的所有元素都不会被额外旋转 */
+    .avatar-preview-overlay.force-landscape * {
+        max-width: none !important;
+        max-height: none !important;
+    }
+}
+
+/* 居民详情弹窗淡入缩放动画 */
+@keyframes fadeInScale {
+    0% {
+        opacity: 0;
+        transform: scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: scale(1);
+    }
 }
 
 /* 桌面端和大屏设备的正常显示 */
