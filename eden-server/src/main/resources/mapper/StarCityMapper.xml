@@ -54,4 +54,13 @@
         WHERE id = (SELECT id FROM star_city ORDER BY id DESC LIMIT 1)
     </update>
 
+    <!-- 增加人口数量（特殊居住组合加成） -->
+    <update id="addPopulation">
+        UPDATE star_city 
+        SET population = population + #{population},
+            last_update_time = datetime('now', 'localtime'),
+            update_time = datetime('now', 'localtime')
+        WHERE id = (SELECT id FROM star_city ORDER BY id DESC LIMIT 1)
+    </update>
+
 </mapper>

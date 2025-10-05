@@ -28,4 +28,9 @@ public interface StarCityMapper {
      * 每日更新星星城数据
      */
     int dailyUpdate();
+    
+    /**
+     * 增加人口数量（特殊居住组合加成）
+     */
+    int addPopulation(int population);
 }

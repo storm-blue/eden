@@ -82,6 +82,34 @@ public class StarCityService {
     }
 
     /**
+     * 应用每小时人口增长加成（特殊居住组合）
+     * @param bonusPopulation 增长的人口数量
+     */
+    @Transactional
+    public void applyHourlyPopulationBonus(int bonusPopulation) {
+        if (bonusPopulation <= 0) {
+            return;
+        }
+        
+        // 先确保有数据
+        StarCity current = getStarCity();
+        
+        // 应用人口增长加成
+        starCityMapper.addPopulation(bonusPopulation);
+        
+        // 重新计算等级
+        StarCity updated = starCityMapper.getStarCity();
+        if (updated != null) {
+            updated.setLevel(updated.calculateLevel());
+            updated.setUpdateTime(LocalDateTime.now());
+            starCityMapper.updateStarCity(updated);
+            
+            logger.info("应用特殊居住组合人口加成：+{} 人口，当前人口：{}", 
+                       bonusPopulation, updated.getPopulation());
+        }
+    }
+
+    /**
      * 获取等级信息
      */
     public String getLevelInfo(int level) {

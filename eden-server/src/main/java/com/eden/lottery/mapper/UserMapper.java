@@ -74,6 +74,11 @@ public interface UserMapper {
     List<User> selectAll();
     
     /**
+     * 获取所有有居住地点的用户
+     */
+    List<User> selectAllWithResidence();
+    
+    /**
      * 删除用户
      */
     void deleteByUserId(@Param("userId") String userId);

@@ -216,7 +216,8 @@ const LotteryLuckyWheel = () => {
     const [selectedBuilding, setSelectedBuilding] = useState(null) // 选中的建筑
     const [buildingResidents, setBuildingResidents] = useState([]) // 建筑的居住人员
     const [loadingResidents, setLoadingResidents] = useState(false) // 加载居住人员状态
-    const [allBuildingResidents, setAllBuildingResidents] = useState({}) // 所有建筑的居住人员 // 星星城关闭动画状态 // 星星城页面状态
+    const [allBuildingResidents, setAllBuildingResidents] = useState({}) // 所有建筑的居住人员
+    const [specialCombos, setSpecialCombos] = useState(null) // 特殊居住组合状态 // 星星城关闭动画状态 // 星星城页面状态
     const [wishes, setWishes] = useState([]) // 所有许愿列表
     const [showWishInput, setShowWishInput] = useState(false) // 是否显示许愿输入框
     const [wishContent, setWishContent] = useState('') // 许愿内容
@@ -485,6 +486,22 @@ const LotteryLuckyWheel = () => {
         }
     }
 
+    // 获取特殊居住组合状态
+    const fetchSpecialCombos = async () => {
+        try {
+            const response = await fetch('/api/star-city/special-combos')
+            const data = await response.json()
+            if (data.success) {
+                console.log('获取特殊居住组合状态成功:', data.data)
+                setSpecialCombos(data.data)
+            } else {
+                console.error('获取特殊居住组合状态失败:', data.message)
+            }
+        } catch (error) {
+            console.error('获取特殊居住组合状态出错:', error)
+        }
+    }
+
     // 获取用户可捐献的奖品
     const fetchUserDonationPrizes = async (userId) => {
         try {
@@ -735,6 +752,8 @@ const LotteryLuckyWheel = () => {
                 fetchUserInfo(userName)
                 // 刷新所有建筑的居住人员信息以更新爱心显示状态
                 loadAllBuildingResidents()
+                // 刷新特殊居住组合状态
+                fetchSpecialCombos()
             } else {
                 alert(data.message)
             }
@@ -764,6 +783,7 @@ const LotteryLuckyWheel = () => {
     useEffect(() => {
         if (showStarCity) {
             fetchStarCityData()
+            fetchSpecialCombos() // 获取特殊居住组合状态
             loadAllBuildingResidents() // 加载所有建筑的居住人员信息
             // 播放背景音乐
             setTimeout(() => {
@@ -1431,6 +1451,46 @@ const LotteryLuckyWheel = () => {
                   </span>
                                 </div>
                             </div>
+
+                            {/* 特殊居住组合状态显示 */}
+                            {specialCombos && specialCombos.hasSpecialCombos && (
+                                <div className="special-combo-info" style={{
+                                    marginTop: '12px',
+                                    padding: '10px',
+                                    background: 'rgba(255, 105, 180, 0.2)',
+                                    borderRadius: '8px',
+                                    border: '1px solid rgba(255, 105, 180, 0.4)',
+                                    animation: 'loveGlow 2s ease-in-out infinite alternate'
+                                }}>
+                                    <div style={{
+                                        fontSize: '12px', 
+                                        color: '#FF69B4', 
+                                        marginBottom: '6px',
+                                        fontWeight: 'bold',
+                                        textAlign: 'center'
+                                    }}>
+                                        💕 爱情加成 💕
+                                    </div>
+                                    <div style={{
+                                        fontSize: '11px', 
+                                        lineHeight: '1.4',
+                                        textAlign: 'center'
+                                    }}>
+                                        <div style={{color: '#FFB6C1', marginBottom: '2px'}}>
+                                            每小时人口 +{specialCombos.totalHourlyBonus}
+                                        </div>
+                                        {specialCombos.activeCombos.map((combo, index) => (
+                                            <div key={index} style={{
+                                                fontSize: '10px',
+                                                color: 'rgba(255, 255, 255, 0.8)',
+                                                marginTop: '2px'
+                                            }}>
+                                                {combo.residenceName}: {combo.description}
+                                            </div>
+                                        ))}
+                                    </div>
+                                </div>
+                            )}
 
                             {starCityData.canUpgrade && starCityData.nextLevelRequirements && (
                                 <div className="upgrade-info" style={{

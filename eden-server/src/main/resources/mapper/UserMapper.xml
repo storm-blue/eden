@@ -113,6 +113,14 @@
         ORDER BY create_time DESC
     </select>
 
+    <!-- 获取所有有居住地点的用户 -->
+    <select id="selectAllWithResidence" resultMap="UserResultMap">
+        SELECT user_id, remaining_draws, daily_draws, wish_count, residence, create_time, update_time, last_refresh_date
+        FROM users
+        WHERE residence IS NOT NULL AND residence != ''
+        ORDER BY residence, create_time ASC
+    </select>
+
     <!-- 删除用户 -->
     <delete id="deleteByUserId">
         DELETE FROM users WHERE user_id = #{userId}

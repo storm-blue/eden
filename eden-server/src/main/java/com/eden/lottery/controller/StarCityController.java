@@ -3,6 +3,7 @@ package com.eden.lottery.controller;
 import com.eden.lottery.dto.ApiResponse;
 import com.eden.lottery.entity.StarCity;
 import com.eden.lottery.service.StarCityService;
+import com.eden.lottery.service.SpecialResidenceService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -19,6 +20,9 @@ public class StarCityController {
 
     @Autowired
     private StarCityService starCityService;
+
+    @Autowired
+    private SpecialResidenceService specialResidenceService;
 
     /**
      * 获取星星城数据
@@ -231,5 +235,25 @@ public class StarCityController {
         requirements.put("foodFormatted", starCityService.formatNumber((Long) requirements.get("food")));
         
         return requirements;
+    }
+    
+    /**
+     * 获取特殊居住组合状态
+     */
+    @GetMapping("/special-combos")
+    public ApiResponse<Map<String, Object>> getSpecialCombos() {
+        try {
+            List<Map<String, Object>> activeCombos = specialResidenceService.getActiveSpecialCombos();
+            int hourlyBonus = specialResidenceService.calculateHourlyPopulationBonus();
+            
+            Map<String, Object> result = new HashMap<>();
+            result.put("activeCombos", activeCombos);
+            result.put("totalHourlyBonus", hourlyBonus);
+            result.put("hasSpecialCombos", !activeCombos.isEmpty());
+            
+            return ApiResponse.success("获取特殊居住组合状态成功", result);
+        } catch (Exception e) {
+            return ApiResponse.error("获取特殊居住组合状态失败: " + e.getMessage());
+        }
     }
 }
