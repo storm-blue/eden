@@ -1068,7 +1068,7 @@ const LotteryLuckyWheel = () => {
                         marginBottom: '10px',
                         textShadow: '0 0 25px rgba(0,0,0,0.8), 0 0 50px rgba(255,255,255,0.6)',
                         position: 'absolute',
-                        bottom: '30px',
+                        bottom: '10px',
                         left: '50%',
                         transform: 'translateX(-50%)',
                         zIndex: 10,
@@ -1373,15 +1373,15 @@ const LotteryLuckyWheel = () => {
                             onClick={openDonationModal}
                             style={{
                                 position: 'absolute',
-                                bottom: '30px',
-                                right: '30px',
+                                bottom: '15px',
+                                right: '15px',
                                 background: 'rgba(0, 0, 0, 0.7)',
                                 color: 'white',
-                                padding: '15px 20px',
-                                borderRadius: '15px',
+                                padding: '8px 12px',
+                                borderRadius: '10px',
                                 backdropFilter: 'blur(10px)',
                                 border: '1px solid rgba(255, 255, 255, 0.2)',
-                                minWidth: '200px',
+                                minWidth: '140px',
                                 textAlign: 'center',
                                 boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
                                 cursor: 'pointer',
@@ -1403,11 +1403,11 @@ const LotteryLuckyWheel = () => {
                             title="点击进行城市捐献"
                         >
                             <div className="data-title" style={{
-                                fontSize: '16px',
+                                fontSize: '12px',
                                 fontWeight: 'bold',
-                                marginBottom: '10px',
+                                marginBottom: '4px',
                                 color: '#FFD700',
-                                textShadow: '0 0 10px rgba(255, 215, 0, 0.5)'
+                                textShadow: '0 0 6px rgba(255, 215, 0, 0.5)'
                             }}>
                                 城市数据
                             </div>
@@ -1415,8 +1415,8 @@ const LotteryLuckyWheel = () => {
                             <div style={{
                                 display: 'flex',
                                 flexDirection: 'column',
-                                gap: '8px',
-                                fontSize: '14px'
+                                gap: '2px',
+                                fontSize: '10px'
                             }}>
                                 <div className="data-item" style={{
                                     display: 'flex',
@@ -1455,46 +1455,45 @@ const LotteryLuckyWheel = () => {
                             {/* 特殊居住组合状态显示 */}
                             {specialCombos && specialCombos.hasSpecialCombos && (
                                 <div className="special-combo-info" style={{
-                                    marginTop: '12px',
-                                    padding: '10px',
+                                    marginTop: '6px',
+                                    padding: '4px 6px',
                                     background: 'rgba(255, 105, 180, 0.2)',
-                                    borderRadius: '8px',
+                                    borderRadius: '4px',
                                     border: '1px solid rgba(255, 105, 180, 0.4)',
                                     animation: 'loveGlow 2s ease-in-out infinite alternate'
                                 }}>
                                     <div style={{
-                                        fontSize: '12px', 
+                                        fontSize: '8px', 
                                         color: '#FF69B4', 
-                                        marginBottom: '6px',
+                                        marginBottom: '1px',
                                         fontWeight: 'bold',
                                         textAlign: 'center'
                                     }}>
                                         💕 爱情加成 💕
                                     </div>
                                     <div style={{
-                                        fontSize: '11px', 
-                                        lineHeight: '1.4',
-                                        textAlign: 'center'
+                                        fontSize: '8px', 
+                                        lineHeight: '1.1',
+                                        textAlign: 'center',
+                                        color: '#FFB6C1'
                                     }}>
-                                        <div style={{color: '#FFB6C1', marginBottom: '2px'}}>
-                                            每小时人口 +{specialCombos.totalHourlyBonus}
-                                        </div>
+                                        每小时人口 +{specialCombos.totalHourlyBonus}
                                     </div>
                                 </div>
                             )}
 
                             {starCityData.canUpgrade && starCityData.nextLevelRequirements && (
                                 <div className="upgrade-info" style={{
-                                    marginTop: '10px',
-                                    padding: '8px',
+                                    marginTop: '6px',
+                                    padding: '4px',
                                     background: 'rgba(255, 215, 0, 0.2)',
-                                    borderRadius: '8px',
+                                    borderRadius: '4px',
                                     border: '1px solid rgba(255, 215, 0, 0.3)'
                                 }}>
-                                    <div style={{fontSize: '12px', color: '#FFD700', marginBottom: '4px'}}>
+                                    <div style={{fontSize: '8px', color: '#FFD700', marginBottom: '1px'}}>
                                         🎯 升级条件 (LV{starCityData.level + 1}):
                                     </div>
-                                    <div style={{fontSize: '11px', lineHeight: '1.3'}}>
+                                    <div style={{fontSize: '7px', lineHeight: '1.1'}}>
                                         人口{starCityData.nextLevelRequirements.populationFormatted} |
                                         食物{starCityData.nextLevelRequirements.foodFormatted} |
                                         幸福{starCityData.nextLevelRequirements.happiness}
