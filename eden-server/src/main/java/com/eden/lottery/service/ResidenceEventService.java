@@ -105,12 +105,15 @@ public class ResidenceEventService {
      * 这个方法会被定时任务调用，用于为每个居所生成新的事件
      *
      * @param residence 居所类型
-     * @param residents 当前居住人员列表
      * @return 是否生成成功
      */
-    public boolean generateResidenceEvent(String residence, List<User> residents) {
+    public boolean generateResidenceEvent(String residence) {
+
+        List<User> residents = userMapper.selectByResidence(residence);
+
         // TODO: 用户手动实现具体的事件生成逻辑
         logger.info("生成居所事件 - 居所: {}, 人员数量: {}", residence, residents != null ? residents.size() : 0);
+
 
         // 检查是否是特殊情侣组合
         SpecialCoupleResult specialResult = checkSpecialCouple(residents);
@@ -289,11 +292,8 @@ public class ResidenceEventService {
 
         for (String residence : residences) {
             try {
-                // 获取该居所的当前居住人员
-                List<User> residents = userMapper.selectByResidence(residence);
-
                 // 生成新的事件
-                if (generateResidenceEvent(residence, residents)) {
+                if (generateResidenceEvent(residence)) {
                     successCount++;
                 }
             } catch (Exception e) {
@@ -361,10 +361,10 @@ public class ResidenceEventService {
 
             // 插入历史记录
             int result = residenceEventHistoryMapper.insertEventHistory(history);
-            
+
             // 清理旧记录，保留最新的20条
             residenceEventHistoryMapper.cleanupOldEventHistory(residence, 20);
-            
+
             logger.debug("记录事件历史成功，居所: {}, 插入结果: {}", residence, result > 0 ? "成功" : "失败");
         } catch (Exception e) {
             logger.error("记录事件历史失败，居所: {}", residence, e);

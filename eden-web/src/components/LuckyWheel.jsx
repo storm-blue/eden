@@ -901,6 +901,12 @@ const LotteryLuckyWheel = () => {
         return ""
     }
 
+    // 检查当前用户是否已经在该居所中
+    const isUserAlreadyInResidence = (residents, currentUser) => {
+        if (!residents || !currentUser) return false
+        return residents.some(resident => resident.username === currentUser)
+    }
+
     // 确认居住选择
     const confirmResidence = async () => {
         if (!selectedBuilding || !userName) {
@@ -2470,46 +2476,58 @@ const LotteryLuckyWheel = () => {
                                 </div>
                             )}
                             <button
-                                onClick={confirmResidence}
+                                onClick={isUserAlreadyInResidence(buildingResidents, userName) ? undefined : confirmResidence}
+                                disabled={isUserAlreadyInResidence(buildingResidents, userName)}
                                 style={{
-                                    background: isDangerousResidence(buildingResidents, userName) 
-                                        ? 'linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)' 
-                                        : 'rgba(255, 255, 255, 0.2)',
-                                    color: 'white',
+                                    background: isUserAlreadyInResidence(buildingResidents, userName)
+                                        ? 'rgba(128, 128, 128, 0.3)' // 灰色表示已居住
+                                        : isDangerousResidence(buildingResidents, userName) 
+                                            ? 'linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)' 
+                                            : 'rgba(255, 255, 255, 0.2)',
+                                    color: isUserAlreadyInResidence(buildingResidents, userName) 
+                                        ? 'rgba(255, 255, 255, 0.6)' // 淡化文字颜色
+                                        : 'white',
                                     borderRadius: '25px',
                                     padding: '12px 25px',
                                     fontSize: '16px',
-                                    cursor: 'pointer',
+                                    cursor: isUserAlreadyInResidence(buildingResidents, userName) ? 'not-allowed' : 'pointer',
                                     transition: 'all 0.3s ease',
                                     backdropFilter: 'blur(10px)',
-                                    border: isDangerousResidence(buildingResidents, userName)
-                                        ? '1px solid rgba(255, 107, 107, 0.5)'
-                                        : '1px solid rgba(255, 255, 255, 0.3)',
+                                    border: isUserAlreadyInResidence(buildingResidents, userName)
+                                        ? '1px solid rgba(128, 128, 128, 0.3)'
+                                        : isDangerousResidence(buildingResidents, userName)
+                                            ? '1px solid rgba(255, 107, 107, 0.5)'
+                                            : '1px solid rgba(255, 255, 255, 0.3)',
                                     fontWeight: 'bold',
-                                    boxShadow: isDangerousResidence(buildingResidents, userName)
+                                    boxShadow: isDangerousResidence(buildingResidents, userName) && !isUserAlreadyInResidence(buildingResidents, userName)
                                         ? '0 4px 15px rgba(255, 107, 107, 0.3)'
-                                        : 'none'
+                                        : 'none',
+                                    opacity: isUserAlreadyInResidence(buildingResidents, userName) ? 0.7 : 1
                                 }}
                                 onMouseEnter={(e) => {
-                                    if (isDangerousResidence(buildingResidents, userName)) {
-                                        e.target.style.background = 'linear-gradient(135deg, #ff5252 0%, #d32f2f 100%)'
-                                        e.target.style.boxShadow = '0 6px 20px rgba(255, 107, 107, 0.4)'
-                                    } else {
-                                        e.target.style.background = 'rgba(255, 255, 255, 0.3)'
+                                    if (!isUserAlreadyInResidence(buildingResidents, userName)) {
+                                        if (isDangerousResidence(buildingResidents, userName)) {
+                                            e.target.style.background = 'linear-gradient(135deg, #ff5252 0%, #d32f2f 100%)'
+                                            e.target.style.boxShadow = '0 6px 20px rgba(255, 107, 107, 0.4)'
+                                        } else {
+                                            e.target.style.background = 'rgba(255, 255, 255, 0.3)'
+                                        }
+                                        e.target.style.transform = 'scale(1.05)'
                                     }
-                                    e.target.style.transform = 'scale(1.05)'
                                 }}
                                 onMouseLeave={(e) => {
-                                    if (isDangerousResidence(buildingResidents, userName)) {
-                                        e.target.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)'
-                                        e.target.style.boxShadow = '0 4px 15px rgba(255, 107, 107, 0.3)'
-                                    } else {
-                                        e.target.style.background = 'rgba(255, 255, 255, 0.2)'
+                                    if (!isUserAlreadyInResidence(buildingResidents, userName)) {
+                                        if (isDangerousResidence(buildingResidents, userName)) {
+                                            e.target.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)'
+                                            e.target.style.boxShadow = '0 4px 15px rgba(255, 107, 107, 0.3)'
+                                        } else {
+                                            e.target.style.background = 'rgba(255, 255, 255, 0.2)'
+                                        }
+                                        e.target.style.transform = 'scale(1)'
                                     }
-                                    e.target.style.transform = 'scale(1)'
                                 }}
                             >
-                                居住
+                                {isUserAlreadyInResidence(buildingResidents, userName) ? '已居住' : '居住'}
                             </button>
                             <button
                                 onClick={showResidenceEventHistory}

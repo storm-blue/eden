@@ -5,6 +5,7 @@ import com.eden.lottery.mapper.UserMapper;
 import com.eden.lottery.entity.User;
 import com.eden.lottery.entity.ResidenceHistory;
 import com.eden.lottery.service.ResidenceHistoryService;
+import com.eden.lottery.service.ResidenceEventService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,9 @@ public class ResidenceController {
 
     @Autowired
     private ResidenceHistoryService residenceHistoryService;
+
+    @Autowired
+    private ResidenceEventService residenceEventService;
 
     /**
      * 获取用户当前居住地点
@@ -107,6 +111,9 @@ public class ResidenceController {
             String ipAddress = getClientIpAddress(httpRequest);
             String userAgent = httpRequest.getHeader("User-Agent");
             residenceHistoryService.recordResidenceChange(userId, residence, previousResidence, ipAddress, userAgent);
+
+            // 刷新相关居所的事件
+            refreshResidenceEvents(userId, residence, previousResidence);
 
             Map<String, Object> result = new HashMap<>();
             result.put("userId", userId);
@@ -279,5 +286,28 @@ public class ResidenceController {
             ip = ip.split(",")[0].trim();
         }
         return ip;
+    }
+
+    /**
+     * 刷新相关居所的事件
+     * 当用户移动时，需要刷新新居所和旧居所的事件
+     */
+    private void refreshResidenceEvents(String userId, String newResidence, String previousResidence) {
+        try {
+            // 刷新新居所的事件（用户搬入）
+            if (newResidence != null && !newResidence.trim().isEmpty()) {
+                residenceEventService.generateResidenceEvent(newResidence);
+                logger.info("已刷新新居所事件: {} (用户 {} 搬入)", getResidenceName(newResidence), userId);
+            }
+
+            // 刷新旧居所的事件（用户搬出）
+            if (previousResidence != null && !previousResidence.trim().isEmpty() && !previousResidence.equals(newResidence)) {
+                residenceEventService.generateResidenceEvent(previousResidence);
+                logger.info("已刷新旧居所事件: {} (用户 {} 搬出)", getResidenceName(previousResidence), userId);
+            }
+        } catch (Exception e) {
+            logger.error("刷新居所事件失败 - 用户: {}, 新居所: {}, 旧居所: {}, 错误: {}", 
+                    userId, newResidence, previousResidence, e.getMessage(), e);
+        }
     }
 }
