@@ -109,10 +109,11 @@ public class ResidenceEventService {
         if (specialResult.isSpecialCouple) {
             // 特殊情侣组合，生成特殊类型事件
             if (specialResult.isThreePerson) {
-                // 三人组合
-                events.add(new ResidenceEventItem("💕 秦小淮、李星斗和存子正在疯狂爱爱 💕", "special"));
-                events.add(new ResidenceEventItem(getResidenceDisplayName(residence) + "中弥漫着爱情的芬芳～", "special"));
-                events.add(new ResidenceEventItem("空气中充满了甜蜜的气息💕", "special"));
+                // 三人组合 - 随机选择一个场景
+                List<ResidenceEventItem> randomScene = Scenes.threeCoupleScenes.get(
+                    (int) (Math.random() * Scenes.threeCoupleScenes.size())
+                );
+                events.addAll(randomScene);
             } else {
                 // 两人组合 - 随机选择一个场景
                 List<ResidenceEventItem> randomScene = Scenes.twoCoupleScenes.get(
