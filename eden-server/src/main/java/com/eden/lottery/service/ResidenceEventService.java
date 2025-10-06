@@ -2,8 +2,10 @@ package com.eden.lottery.service;
 
 import com.eden.lottery.dto.ResidenceEventItem;
 import com.eden.lottery.entity.ResidenceEvent;
+import com.eden.lottery.entity.ResidenceEventHistory;
 import com.eden.lottery.entity.User;
 import com.eden.lottery.mapper.ResidenceEventMapper;
+import com.eden.lottery.mapper.ResidenceEventHistoryMapper;
 import com.eden.lottery.mapper.UserMapper;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
@@ -28,6 +30,9 @@ public class ResidenceEventService {
 
     @Autowired
     private ResidenceEventMapper residenceEventMapper;
+
+    @Autowired
+    private ResidenceEventHistoryMapper residenceEventHistoryMapper;
 
     @Autowired
     private UserMapper userMapper;
@@ -68,6 +73,12 @@ public class ResidenceEventService {
             event.setUpdatedAt(LocalDateTime.now());
 
             int result = residenceEventMapper.upsert(event);
+
+            // 记录事件历史
+            if (result > 0) {
+                recordEventHistory(residence, eventData, showHeartEffect, specialText, showSpecialEffect);
+            }
+
             logger.info("更新居所事件: {} - 事件数量: {}, 特殊文字: {}, 特殊特效: {}",
                     residence, countEventsInData(eventData), specialText != null, showSpecialEffect);
             return result > 0;
@@ -332,6 +343,110 @@ public class ResidenceEventService {
             return Math.max(count - 1, 0); // 减去初始值1
         } catch (Exception e) {
             return 1; // 默认返回1个事件
+        }
+    }
+
+    /**
+     * 记录事件历史
+     */
+    private void recordEventHistory(String residence, String eventData, Boolean showHeartEffect, String specialText, Boolean showSpecialEffect) {
+        try {
+            // 获取当前居住人员信息
+            String residentsInfo = getCurrentResidentsInfo(residence);
+
+            // 创建历史记录
+            ResidenceEventHistory history = new ResidenceEventHistory(
+                    residence, eventData, residentsInfo, showHeartEffect, specialText, showSpecialEffect
+            );
+
+            // 插入历史记录
+            residenceEventHistoryMapper.insertEventHistory(history);
+
+            // 清理旧记录，保留最新的20条
+            residenceEventHistoryMapper.cleanupOldEventHistory(residence, 20);
+
+            logger.debug("记录事件历史成功，居所: {}, 历史ID: {}", residence, history.getId());
+        } catch (Exception e) {
+            logger.error("记录事件历史失败，居所: {}", residence, e);
+        }
+    }
+
+    /**
+     * 获取当前居住人员信息（JSON格式）
+     */
+    private String getCurrentResidentsInfo(String residence) {
+        try {
+            List<User> residents = userMapper.selectByResidence(residence);
+            List<String> residentNames = residents.stream()
+                    .map(User::getUserId)
+                    .toList();
+            return gson.toJson(residentNames);
+        } catch (Exception e) {
+            logger.error("获取居住人员信息失败，居所: {}", residence, e);
+            return "[]";
+        }
+    }
+
+    /**
+     * 获取指定居所的事件历史（最近20条）
+     */
+    public List<ResidenceEventHistory> getResidenceEventHistory(String residence) {
+        try {
+            return residenceEventHistoryMapper.getRecentEventHistory(residence, 20);
+        } catch (Exception e) {
+            logger.error("获取事件历史失败，居所: {}", residence, e);
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * 获取指定居所的事件历史（指定数量）
+     */
+    public List<ResidenceEventHistory> getResidenceEventHistory(String residence, int limit) {
+        try {
+            return residenceEventHistoryMapper.getRecentEventHistory(residence, Math.max(1, Math.min(limit, 50)));
+        } catch (Exception e) {
+            logger.error("获取事件历史失败，居所: {}, 限制数量: {}", residence, limit, e);
+            return new ArrayList<>();
+        }
+    }
+
+    /**
+     * 清理指定居所的所有事件历史
+     */
+    public boolean clearResidenceEventHistory(String residence) {
+        try {
+            int result = residenceEventHistoryMapper.deleteAllEventHistoryByResidence(residence);
+            logger.info("清理居所事件历史完成，居所: {}, 删除数量: {}", residence, result);
+            return true;
+        } catch (Exception e) {
+            logger.error("清理居所事件历史失败，居所: {}", residence, e);
+            return false;
+        }
+    }
+
+    /**
+     * 获取事件历史统计信息
+     */
+    public Map<String, Object> getEventHistoryStats(String residence) {
+        try {
+            int count = residenceEventHistoryMapper.getEventHistoryCount(residence);
+            int totalCount = residenceEventHistoryMapper.getTotalEventHistoryCount();
+
+            return Map.of(
+                    "residence", residence,
+                    "historyCount", count,
+                    "totalHistoryCount", totalCount,
+                    "lastUpdated", LocalDateTime.now()
+            );
+        } catch (Exception e) {
+            logger.error("获取事件历史统计失败，居所: {}", residence, e);
+            return Map.of(
+                    "residence", residence,
+                    "historyCount", 0,
+                    "totalHistoryCount", 0,
+                    "error", e.getMessage()
+            );
         }
     }
 }

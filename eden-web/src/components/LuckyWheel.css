@@ -2730,13 +2730,17 @@
         position: relative !important;
         max-width: 580px !important;
         width: 95% !important;
-        max-height: 80vh !important;
+        min-height: auto !important;
+        max-height: 400px !important;
         padding: 20px !important;
         font-size: 14px !important;
         /* 确保内容居中 */
         margin: 0 auto !important;
         /* 防止内容被旋转 */
         transform: none !important;
+        /* 使用flex布局 */
+        display: flex !important;
+        flex-direction: column !important;
     }
 
     /* 确保居住选择弹窗内的所有元素都不会被额外旋转 */

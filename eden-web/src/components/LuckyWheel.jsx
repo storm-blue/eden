@@ -225,6 +225,9 @@ const LotteryLuckyWheel = () => {
     const [loadingResidents, setLoadingResidents] = useState(false) // 加载居住人员状态
     const [allBuildingResidents, setAllBuildingResidents] = useState({}) // 所有建筑的居住人员
     const [specialCombos, setSpecialCombos] = useState(null) // 特殊居住组合状态 // 星星城关闭动画状态 // 星星城页面状态
+    const [showEventHistory, setShowEventHistory] = useState(false) // 显示事件历史弹窗
+    const [eventHistory, setEventHistory] = useState([]) // 事件历史数据
+    const [loadingEventHistory, setLoadingEventHistory] = useState(false) // 加载事件历史状态
     const [wishes, setWishes] = useState([]) // 所有许愿列表
     const [showWishInput, setShowWishInput] = useState(false) // 是否显示许愿输入框
     const [wishContent, setWishContent] = useState('') // 许愿内容
@@ -845,6 +848,62 @@ const LotteryLuckyWheel = () => {
             setShowStarCity(false)
             setStarCityClosing(false)
         }, 500)
+    }
+
+    // 获取事件历史
+    const fetchEventHistory = async (residence) => {
+        if (!residence) return
+        
+        setLoadingEventHistory(true)
+        try {
+            const response = await fetch(`/api/residence-event-history/${residence}`)
+            if (response.ok) {
+                const data = await response.json()
+                if (data.success) {
+                    setEventHistory(data.history || [])
+                } else {
+                    console.error('获取事件历史失败:', data.message)
+                    setEventHistory([])
+                }
+            } else {
+                console.error('获取事件历史失败:', response.statusText)
+                setEventHistory([])
+            }
+        } catch (error) {
+            console.error('获取事件历史时发生错误:', error)
+            setEventHistory([])
+        } finally {
+            setLoadingEventHistory(false)
+        }
+    }
+
+    // 显示事件历史弹窗
+    const showResidenceEventHistory = () => {
+        if (selectedBuilding) {
+            fetchEventHistory(selectedBuilding.key)
+            setShowEventHistory(true)
+        }
+    }
+
+    // 格式化历史时间
+    const formatHistoryTime = (createdAt) => {
+        if (!createdAt) return ''
+        const date = new Date(createdAt)
+        return date.toLocaleString('zh-CN', {
+            month: '2-digit',
+            day: '2-digit',
+            hour: '2-digit',
+            minute: '2-digit'
+        })
+    }
+
+    // 解析事件数据
+    const parseEventData = (eventData) => {
+        try {
+            return JSON.parse(eventData)
+        } catch (error) {
+            return []
+        }
     }
 
     // 监听星星城页面状态，获取数据
@@ -2068,13 +2127,17 @@ const LotteryLuckyWheel = () => {
                         padding: '30px',
                         maxWidth: isMobileDevice ? '750px' : '500px',
                         width: isMobileDevice ? '95%' : '90%',
+                        minHeight: 'auto',
+                        maxHeight: isMobileDevice ? '400px' : '80vh',
                         textAlign: 'center',
                         boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
                         border: '2px solid rgba(255, 255, 255, 0.2)',
                         color: 'white',
                         fontSize: isMobileDevice ? '14px' : '16px',
                         position: 'relative',
-                        overflow: 'hidden'
+                        overflow: 'hidden',
+                        display: 'flex',
+                        flexDirection: 'column'
                     }}>
                         {/* 特殊情侣的爱心背景动画 - 覆盖整个弹框（从事件接口控制） */}
                         {selectedBuilding && residenceEvents[selectedBuilding.key] && residenceEvents[selectedBuilding.key].showSpecialEffect && (
@@ -2241,9 +2304,10 @@ const LotteryLuckyWheel = () => {
                                                 className="residence-event-scroll"
                                                 style={{
                                                     marginTop: '10px',
-                                                    maxHeight: '90px', // 限制最大高度，约3行事件的高度
+                                                    maxHeight: isMobileDevice ? '120px' : '150px', // 根据设备调整最大高度
                                                     overflowY: 'auto', // 超出时显示垂直滚动条
-                                                    paddingRight: '5px' // 为滚动条留出空间
+                                                    paddingRight: '5px', // 为滚动条留出空间
+                                                    minHeight: 'auto' // 允许内容自适应高度
                                                 }}
                                             >
                                                 {/* 渲染多条事件 */}
@@ -2340,6 +2404,32 @@ const LotteryLuckyWheel = () => {
                                 }}
                             >
                                 居住
+                            </button>
+                            <button
+                                onClick={showResidenceEventHistory}
+                                style={{
+                                    background: 'rgba(255, 255, 255, 0.15)',
+                                    color: 'white',
+                                    borderRadius: '25px',
+                                    padding: '12px 25px',
+                                    fontSize: '16px',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.3s ease',
+                                    backdropFilter: 'blur(10px)',
+                                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                                    fontWeight: 'bold',
+                                    marginLeft: '10px'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.target.style.background = 'rgba(255, 255, 255, 0.25)'
+                                    e.target.style.transform = 'scale(1.05)'
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.target.style.background = 'rgba(255, 255, 255, 0.15)'
+                                    e.target.style.transform = 'scale(1)'
+                                }}
+                            >
+                                📜 历史
                             </button>
                             <button
                                 onClick={() => {
@@ -3279,6 +3369,165 @@ const LotteryLuckyWheel = () => {
                 🏠 安居乐业中
               </div>
             </div>
+          </div>
+        </div>
+      )}
+
+      {/* 事件历史弹窗 */}
+      {showEventHistory && selectedBuilding && (
+        <div
+          className={`residence-modal-overlay ${isMobileDevice ? 'force-landscape' : ''}`}
+          style={{
+            position: 'fixed',
+            top: isMobileDevice ? '50%' : 0,
+            left: isMobileDevice ? '50%' : 0,
+            width: '100%',
+            height: '100%',
+            background: 'rgba(0, 0, 0, 0.8)',
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center',
+            zIndex: 100001,
+            transform: isMobileDevice ? 'translate(-50%, -50%) rotate(90deg)' : 'none',
+            transformOrigin: 'center center'
+          }}
+          onClick={() => setShowEventHistory(false)}
+        >
+          <div
+            className="residence-modal-content"
+            style={{
+              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+              borderRadius: '20px',
+              padding: '20px',
+              maxWidth: isMobileDevice ? '750px' : '600px',
+              width: isMobileDevice ? '95%' : '90%',
+              height: isMobileDevice ? '400px' : 'auto',
+              maxHeight: isMobileDevice ? '400px' : '80vh',
+              textAlign: 'center',
+              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+              border: '2px solid rgba(255, 255, 255, 0.2)',
+              color: 'white',
+              fontSize: isMobileDevice ? '14px' : '16px',
+              position: 'relative',
+              overflow: 'hidden',
+              display: 'flex',
+              flexDirection: 'column'
+            }}
+            onClick={(e) => e.stopPropagation()}
+          >
+            {/* 标题 */}
+            <div style={{ 
+              display: 'flex', 
+              alignItems: 'center', 
+              justifyContent: 'center', 
+              marginBottom: isMobileDevice ? '15px' : '20px',
+              fontSize: isMobileDevice ? '18px' : '20px',
+              fontWeight: 'bold',
+              flexShrink: 0
+            }}>
+              <span style={{ marginRight: '10px', fontSize: '24px' }}>
+                {selectedBuilding.icon}
+              </span>
+              <span>{selectedBuilding.name} - 事件历史</span>
+            </div>
+
+            {/* 历史列表 */}
+            <div style={{
+              height: isMobileDevice ? '250px' : '400px',
+              overflowY: 'auto',
+              marginBottom: isMobileDevice ? '15px' : '20px',
+              paddingRight: '10px',
+              flex: 1,
+              minHeight: 0
+            }} className="residence-event-scroll">
+              {loadingEventHistory ? (
+                <div style={{ padding: '20px', color: 'rgba(255, 255, 255, 0.7)' }}>
+                  加载中...
+                </div>
+              ) : eventHistory.length === 0 ? (
+                <div style={{ padding: '20px', color: 'rgba(255, 255, 255, 0.7)' }}>
+                  暂无历史记录
+                </div>
+              ) : (
+                eventHistory.map((history, index) => (
+                  <div
+                    key={history.id || index}
+                    style={{
+                      background: 'rgba(255, 255, 255, 0.1)',
+                      borderRadius: '15px',
+                      padding: '15px',
+                      marginBottom: '15px',
+                      textAlign: 'left',
+                      border: '1px solid rgba(255, 255, 255, 0.2)'
+                    }}
+                  >
+                    {/* 时间和居住人员 */}
+                    <div style={{
+                      display: 'flex',
+                      justifyContent: 'space-between',
+                      alignItems: 'center',
+                      marginBottom: '10px',
+                      fontSize: '12px',
+                      color: 'rgba(255, 255, 255, 0.8)'
+                    }}>
+                      <span>⏰ {formatHistoryTime(history.createdAt)}</span>
+                      <span>
+                        👥 {JSON.parse(history.residentsInfo || '[]').join(', ') || '无人'}
+                      </span>
+                    </div>
+
+                    {/* 事件列表 */}
+                    <div>
+                      {parseEventData(history.eventData).map((event, eventIndex) => (
+                        <div
+                          key={eventIndex}
+                          style={{
+                            marginBottom: '8px',
+                            color: event.type === 'special' 
+                              ? '#ffb3d9' 
+                              : 'rgba(255, 255, 255, 0.9)',
+                            fontSize: '14px',
+                            textShadow: event.type === 'special' 
+                              ? '0 0 10px rgba(255, 105, 180, 0.5)' 
+                              : 'none'
+                          }}
+                        >
+                          {event.description}
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                ))
+              )}
+            </div>
+
+            {/* 关闭按钮 */}
+            <button
+              onClick={() => setShowEventHistory(false)}
+              style={{
+                background: 'rgba(255, 255, 255, 0.2)',
+                color: 'white',
+                borderRadius: '25px',
+                padding: isMobileDevice ? '10px 20px' : '12px 25px',
+                fontSize: isMobileDevice ? '14px' : '16px',
+                cursor: 'pointer',
+                transition: 'all 0.3s ease',
+                backdropFilter: 'blur(10px)',
+                border: '1px solid rgba(255, 255, 255, 0.3)',
+                fontWeight: 'bold',
+                flexShrink: 0
+              }}
+              onMouseEnter={(e) => {
+                e.target.style.background = 'rgba(255, 255, 255, 0.3)'
+                e.target.style.transform = 'scale(1.05)'
+              }}
+              onMouseLeave={(e) => {
+                e.target.style.background = 'rgba(255, 255, 255, 0.2)'
+                e.target.style.transform = 'scale(1)'
+              }}
+            >
+              关闭
+            </button>
           </div>
         </div>
       )}

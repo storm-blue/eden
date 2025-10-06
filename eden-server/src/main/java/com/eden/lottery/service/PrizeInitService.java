@@ -66,6 +66,9 @@ public class PrizeInitService implements ApplicationRunner {
             // 检查并创建居所事件表
             checkAndCreateResidenceEventsTable(connection);
             
+            // 检查并创建居所事件历史表
+            checkAndCreateResidenceEventHistoryTable(connection);
+            
             // 检查并迁移居所事件表字段
             checkAndMigrateResidenceEventsTable(connection);
             
@@ -411,5 +414,50 @@ public class PrizeInitService implements ApplicationRunner {
             }
         }
         columns.close();
+    }
+    
+    /**
+     * 检查并创建居所事件历史表
+     */
+    private void checkAndCreateResidenceEventHistoryTable(Connection connection) throws Exception {
+        DatabaseMetaData metaData = connection.getMetaData();
+        ResultSet tables = metaData.getTables(null, null, "residence_event_history", null);
+        
+        if (!tables.next()) {
+            logger.info("residence_event_history表不存在，创建表...");
+            createResidenceEventHistoryTable(connection);
+        } else {
+            logger.info("residence_event_history表已存在");
+        }
+        
+        tables.close();
+    }
+    
+    /**
+     * 创建居所事件历史表
+     */
+    private void createResidenceEventHistoryTable(Connection connection) throws Exception {
+        String createTableSql = """
+            CREATE TABLE residence_event_history (
+                id INTEGER PRIMARY KEY AUTOINCREMENT,
+                residence VARCHAR(20) NOT NULL,
+                event_data TEXT NOT NULL,
+                residents_info TEXT,
+                show_heart_effect INTEGER NOT NULL DEFAULT 0,
+                special_text TEXT,
+                show_special_effect INTEGER NOT NULL DEFAULT 0,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+            )
+            """;
+        
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(createTableSql);
+            logger.info("residence_event_history表创建成功");
+            
+            // 创建索引
+            statement.execute("CREATE INDEX IF NOT EXISTS idx_residence_event_history_residence ON residence_event_history(residence)");
+            statement.execute("CREATE INDEX IF NOT EXISTS idx_residence_event_history_created_at ON residence_event_history(created_at)");
+            logger.info("residence_event_history表索引创建成功");
+        }
     }
 }
