@@ -680,11 +680,13 @@ const LotteryLuckyWheel = () => {
         setShowDonationModal(true)
     }
 
-    // 播放星星城背景音乐（简化版）
+    // 播放星星城背景音乐（修复双重下载）
     const playStarCityMusic = () => {
         if (starCityAudioRef.current && !isMusicPlaying) {
-            // 🔥 简化：直接播放单个音频文件
-            starCityAudioRef.current.src = starCityMusicUrl
+            // 🔥 修复：检查是否已设置src，避免重复设置
+            if (!starCityAudioRef.current.src || starCityAudioRef.current.src === window.location.href) {
+                starCityAudioRef.current.src = starCityMusicUrl
+            }
             starCityAudioRef.current.currentTime = 0
             starCityAudioRef.current.loop = true // 循环播放
             starCityAudioRef.current.play().then(() => {
@@ -713,38 +715,6 @@ const LotteryLuckyWheel = () => {
         if (isMusicPlaying) {
             playStarCityMusic()
         }
-    }
-
-    // 预加载音乐文件（简化版）
-    const preloadMusic = async () => {
-        console.log('开始预加载背景音乐...')
-        
-        try {
-            // 🔥 简化：只预加载一个音频文件
-            const tempAudio = new Audio()
-            tempAudio.preload = 'auto'
-            tempAudio.src = starCityMusicUrl
-            
-            await new Promise((resolve, reject) => {
-                tempAudio.addEventListener('canplaythrough', () => {
-                    console.log(`音乐预加载完成: ${starCityMusicUrl}`)
-                    resolve()
-                })
-                tempAudio.addEventListener('error', () => {
-                    console.error(`音乐预加载失败: ${starCityMusicUrl}`, tempAudio.error)
-                    resolve() // 即使失败也resolve，不阻塞后续流程
-                })
-                // 5秒超时
-                setTimeout(() => {
-                    console.warn(`音乐预加载超时: ${starCityMusicUrl}`)
-                    resolve()
-                }, 5000)
-            })
-        } catch (error) {
-            console.error(`预加载音乐发生异常:`, error)
-        }
-        
-        console.log('背景音乐预加载完成')
     }
 
     // 建筑信息映射
@@ -976,16 +946,12 @@ const LotteryLuckyWheel = () => {
             loadAllBuildingResidents() // 加载所有建筑的居住人员信息
             loadAllResidenceEvents() // 加载所有居所事件
             
-            // 🔥 CPU优化：延迟音频预加载，避免阻塞页面渲染
+            // 🔥 修复双重下载：移除独立的预加载，直接播放
+            // 音频会在首次播放时自动加载
             const audioDelay = isMobileDevice ? 2000 : 1000 // 移动端延迟更久
             setTimeout(() => {
-                preloadMusic()
-            }, audioDelay)
-            
-            // 🔥 CPU优化：延迟播放背景音乐
-            setTimeout(() => {
                 playStarCityMusic()
-            }, audioDelay + 500)
+            }, audioDelay)
         }
     }, [showStarCity])
 
@@ -1479,10 +1445,10 @@ const LotteryLuckyWheel = () => {
 
   return (
     <div className="lucky-lottery-container">
-            {/* 星星城背景音乐（简化版） */}
+            {/* 星星城背景音乐（简化版 - 修复双重下载） */}
             <audio
                 ref={starCityAudioRef}
-                preload="auto"
+                preload="none"
                 style={{display: 'none'}}
                 onEnded={handleMusicEnded}
             >
