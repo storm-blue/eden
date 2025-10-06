@@ -109,16 +109,12 @@ public class ResidenceEventService {
         if (specialResult.isSpecialCouple) {
             // 特殊情侣组合，生成特殊类型事件
             if (specialResult.isThreePerson) {
-                // 三人组合 - 随机选择一个场景
-                List<ResidenceEventItem> randomScene = Scenes.threeCoupleScenes.get(
-                    (int) (Math.random() * Scenes.threeCoupleScenes.size())
-                );
+                // 三人组合 - 根据居所类型随机选择场景
+                List<ResidenceEventItem> randomScene = getRandomThreePersonScene(residence);
                 events.addAll(randomScene);
             } else {
-                // 两人组合 - 随机选择一个场景
-                List<ResidenceEventItem> randomScene = Scenes.twoCoupleScenes.get(
-                    (int) (Math.random() * Scenes.twoCoupleScenes.size())
-                );
+                // 两人组合 - 根据居所类型随机选择场景
+                List<ResidenceEventItem> randomScene = getRandomTwoPersonScene(residence);
                 events.addAll(randomScene);
             }
 
@@ -179,6 +175,82 @@ public class ResidenceEventService {
             this.isSpecialCouple = isSpecialCouple;
             this.isThreePerson = isThreePerson;
         }
+    }
+    
+    /**
+     * 根据居所类型获取随机两人场景
+     * @param residence 居所类型
+     * @return 随机选择的两人场景
+     */
+    private List<ResidenceEventItem> getRandomTwoPersonScene(String residence) {
+        List<List<ResidenceEventItem>> scenePool;
+        
+        switch (residence) {
+            case "park":
+                // 公园场景：使用公园双人场景池（18个）
+                scenePool = List.of(
+                    Scenes.TWO__GY__01, Scenes.TWO__GY__02, Scenes.TWO__GY__03, Scenes.TWO__GY__04,
+                    Scenes.TWO__GY__05, Scenes.TWO__GY__06, Scenes.TWO__GY__07, Scenes.TWO__GY__08,
+                    Scenes.TWO__GY__09, Scenes.TWO__GY__10, Scenes.TWO__GY__11, Scenes.TWO__GY__12,
+                    Scenes.TWO__GY__13, Scenes.TWO__GY__14, Scenes.TWO__GY__15, Scenes.TWO__GY__16,
+                    Scenes.TWO__GY__17, Scenes.TWO__GY__18
+                );
+                break;
+            case "city_hall":
+                // 市政厅场景：使用市政厅双人场景池（18个）
+                scenePool = List.of(
+                    Scenes.TWO__SZT__01, Scenes.TWO__SZT__02, Scenes.TWO__SZT__03, Scenes.TWO__SZT__04,
+                    Scenes.TWO__SZT__05, Scenes.TWO__SZT__06, Scenes.TWO__SZT__07, Scenes.TWO__SZT__08,
+                    Scenes.TWO__SZT__09, Scenes.TWO__SZT__10, Scenes.TWO__SZT__11, Scenes.TWO__SZT__12,
+                    Scenes.TWO__SZT__13, Scenes.TWO__SZT__14, Scenes.TWO__SZT__15, Scenes.TWO__SZT__16,
+                    Scenes.TWO__SZT__17, Scenes.TWO__SZT__18
+                );
+                break;
+            default:
+                // 城堡等其他场景：使用城堡双人场景池（18个）
+                scenePool = Scenes.twoCoupleScenes;
+                break;
+        }
+        
+        return scenePool.get((int) (Math.random() * scenePool.size()));
+    }
+    
+    /**
+     * 根据居所类型获取随机三人场景
+     * @param residence 居所类型
+     * @return 随机选择的三人场景
+     */
+    private List<ResidenceEventItem> getRandomThreePersonScene(String residence) {
+        List<List<ResidenceEventItem>> scenePool;
+        
+        switch (residence) {
+            case "park":
+                // 公园场景：使用公园三人场景池（18个）
+                scenePool = List.of(
+                    Scenes.THREE__GY__01, Scenes.THREE__GY__02, Scenes.THREE__GY__03, Scenes.THREE__GY__04,
+                    Scenes.THREE__GY__05, Scenes.THREE__GY__06, Scenes.THREE__GY__07, Scenes.THREE__GY__08,
+                    Scenes.THREE__GY__09, Scenes.THREE__GY__10, Scenes.THREE__GY__11, Scenes.THREE__GY__12,
+                    Scenes.THREE__GY__13, Scenes.THREE__GY__14, Scenes.THREE__GY__15, Scenes.THREE__GY__16,
+                    Scenes.THREE__GY__17, Scenes.THREE__GY__18
+                );
+                break;
+            case "city_hall":
+                // 市政厅场景：使用市政厅三人场景池（18个）
+                scenePool = List.of(
+                    Scenes.THREE__SZT__01, Scenes.THREE__SZT__02, Scenes.THREE__SZT__03, Scenes.THREE__SZT__04,
+                    Scenes.THREE__SZT__05, Scenes.THREE__SZT__06, Scenes.THREE__SZT__07, Scenes.THREE__SZT__08,
+                    Scenes.THREE__SZT__09, Scenes.THREE__SZT__10, Scenes.THREE__SZT__11, Scenes.THREE__SZT__12,
+                    Scenes.THREE__SZT__13, Scenes.THREE__SZT__14, Scenes.THREE__SZT__15, Scenes.THREE__SZT__16,
+                    Scenes.THREE__SZT__17, Scenes.THREE__SZT__18
+                );
+                break;
+            default:
+                // 城堡等其他场景：使用城堡三人场景池（18个）
+                scenePool = Scenes.threeCoupleScenes;
+                break;
+        }
+        
+        return scenePool.get((int) (Math.random() * scenePool.size()));
     }
 
     /**
