@@ -23,7 +23,7 @@ public class ResidenceEventRefreshTask {
     /**
      * 每小时刷新居所事件
      */
-    @Scheduled(fixedDelay = 3600, timeUnit = TimeUnit.SECONDS)
+    @Scheduled(initialDelay = 360, fixedDelay = 3600, timeUnit = TimeUnit.SECONDS)
     public void refreshResidenceEvents() {
         logger.info("开始执行居所事件定时刷新任务");
 
