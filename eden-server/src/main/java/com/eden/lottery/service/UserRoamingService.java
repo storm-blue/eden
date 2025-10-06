@@ -24,6 +24,9 @@ public class UserRoamingService {
 
     @Autowired
     private UserRoamingLogicService roamingLogicService; // 用户自定义漫游逻辑
+    
+    @Autowired
+    private ResidenceEventService residenceEventService; // 居所事件服务
 
     /**
      * 定时任务：每半小时执行一次用户漫游
@@ -70,6 +73,19 @@ public class UserRoamingService {
             }
 
             logger.info("用户漫游系统执行完成 - 总用户数: {}, 移动用户数: {}", totalUsers, movedUsers);
+            
+            // 如果有用户移动，刷新所有居所事件
+            if (movedUsers > 0) {
+                logger.info("检测到用户移动，开始刷新居所事件...");
+                try {
+                    int refreshedCount = residenceEventService.refreshAllResidenceEvents();
+                    logger.info("居所事件刷新完成，成功刷新 {} 个居所", refreshedCount);
+                } catch (Exception e) {
+                    logger.error("刷新居所事件时发生错误: {}", e.getMessage(), e);
+                }
+            } else {
+                logger.info("无用户移动，跳过居所事件刷新");
+            }
 
         } catch (Exception e) {
             logger.error("执行用户漫游系统时发生错误: {}", e.getMessage(), e);
