@@ -463,7 +463,9 @@ const LotteryLuckyWheel = () => {
     // 使用useMemo生成固定的背景星星，只计算一次
     const backgroundStars = useMemo(() => {
         const stars = []
-        for (let i = 0; i < 50; i++) {
+        // 🔥 CPU优化：移动端大幅减少星星数量
+        const starCount = isMobileDevice ? 16 : 50 // 从50减少到8/20
+        for (let i = 0; i < starCount; i++) {
             stars.push({
                 id: i,
                 left: Math.random() * 100,
@@ -473,28 +475,35 @@ const LotteryLuckyWheel = () => {
             })
         }
         return stars
-    }, []) // 空依赖数组，只计算一次
+    }, [isMobileDevice]) // 添加依赖，设备类型变化时重新计算
 
     // 监听屏幕尺寸变化（仅在星星城页面时）
     useEffect(() => {
         if (!showStarCity) return
 
+        // 🔥 CPU优化：防抖函数，减少频繁调用
+        let resizeTimer
         const checkScreenSize = () => {
-            // 移动端设备始终强制横屏显示
-            const isMobile = window.innerWidth <= 768 || window.screen.width <= 768
-            setIsMobileDevice(isMobile)
+            clearTimeout(resizeTimer)
+            resizeTimer = setTimeout(() => {
+                // 移动端设备始终强制横屏显示
+                const isMobile = window.innerWidth <= 768 || window.screen.width <= 768
+                setIsMobileDevice(isMobile)
+            }, 150) // 150ms防抖
         }
 
         // 初始检查
         checkScreenSize()
 
-        // 监听窗口大小变化
-        window.addEventListener('resize', checkScreenSize)
+        // 🔥 CPU优化：使用passive监听器提升性能
+        const options = { passive: true }
+        window.addEventListener('resize', checkScreenSize, options)
         window.addEventListener('orientationchange', () => {
             setTimeout(checkScreenSize, 200)
-        })
+        }, options)
 
         return () => {
+            clearTimeout(resizeTimer)
             window.removeEventListener('resize', checkScreenSize)
             window.removeEventListener('orientationchange', checkScreenSize)
         }
@@ -1022,13 +1031,16 @@ const LotteryLuckyWheel = () => {
             loadAllBuildingResidents() // 加载所有建筑的居住人员信息
             loadAllResidenceEvents() // 加载所有居所事件
             
-            // 预加载背景音乐
-            preloadMusic()
+            // 🔥 CPU优化：延迟音频预加载，避免阻塞页面渲染
+            const audioDelay = isMobileDevice ? 2000 : 1000 // 移动端延迟更久
+            setTimeout(() => {
+                preloadMusic()
+            }, audioDelay)
             
-            // 播放背景音乐
+            // 🔥 CPU优化：延迟播放背景音乐
             setTimeout(() => {
                 playStarCityMusic()
-            }, 500) // 延迟500ms播放，确保页面已加载
+            }, audioDelay + 500)
         }
     }, [showStarCity])
 
@@ -2262,28 +2274,36 @@ const LotteryLuckyWheel = () => {
                                 pointerEvents: 'none',
                                 zIndex: 0 // 降低到最底层，不遮挡任何内容
                             }}>
-                                {[...Array(12)].map((_, i) => {
-                                    // 计算爱心位置，避开中间的事件文字区域
-                                    const isLeftSide = i % 2 === 0;
-                                    const leftPosition = isLeftSide 
-                                        ? Math.random() * 25 // 左侧 0-25%
-                                        : 75 + Math.random() * 25; // 右侧 75-100%
-                                    
-                                    // 垂直位置分布在整个高度
-                                    const topPosition = Math.random() * 100;
+                                {/* 🔥 CPU优化：减少爱心数量，移动端4个，桌面端8个 */}
+                                {[...Array(isMobileDevice ? 8 : 8)].map((_, i) => {
+                                    // 🔥 CPU优化：使用预定义位置，减少Math.random()计算
+                                    const positions = [
+                                        { left: 15, top: 20 },
+                                        { left: 85, top: 30 },
+                                        { left: 10, top: 70 },
+                                        { left: 90, top: 80 },
+                                        { left: 20, top: 50 },
+                                        { left: 80, top: 60 },
+                                        { left: 25, top: 85 },
+                                        { left: 75, top: 15 }
+                                    ]
+                                    const pos = positions[i] || positions[0]
                                     
                                     return (
                                         <div
                                             key={i}
                                             style={{
                                                 position: 'absolute',
-                                                fontSize: `${Math.random() * 16 + 14}px`, // 稍微缩小爱心尺寸
+                                                fontSize: `${isMobileDevice ? 25 : 50}px`, // 移动端更小
                                                 color: '#ff69b4',
-                                                left: `${leftPosition}%`,
-                                                top: `${topPosition}%`,
-                                                animation: `heartFloat ${2 + Math.random() * 3}s ease-in-out infinite`,
-                                                animationDelay: `${Math.random() * 2}s`,
-                                                opacity: 0.4 // 适中的透明度
+                                                left: `${pos.left}%`,
+                                                top: `${pos.top}%`,
+                                                animation: `heartFloat ${2 + (i % 2) * 1}s ease-in-out infinite`,
+                                                animationDelay: `${i * 0.3}s`,
+                                                opacity: 0.4,
+                                                // 🔥 CPU优化：强制GPU加速
+                                                willChange: 'transform',
+                                                transform: 'translateZ(0)'
                                             }}
                                         >
                                             💖
@@ -2291,8 +2311,8 @@ const LotteryLuckyWheel = () => {
                                     );
                                 })}
                                 
-                                {/* 在顶部和底部区域添加一些装饰性爱心 */}
-                                {[...Array(6)].map((_, i) => {
+                                {/* 🔥 CPU优化：移动端移除装饰性爱心，减少CPU负担 */}
+                                {!isMobileDevice && [...Array(3)].map((_, i) => {
                                     // 顶部区域的爱心
                                     const isTopArea = i < 3;
                                     const topPosition = isTopArea 

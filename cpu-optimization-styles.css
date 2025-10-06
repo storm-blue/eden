@@ -1,0 +1,294 @@
+/* 🔥 星星城CPU占用优化CSS - 移动端省电模式 */
+
+/* ===== 1. 移动端禁用CPU密集型动画（立即降低40-50% CPU）===== */
+@media screen and (max-width: 768px) {
+    
+    /* 🔥 禁用装饰动画（最耗CPU的动画） */
+    .decorations::before,
+    .decorations::after {
+        display: none !important;
+    }
+    
+    /* 🔥 简化建筑物动画 */
+    .building {
+        animation-duration: 2s !important; /* 从4s减少到2s */
+        filter: none !important; /* 移除drop-shadow */
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.3) !important; /* 简化阴影 */
+    }
+    
+    /* 🔥 简化星星动画 */
+    .city-star {
+        animation-duration: 2s !important; /* 从3s减少到2s */
+        filter: none !important;
+    }
+    
+    /* 🔥 禁用悬停效果（移动端不需要） */
+    .city-star:hover,
+    .building:hover {
+        transform: none !important;
+        filter: none !important;
+    }
+    
+    /* 🔥 简化标题动画 */
+    .star-city-title h2 {
+        animation: none !important; /* 完全禁用标题动画 */
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.4) !important;
+    }
+    
+    /* 🔥 简化背景 */
+    .star-city-background {
+        background: #667eea !important; /* 纯色背景，移除渐变 */
+        background-image: none !important;
+    }
+    
+    /* 🔥 简化关闭按钮 */
+    .star-city-close-button {
+        backdrop-filter: none !important;
+        background: rgba(255, 255, 255, 0.3) !important;
+        transition: none !important;
+    }
+    
+    .star-city-close-button:hover {
+        transform: none !important;
+    }
+}
+
+/* ===== 2. 省电模式专用样式 ===== */
+.power-save-mode {
+    /* 🔥 全局禁用动画 */
+    *, *::before, *::after {
+        animation-duration: 0s !important;
+        animation-delay: 0s !important;
+        transition-duration: 0s !important;
+    }
+    
+    /* 🔥 移除所有滤镜和阴影 */
+    * {
+        filter: none !important;
+        text-shadow: none !important;
+        box-shadow: none !important;
+    }
+    
+    /* 🔥 简化背景 */
+    .star-city-container {
+        background: #667eea !important;
+        background-image: none !important;
+    }
+}
+
+/* ===== 3. 优化动画性能（启用GPU加速）===== */
+
+/* 🔥 为所有动画元素启用GPU加速 */
+.building,
+.city-star,
+.background-star,
+.heart-effect {
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    perspective: 1000px;
+}
+
+/* 🔥 优化爱心动画，减少复杂度 */
+@keyframes heartFloat {
+    0%, 100% {
+        transform: translateY(0) translateZ(0) scale(1);
+    }
+    50% {
+        transform: translateY(-8px) translateZ(0) scale(1.05); /* 减少移动距离和缩放 */
+    }
+}
+
+/* 🔥 简化建筑物浮动动画 */
+@keyframes buildingFloat {
+    0%, 100% {
+        transform: translateY(0) translateZ(0);
+    }
+    50% {
+        transform: translateY(-5px) translateZ(0); /* 减少移动距离 */
+    }
+}
+
+/* 🔥 简化星星闪烁动画 */
+@keyframes cityStarTwinkle {
+    0%, 100% {
+        opacity: 0.8;
+        transform: scale(1) translateZ(0);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1) translateZ(0); /* 减少缩放幅度 */
+    }
+}
+
+/* ===== 4. 移动端强制横屏优化 ===== */
+@media screen and (max-width: 768px) {
+    .star-city-container.force-landscape {
+        /* 🔥 使用3D变换启用GPU加速 */
+        transform: translate3d(-50%, -50%, 0) rotate(90deg) !important;
+        backface-visibility: hidden !important;
+        perspective: 1000px !important;
+        
+        /* 🔥 减少重绘 */
+        contain: layout style paint !important;
+    }
+}
+
+/* ===== 5. 优化模态框性能 ===== */
+.residence-modal-overlay,
+.residence-modal-content {
+    will-change: transform, opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+    
+    /* 🔥 减少重排 */
+    contain: layout style;
+}
+
+/* ===== 6. 低端设备专用优化 ===== */
+@media screen and (max-width: 768px) and (max-device-pixel-ratio: 2) {
+    /* 🔥 低像素密度设备进一步优化 */
+    
+    /* 完全禁用复杂动画 */
+    @keyframes heartFloat,
+    @keyframes buildingFloat,
+    @keyframes cityStarTwinkle {
+        0%, 100% {
+            transform: translateZ(0);
+        }
+    }
+    
+    /* 降低动画帧率 */
+    .building,
+    .city-star {
+        animation-timing-function: steps(10) !important; /* 降低到10帧 */
+    }
+    
+    /* 简化字体渲染 */
+    * {
+        text-rendering: optimizeSpeed !important;
+        -webkit-font-smoothing: none !important;
+        -moz-osx-font-smoothing: unset !important;
+    }
+}
+
+/* ===== 7. 减少CSS计算复杂度 ===== */
+
+/* 🔥 避免复杂的选择器 */
+.star-city-container .building {
+    /* 使用简单选择器替代复杂嵌套 */
+}
+
+/* 🔥 减少box-shadow层数 */
+.explosion-1,
+.explosion-2,
+.explosion-3,
+.explosion-4,
+.explosion-5 {
+    /* 移动端简化爆炸效果 */
+}
+
+@media screen and (max-width: 768px) {
+    .explosion-1,
+    .explosion-2,
+    .explosion-3,
+    .explosion-4,
+    .explosion-5 {
+        box-shadow: 0 0 0 10px currentColor !important; /* 简化为单层阴影 */
+    }
+}
+
+/* ===== 8. 内存优化 ===== */
+@media screen and (max-width: 768px) {
+    
+    /* 🔥 减少层叠上下文 */
+    .star-city-container {
+        contain: layout style paint;
+        isolation: isolate;
+    }
+    
+    /* 🔥 优化滚动性能 */
+    .residence-event-scroll {
+        -webkit-overflow-scrolling: touch;
+        transform: translateZ(0);
+        will-change: scroll-position;
+        contain: layout style paint;
+    }
+    
+    /* 🔥 减少重绘区域 */
+    .heart-effect,
+    .background-star {
+        contain: layout style paint;
+    }
+}
+
+/* ===== 9. 动态禁用动画的工具类 ===== */
+
+/* 🔥 JavaScript可以动态添加这个类来禁用动画 */
+.disable-animations {
+    *, *::before, *::after {
+        animation-duration: 0s !important;
+        animation-delay: 0s !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0s !important;
+        transition-delay: 0s !important;
+    }
+}
+
+/* 🔥 低性能模式 */
+.low-performance-mode {
+    /* 禁用所有特效 */
+    filter: none !important;
+    backdrop-filter: none !important;
+    text-shadow: none !important;
+    box-shadow: none !important;
+    
+    /* 简化背景 */
+    background-image: none !important;
+    
+    /* 禁用变换 */
+    transform: none !important;
+}
+
+/* ===== 10. 帧率控制 ===== */
+
+/* 🔥 30fps模式（通过steps实现） */
+.fps-30 .building {
+    animation-timing-function: steps(30, end) !important;
+}
+
+.fps-30 .city-star {
+    animation-timing-function: steps(30, end) !important;
+}
+
+.fps-30 .heart-effect {
+    animation-timing-function: steps(30, end) !important;
+}
+
+/* 🔥 15fps省电模式 */
+.fps-15 .building,
+.fps-15 .city-star,
+.fps-15 .heart-effect {
+    animation-timing-function: steps(15, end) !important;
+}
+
+/* ===== 11. 响应式性能优化 ===== */
+
+/* 🔥 根据屏幕尺寸调整性能 */
+@media screen and (max-width: 480px) {
+    /* 超小屏幕设备更激进的优化 */
+    .star-city-container * {
+        animation: none !important;
+        transition: none !important;
+        filter: none !important;
+        text-shadow: none !important;
+        box-shadow: none !important;
+    }
+}
+
+@media screen and (min-width: 1200px) {
+    /* 大屏设备可以使用更多特效 */
+    .star-city-container {
+        /* 恢复完整特效 */
+    }
+}

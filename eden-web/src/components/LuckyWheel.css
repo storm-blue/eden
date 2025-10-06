@@ -876,6 +876,86 @@
     z-index: -1;
 }
 
+/* 🔥 CPU优化：移动端禁用装饰动画 */
+@media screen and (max-width: 768px) {
+    .decorations::before,
+    .decorations::after {
+        display: none !important;
+    }
+    
+    /* 🔥 简化建筑物动画 */
+    .building {
+        animation-duration: 2s !important; /* 从4s减少到2s */
+        filter: none !important; /* 移除drop-shadow */
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.3) !important;
+    }
+    
+    /* 🔥 简化星星动画 */
+    .city-star {
+        animation-duration: 2s !important; /* 从3s减少到2s */
+    }
+    
+    /* 🔥 禁用悬停效果（移动端不需要） */
+    .city-star:hover,
+    .building:hover {
+        transform: none !important;
+        filter: none !important;
+    }
+    
+    /* 🔥 简化标题动画 */
+    .star-city-title h2 {
+        animation: none !important;
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.4) !important;
+    }
+    
+    /* 🔥 简化背景 */
+    .star-city-background {
+        background: #667eea !important;
+        background-image: none !important;
+    }
+}
+
+/* 🔥 CPU优化：为动画元素启用GPU加速 */
+.building,
+.city-star,
+.star-city-container,
+.residence-modal-overlay,
+.residence-modal-content {
+    will-change: transform;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+}
+
+/* 🔥 优化动画性能 */
+@keyframes heartFloat {
+    0%, 100% {
+        transform: translateY(0) translateZ(0) scale(1);
+    }
+    50% {
+        transform: translateY(-8px) translateZ(0) scale(1.05);
+    }
+}
+
+@keyframes buildingFloat {
+    0%, 100% {
+        transform: translateY(0) translateZ(0);
+    }
+    50% {
+        transform: translateY(-5px) translateZ(0);
+    }
+}
+
+@keyframes cityStarTwinkle {
+    0%, 100% {
+        opacity: 0.8;
+        transform: scale(1) translateZ(0);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1) translateZ(0);
+    }
+}
+
 /* 动画效果 */
 @keyframes bounce {
     0%, 100% {

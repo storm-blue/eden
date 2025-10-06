@@ -1,0 +1,181 @@
+/* 星星城移动端性能优化CSS */
+
+/* 1. 启用GPU加速的动画 */
+@keyframes heartFloat {
+    0%, 100% {
+        transform: translateY(0) translateZ(0);
+    }
+    50% {
+        transform: translateY(-10px) translateZ(0);
+    }
+}
+
+@keyframes starTwinkle {
+    0%, 100% {
+        opacity: 0.8;
+        transform: scale(1) translateZ(0);
+    }
+    50% {
+        opacity: 1;
+        transform: scale(1.1) translateZ(0);
+    }
+}
+
+/* 2. 优化强制横屏性能 */
+@media screen and (max-width: 768px) {
+    .star-city-container.force-landscape {
+        position: fixed;
+        top: 50%;
+        left: 50%;
+        /* 使用3D变换启用GPU加速 */
+        transform: translate3d(-50%, -50%, 0) rotate(90deg);
+        transform-origin: center center;
+        width: 100vh;
+        height: 100vw;
+        max-width: 100vh;
+        max-height: 100vw;
+        /* 减少重绘 */
+        backface-visibility: hidden;
+        perspective: 1000px;
+    }
+}
+
+/* 3. 减少动画复杂度 - 移动端简化版本 */
+@media screen and (max-width: 768px) {
+    /* 简化建筑物浮动动画 */
+    @keyframes buildingFloat {
+        0%, 100% {
+            transform: translateY(0) translateZ(0);
+        }
+        50% {
+            transform: translateY(-3px) translateZ(0); /* 减少移动距离 */
+        }
+    }
+    
+    /* 简化星星闪烁动画 */
+    @keyframes cityStarTwinkle {
+        0%, 100% {
+            opacity: 0.7;
+            transform: scale(1) translateZ(0);
+        }
+        50% {
+            opacity: 1;
+            transform: scale(1.05) translateZ(0); /* 减少缩放幅度 */
+        }
+    }
+    
+    /* 移动端禁用部分装饰动画 */
+    .decorations::before,
+    .decorations::after {
+        display: none; /* 禁用滚动装饰 */
+    }
+    
+    /* 减少阴影和滤镜效果 */
+    .building {
+        filter: none; /* 移除drop-shadow */
+        text-shadow: 0 0 5px rgba(255, 255, 255, 0.5); /* 简化阴影 */
+    }
+    
+    /* 简化标题效果 */
+    .star-city-title h2 {
+        text-shadow: 0 0 10px rgba(255, 255, 255, 0.4); /* 减少阴影复杂度 */
+        animation: none; /* 移动端禁用标题动画 */
+    }
+}
+
+/* 4. 优化背景和渐变 */
+.star-city-background {
+    /* 简化渐变，减少GPU负担 */
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    /* 移动端移除复杂的径向渐变 */
+}
+
+@media screen and (max-width: 768px) {
+    .star-city-background {
+        /* 移动端使用纯色背景 */
+        background: #667eea;
+        background-image: none;
+    }
+}
+
+/* 5. 优化模态框性能 */
+.residence-modal-overlay {
+    /* 启用GPU加速 */
+    will-change: transform, opacity;
+    transform: translateZ(0);
+}
+
+.residence-modal-content {
+    /* 启用GPU加速 */
+    will-change: transform;
+    transform: translateZ(0);
+    /* 减少重绘 */
+    backface-visibility: hidden;
+}
+
+/* 6. 优化动画元素 */
+.city-star,
+.building {
+    /* 为动画元素启用GPU加速 */
+    will-change: transform;
+    transform: translateZ(0);
+    /* 减少重绘 */
+    backface-visibility: hidden;
+}
+
+/* 7. 移动端特定优化 */
+@media screen and (max-width: 768px) {
+    /* 减少动画持续时间 */
+    .building {
+        animation-duration: 2s; /* 从4s减少到2s */
+    }
+    
+    .city-star {
+        animation-duration: 2s; /* 从3s减少到2s */
+    }
+    
+    /* 禁用悬停效果（移动端不需要） */
+    .city-star:hover {
+        transform: none;
+        filter: none;
+    }
+    
+    /* 简化关闭按钮效果 */
+    .star-city-close-button {
+        backdrop-filter: none; /* 移除模糊效果 */
+        background: rgba(255, 255, 255, 0.3);
+    }
+    
+    .star-city-close-button:hover {
+        transform: none; /* 移除悬停缩放 */
+    }
+}
+
+/* 8. 优化滚动性能 */
+.residence-event-scroll {
+    /* 启用硬件加速滚动 */
+    -webkit-overflow-scrolling: touch;
+    transform: translateZ(0);
+    will-change: scroll-position;
+}
+
+/* 9. 减少重排的布局 */
+.star-city-container * {
+    /* 避免layout thrashing */
+    box-sizing: border-box;
+}
+
+/* 10. 移动端内存优化 */
+@media screen and (max-width: 768px) {
+    /* 减少层叠上下文 */
+    .star-city-container {
+        contain: layout style paint;
+    }
+    
+    /* 优化字体渲染 */
+    * {
+        text-rendering: optimizeSpeed;
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
