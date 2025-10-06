@@ -16,7 +16,6 @@ public interface ResidenceEventHistoryMapper {
      */
     @Insert("INSERT INTO residence_event_history (residence, event_data, residents_info, show_heart_effect, special_text, show_special_effect) " +
             "VALUES (#{residence}, #{eventData}, #{residentsInfo}, #{showHeartEffect}, #{specialText}, #{showSpecialEffect})")
-    @Options(useGeneratedKeys = true, keyProperty = "id")
     int insertEventHistory(ResidenceEventHistory eventHistory);
 
     /**
@@ -46,10 +45,11 @@ public interface ResidenceEventHistoryMapper {
 
     /**
      * 清理超过指定数量的旧记录（保留最新的N条）
+     * SQLite兼容版本：使用ROWID进行删除
      */
-    @Delete("DELETE FROM residence_event_history WHERE residence = #{residence} AND id NOT IN " +
-            "(SELECT id FROM (SELECT id FROM residence_event_history WHERE residence = #{residence} " +
-            "ORDER BY created_at DESC LIMIT #{keepCount}) AS recent_records)")
+    @Delete("DELETE FROM residence_event_history WHERE residence = #{residence} AND ROWID NOT IN " +
+            "(SELECT ROWID FROM residence_event_history WHERE residence = #{residence} " +
+            "ORDER BY created_at DESC LIMIT #{keepCount})")
     int cleanupOldEventHistory(@Param("residence") String residence, @Param("keepCount") int keepCount);
 
     /**

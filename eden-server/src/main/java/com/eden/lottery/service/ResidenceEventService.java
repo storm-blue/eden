@@ -360,12 +360,12 @@ public class ResidenceEventService {
             );
 
             // 插入历史记录
-            residenceEventHistoryMapper.insertEventHistory(history);
-
+            int result = residenceEventHistoryMapper.insertEventHistory(history);
+            
             // 清理旧记录，保留最新的20条
             residenceEventHistoryMapper.cleanupOldEventHistory(residence, 20);
-
-            logger.debug("记录事件历史成功，居所: {}, 历史ID: {}", residence, history.getId());
+            
+            logger.debug("记录事件历史成功，居所: {}, 插入结果: {}", residence, result > 0 ? "成功" : "失败");
         } catch (Exception e) {
             logger.error("记录事件历史失败，居所: {}", residence, e);
         }

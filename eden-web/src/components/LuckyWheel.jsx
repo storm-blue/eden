@@ -199,6 +199,7 @@ const LotteryLuckyWheel = () => {
     const [currentPrize, setCurrentPrize] = useState('') // 存储后端返回的奖品名称
     const [isMusicPlaying, setIsMusicPlaying] = useState(false) // 音乐播放状态
     const [currentMusicIndex, setCurrentMusicIndex] = useState(0) // 当前播放的音乐索引
+    const [musicCacheStatus, setMusicCacheStatus] = useState({}) // 音乐缓存状态
     
     // 星星城背景音乐列表
     const starCityMusicList = [
@@ -678,16 +679,31 @@ const LotteryLuckyWheel = () => {
     // 播放星星城背景音乐
     const playStarCityMusic = () => {
         if (starCityAudioRef.current && !isMusicPlaying) {
+            // 优先选择已缓存的音乐
+            let availableMusic = starCityMusicList.filter(url => 
+                musicCacheStatus[url] === 'cached'
+            )
+            
+            // 如果没有已缓存的音乐，使用全部音乐列表
+            if (availableMusic.length === 0) {
+                availableMusic = starCityMusicList
+                console.log('没有预缓存音乐，使用完整列表')
+            } else {
+                console.log(`找到 ${availableMusic.length} 首已缓存音乐`)
+            }
+            
             // 随机选择一首音乐
-            const randomIndex = Math.floor(Math.random() * starCityMusicList.length)
-            setCurrentMusicIndex(randomIndex)
+            const randomIndex = Math.floor(Math.random() * availableMusic.length)
+            const selectedMusic = availableMusic[randomIndex]
+            const originalIndex = starCityMusicList.indexOf(selectedMusic)
+            setCurrentMusicIndex(originalIndex)
             
             // 设置音频源
-            starCityAudioRef.current.src = starCityMusicList[randomIndex]
+            starCityAudioRef.current.src = selectedMusic
             starCityAudioRef.current.currentTime = 0
             starCityAudioRef.current.play().then(() => {
                 setIsMusicPlaying(true)
-                console.log(`星星城背景音乐开始播放: ${starCityMusicList[randomIndex]}`)
+                console.log(`星星城背景音乐开始播放: ${selectedMusic} (缓存状态: ${musicCacheStatus[selectedMusic] || '未知'})`)
             }).catch(error => {
                 console.log('背景音乐播放失败:', error)
             })
@@ -707,20 +723,74 @@ const LotteryLuckyWheel = () => {
     // 音乐结束时的处理函数
     const handleMusicEnded = () => {
         if (isMusicPlaying) {
+            // 优先选择已缓存的音乐
+            let availableMusic = starCityMusicList.filter(url => 
+                musicCacheStatus[url] === 'cached'
+            )
+            
+            // 如果没有已缓存的音乐，使用全部音乐列表
+            if (availableMusic.length === 0) {
+                availableMusic = starCityMusicList
+            }
+            
             // 随机选择下一首音乐
-            const randomIndex = Math.floor(Math.random() * starCityMusicList.length)
-            setCurrentMusicIndex(randomIndex)
+            const randomIndex = Math.floor(Math.random() * availableMusic.length)
+            const selectedMusic = availableMusic[randomIndex]
+            const originalIndex = starCityMusicList.indexOf(selectedMusic)
+            setCurrentMusicIndex(originalIndex)
             
             // 设置新的音频源并播放
-            starCityAudioRef.current.src = starCityMusicList[randomIndex]
+            starCityAudioRef.current.src = selectedMusic
             starCityAudioRef.current.currentTime = 0
             starCityAudioRef.current.play().then(() => {
-                console.log(`自动播放下一首音乐: ${starCityMusicList[randomIndex]}`)
+                console.log(`自动播放下一首音乐: ${selectedMusic} (缓存状态: ${musicCacheStatus[selectedMusic] || '未知'})`)
             }).catch(error => {
                 console.log('自动播放下一首音乐失败:', error)
                 setIsMusicPlaying(false)
             })
         }
+    }
+
+    // 预加载音乐文件
+    const preloadMusic = async () => {
+        console.log('开始预加载背景音乐...')
+        const cacheStatus = {}
+        
+        for (let i = 0; i < starCityMusicList.length; i++) {
+            const musicUrl = starCityMusicList[i]
+            try {
+                // 创建临时音频对象进行预加载
+                const tempAudio = new Audio()
+                tempAudio.preload = 'auto'
+                tempAudio.src = musicUrl
+                
+                // 等待音频元数据加载完成
+                await new Promise((resolve, reject) => {
+                    tempAudio.addEventListener('canplaythrough', () => {
+                        cacheStatus[musicUrl] = 'cached'
+                        console.log(`音乐预加载完成: ${musicUrl}`)
+                        resolve()
+                    })
+                    tempAudio.addEventListener('error', () => {
+                        cacheStatus[musicUrl] = 'error'
+                        console.warn(`音乐预加载失败: ${musicUrl}`)
+                        reject()
+                    })
+                    // 5秒超时
+                    setTimeout(() => {
+                        cacheStatus[musicUrl] = 'timeout'
+                        console.warn(`音乐预加载超时: ${musicUrl}`)
+                        resolve()
+                    }, 5000)
+                })
+            } catch (error) {
+                cacheStatus[musicUrl] = 'error'
+                console.warn(`音乐预加载异常: ${musicUrl}`, error)
+            }
+        }
+        
+        setMusicCacheStatus(cacheStatus)
+        console.log('音乐预加载完成，缓存状态:', cacheStatus)
     }
 
     // 建筑信息映射
@@ -945,6 +1015,10 @@ const LotteryLuckyWheel = () => {
             fetchSpecialCombos() // 获取特殊居住组合状态
             loadAllBuildingResidents() // 加载所有建筑的居住人员信息
             loadAllResidenceEvents() // 加载所有居所事件
+            
+            // 预加载背景音乐
+            preloadMusic()
+            
             // 播放背景音乐
             setTimeout(() => {
                 playStarCityMusic()
