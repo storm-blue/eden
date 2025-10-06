@@ -17,13 +17,8 @@ export default defineConfig({
         target: 'http://localhost:5000',
         changeOrigin: true,
         secure: false
-      },
-      // 添加对音频文件的代理转发
-      '/audio': {
-        target: 'http://localhost:5000',
-        changeOrigin: true,
-        secure: false
       }
+      // 🔥 移除音频代理：音频文件已移回前端静态资源
     }
   }
 })
