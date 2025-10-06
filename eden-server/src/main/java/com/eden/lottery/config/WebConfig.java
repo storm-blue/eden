@@ -23,10 +23,10 @@ public class WebConfig implements WebMvcConfigurer {
         registry.addResourceHandler("/**")
                 .addResourceLocations("classpath:/static/");
                 
-        // 配置音频文件缓存（1天）
+        // 配置音频文件缓存（30天）
         registry.addResourceHandler("/audio/**")
                 .addResourceLocations("classpath:/static/audio/")
-                .setCacheControl(CacheControl.maxAge(1, TimeUnit.DAYS)
+                .setCacheControl(CacheControl.maxAge(30, TimeUnit.DAYS)
                     .cachePublic()
                     .mustRevalidate());
     }
