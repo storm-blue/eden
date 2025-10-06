@@ -198,6 +198,13 @@ const LotteryLuckyWheel = () => {
   const [result, setResult] = useState('')
     const [currentPrize, setCurrentPrize] = useState('') // 存储后端返回的奖品名称
     const [isMusicPlaying, setIsMusicPlaying] = useState(false) // 音乐播放状态
+    const [currentMusicIndex, setCurrentMusicIndex] = useState(0) // 当前播放的音乐索引
+    
+    // 星星城背景音乐列表
+    const starCityMusicList = [
+        '/audio/star-city-bg.mp3',
+        '/audio/star-city-bg2.mp3'
+    ]
     const [userName, setUserName] = useState(() => {
         // 从localStorage读取保存的用户名
         return localStorage.getItem('eden_userName') || ''
@@ -671,10 +678,16 @@ const LotteryLuckyWheel = () => {
     // 播放星星城背景音乐
     const playStarCityMusic = () => {
         if (starCityAudioRef.current && !isMusicPlaying) {
+            // 随机选择一首音乐
+            const randomIndex = Math.floor(Math.random() * starCityMusicList.length)
+            setCurrentMusicIndex(randomIndex)
+            
+            // 设置音频源
+            starCityAudioRef.current.src = starCityMusicList[randomIndex]
             starCityAudioRef.current.currentTime = 0
             starCityAudioRef.current.play().then(() => {
                 setIsMusicPlaying(true)
-                console.log('星星城背景音乐开始播放')
+                console.log(`星星城背景音乐开始播放: ${starCityMusicList[randomIndex]}`)
             }).catch(error => {
                 console.log('背景音乐播放失败:', error)
             })
@@ -688,6 +701,25 @@ const LotteryLuckyWheel = () => {
             starCityAudioRef.current.currentTime = 0
             setIsMusicPlaying(false)
             console.log('星星城背景音乐已停止')
+        }
+    }
+
+    // 音乐结束时的处理函数
+    const handleMusicEnded = () => {
+        if (isMusicPlaying) {
+            // 随机选择下一首音乐
+            const randomIndex = Math.floor(Math.random() * starCityMusicList.length)
+            setCurrentMusicIndex(randomIndex)
+            
+            // 设置新的音频源并播放
+            starCityAudioRef.current.src = starCityMusicList[randomIndex]
+            starCityAudioRef.current.currentTime = 0
+            starCityAudioRef.current.play().then(() => {
+                console.log(`自动播放下一首音乐: ${starCityMusicList[randomIndex]}`)
+            }).catch(error => {
+                console.log('自动播放下一首音乐失败:', error)
+                setIsMusicPlaying(false)
+            })
         }
     }
 
@@ -1413,9 +1445,9 @@ const LotteryLuckyWheel = () => {
             {/* 星星城背景音乐 */}
             <audio
                 ref={starCityAudioRef}
-                loop
                 preload="auto"
                 style={{display: 'none'}}
+                onEnded={handleMusicEnded}
             >
                 <source src="/audio/star-city-bg.mp3" type="audio/mpeg"/>
                 <source src="/audio/star-city-bg.ogg" type="audio/ogg"/>
