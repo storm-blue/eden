@@ -680,11 +680,12 @@ const LotteryLuckyWheel = () => {
         setShowDonationModal(true)
     }
 
-    // 播放星星城背景音乐（修复双重下载）
+    // 播放星星城背景音乐（彻底修复双重下载）
     const playStarCityMusic = () => {
         if (starCityAudioRef.current && !isMusicPlaying) {
-            // 🔥 修复：检查是否已设置src，避免重复设置
-            if (!starCityAudioRef.current.src || starCityAudioRef.current.src === window.location.href) {
+            // 🔥 彻底修复：只在首次播放时设置src，确保只下载一次
+            if (!starCityAudioRef.current.src) {
+                console.log('首次设置音频源:', starCityMusicUrl)
                 starCityAudioRef.current.src = starCityMusicUrl
             }
             starCityAudioRef.current.currentTime = 0
@@ -1445,14 +1446,14 @@ const LotteryLuckyWheel = () => {
 
   return (
     <div className="lucky-lottery-container">
-            {/* 星星城背景音乐（简化版 - 修复双重下载） */}
+            {/* 星星城背景音乐（彻底修复双重下载） */}
             <audio
                 ref={starCityAudioRef}
                 preload="none"
                 style={{display: 'none'}}
                 onEnded={handleMusicEnded}
             >
-                <source src="/audio/star-city-bg.mp3" type="audio/mpeg"/>
+                {/* 🔥 移除source标签，避免HTML层面的下载 */}
                 您的浏览器不支持音频播放。
             </audio>
 
