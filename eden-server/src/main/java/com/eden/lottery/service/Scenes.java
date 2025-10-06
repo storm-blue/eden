@@ -62,7 +62,7 @@ public final class Scenes {
             new ResidenceEventItem("💕 李星斗掀起她的裙子，露出湿润粉嫩的花瓣 💕", "special"),
             new ResidenceEventItem("💕 \"你不是说要看一下午的书吗？这才十分钟。\" 💕", "special"),
             new ResidenceEventItem("💕 秦小淮理直气壮：\"我就是这样的！\" 💕", "special"),
-            new ResidenceEventItem("💕 书桌被撞得嘎吱作响，秦小淮欢快地叫了起来 💕", "special")
+            new ResidenceEventItem("💕 书桌被撞得嘎吱作响，秦小淮软软地呻吟起来 💕", "special")
     );
 
     public static List<ResidenceEventItem> TWO__CB__08 = List.of(
@@ -70,7 +70,7 @@ public final class Scenes {
             new ResidenceEventItem("💕 \"星斗爸爸，小骚猫害怕，想要抱抱……\" 💕", "special"),
             new ResidenceEventItem("💕 李星斗把她按在沙发上：\"乖女儿又想要了？\" 💕", "special"),
             new ResidenceEventItem("💕 秦小淮嘻嘻一笑： 💕", "special"),
-            new ResidenceEventItem("💕 \"您的乖女儿小穴穴都流水了……\" 💕", "special")
+            new ResidenceEventItem("💕 \"您的乖女儿都流水了……\" 💕", "special")
     );
 
     public static List<ResidenceEventItem> TWO__CB__09 = List.of(
@@ -81,7 +81,7 @@ public final class Scenes {
     );
 
     public static List<ResidenceEventItem> TWO__CB__10 = List.of(
-            new ResidenceEventItem("💕 清晨的阳台上，秦小淮穿着紧身衣在做瑜伽 💕", "special"),
+            new ResidenceEventItem("💕 阳台上，秦小淮穿着紧身衣在做瑜伽 💕", "special"),
             new ResidenceEventItem("💕 \"小乖宝的身体真柔软～\" 李星斗从背后环抱住她 💕", "special"),
             new ResidenceEventItem("💕 \"干嘛～人家在认真锻炼呢！\" 秦小淮娇嗔道 💕", "special"),
             new ResidenceEventItem("💕 \"那我也来帮你'锻炼'一下...\" 💕", "special")
@@ -90,7 +90,7 @@ public final class Scenes {
     public static List<ResidenceEventItem> TWO__CB__11 = List.of(
             new ResidenceEventItem("💕 深夜书桌前，秦小淮跪在桌子下面 💕", "special"),
             new ResidenceEventItem("💕 李星斗假装没看见，继续研究着面前的文件 💕", "special"),
-            new ResidenceEventItem("💕 \"啊……星斗哥哥好大，小骚猫的嘴都塞不下了\"秦小淮故意说 💕", "special"),
+            new ResidenceEventItem("💕 \"啊……星斗哥哥好大，小骚猫的嘴都塞不下了\" 秦小淮故意说 💕", "special"),
             new ResidenceEventItem("💕 书桌下传来湿润的吮吸声 💕", "special")
     );
 
@@ -105,9 +105,9 @@ public final class Scenes {
     public static List<ResidenceEventItem> TWO__CB__13 = List.of(
             new ResidenceEventItem("💕 城堡地窖里，秦小淮被绑在酒桶上 💕", "special"),
             new ResidenceEventItem("💕 \"主人，小骚猫下次再也不敢了……\" 💕", "special"),
-            new ResidenceEventItem("💕 李星斗冷笑一声，轻轻一鞭子抽打在她的小穴穴上 💕", "special"),
-            new ResidenceEventItem("💕 \"啊，主人打得乖女儿好痛，但是好舒服……\" 💕", "special"),
-            new ResidenceEventItem("💕 一滴滴奇怪的淫靡液体渗入了酒桶里 💕", "special")
+            new ResidenceEventItem("💕 李星斗轻笑一声，轻轻一鞭子抽打在她的小穴穴上 💕", "special"),
+            new ResidenceEventItem("💕 \"星斗哥哥，为什么有点舒服……\" 💕", "special"),
+            new ResidenceEventItem("💕 一滴奇怪的淫靡液体滴落下来，渗入了酒桶中 💕", "special")
     );
 
     // TODO update to here
@@ -153,7 +153,7 @@ public final class Scenes {
     );
 
     // 三人场景
-    public static List<ResidenceEventItem> THREE__CBS__01 = List.of(
+    public static List<ResidenceEventItem> THREE__CB__01 = List.of(
             new ResidenceEventItem("💕 存子跪在地上，小心翼翼地为主人们舔脚指 💕", "special"),
             new ResidenceEventItem("💕 \"存子真淫荡～\" 秦小淮温柔地摸了摸存子的头 💕", "special"),
             new ResidenceEventItem("💕 存子感受到小淮宝宝主人的温暖，眼中满含崇拜和感激 💕", "special"),
@@ -161,7 +161,7 @@ public final class Scenes {
             new ResidenceEventItem("💕 \"冷酷哥哥大人的眼神好可怕，但是好舒服……\" 💕", "special")
     );
 
-    public static List<ResidenceEventItem> THREE__CBS__02 = List.of(
+    public static List<ResidenceEventItem> THREE__CB__02 = List.of(
             new ResidenceEventItem("💕 \"存子，跪下帮小淮宝宝舔小穴穴\" 李星斗淡淡地命令道 💕", "special"),
             new ResidenceEventItem("💕 存子立刻放下手中的活，跪在秦小淮两腿间 💕", "special"),
             new ResidenceEventItem("💕 \"小淮宝宝主人的味道好香甜……\" 存子温柔地舔着 💕", "special"),
@@ -169,28 +169,28 @@ public final class Scenes {
             new ResidenceEventItem("💕 \"存子也想要被插……\" 存子心里想 💕", "special")
     );
 
-    public static List<ResidenceEventItem> THREE__CBS__03 = List.of(
+    public static List<ResidenceEventItem> THREE__CB__03 = List.of(
             new ResidenceEventItem("💕 夜深了，存子跪在房间外，既羞耻又兴奋 💕", "special"),
             new ResidenceEventItem("💕 \"啊……冷酷哥哥大人的大肉棒好棒……\" 秦小淮的娇喘声 💕", "special"),
             new ResidenceEventItem("💕 存子紧握双拳，下面流水了，渴望能参与其中 💕", "special"),
             new ResidenceEventItem("💕 突然门开了，李星斗的身影出现：\"存子，进来\" 💕", "special")
     );
 
-    public static List<ResidenceEventItem> THREE__CBS__04 = List.of(
+    public static List<ResidenceEventItem> THREE__CB__04 = List.of(
             new ResidenceEventItem("💕 餐桌上，存子恭敬地站在一旁伺候 💕", "special"),
             new ResidenceEventItem("💕 \"存子也坐下一起吃吧～\" 秦小淮心疼地拉着存子的手 💕", "special"),
             new ResidenceEventItem("💕 \"不...不敢...\" 存子战战兢兢地看了李星斗一眼 💕", "special"),
             new ResidenceEventItem("💕 李星斗轻笑：\"连精液一起吃下去\" 低沉的声音让存子浑身一颤 💕", "special")
     );
 
-    public static List<ResidenceEventItem> THREE__CBS__05 = List.of(
+    public static List<ResidenceEventItem> THREE__CB__05 = List.of(
             new ResidenceEventItem("💕 浴室里，存子正在为主人们准备洗浴用品 💕", "special"),
             new ResidenceEventItem("💕 \"存子，你也一起洗吧\" 秦小淮温柔地邀请 💕", "special"),
             new ResidenceEventItem("💕 存子羞涩地摇头，却被李星斗一把拉了过来 💕", "special"),
             new ResidenceEventItem("💕 \"既然小淮这么说了...\" 存子在主人的气息包围下晕眩 💕", "special")
     );
 
-    public static List<ResidenceEventItem> THREE__CBS__06 = List.of(
+    public static List<ResidenceEventItem> THREE__CB__06 = List.of(
             new ResidenceEventItem("💕 花园里，存子跪在地上用嘴巴修剪花草 💕", "special"),
             new ResidenceEventItem("💕 \"存子的嘴真巧呢～\" 秦小淮夸奖道 💕", "special"),
             new ResidenceEventItem("💕 \"都是为了小淮宝宝主人能看到最美的花……\" 存子含糊地说 💕", "special"),
@@ -200,7 +200,7 @@ public final class Scenes {
             new ResidenceEventItem("💕 存子兴奋地张开腿：\"请蹂躏存子的小穴穴……\" 💕", "special")
     );
 
-    public static List<ResidenceEventItem> THREE__CBS__07 = List.of(
+    public static List<ResidenceEventItem> THREE__CB__07 = List.of(
             new ResidenceEventItem("💕 客厅里，存子正在跪着整理书架 💕", "special"),
             new ResidenceEventItem("💕 \"存子，过来趴在我们腿上看电影\" 秦小淮拍了拍沙发 💕", "special"),
             new ResidenceEventItem("💕 \"我……我不配碰触主人们的身体……\" 存子怯怯地说 💕", "special"),
@@ -210,7 +210,7 @@ public final class Scenes {
             new ResidenceEventItem("💕 李星斗开始抚摸她的后背：\"乖狗狗\" 💕", "special")
     );
 
-    public static List<ResidenceEventItem> THREE__CBS__08 = List.of(
+    public static List<ResidenceEventItem> THREE__CB__08 = List.of(
             new ResidenceEventItem("💕 厨房里，存子跪在地上为主人们准备晚餐 💕", "special"),
             new ResidenceEventItem("💕 \"让我来喂你吃点东西吧～\" 秦小淮挽起袖子 💕", "special"),
             new ResidenceEventItem("💕 \"小淮宝宝主人不用……存子不配……\" 存子慌张地想阻止 💕", "special"),
@@ -220,7 +220,7 @@ public final class Scenes {
             new ResidenceEventItem("💕 \"冷酷哥哥大人的味道……存子好喜欢……\" 💕", "special")
     );
 
-    public static List<ResidenceEventItem> THREE__CBS__09 = List.of(
+    public static List<ResidenceEventItem> THREE__CB__09 = List.of(
             new ResidenceEventItem("💕 书房里，李星斗在处理公务，秦小淮跪在桌子下面 💕", "special"),
             new ResidenceEventItem("💕 存子悄悄地爬进来送茶，看到小淮宝宝主人在服务 💕", "special"),
             new ResidenceEventItem("💕 \"存子也过来一起服务吧\" 秦小淮含糊地说 💕", "special"),
@@ -229,7 +229,7 @@ public final class Scenes {
             new ResidenceEventItem("💕 李星斗满意地看着两个女人为他服务 💕", "special")
     );
 
-    public static List<ResidenceEventItem> THREE__CBS__10 = List.of(
+    public static List<ResidenceEventItem> THREE__CB__10 = List.of(
             new ResidenceEventItem("💕 雨夜里，存子跪在窗边看着外面的雨 💕", "special"),
             new ResidenceEventItem("💕 \"害怕打雷吗？\" 秦小淮走到存子身边 💕", "special"),
             new ResidenceEventItem("💕 存子点点头，秦小淮轻轻拥抱了她 💕", "special"),
@@ -238,14 +238,14 @@ public final class Scenes {
             new ResidenceEventItem("💕 李星斗轻抚了抚她的头：\"乖孩子\" 💕", "special")
     );
 
-    public static List<ResidenceEventItem> THREE__CBS__11 = List.of(
+    public static List<ResidenceEventItem> THREE__CB__11 = List.of(
             new ResidenceEventItem("💕 阳台上，存子在晾晒衣物 💕", "special"),
             new ResidenceEventItem("💕 \"存子，你的衣服也一起洗了吧\" 秦小淮关心地说 💕", "special"),
             new ResidenceEventItem("💕 \"谢谢小淮姐姐...\" 存子眼中盈满感激的泪水 💕", "special"),
             new ResidenceEventItem("💕 李星斗走过来，轻抚了抚存子的头：\"别哭了\" 💕", "special")
     );
 
-    public static List<ResidenceEventItem> THREE__CBS__12 = List.of(
+    public static List<ResidenceEventItem> THREE__CB__12 = List.of(
             new ResidenceEventItem("💕 深夜，存子跪在房间外听到主人们的声音 💕", "special"),
             new ResidenceEventItem("💕 \"存子……也进来吧……\" 秦小淮娇喘着说 💕", "special"),
             new ResidenceEventItem("💕 存子颤抖着推开门，看到李星斗深邃的眼神 💕", "special"),
@@ -255,7 +255,7 @@ public final class Scenes {
             new ResidenceEventItem("💕 存子兴奋地流水了：\"存子最喜欢被主人们玩弄了……\" 💕", "special")
     );
 
-    public static List<ResidenceEventItem> THREE__CBS__13 = List.of(
+    public static List<ResidenceEventItem> THREE__CB__13 = List.of(
             new ResidenceEventItem("💕 城堡地窖里，存子跪在地上整理酒瓶 💕", "special"),
             new ResidenceEventItem("💕 \"存子，过来喝点特别的东西\" 秦小淮举着装满白浊液体的酒杯 💕", "special"),
             new ResidenceEventItem("💕 \"我……我知道这是什么……\" 存子脸红如血 💕", "special"),
@@ -266,7 +266,7 @@ public final class Scenes {
             new ResidenceEventItem("💕 存子兴奋地用舌头舔遍整个酒杯：\"一滴都不能浪费……\" 💕", "special")
     );
 
-    public static List<ResidenceEventItem> THREE__CBS__14 = List.of(
+    public static List<ResidenceEventItem> THREE__CB__14 = List.of(
             new ResidenceEventItem("💕 塔楼楼梯上，存子跪着一级一级爬上去清理台阶 💕", "special"),
             new ResidenceEventItem("💕 \"存子，爬上来趴好\" 秦小淮在上面娇滴滴地叫她 💕", "special"),
             new ResidenceEventItem("💕 存子气喘吁吁地爬上去，看到两位主人正在亲热 💕", "special"),
@@ -277,7 +277,7 @@ public final class Scenes {
             new ResidenceEventItem("💕 \"冷酷哥哥大人，请也用存子的嘴巴……\" 💕", "special")
     );
 
-    public static List<ResidenceEventItem> THREE__CBS__15 = List.of(
+    public static List<ResidenceEventItem> THREE__CB__15 = List.of(
             new ResidenceEventItem("💕 秘密通道里，存子光着身子举着火把在前面爬行 💕", "special"),
             new ResidenceEventItem("💕 \"存子真是个好狗狗呢\" 秦小淮夸奖道 💕", "special"),
             new ResidenceEventItem("💕 \"为了主人们，存子愿意做任何事情……\" 她兴奋地扭动身体 💕", "special"),
@@ -288,7 +288,7 @@ public final class Scenes {
             new ResidenceEventItem("💕 李星斗将她压在石墙上：\"既然这么想要……\" 💕", "special")
     );
 
-    public static List<ResidenceEventItem> THREE__CBS__16 = List.of(
+    public static List<ResidenceEventItem> THREE__CB__16 = List.of(
             new ResidenceEventItem("💕 温泉边，存子跪在地上为主人们准备浴巾 💕", "special"),
             new ResidenceEventItem("💕 \"存子也下来一起泡泡吧\" 秦小淮娇滴滴地说 💕", "special"),
             new ResidenceEventItem("💕 \"我……我不敢脱衣服……\" 存子羞涩地说 💕", "special"),
@@ -300,7 +300,7 @@ public final class Scenes {
             new ResidenceEventItem("💕 李星斗将她压在温泉边缘：\"水中的淫荡小母狗\" 💕", "special")
     );
 
-    public static List<ResidenceEventItem> THREE__CBS__17 = List.of(
+    public static List<ResidenceEventItem> THREE__CB__17 = List.of(
             new ResidenceEventItem("💕 舞厅里，存子跪在角落看着主人们跳舞 💕", "special"),
             new ResidenceEventItem("💕 \"存子，爬过来和我们一起跳舞\" 秦小淮娇滴滴地说 💕", "special"),
             new ResidenceEventItem("💕 \"我……我只会像狗狗一样爬行……\" 存子紧张地摆手 💕", "special"),
@@ -312,7 +312,7 @@ public final class Scenes {
             new ResidenceEventItem("💕 \"这就是存子专属的舞蹈\" 李星斗满意地说 💕", "special")
     );
 
-    public static List<ResidenceEventItem> THREE__CBS__18 = List.of(
+    public static List<ResidenceEventItem> THREE__CB__18 = List.of(
             new ResidenceEventItem("💕 天文台上，存子跪着清洁望远镜 💕", "special"),
             new ResidenceEventItem("💕 \"存子，看看那颗最亮的星，许个愿吧\" 秦小淮指着天空 💕", "special"),
             new ResidenceEventItem("💕 \"好美啊……就像主人们一样美……\" 存子眼中满含感动 💕", "special"),
@@ -331,9 +331,9 @@ public final class Scenes {
     );
 
     public static List<List<ResidenceEventItem>> threeCoupleScenes = List.of(
-            THREE__CBS__01, THREE__CBS__02, THREE__CBS__03, THREE__CBS__04, THREE__CBS__05, THREE__CBS__06,
-            THREE__CBS__07, THREE__CBS__08, THREE__CBS__09, THREE__CBS__10, THREE__CBS__11, THREE__CBS__12,
-            THREE__CBS__13, THREE__CBS__14, THREE__CBS__15, THREE__CBS__16, THREE__CBS__17, THREE__CBS__18
+            THREE__CB__01, THREE__CB__02, THREE__CB__03, THREE__CB__04, THREE__CB__05, THREE__CB__06,
+            THREE__CB__07, THREE__CB__08, THREE__CB__09, THREE__CB__10, THREE__CB__11, THREE__CB__12,
+            THREE__CB__13, THREE__CB__14, THREE__CB__15, THREE__CB__16, THREE__CB__17, THREE__CB__18
     );
 
     // 公园双人场景

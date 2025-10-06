@@ -257,7 +257,7 @@ public class ResidenceEventService {
             default ->
                 // 城堡等其他场景：使用城堡三人场景池（18个）
                     List.of(
-                            Scenes.THREE__CBS__02
+                            Scenes.THREE__CB__02
                     );
         };
 
@@ -435,16 +435,17 @@ public class ResidenceEventService {
 
             return Map.of(
                     "residence", residence,
-                    "historyCount", count,
-                    "totalHistoryCount", totalCount,
+                    "totalCount", count,
+                    "globalTotalCount", totalCount,
                     "lastUpdated", LocalDateTime.now()
             );
         } catch (Exception e) {
             logger.error("获取事件历史统计失败，居所: {}", residence, e);
             return Map.of(
                     "residence", residence,
-                    "historyCount", 0,
-                    "totalHistoryCount", 0,
+                    "totalCount", 0,
+                    "globalTotalCount", 0,
+                    "lastUpdated", LocalDateTime.now(),
                     "error", e.getMessage()
             );
         }

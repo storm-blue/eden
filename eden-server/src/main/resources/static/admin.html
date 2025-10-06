@@ -512,6 +512,7 @@
                 <button class="tab" data-tab="residence">居住历史</button>
                 <button class="tab" data-tab="attempts">用户尝试记录</button>
                 <button class="tab" data-tab="actions">用户操作</button>
+                <button class="tab" data-tab="residence-events">居所事件</button>
             </div>
 
             <!-- 用户管理标签页 -->
@@ -867,6 +868,46 @@
                     </div>
                 </div>
             </div>
+
+            <!-- 居所事件管理标签页 -->
+            <div id="residence-events" class="tab-content">
+                <!-- 居所事件历史概览 -->
+                <div class="action-form">
+                    <h4>🏠 居所事件历史概览</h4>
+                    <div id="residenceOverview" style="margin-top: 15px;">
+                        <div style="text-align: center; padding: 20px; color: #666;">
+                            点击刷新按钮加载数据
+                        </div>
+                    </div>
+                    <div style="text-align: center; margin-top: 15px;">
+                        <button class="action-btn" onclick="loadResidenceEventOverview()">🔄 刷新概览</button>
+                    </div>
+                </div>
+
+                <!-- 清除居所事件历史 -->
+                <div class="action-form">
+                    <h4>🗑️ 清除居所事件历史</h4>
+                    <p style="color: #e53e3e; margin-bottom: 15px; font-size: 14px;">
+                        ⚠️ 警告：清除操作不可逆，请谨慎使用！
+                    </p>
+                    <div class="form-row">
+                        <div class="form-field">
+                            <label for="clearResidence">选择居所</label>
+                            <select id="clearResidence" style="width: 100%; padding: 10px; border: 1px solid #ddd; border-radius: 5px; font-size: 14px;">
+                                <option value="">请选择要清除的居所</option>
+                                <option value="castle">城堡🏰</option>
+                                <option value="park">公园🌳</option>
+                                <option value="city_hall">市政厅🏛️</option>
+                                <option value="white_dove_house">小白鸽家🕊️</option>
+                                <option value="palace">行宫🏯</option>
+                            </select>
+                        </div>
+                        <button class="action-btn" onclick="clearResidenceEventHistory()" style="background: #e53e3e;">
+                            🗑️ 清除历史
+                        </button>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1010,6 +1051,8 @@
             } else if (tabName === 'residence') {
                 loadResidenceHistory();
                 loadResidenceStats();
+            } else if (tabName === 'residence-events') {
+                loadResidenceEventOverview();
             }
         }
 
@@ -1713,6 +1756,103 @@
             setTimeout(() => {
                 container.innerHTML = '';
             }, 3000);
+        }
+
+        // 加载居所事件历史概览
+        async function loadResidenceEventOverview() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/residence-event-history/overview`, {
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    const overviewContainer = document.getElementById('residenceOverview');
+                    const overview = result.data.overview;
+                    
+                    let html = '<div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 15px;">';
+                    
+                    Object.keys(overview).forEach(residence => {
+                        const data = overview[residence];
+                        html += `
+                            <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; border: 1px solid #e0e0e0;">
+                                <div style="font-weight: bold; margin-bottom: 8px; color: #333;">
+                                    ${data.residenceName}
+                                </div>
+                                <div style="font-size: 24px; color: #667eea; font-weight: bold; margin-bottom: 5px;">
+                                    ${data.totalCount || 0}
+                                </div>
+                                <div style="font-size: 12px; color: #666;">
+                                    事件历史记录
+                                </div>
+                            </div>
+                        `;
+                    });
+                    
+                    html += '</div>';
+                    overviewContainer.innerHTML = html;
+                } else {
+                    document.getElementById('residenceOverview').innerHTML = 
+                        `<div style="text-align: center; padding: 20px; color: #e53e3e;">
+                            加载失败：${result.message}
+                        </div>`;
+                }
+            } catch (error) {
+                console.error('加载居所事件概览错误:', error);
+                document.getElementById('residenceOverview').innerHTML = 
+                    `<div style="text-align: center; padding: 20px; color: #e53e3e;">
+                        网络错误，请稍后重试
+                    </div>`;
+            }
+        }
+
+        // 清除居所事件历史
+        async function clearResidenceEventHistory() {
+            const residence = document.getElementById('clearResidence').value;
+            
+            if (!residence) {
+                showMessage('adminMessage', '请选择要清除的居所', 'error');
+                return;
+            }
+
+            // 获取居所显示名称
+            const residenceNames = {
+                'castle': '城堡🏰',
+                'park': '公园🌳',
+                'city_hall': '市政厅🏛️',
+                'white_dove_house': '小白鸽家🕊️',
+                'palace': '行宫🏯'
+            };
+            const residenceName = residenceNames[residence] || residence;
+
+            // 确认对话框
+            if (!confirm(`确定要清除 "${residenceName}" 的所有事件历史记录吗？\n\n⚠️ 警告：此操作不可逆，所有历史记录将永久删除！`)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/admin/residence-event-history/${residence}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showMessage('adminMessage', `${residenceName} 的事件历史记录已成功清除！`, 'success');
+                    document.getElementById('clearResidence').value = '';
+                    // 刷新概览数据
+                    loadResidenceEventOverview();
+                } else {
+                    showMessage('adminMessage', result.message || '清除失败', 'error');
+                }
+            } catch (error) {
+                console.error('清除居所事件历史错误:', error);
+                showMessage('adminMessage', '网络错误，请稍后重试', 'error');
+            }
         }
     </script>
 </body>

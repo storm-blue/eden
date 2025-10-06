@@ -12,6 +12,7 @@ import com.eden.lottery.service.LotteryService;
 import com.eden.lottery.service.UserAttemptService;
 import com.eden.lottery.service.WishService;
 import com.eden.lottery.service.ResidenceHistoryService;
+import com.eden.lottery.service.ResidenceEventService;
 import com.eden.lottery.entity.UserAttempt;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
@@ -38,13 +39,15 @@ public class AdminController {
     private final UserAttemptService userAttemptService;
     private final WishService wishService;
     private final ResidenceHistoryService residenceHistoryService;
+    private final ResidenceEventService residenceEventService;
     
-    public AdminController(AdminService adminService, LotteryService lotteryService, UserAttemptService userAttemptService, WishService wishService, ResidenceHistoryService residenceHistoryService) {
+    public AdminController(AdminService adminService, LotteryService lotteryService, UserAttemptService userAttemptService, WishService wishService, ResidenceHistoryService residenceHistoryService, ResidenceEventService residenceEventService) {
         this.adminService = adminService;
         this.lotteryService = lotteryService;
         this.userAttemptService = userAttemptService;
         this.wishService = wishService;
         this.residenceHistoryService = residenceHistoryService;
+        this.residenceEventService = residenceEventService;
     }
 
     /**
@@ -654,6 +657,88 @@ public class AdminController {
     }
 
     /**
+     * 清除指定居所的所有事件历史记录
+     */
+    @DeleteMapping("/residence-event-history/{residence}")
+    public ApiResponse<Object> clearResidenceEventHistory(@PathVariable String residence, HttpServletRequest request) {
+        try {
+            if (!validateAdmin(request)) {
+                return ApiResponse.error("未授权访问");
+            }
+
+            // 验证居所参数
+            if (residence == null || residence.trim().isEmpty()) {
+                return ApiResponse.error("居所参数不能为空");
+            }
+
+            // 验证居所是否有效
+            if (!isValidResidence(residence)) {
+                return ApiResponse.error("无效的居所类型");
+            }
+
+            // 获取居所显示名称
+            String residenceName = getResidenceName(residence);
+
+            // 清除指定居所的事件历史
+            boolean success = residenceEventService.clearResidenceEventHistory(residence);
+
+            if (success) {
+                final String finalResidence = residence;
+                final String finalResidenceName = residenceName;
+                Object result = new Object() {
+                    public final String residence = finalResidence;
+                    public final String residenceName = finalResidenceName;
+                    public final String message = "居所事件历史清除成功";
+                };
+
+                logger.info("管理员清除了居所事件历史：{} ({})", residenceName, residence);
+                return ApiResponse.success("清除成功", result);
+            } else {
+                return ApiResponse.error("清除居所事件历史失败");
+            }
+        } catch (Exception e) {
+            logger.error("清除居所事件历史失败：residence={}", residence, e);
+            return ApiResponse.error("清除居所事件历史失败：" + e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有居所的事件历史统计信息
+     */
+    @GetMapping("/residence-event-history/overview")
+    public ApiResponse<Object> getResidenceEventHistoryOverview(HttpServletRequest request) {
+        try {
+            if (!validateAdmin(request)) {
+                return ApiResponse.error("未授权访问");
+            }
+
+            String[] residences = {"castle", "park", "city_hall", "white_dove_house", "palace"};
+            Map<String, Object> overview = new java.util.HashMap<>();
+
+            for (String residence : residences) {
+                Map<String, Object> stats = residenceEventService.getEventHistoryStats(residence);
+                
+                // 创建一个新的可变Map来避免UnsupportedOperationException
+                Map<String, Object> residenceStats = new java.util.HashMap<>(stats);
+                residenceStats.put("residenceName", getResidenceName(residence));
+                
+                overview.put(residence, residenceStats);
+            }
+
+            final Map<String, Object> finalOverview = overview;
+            Object result = new Object() {
+                public final Map<String, Object> overview = finalOverview;
+                public final String message = "获取居所事件历史概览成功";
+            };
+
+            return ApiResponse.success("获取成功", result);
+        } catch (Exception e) {
+            logger.error("获取居所事件历史概览失败", e);
+            return ApiResponse.error("获取居所事件历史概览失败：" + e.getMessage());
+        }
+    }
+
+    /**
      * 验证管理员权限
      */
     private boolean validateAdmin(HttpServletRequest request) {
@@ -670,5 +755,40 @@ public class AdminController {
             return token.substring(7);
         }
         return null;
+    }
+
+    /**
+     * 验证居所是否有效
+     */
+    private boolean isValidResidence(String residence) {
+        return "castle".equals(residence) ||
+               "city_hall".equals(residence) ||
+               "palace".equals(residence) ||
+               "white_dove_house".equals(residence) ||
+               "park".equals(residence);
+    }
+
+    /**
+     * 获取居所的中文名称
+     */
+    private String getResidenceName(String residence) {
+        if (residence == null) {
+            return "未知居所";
+        }
+        
+        switch (residence) {
+            case "castle":
+                return "城堡🏰";
+            case "city_hall":
+                return "市政厅🏛️";
+            case "palace":
+                return "行宫🏯";
+            case "white_dove_house":
+                return "小白鸽家🕊️";
+            case "park":
+                return "公园🌳";
+            default:
+                return "未知居所";
+        }
     }
 }
