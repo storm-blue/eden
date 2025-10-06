@@ -90,7 +90,7 @@ public final class Scenes {
     public static List<ResidenceEventItem> TWO__CB__11 = List.of(
             new ResidenceEventItem("💕 深夜书桌前，秦小淮跪在桌子下面 💕", "special"),
             new ResidenceEventItem("💕 李星斗假装没看见，继续研究着面前的文件 💕", "special"),
-            new ResidenceEventItem("💕 \"啊……星斗哥哥的大肉棒好大，小骚猫的嘴都塞不下了\"秦小淮故意说 💕", "special"),
+            new ResidenceEventItem("💕 \"啊……星斗哥哥好大，小骚猫的嘴都塞不下了\"秦小淮故意说 💕", "special"),
             new ResidenceEventItem("💕 书桌下传来湿润的吮吸声 💕", "special")
     );
 
