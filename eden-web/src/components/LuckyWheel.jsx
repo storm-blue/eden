@@ -459,7 +459,7 @@ const LotteryLuckyWheel = () => {
     const backgroundStars = useMemo(() => {
         const stars = []
         // 🔥 CPU优化：移动端大幅减少星星数量
-        const starCount = isMobileDevice ? 16 : 50 // 从50减少到8/20
+        const starCount = isMobileDevice ? 16 : 16 // 从50减少到8/20
         for (let i = 0; i < starCount; i++) {
             stars.push({
                 id: i,
