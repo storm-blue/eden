@@ -29,7 +29,8 @@ public final class Scenes {
             new ResidenceEventItem("💕 最近几天，秦小淮特别淫荡 💕", "special"),
             new ResidenceEventItem("💕 \"求求主人，来插小骚猫的小穴穴好不好……\" 💕", "special"),
             new ResidenceEventItem("💕 见李星斗不理她，她就用屁股上插的猫尾巴扫他眼睛 💕", "special"),
-            new ResidenceEventItem("💕 李星斗一下子就把她按倒了 💕", "special")
+            new ResidenceEventItem("💕 李星斗一下子就把她按倒了 💕", "special"),
+            new ResidenceEventItem("💕 \"啊，主人，喜欢主人的大肉棒……\" 💕", "special")
     );
 
     public static List<ResidenceEventItem> TWO__CB__04 = List.of(
@@ -43,7 +44,8 @@ public final class Scenes {
             new ResidenceEventItem("💕 午后的阳光透过窗帘洒在床上 💕", "special"),
             new ResidenceEventItem("💕 秦小淮穿着粉色的睡裙，慵懒地伸着懒腰 💕", "special"),
             new ResidenceEventItem("💕 \"星斗哥哥～人家想要抱抱……\" 💕", "special"),
-            new ResidenceEventItem("💕 李星斗将她拥入怀中，顺势把手探入了她的内内里 💕", "special")
+            new ResidenceEventItem("💕 李星斗将她拥入怀中，顺势把手探入了她的内内里 💕", "special"),
+            new ResidenceEventItem("💕 \"啧，小淮宝宝真容易湿呢。\" 💕", "special")
     );
 
     public static List<ResidenceEventItem> TWO__CB__06 = List.of(
