@@ -22,7 +22,7 @@ public final class Scenes {
             new ResidenceEventItem("💕 顶层的走廊里，秦小淮撅着白嫩的屁股，承受着身后的暴风骤雨 💕", "special"),
             new ResidenceEventItem("💕 她腿软的站不住了，刚想再次耍赖往地上瘫倒，屁股上就吃了一记巴掌，有点疼 💕", "special"),
             new ResidenceEventItem("💕 她开始装哭，结果越来越委屈，哭着哭着哭成真的了！ 💕", "special"),
-            new ResidenceEventItem("💕 \"呜呜，你以前都很爱护我的，从来不打我的！\" 💕", "special")
+            new ResidenceEventItem("💕 \"呜呜，你以前都很爱护我，从来不打我的！\" 💕", "special")
     );
 
     public static List<ResidenceEventItem> TWO__CB__03 = List.of(
@@ -60,7 +60,7 @@ public final class Scenes {
             new ResidenceEventItem("💕 书房里，秦小淮趴在桌案上，屁股高高翘着 💕", "special"),
             new ResidenceEventItem("💕 \"星斗哥哥，小骚猫想要你的大肉棒了……\" 💕", "special"),
             new ResidenceEventItem("💕 李星斗掀起她的裙子，露出湿润粉嫩的花瓣 💕", "special"),
-            new ResidenceEventItem("💕 \"你不是说要看一下午的书吗？这才十分钟。\" 💕", "special"),
+            new ResidenceEventItem("💕 \"你不是说要看一下午的书吗？这才十分钟\" 💕", "special"),
             new ResidenceEventItem("💕 秦小淮理直气壮：\"我就是这样的！\" 💕", "special"),
             new ResidenceEventItem("💕 书桌被撞得嘎吱作响，秦小淮软软地呻吟起来 💕", "special")
     );
@@ -77,7 +77,7 @@ public final class Scenes {
             new ResidenceEventItem("💕 花园里，秦小淮光着身子在浇花 💕", "special"),
             new ResidenceEventItem("💕 \"星斗哥哥，宝宝的小花园也湿了……\" 💕", "special"),
             new ResidenceEventItem("💕 李星斗从背后抱住了她：\"那我就给小乖宝的花园浇浇水\" 💕", "special"),
-            new ResidenceEventItem("💕 秦小淮娇喘着，花洒的水洒了一地 💕", "special")
+            new ResidenceEventItem("💕 秦小淮喘息着，花洒的水洒了一地 💕", "special")
     );
 
     public static List<ResidenceEventItem> TWO__CB__10 = List.of(
@@ -152,6 +152,62 @@ public final class Scenes {
             new ResidenceEventItem("💕 星光下，两人许下了永恒的誓言 💕", "special")
     );
 
+    // 城堡双人日常场景 (19-25)
+    public static List<ResidenceEventItem> TWO__CB__19 = List.of(
+            new ResidenceEventItem("🌅 城堡餐厅里，秦小淮用让煎蛋自己飞到盘子里", "normal"),
+            new ResidenceEventItem("🍳 \"又糊了……\" 她沮丧地看着焦黑的蛋", "normal"),
+            new ResidenceEventItem("😄 李星斗走过来：\"小法师宝宝，魔法也要学会控制火候\"", "normal"),
+            new ResidenceEventItem("💕 \"星斗哥哥教教我嘛～\" 秦小淮撒娇地抱住他的胳膊", "normal"),
+            new ResidenceEventItem("👨‍🍳 \"好吧，武士教法师做饭，听起来很有趣\"", "normal")
+    );
+
+    public static List<ResidenceEventItem> TWO__CB__20 = List.of(
+            new ResidenceEventItem("🎯 城堡的训练场上，李星斗在练剑", "normal"),
+            new ResidenceEventItem("✨ 秦小淮坐在一旁，用魔法让小花朵在空中跳舞", "normal"),
+            new ResidenceEventItem("🌸 \"星斗哥哥，看我的花朵芭蕾！\" 花朵们排成一排旋转", "normal"),
+            new ResidenceEventItem("😅 李星斗一分神，差点被自己的剑绊倒", "normal"),
+            new ResidenceEventItem("😘 \"小淮宝宝太可爱了，害得我都不能专心练剑了\"", "normal")
+    );
+
+    public static List<ResidenceEventItem> TWO__CB__21 = List.of(
+            new ResidenceEventItem("🎲 雨天的城堡里，两人正在玩牌", "normal"),
+            new ResidenceEventItem("🃏 \"秦小淮，我手里的牌怎么变成3了！\" 李星斗咬牙切齿地说", "normal"),
+            new ResidenceEventItem("😇 \"我怎么知道～\" 秦小淮嘻嘻一笑", "normal"),
+            new ResidenceEventItem("🤔 \"那为什么你的牌会自己发光？\"", "normal"),
+            new ResidenceEventItem("😋 \"因为它们太开心了呀！\"", "normal")
+    );
+
+    public static List<ResidenceEventItem> TWO__CB__22 = List.of(
+            new ResidenceEventItem("🛁 城堡的大浴池里，秦小淮用魔法让水变成彩虹色", "normal"),
+            new ResidenceEventItem("🌈 \"哇，好漂亮！\" 她兴奋地在彩色水中游泳", "normal"),
+            new ResidenceEventItem("😰 \"小淮，这个魔法安全吗？\" 李星斗有点担心", "normal"),
+            new ResidenceEventItem("🥰 \"当然安全啦，只是颜色而已～来一起泡泡嘛\"", "normal"),
+            new ResidenceEventItem("💝 \"好吧，谁让我舍不得拒绝小法师呢\"", "normal")
+    );
+
+    public static List<ResidenceEventItem> TWO__CB__23 = List.of(
+            new ResidenceEventItem("🍪 厨房里，两人一起做饼干", "normal"),
+            new ResidenceEventItem("✨ 秦小淮用魔法让面粉自己和成面团", "normal"),
+            new ResidenceEventItem("😤 \"不行，这样做出来的饼干没有爱心！\" 李星斗抗议", "normal"),
+            new ResidenceEventItem("🤗 \"那我们一起用手揉面团吧～\"", "normal"),
+            new ResidenceEventItem("💕 两人的手交叠在面团上，温馨又甜蜜", "normal")
+    );
+
+    public static List<ResidenceEventItem> TWO__CB__24 = List.of(
+            new ResidenceEventItem("📚 图书室里，李星斗在看兵法书", "normal"),
+            new ResidenceEventItem("✨ 秦小淮用魔法让书页自己翻动", "normal"),
+            new ResidenceEventItem("😅 \"小淮，你这样我看不清字啊\"", "normal"),
+            new ResidenceEventItem("😘 \"那我给星斗哥哥读书吧～\" 她钻到他怀里", "normal"),
+            new ResidenceEventItem("💤 结果两人都在温暖的怀抱中睡着了", "normal")
+    );
+
+    public static List<ResidenceEventItem> TWO__CB__25 = List.of(
+            new ResidenceEventItem("🌙 深夜的城堡天台上，两人一起看星星", "normal"),
+            new ResidenceEventItem("✨ 秦小淮用魔法让星星变得更亮", "normal"),
+            new ResidenceEventItem("⭐ \"整个银河的星星都在为我们闪烁！\"", "normal"),
+            new ResidenceEventItem("🤗 李星斗冷哼一声：\"但最亮最可爱的那颗在老子怀里\"", "normal")
+    );
+
     // 三人场景
     public static List<ResidenceEventItem> THREE__CB__01 = List.of(
             new ResidenceEventItem("💕 存子跪在地上，小心翼翼地为主人们舔脚指 💕", "special"),
@@ -166,7 +222,7 @@ public final class Scenes {
             new ResidenceEventItem("💕 存子立刻放下手中的活，跪在秦小淮两腿间 💕", "special"),
             new ResidenceEventItem("💕 \"小淮宝宝主人的味道好香甜……\" 存子温柔地舔着 💕", "special"),
             new ResidenceEventItem("💕 感受到李星斗在身后靠近，存子下面水流如注 💕", "special"),
-            new ResidenceEventItem("💕 \"存子也想要被插……\" 存子心里想 💕", "special")
+            new ResidenceEventItem("💕 \"存子也想要被填满……\" 存子怯怯地想着 💕", "special")
     );
 
     public static List<ResidenceEventItem> THREE__CB__03 = List.of(
@@ -324,63 +380,6 @@ public final class Scenes {
             new ResidenceEventItem("💕 \"从今以后，存子就是我们永远的小母狗\" 💕", "special")
     );
 
-    // 城堡双人日常场景 (19-25)
-    public static List<ResidenceEventItem> TWO__CB__19 = List.of(
-            new ResidenceEventItem("🌅 早晨的城堡餐厅里，秦小淮用魔法让煎蛋自己飞到盘子里", "normal"),
-            new ResidenceEventItem("🍳 \"哎呀，又糊了！\" 她沮丧地看着焦黑的蛋", "normal"),
-            new ResidenceEventItem("😄 李星斗笑着走过来：\"小法师，魔法也要控制火候的\"", "normal"),
-            new ResidenceEventItem("💕 \"星斗哥哥教教我嘛～\" 秦小淮撒娇地抱住他的胳膊", "normal"),
-            new ResidenceEventItem("👨‍🍳 \"好吧，武士教法师做饭，听起来很有趣\"", "normal")
-    );
-
-    public static List<ResidenceEventItem> TWO__CB__20 = List.of(
-            new ResidenceEventItem("🎯 城堡的训练场上，李星斗在练剑", "normal"),
-            new ResidenceEventItem("✨ 秦小淮坐在一旁，用魔法让小花朵在空中跳舞", "normal"),
-            new ResidenceEventItem("🌸 \"星斗哥哥，看我的花朵芭蕾！\" 花朵们排成一排旋转", "normal"),
-            new ResidenceEventItem("😅 李星斗一分神，差点被自己的剑绊倒", "normal"),
-            new ResidenceEventItem("😘 \"小淮宝宝太可爱了，害得我都不能专心练剑了\"", "normal")
-    );
-
-    public static List<ResidenceEventItem> TWO__CB__21 = List.of(
-            new ResidenceEventItem("🎲 雨天的城堡里，两人决定玩桌游", "normal"),
-            new ResidenceEventItem("🃏 \"不许用魔法偷看我的牌！\" 李星斗严肃地说", "normal"),
-            new ResidenceEventItem("😇 \"人家没有偷看～\" 秦小淮眨眨眼，手里的牌却在发光", "normal"),
-            new ResidenceEventItem("🤔 \"那为什么你的牌会自己发光？\"", "normal"),
-            new ResidenceEventItem("😋 \"因为它们太开心了呀！\" 秦小淮调皮地笑", "normal")
-    );
-
-    public static List<ResidenceEventItem> TWO__CB__22 = List.of(
-            new ResidenceEventItem("🛁 城堡的大浴池里，秦小淮用魔法让水变成彩虹色", "normal"),
-            new ResidenceEventItem("🌈 \"哇，好漂亮！\" 她兴奋地在彩色水中游泳", "normal"),
-            new ResidenceEventItem("😰 \"小淮，这个魔法安全吗？\" 李星斗有点担心", "normal"),
-            new ResidenceEventItem("🥰 \"当然安全啦，只是颜色而已～来一起泡泡嘛\"", "normal"),
-            new ResidenceEventItem("💝 \"好吧，谁让我舍不得拒绝小法师呢\"", "normal")
-    );
-
-    public static List<ResidenceEventItem> TWO__CB__23 = List.of(
-            new ResidenceEventItem("🍪 厨房里，两人一起做饼干", "normal"),
-            new ResidenceEventItem("✨ 秦小淮用魔法让面粉自己和成面团", "normal"),
-            new ResidenceEventItem("😤 \"不行，这样做出来的饼干没有爱心！\" 李星斗抗议", "normal"),
-            new ResidenceEventItem("🤗 \"那我们一起用手揉面团吧～\"", "normal"),
-            new ResidenceEventItem("💕 两人的手交叠在面团上，温馨又甜蜜", "normal")
-    );
-
-    public static List<ResidenceEventItem> TWO__CB__24 = List.of(
-            new ResidenceEventItem("📚 图书室里，李星斗在看兵法书", "normal"),
-            new ResidenceEventItem("✨ 秦小淮用魔法让书页自己翻动", "normal"),
-            new ResidenceEventItem("😅 \"小淮，你这样我看不清字啊\"", "normal"),
-            new ResidenceEventItem("😘 \"那我给星斗哥哥读书吧～\" 她钻到他怀里", "normal"),
-            new ResidenceEventItem("💤 结果两人都在温暖的怀抱中睡着了", "normal")
-    );
-
-    public static List<ResidenceEventItem> TWO__CB__25 = List.of(
-            new ResidenceEventItem("🌙 深夜的城堡天台上，两人一起看星星", "normal"),
-            new ResidenceEventItem("✨ 秦小淮用魔法让星星变得更亮", "normal"),
-            new ResidenceEventItem("⭐ \"哇，好像整个银河都在为我们闪烁！\"", "normal"),
-            new ResidenceEventItem("🤗 李星斗紧紧抱住她：\"最亮的星星就在我怀里\"", "normal"),
-            new ResidenceEventItem("😴 \"星斗哥哥，我们就这样看一整夜的星星吧～\"", "normal")
-    );
-
     // 城堡三人日常场景 (19-25)
     public static List<ResidenceEventItem> THREE__CB__19 = List.of(
             new ResidenceEventItem("🍽️ 早餐时间，存子跪着为主人们端菜", "normal"),
@@ -420,11 +419,12 @@ public final class Scenes {
 
     public static List<ResidenceEventItem> THREE__CB__23 = List.of(
             new ResidenceEventItem("🍪 厨房里，三人一起做点心", "normal"),
-            new ResidenceEventItem("✨ 秦小淮用魔法让面粉在空中跳舞", "normal"),
+            new ResidenceEventItem("✨ 秦小淮让面粉在空中跳舞", "normal"),
             new ResidenceEventItem("😲 \"好神奇！\" 存子看得目不转睛", "normal"),
-            new ResidenceEventItem("⚔️ 李星斗用剑精确地切水果：\"武士的刀工也不错\"", "normal"),
-            new ResidenceEventItem("👏 \"哇，冷酷哥哥大人和小淮宝宝主人都好厉害！\"", "normal"),
-            new ResidenceEventItem("🥰 \"存子负责品尝，这也是很重要的工作哦\"", "normal")
+            new ResidenceEventItem("⚔️ 李星斗用刀耍酷般地切水果", "normal"),
+            new ResidenceEventItem("😲 \"冷酷哥哥的刀用得也好厉害！\" 存子做出崇拜的表情", "normal"),
+            new ResidenceEventItem("⚔️ 秦小淮和李星斗一起黑下了脸：", "normal"),
+            new ResidenceEventItem("👏 \"存子，你在嘲讽我们吗？快教教我们两个门外汉！\" ", "normal")
     );
 
     public static List<ResidenceEventItem> THREE__CB__24 = List.of(
@@ -432,7 +432,7 @@ public final class Scenes {
             new ResidenceEventItem("✨ 她用魔法让文字在空中闪烁", "normal"),
             new ResidenceEventItem("📖 \"这个字读'爱'，存子跟我念\"", "normal"),
             new ResidenceEventItem("😊 \"爱...小淮宝宝主人，这个字好温暖\"", "normal"),
-            new ResidenceEventItem("⚔️ 李星斗在一旁练剑，偶尔温柔地看向她们", "normal"),
+            new ResidenceEventItem("⚔️ 李星斗在一旁练剑，偶尔地看向她们", "normal"),
             new ResidenceEventItem("💕 \"存子学会了这个字，就能写情书了呢\"", "normal")
     );
 
@@ -443,20 +443,6 @@ public final class Scenes {
             new ResidenceEventItem("🤗 \"存子，过来一起看\" 秦小淮拍拍身边的位置", "normal"),
             new ResidenceEventItem("😊 李星斗将外套披在两个女孩身上", "normal"),
             new ResidenceEventItem("💤 \"这样的夜晚，真希望永远不要结束...\"", "normal")
-    );
-
-    public static List<List<ResidenceEventItem>> twoCoupleScenes = List.of(
-            TWO__CB__01, TWO__CB__02, TWO__CB__03, TWO__CB__04, TWO__CB__05, TWO__CB__06,
-            TWO__CB__07, TWO__CB__08, TWO__CB__09, TWO__CB__10, TWO__CB__11, TWO__CB__12,
-            TWO__CB__13, TWO__CB__14, TWO__CB__15, TWO__CB__16, TWO__CB__17, TWO__CB__18,
-            TWO__CB__19, TWO__CB__20, TWO__CB__21, TWO__CB__22, TWO__CB__23, TWO__CB__24, TWO__CB__25
-    );
-
-    public static List<List<ResidenceEventItem>> threeCoupleScenes = List.of(
-            THREE__CB__01, THREE__CB__02, THREE__CB__03, THREE__CB__04, THREE__CB__05, THREE__CB__06,
-            THREE__CB__07, THREE__CB__08, THREE__CB__09, THREE__CB__10, THREE__CB__11, THREE__CB__12,
-            THREE__CB__13, THREE__CB__14, THREE__CB__15, THREE__CB__16, THREE__CB__17, THREE__CB__18,
-            THREE__CB__19, THREE__CB__20, THREE__CB__21, THREE__CB__22, THREE__CB__23, THREE__CB__24, THREE__CB__25
     );
 
     // 公园双人场景

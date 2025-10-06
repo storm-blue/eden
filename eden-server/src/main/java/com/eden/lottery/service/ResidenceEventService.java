@@ -219,16 +219,12 @@ public class ResidenceEventService {
                         Scenes.TWO__CB__01,
                         Scenes.TWO__CB__02,
                         Scenes.TWO__CB__03,
-                        Scenes.TWO__CB__04,
-                        Scenes.TWO__CB__05,
-                        Scenes.TWO__CB__06,
                         Scenes.TWO__CB__07,
                         Scenes.TWO__CB__08,
-                        Scenes.TWO__CB__09,
-                        Scenes.TWO__CB__10,
                         Scenes.TWO__CB__11,
-                        Scenes.TWO__CB__12,
-                        Scenes.TWO__CB__13
+                        Scenes.TWO__CB__19,
+                        Scenes.TWO__CB__21,
+                        Scenes.TWO__CB__25
                 );
                 break;
         }
@@ -257,7 +253,7 @@ public class ResidenceEventService {
             default ->
                 // 城堡等其他场景：使用城堡三人场景池（18个）
                     List.of(
-                            Scenes.THREE__CB__02
+                            Scenes.THREE__CB__02, Scenes.THREE__CB__23, Scenes.THREE__CB__24
                     );
         };
 
