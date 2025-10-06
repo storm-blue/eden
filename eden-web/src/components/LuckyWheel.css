@@ -2559,7 +2559,6 @@
         padding: 6px !important;
         font-size: 10px !important;
     }
-}
 
 /* 捐献效果提示动画 */
 @keyframes donationEffectPulse {
@@ -2729,8 +2728,8 @@
     /* 重置居住选择弹窗内容的定位，避免继承父级的transform */
     .residence-modal-overlay.force-landscape .residence-modal-content {
         position: relative !important;
-        max-width: 450px !important;
-        width: 90% !important;
+        max-width: 580px !important;
+        width: 95% !important;
         max-height: 80vh !important;
         padding: 20px !important;
         font-size: 14px !important;

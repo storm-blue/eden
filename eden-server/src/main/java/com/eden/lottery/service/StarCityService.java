@@ -2,8 +2,10 @@ package com.eden.lottery.service;
 
 import com.eden.lottery.entity.LotteryRecord;
 import com.eden.lottery.entity.StarCity;
+import com.eden.lottery.entity.User;
 import com.eden.lottery.mapper.LotteryRecordMapper;
 import com.eden.lottery.mapper.StarCityMapper;
+import com.eden.lottery.mapper.UserMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +14,7 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.time.LocalDateTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * 星星城服务层
@@ -26,6 +29,9 @@ public class StarCityService {
 
     @Autowired
     private LotteryRecordMapper lotteryRecordMapper;
+    
+    @Autowired
+    private UserMapper userMapper;
 
     /**
      * 获取星星城数据
@@ -256,5 +262,95 @@ public class StarCityService {
         
         logger.info("返回可捐献奖品列表，数量: {}", result.size());
         return result;
+    }
+    
+    // ==================== 用户漫游系统相关方法 ====================
+    
+    /**
+     * 获取所有建筑的居住人员
+     * @return 建筑名称 -> 居住人员列表的映射
+     */
+    public Map<String, List<String>> getAllBuildingResidents() {
+        logger.info("获取所有建筑的居住人员");
+        
+        Map<String, List<String>> result = new HashMap<>();
+        String[] buildings = {"castle", "park", "city_hall", "white_dove_house", "palace"};
+        
+        for (String building : buildings) {
+            try {
+                List<User> residents = userMapper.selectByResidence(building);
+                List<String> usernames = residents.stream()
+                    .map(User::getUserId)
+                    .collect(Collectors.toList());
+                result.put(building, usernames);
+                
+                logger.debug("建筑 {} 的居住人员: {}", building, usernames);
+            } catch (Exception e) {
+                logger.error("获取建筑 {} 的居住人员失败: {}", building, e.getMessage(), e);
+                result.put(building, new ArrayList<>());
+            }
+        }
+        
+        return result;
+    }
+    
+    /**
+     * 移动用户到新建筑
+     * @param username 用户名
+     * @param fromBuilding 原建筑
+     * @param toBuilding 目标建筑
+     * @return 移动是否成功
+     */
+    @Transactional
+    public boolean moveUserToBuilding(String username, String fromBuilding, String toBuilding) {
+        logger.info("移动用户 {} 从 {} 到 {}", username, fromBuilding, toBuilding);
+        
+        try {
+            // 验证建筑名称
+            if (!isValidBuilding(toBuilding)) {
+                logger.error("无效的目标建筑: {}", toBuilding);
+                return false;
+            }
+            
+            // 更新用户居住地
+            userMapper.updateResidence(username, toBuilding);
+            
+            logger.info("用户 {} 成功从 {} 移动到 {}", username, fromBuilding, toBuilding);
+            return true;
+            
+        } catch (Exception e) {
+            logger.error("移动用户 {} 从 {} 到 {} 失败: {}", username, fromBuilding, toBuilding, e.getMessage(), e);
+            return false;
+        }
+    }
+    
+    /**
+     * 验证建筑名称是否有效
+     * @param building 建筑名称
+     * @return 是否有效
+     */
+    private boolean isValidBuilding(String building) {
+        return building != null && 
+               (building.equals("castle") || 
+                building.equals("park") || 
+                building.equals("city_hall") || 
+                building.equals("white_dove_house") || 
+                building.equals("palace"));
+    }
+    
+    /**
+     * 获取建筑的显示名称
+     * @param building 建筑key
+     * @return 显示名称
+     */
+    public String getBuildingDisplayName(String building) {
+        switch (building) {
+            case "castle": return "城堡🏰";
+            case "park": return "公园🌳";
+            case "city_hall": return "市政厅🏛️";
+            case "white_dove_house": return "小白鸽家🕊️";
+            case "palace": return "行宫🏯";
+            default: return building;
+        }
     }
 }
