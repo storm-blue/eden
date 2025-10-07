@@ -28,7 +28,7 @@ public class UserRoamingLogicService {
     public String determineNewResidence(String username, String currentResidence) {
         logger.debug("为用户 {} 确定新居所，当前居所: {}", username, currentResidence);
 
-        // 只有"存子"和"小白鸽"可能移动
+        // "小白鸽" 可以去所有地方
         if ("存子".equals(username) || "小白鸽".equals(username)) {
             // 获取所有可用居所
             String[] availableResidences = getAvailableResidences();
@@ -47,6 +47,10 @@ public class UserRoamingLogicService {
 
                 return newResidence;
             }
+        }
+
+        if ("存子".equals(username)) {
+            // TODO 如果当前居所中秦小淮和李星斗任意一个人在，移动的概率为30%。如果秦小淮和李星斗都在，移动的概率为10%。
         }
 
         // 其他用户或没有可移动的居所时，不移动
