@@ -34,67 +34,54 @@ public class UserRoamingLogicService {
     public String determineNewResidence(String username, String currentResidence) {
         logger.debug("为用户 {} 确定新居所，当前居所: {}", username, currentResidence);
 
-        // 小白鸽可以去所有地方，随机移动
-        if ("小白鸽".equals(username)) {
-            return performRandomMove(username, currentResidence);
-        }
-
-        // 存子的特殊移动逻辑
-        if ("存子".equals(username)) {
-            return performCunziMove(username, currentResidence);
-        }
-
-        // 白婆婆的特殊移动逻辑
-        if ("白婆婆".equals(username)) {
-            return performBaipopoMove(username, currentResidence);
-        }
-
-        // 大祭祀的特殊移动逻辑
-        if ("大祭祀".equals(username)) {
-            return performDajiziMove(username, currentResidence);
-        }
-
-        // 严伯升的特殊移动逻辑
-        if ("严伯升".equals(username)) {
-            return performYanboshengMove(username, currentResidence);
-        }
-
-        // 其他用户不移动
-        logger.debug("用户 {} 保持在当前居所: {}", username, getResidenceDisplayName(currentResidence));
-        return null;
+        return switch (username) {
+            case "小白鸽" -> performSimpleRandomMove(username, currentResidence, getAllResidences());
+            case "存子" -> performCunziMove(username, currentResidence);
+            case "白婆婆" -> performSimpleRandomMove(username, currentResidence, new String[]{"park", "white_dove_house"});
+            case "大祭祀" -> performSimpleRandomMove(username, currentResidence, new String[]{"palace", "castle", "park"});
+            case "严伯升" -> performSimpleRandomMove(username, currentResidence, new String[]{"castle", "city_hall"});
+            default -> {
+                logger.debug("用户 {} 保持在当前居所: {}", username, getResidenceDisplayName(currentResidence));
+                yield null;
+            }
+        };
     }
 
     /**
-     * 执行随机移动（适用于小白鸽）
+     * 执行简单的随机移动逻辑
+     * 适用于大部分用户的移动逻辑
+     *
+     * @param username 用户名
+     * @param currentResidence 当前居所
+     * @param availableResidences 可选居所列表
+     * @return 新居所名称，如果不移动则返回null
      */
-    private String performRandomMove(String username, String currentResidence) {
-        // 获取所有可用居所
-        String[] availableResidences = getAvailableResidences();
+    private String performSimpleRandomMove(String username, String currentResidence, String[] availableResidences) {
+        logger.debug("执行{}的移动逻辑，当前居所: {}", username, getResidenceDisplayName(currentResidence));
 
+        // 过滤掉当前居所，避免"移动"到相同位置
         List<String> targetResidences = new ArrayList<>(Arrays.asList(availableResidences));
+        targetResidences.remove(currentResidence);
 
         // 如果有可选的居所，随机选择一个
         if (!targetResidences.isEmpty()) {
             int randomIndex = (int) (Math.random() * targetResidences.size());
             String newResidence = targetResidences.get(randomIndex);
 
-            // 如果目标居所和当前居所一样，不移动
-            if (currentResidence.equals(newResidence)) {
-                return null;
-            }
-
-            logger.info("用户 {} 将从 {} 移动到 {}", username,
+            logger.info("{}将从 {} 移动到 {}", username,
                     getResidenceDisplayName(currentResidence),
                     getResidenceDisplayName(newResidence));
 
             return newResidence;
         }
 
+        logger.debug("{}没有可移动的居所，保持当前位置", username);
         return null;
     }
 
     /**
      * 执行存子的移动逻辑
+     * 基于秦小淮和李星斗的位置决定移动概率
      */
     private String performCunziMove(String username, String currentResidence) {
         try {
@@ -107,20 +94,18 @@ public class UserRoamingLogicService {
             boolean hasLiXingdou = currentResidents.stream()
                     .anyMatch(user -> "李星斗".equals(user.getUserId()));
 
-            double moveChance = 0.0;
-            String logMessage = "";
-
+            // 根据情况确定移动概率
+            double moveChance;
+            String logMessage;
+            
             if (hasQinXiaohuai && hasLiXingdou) {
-                // 如果秦小淮和李星斗都在，移动概率为10%
                 moveChance = 0.10;
                 logMessage = "秦小淮和李星斗都在当前居所，移动概率: 10%";
             } else if (hasQinXiaohuai || hasLiXingdou) {
-                // 如果秦小淮和李星斗任意一个人在，移动概率为30%
                 moveChance = 0.30;
                 String presentPerson = hasQinXiaohuai ? "秦小淮" : "李星斗";
                 logMessage = String.format("%s在当前居所，移动概率: 30%%", presentPerson);
             } else {
-                // 如果秦小淮和李星斗都不在，按照原逻辑随机移动
                 moveChance = 1.0;
                 logMessage = "秦小淮和李星斗都不在当前居所，正常随机移动";
             }
@@ -130,23 +115,11 @@ public class UserRoamingLogicService {
             // 根据概率决定是否移动
             double random = Math.random();
             if (random < moveChance) {
-                // 获取所有可用居所
-                String[] availableResidences = getAvailableResidences();
-
-                // 过滤掉当前居所，避免"移动"到相同位置
-                List<String> targetResidences = new ArrayList<>(Arrays.asList(availableResidences));
-                targetResidences.remove(currentResidence);
-
-                // 如果有可选的居所，随机选择一个
-                if (!targetResidences.isEmpty()) {
-                    int randomIndex = (int) (Math.random() * targetResidences.size());
-                    String newResidence = targetResidences.get(randomIndex);
-
-                    logger.info("存子将从 {} 移动到 {} (随机值: {}, 阈值: {})",
-                            getResidenceDisplayName(currentResidence),
-                            getResidenceDisplayName(newResidence),
-                            random, moveChance);
-
+                // 使用统一的随机移动逻辑
+                String newResidence = performSimpleRandomMove(username, currentResidence, getAllResidences());
+                
+                if (newResidence != null) {
+                    logger.info("存子移动决策成功 (随机值: {}, 阈值: {})", random, moveChance);
                     return newResidence;
                 }
             } else {
@@ -165,7 +138,7 @@ public class UserRoamingLogicService {
      *
      * @return 所有可用居所的列表
      */
-    public String[] getAvailableResidences() {
+    public String[] getAllResidences() {
         return new String[]{
                 "castle",           // 城堡🏰
                 "park",             // 公园🌳
@@ -190,103 +163,5 @@ public class UserRoamingLogicService {
             case "palace" -> "行宫🏯";
             default -> residence;
         };
-    }
-
-    /**
-     * 执行白婆婆的移动逻辑
-     * 白婆婆可能去公园、小白鸽家
-     */
-    private String performBaipopoMove(String username, String currentResidence) {
-        logger.debug("执行白婆婆的移动逻辑，当前居所: {}", getResidenceDisplayName(currentResidence));
-
-        // 白婆婆的可选居所：公园、小白鸽家
-        String[] preferredResidences = {"park", "white_dove_house"};
-
-        List<String> targetResidences = new ArrayList<>(Arrays.asList(preferredResidences));
-
-        // 如果有可选的居所，随机选择一个
-        if (!targetResidences.isEmpty()) {
-            int randomIndex = (int) (Math.random() * targetResidences.size());
-            String newResidence = targetResidences.get(randomIndex);
-
-            if (currentResidence.equals(newResidence)) {
-                return null;
-            }
-
-            logger.info("白婆婆将从 {} 移动到 {}",
-                    getResidenceDisplayName(currentResidence),
-                    getResidenceDisplayName(newResidence));
-
-            return newResidence;
-        }
-
-        logger.debug("白婆婆没有可移动的居所，保持当前位置");
-        return null;
-    }
-
-    /**
-     * 执行大祭祀的移动逻辑
-     * 大祭祀可能去行宫、城堡、公园
-     */
-    private String performDajiziMove(String username, String currentResidence) {
-        logger.debug("执行大祭祀的移动逻辑，当前居所: {}", getResidenceDisplayName(currentResidence));
-
-        // 大祭祀的可选居所：行宫、城堡、公园
-        String[] preferredResidences = {"palace", "castle", "park"};
-
-        // 过滤掉当前居所
-        List<String> targetResidences = new ArrayList<>(Arrays.asList(preferredResidences));
-
-        // 如果有可选的居所，随机选择一个
-        if (!targetResidences.isEmpty()) {
-            int randomIndex = (int) (Math.random() * targetResidences.size());
-            String newResidence = targetResidences.get(randomIndex);
-
-            if (currentResidence.equals(newResidence)) {
-                return null;
-            }
-
-            logger.info("大祭祀将从 {} 移动到 {}",
-                    getResidenceDisplayName(currentResidence),
-                    getResidenceDisplayName(newResidence));
-
-            return newResidence;
-        }
-
-        logger.debug("大祭祀没有可移动的居所，保持当前位置");
-        return null;
-    }
-
-    /**
-     * 执行严伯升的移动逻辑
-     * 严伯升可能去城堡、市政厅
-     */
-    private String performYanboshengMove(String username, String currentResidence) {
-        logger.debug("执行严伯升的移动逻辑，当前居所: {}", getResidenceDisplayName(currentResidence));
-
-        // 严伯升的可选居所：城堡、市政厅
-        String[] preferredResidences = {"castle", "city_hall"};
-
-        // 过滤掉当前居所
-        List<String> targetResidences = new ArrayList<>(Arrays.asList(preferredResidences));
-
-        // 如果有可选的居所，随机选择一个
-        if (!targetResidences.isEmpty()) {
-            int randomIndex = (int) (Math.random() * targetResidences.size());
-            String newResidence = targetResidences.get(randomIndex);
-
-            if (currentResidence.equals(newResidence)) {
-                return null;
-            }
-
-            logger.info("严伯升将从 {} 移动到 {}",
-                    getResidenceDisplayName(currentResidence),
-                    getResidenceDisplayName(newResidence));
-
-            return newResidence;
-        }
-
-        logger.debug("严伯升没有可移动的居所，保持当前位置");
-        return null;
     }
 }
