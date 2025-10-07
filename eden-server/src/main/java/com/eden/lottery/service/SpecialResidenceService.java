@@ -2,6 +2,7 @@ package com.eden.lottery.service;
 
 import com.eden.lottery.entity.User;
 import com.eden.lottery.mapper.UserMapper;
+import com.eden.lottery.utils.ResidenceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -78,7 +79,7 @@ public class SpecialResidenceService {
                 if (combo != null) {
                     totalBonus += combo.getHourlyBonus();
                     logger.info("检测到特殊居住组合：{} 在 {} - 人口加成: +{}/小时",
-                            combo.getDescription(), getResidenceName(residence), combo.getHourlyBonus());
+                            combo.getDescription(), ResidenceUtils.getDisplayName(residence), combo.getHourlyBonus());
                 }
             }
 
@@ -144,7 +145,7 @@ public class SpecialResidenceService {
                         if (combo != null) {
                             return Map.of(
                                     "residence", residence,
-                                    "residenceName", getResidenceName(residence),
+                                    "residenceName", ResidenceUtils.getDisplayName(residence),
                                     "combo", combo.name(),
                                     "description", combo.getDescription(),
                                     "hourlyBonus", combo.getHourlyBonus(),
@@ -161,25 +162,4 @@ public class SpecialResidenceService {
         }
     }
 
-    /**
-     * 获取居住地点的中文名称
-     */
-    private String getResidenceName(String residence) {
-        if (residence == null) return "未知地点";
-
-        switch (residence) {
-            case "castle":
-                return "🏰 城堡";
-            case "city_hall":
-                return "🏛️ 市政厅";
-            case "palace":
-                return "🏯 行宫";
-            case "dove_house":
-                return "🕊️ 小白鸽家";
-            case "park":
-                return "🌳 公园";
-            default:
-                return residence;
-        }
-    }
 }

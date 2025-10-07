@@ -1,5 +1,6 @@
 package com.eden.lottery.service;
 
+import com.eden.lottery.constants.ResidenceConstants;
 import com.eden.lottery.dto.ResidenceEventItem;
 import com.eden.lottery.entity.ResidenceEvent;
 import com.eden.lottery.entity.ResidenceEventHistory;
@@ -7,6 +8,7 @@ import com.eden.lottery.entity.User;
 import com.eden.lottery.mapper.ResidenceEventMapper;
 import com.eden.lottery.mapper.ResidenceEventHistoryMapper;
 import com.eden.lottery.mapper.UserMapper;
+import com.eden.lottery.utils.ResidenceUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import org.slf4j.Logger;
@@ -137,8 +139,8 @@ public class ResidenceEventService {
             return updateResidenceEvent(residence, eventData, true, null, true);
         } else {
             // 普通情况，生成普通类型事件
-            events.add(new ResidenceEventItem(getResidenceDisplayName(residence) + " 平静如常...", "normal"));
-            events.add(new ResidenceEventItem("微风轻拂过" + getResidenceDisplayName(residence), "normal"));
+            events.add(new ResidenceEventItem(ResidenceUtils.getDisplayName(residence) + " 平静如常...", "normal"));
+            events.add(new ResidenceEventItem("微风轻拂过" + ResidenceUtils.getDisplayName(residence), "normal"));
 
             // 使用Gson序列化为JSON
             String eventData = gson.toJson(events);
@@ -200,37 +202,34 @@ public class ResidenceEventService {
     private List<ResidenceEventItem> getRandomTwoPersonScene(String residence) {
         List<List<ResidenceEventItem>> scenePool;
 
-        switch (residence) {
-            case "park":
+        scenePool = switch (residence) {
+            case ResidenceConstants.PARK ->
                 // 公园场景：使用公园双人场景池（18个）
-                scenePool = List.of(
-                        Scenes.TWO__GY__01,
-                        Scenes.TWO__GY__16
-                );
-                break;
-            case "city_hall":
+                    List.of(
+                            Scenes.TWO__GY__01,
+                            Scenes.TWO__GY__16
+                    );
+            case ResidenceConstants.CITY_HALL ->
                 // 市政厅场景：使用市政厅双人场景池（18个）
-                scenePool = List.of(
-                        Scenes.TWO__SZT__01,
-                        Scenes.TWO__SZT__02,
-                        Scenes.TWO__SZT__03
-                );
-                break;
-            default:
+                    List.of(
+                            Scenes.TWO__SZT__01,
+                            Scenes.TWO__SZT__02,
+                            Scenes.TWO__SZT__03
+                    );
+            default ->
                 // 城堡等其他场景：使用城堡双人场景池（18个）
-                scenePool = List.of(
-                        Scenes.TWO__CB__01,
-                        Scenes.TWO__CB__02,
-                        Scenes.TWO__CB__03,
-                        Scenes.TWO__CB__07,
-                        Scenes.TWO__CB__08,
-                        Scenes.TWO__CB__11,
-                        Scenes.TWO__CB__19,
-                        Scenes.TWO__CB__21,
-                        Scenes.TWO__CB__25
-                );
-                break;
-        }
+                    List.of(
+                            Scenes.TWO__CB__01,
+                            Scenes.TWO__CB__02,
+                            Scenes.TWO__CB__03,
+                            Scenes.TWO__CB__07,
+                            Scenes.TWO__CB__08,
+                            Scenes.TWO__CB__11,
+                            Scenes.TWO__CB__19,
+                            Scenes.TWO__CB__21,
+                            Scenes.TWO__CB__25
+                    );
+        };
 
         return scenePool.get((int) (Math.random() * scenePool.size()));
     }
@@ -243,12 +242,12 @@ public class ResidenceEventService {
      */
     private List<ResidenceEventItem> getRandomThreePersonScene(String residence) {
         List<List<ResidenceEventItem>> scenePool = switch (residence) {
-            case "park" ->
+            case ResidenceConstants.PARK ->
                 // 公园场景：使用公园三人场景池（18个）
                     List.of(
                             Scenes.THREE__GY__02, Scenes.THREE__GY__03, Scenes.THREE__GY__08
                     );
-            case "city_hall" ->
+            case ResidenceConstants.CITY_HALL ->
                 // 市政厅场景：使用市政厅三人场景池（18个）
                     List.of(
                             Scenes.THREE__SZT__06,
@@ -264,22 +263,6 @@ public class ResidenceEventService {
         return scenePool.get((int) (Math.random() * scenePool.size()));
     }
 
-    /**
-     * 获取居所显示名称
-     *
-     * @param residence 居所类型
-     * @return 显示名称
-     */
-    private String getResidenceDisplayName(String residence) {
-        return switch (residence) {
-            case "castle" -> "🏰 城堡";
-            case "city_hall" -> "🏛️ 市政厅";
-            case "palace" -> "🏯 行宫";
-            case "dove_house" -> "🕊️ 小白鸽家";
-            case "park" -> "🌳 公园";
-            default -> "未知居所";
-        };
-    }
 
     /**
      * 刷新所有居所的事件
@@ -287,7 +270,7 @@ public class ResidenceEventService {
      * @return 刷新成功的居所数量
      */
     public int refreshAllResidenceEvents() {
-        String[] residences = {"castle", "city_hall", "palace", "dove_house", "park"};
+        String[] residences = ResidenceUtils.getAllResidences();
         int successCount = 0;
 
         for (String residence : residences) {
@@ -301,7 +284,7 @@ public class ResidenceEventService {
             }
         }
 
-        logger.info("居所事件刷新完成，成功: {}/5", successCount);
+        logger.info("居所事件刷新完成，成功: {}/{}", successCount, residences.length);
         return successCount;
     }
 

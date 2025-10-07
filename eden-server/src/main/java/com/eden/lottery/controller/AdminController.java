@@ -14,10 +14,10 @@ import com.eden.lottery.service.WishService;
 import com.eden.lottery.service.ResidenceHistoryService;
 import com.eden.lottery.service.ResidenceEventService;
 import com.eden.lottery.entity.UserAttempt;
+import com.eden.lottery.utils.ResidenceUtils;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -40,7 +40,7 @@ public class AdminController {
     private final WishService wishService;
     private final ResidenceHistoryService residenceHistoryService;
     private final ResidenceEventService residenceEventService;
-    
+
     public AdminController(AdminService adminService, LotteryService lotteryService, UserAttemptService userAttemptService, WishService wishService, ResidenceHistoryService residenceHistoryService, ResidenceEventService residenceEventService) {
         this.adminService = adminService;
         this.lotteryService = lotteryService;
@@ -57,7 +57,7 @@ public class AdminController {
     public ApiResponse<Object> login(@RequestBody AdminLoginRequest request) {
         try {
             String loginToken = adminService.adminLogin(request.getUsername(), request.getPassword());
-            
+
             if (loginToken != null) {
                 final String finalToken = loginToken; // 为匿名类创建final变量
                 Object result = new Object() {
@@ -96,7 +96,7 @@ public class AdminController {
     @GetMapping("/users")
     public ApiResponse<List<Object>> getUsers(HttpServletRequest request) {
         try {
-            if (!validateAdmin(request)) {
+            if (isInvalidAdmin(request)) {
                 return ApiResponse.error("未授权访问");
             }
 
@@ -123,21 +123,21 @@ public class AdminController {
      */
     @GetMapping("/lottery-history")
     public ApiResponse<Object> getLotteryHistory(HttpServletRequest request,
-                                               @RequestParam(defaultValue = "1") int page,
-                                               @RequestParam(defaultValue = "20") int size,
-                                               @RequestParam(required = false) String userId) {
+                                                 @RequestParam(defaultValue = "1") int page,
+                                                 @RequestParam(defaultValue = "20") int size,
+                                                 @RequestParam(required = false) String userId) {
         try {
-            if (!validateAdmin(request)) {
+            if (isInvalidAdmin(request)) {
                 return ApiResponse.error("未授权访问");
             }
 
             // 计算偏移量
             int offset = (page - 1) * size;
-            
+
             // 获取分页数据
             List<LotteryRecord> records = lotteryService.getLotteryHistoryWithPagination(userId, offset, size);
             long totalCount = lotteryService.getLotteryHistoryCount(userId);
-            
+
             List<Object> historyList = records.stream()
                     .map(record -> new Object() {
                         public final Long id = record.getId();
@@ -188,22 +188,22 @@ public class AdminController {
      * 给用户增加抽奖次数
      */
     @PostMapping("/users/add-draws")
-    public ApiResponse<Object> addUserDraws(HttpServletRequest request, 
-                                           @RequestBody UserManagementRequest managementRequest) {
+    public ApiResponse<Object> addUserDraws(HttpServletRequest request,
+                                            @RequestBody UserManagementRequest managementRequest) {
         try {
-            if (!validateAdmin(request)) {
+            if (isInvalidAdmin(request)) {
                 return ApiResponse.error("未授权访问");
             }
 
-            if (!StringUtils.hasText(managementRequest.getUserId()) || 
-                managementRequest.getRemainingDraws() == null || 
-                managementRequest.getRemainingDraws() <= 0) {
+            if (!StringUtils.hasText(managementRequest.getUserId()) ||
+                    managementRequest.getRemainingDraws() == null ||
+                    managementRequest.getRemainingDraws() <= 0) {
                 return ApiResponse.error("参数错误");
             }
 
             boolean success = adminService.addUserDraws(
-                managementRequest.getUserId(), 
-                managementRequest.getRemainingDraws()
+                    managementRequest.getUserId(),
+                    managementRequest.getRemainingDraws()
             );
 
             if (success) {
@@ -227,23 +227,23 @@ public class AdminController {
      */
     @PostMapping("/users/set-daily-draws")
     public ApiResponse<Object> setUserDailyDraws(HttpServletRequest request,
-                                                @RequestBody UserManagementRequest managementRequest) {
+                                                 @RequestBody UserManagementRequest managementRequest) {
         try {
-            if (!validateAdmin(request)) {
+            if (isInvalidAdmin(request)) {
                 return ApiResponse.error("未授权访问");
             }
 
-            if (!StringUtils.hasText(managementRequest.getUserId()) || 
-                managementRequest.getDailyDraws() == null || 
-                managementRequest.getDailyDraws() <= 0) {
+            if (!StringUtils.hasText(managementRequest.getUserId()) ||
+                    managementRequest.getDailyDraws() == null ||
+                    managementRequest.getDailyDraws() <= 0) {
                 return ApiResponse.error("参数错误");
             }
 
             boolean success = adminService.setUserDailyDraws(
-                managementRequest.getUserId(), 
-                managementRequest.getDailyDraws()
+                    managementRequest.getUserId(),
+                    managementRequest.getDailyDraws()
             );
-            
+
             if (success) {
                 Object result = new Object() {
                     public final String userId = managementRequest.getUserId();
@@ -265,9 +265,9 @@ public class AdminController {
      */
     @PostMapping("/users/add")
     public ApiResponse<Object> addUser(HttpServletRequest request,
-                                      @RequestBody UserManagementRequest managementRequest) {
+                                       @RequestBody UserManagementRequest managementRequest) {
         try {
-            if (!validateAdmin(request)) {
+            if (isInvalidAdmin(request)) {
                 return ApiResponse.error("未授权访问");
             }
 
@@ -276,8 +276,8 @@ public class AdminController {
             }
 
             User user = adminService.addUser(
-                managementRequest.getUserId(), 
-                managementRequest.getDailyDraws()
+                    managementRequest.getUserId(),
+                    managementRequest.getDailyDraws()
             );
 
             Object result = new Object() {
@@ -293,15 +293,15 @@ public class AdminController {
             return ApiResponse.error("操作失败");
         }
     }
-    
+
     /**
      * 删除用户
      */
     @DeleteMapping("/users/{userId}")
     public ApiResponse<Object> deleteUser(HttpServletRequest request,
-                                         @PathVariable String userId) {
+                                          @PathVariable String userId) {
         try {
-            if (!validateAdmin(request)) {
+            if (isInvalidAdmin(request)) {
                 return ApiResponse.error("未授权访问");
             }
 
@@ -332,23 +332,23 @@ public class AdminController {
     @GetMapping("/stats")
     public ApiResponse<Object> getStats(HttpServletRequest request) {
         try {
-            if (!validateAdmin(request)) {
+            if (isInvalidAdmin(request)) {
                 return ApiResponse.error("未授权访问");
             }
 
             Object stats = lotteryService.getStatistics();
             Object attemptStats = userAttemptService.getAttemptStatistics();
             List<User> users = adminService.getAllUsers();
-            
+
             Object result = new Object() {
                 public final Object lotteryStats = stats;
                 public final Object attemptStats = AdminController.this.userAttemptService.getAttemptStatistics();
                 public final int totalUsers = users.size();
                 public final long totalActiveUsers = users.stream()
-                    .filter(user -> user.getRemainingDraws() > 0)
-                    .count();
+                        .filter(user -> user.getRemainingDraws() > 0)
+                        .count();
             };
-            
+
             return ApiResponse.success("获取统计信息成功", result);
         } catch (Exception e) {
             logger.error("获取统计信息失败", e);
@@ -361,16 +361,16 @@ public class AdminController {
      */
     @GetMapping("/user-attempts")
     public ApiResponse<List<Object>> getUserAttempts(HttpServletRequest request,
-                                                    @RequestParam(defaultValue = "100") Integer limit,
-                                                    @RequestParam(required = false) String userId,
-                                                    @RequestParam(defaultValue = "24") Integer hours) {
+                                                     @RequestParam(defaultValue = "100") Integer limit,
+                                                     @RequestParam(required = false) String userId,
+                                                     @RequestParam(defaultValue = "24") Integer hours) {
         try {
-            if (!validateAdmin(request)) {
+            if (isInvalidAdmin(request)) {
                 return ApiResponse.error("未授权访问");
             }
 
             List<UserAttempt> attempts;
-            
+
             if (StringUtils.hasText(userId)) {
                 // 查询特定用户的尝试记录
                 attempts = userAttemptService.getAttemptsByUserId(userId, limit);
@@ -406,7 +406,7 @@ public class AdminController {
     @GetMapping("/user-attempts/stats")
     public ApiResponse<Object> getUserAttemptStats(HttpServletRequest request) {
         try {
-            if (!validateAdmin(request)) {
+            if (isInvalidAdmin(request)) {
                 return ApiResponse.error("未授权访问");
             }
 
@@ -423,21 +423,21 @@ public class AdminController {
      */
     @DeleteMapping("/user-attempts/cleanup")
     public ApiResponse<Object> cleanupOldAttempts(HttpServletRequest request,
-                                                 @RequestParam(defaultValue = "30") Integer days) {
+                                                  @RequestParam(defaultValue = "30") Integer days) {
         try {
-            if (!validateAdmin(request)) {
+            if (isInvalidAdmin(request)) {
                 return ApiResponse.error("未授权访问");
             }
 
             java.time.LocalDateTime beforeTime = java.time.LocalDateTime.now().minusDays(days);
             int deletedCount = userAttemptService.cleanOldAttempts(beforeTime);
-            
+
             final int finalDeletedCount = deletedCount;
             Object result = new Object() {
                 public final int deletedCount = finalDeletedCount;
                 public final String message = "清理完成，删除了 " + finalDeletedCount + " 条记录";
             };
-            
+
             return ApiResponse.success("清理完成", result);
         } catch (Exception e) {
             logger.error("清理用户尝试记录失败", e);
@@ -451,7 +451,7 @@ public class AdminController {
     @GetMapping("/wishes")
     public ApiResponse<List<Object>> getAllWishes(HttpServletRequest request) {
         try {
-            if (!validateAdmin(request)) {
+            if (isInvalidAdmin(request)) {
                 return ApiResponse.error("未授权访问");
             }
 
@@ -480,9 +480,9 @@ public class AdminController {
      */
     @DeleteMapping("/wishes/{wishId}")
     public ApiResponse<Object> deleteWish(HttpServletRequest request,
-                                         @PathVariable Long wishId) {
+                                          @PathVariable Long wishId) {
         try {
-            if (!validateAdmin(request)) {
+            if (isInvalidAdmin(request)) {
                 return ApiResponse.error("未授权访问");
             }
 
@@ -524,7 +524,7 @@ public class AdminController {
     @GetMapping("/wishes/stats")
     public ApiResponse<Object> getWishStats(HttpServletRequest request) {
         try {
-            if (!validateAdmin(request)) {
+            if (isInvalidAdmin(request)) {
                 return ApiResponse.error("未授权访问");
             }
 
@@ -541,10 +541,10 @@ public class AdminController {
      */
     @GetMapping("/residence-history")
     public ApiResponse<Map<String, Object>> getAllResidenceHistory(HttpServletRequest request,
-                                                                  @RequestParam(defaultValue = "1") int page,
-                                                                  @RequestParam(defaultValue = "20") int size) {
+                                                                   @RequestParam(defaultValue = "1") int page,
+                                                                   @RequestParam(defaultValue = "20") int size) {
         try {
-            if (!validateAdmin(request)) {
+            if (isInvalidAdmin(request)) {
                 return ApiResponse.error("未授权访问");
             }
 
@@ -564,9 +564,9 @@ public class AdminController {
      */
     @GetMapping("/residence-history/user/{userId}")
     public ApiResponse<List<ResidenceHistory>> getUserResidenceHistory(HttpServletRequest request,
-                                                                      @PathVariable String userId) {
+                                                                       @PathVariable String userId) {
         try {
-            if (!validateAdmin(request)) {
+            if (isInvalidAdmin(request)) {
                 return ApiResponse.error("未授权访问");
             }
 
@@ -587,9 +587,9 @@ public class AdminController {
      */
     @GetMapping("/residence-history/location/{residence}")
     public ApiResponse<List<ResidenceHistory>> getLocationResidenceHistory(HttpServletRequest request,
-                                                                          @PathVariable String residence) {
+                                                                           @PathVariable String residence) {
         try {
-            if (!validateAdmin(request)) {
+            if (isInvalidAdmin(request)) {
                 return ApiResponse.error("未授权访问");
             }
 
@@ -611,7 +611,7 @@ public class AdminController {
     @GetMapping("/residence-history/stats")
     public ApiResponse<Map<String, Object>> getResidenceHistoryStats(HttpServletRequest request) {
         try {
-            if (!validateAdmin(request)) {
+            if (isInvalidAdmin(request)) {
                 return ApiResponse.error("未授权访问");
             }
 
@@ -628,9 +628,9 @@ public class AdminController {
      */
     @DeleteMapping("/residence-history/{historyId}")
     public ApiResponse<Object> deleteResidenceHistory(HttpServletRequest request,
-                                                     @PathVariable Long historyId) {
+                                                      @PathVariable Long historyId) {
         try {
-            if (!validateAdmin(request)) {
+            if (isInvalidAdmin(request)) {
                 return ApiResponse.error("未授权访问");
             }
 
@@ -662,7 +662,7 @@ public class AdminController {
     @DeleteMapping("/residence-event-history/{residence}")
     public ApiResponse<Object> clearResidenceEventHistory(@PathVariable String residence, HttpServletRequest request) {
         try {
-            if (!validateAdmin(request)) {
+            if (isInvalidAdmin(request)) {
                 return ApiResponse.error("未授权访问");
             }
 
@@ -672,12 +672,12 @@ public class AdminController {
             }
 
             // 验证居所是否有效
-            if (!isValidResidence(residence)) {
+            if (ResidenceUtils.isInvalidResidence(residence)) {
                 return ApiResponse.error("无效的居所类型");
             }
 
             // 获取居所显示名称
-            String residenceName = getResidenceName(residence);
+            String residenceName = ResidenceUtils.getDisplayName(residence);
 
             // 清除指定居所的事件历史
             boolean success = residenceEventService.clearResidenceEventHistory(residence);
@@ -708,7 +708,7 @@ public class AdminController {
     @GetMapping("/residence-event-history/overview")
     public ApiResponse<Object> getResidenceEventHistoryOverview(HttpServletRequest request) {
         try {
-            if (!validateAdmin(request)) {
+            if (isInvalidAdmin(request)) {
                 return ApiResponse.error("未授权访问");
             }
 
@@ -717,11 +717,11 @@ public class AdminController {
 
             for (String residence : residences) {
                 Map<String, Object> stats = residenceEventService.getEventHistoryStats(residence);
-                
+
                 // 创建一个新的可变Map来避免UnsupportedOperationException
                 Map<String, Object> residenceStats = new java.util.HashMap<>(stats);
-                residenceStats.put("residenceName", getResidenceName(residence));
-                
+                residenceStats.put("residenceName", ResidenceUtils.getDisplayName(residence));
+
                 overview.put(residence, residenceStats);
             }
 
@@ -741,9 +741,9 @@ public class AdminController {
     /**
      * 验证管理员权限
      */
-    private boolean validateAdmin(HttpServletRequest request) {
+    private boolean isInvalidAdmin(HttpServletRequest request) {
         String token = getTokenFromRequest(request);
-        return adminService.validateAdminSession(token);
+        return !adminService.validateAdminSession(token);
     }
 
     /**
@@ -757,38 +757,4 @@ public class AdminController {
         return null;
     }
 
-    /**
-     * 验证居所是否有效
-     */
-    private boolean isValidResidence(String residence) {
-        return "castle".equals(residence) ||
-               "city_hall".equals(residence) ||
-               "palace".equals(residence) ||
-               "white_dove_house".equals(residence) ||
-               "park".equals(residence);
-    }
-
-    /**
-     * 获取居所的中文名称
-     */
-    private String getResidenceName(String residence) {
-        if (residence == null) {
-            return "未知居所";
-        }
-        
-        switch (residence) {
-            case "castle":
-                return "城堡🏰";
-            case "city_hall":
-                return "市政厅🏛️";
-            case "palace":
-                return "行宫🏯";
-            case "white_dove_house":
-                return "小白鸽家🕊️";
-            case "park":
-                return "公园🌳";
-            default:
-                return "未知居所";
-        }
-    }
 }

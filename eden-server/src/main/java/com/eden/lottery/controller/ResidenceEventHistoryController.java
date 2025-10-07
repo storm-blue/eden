@@ -2,6 +2,7 @@ package com.eden.lottery.controller;
 
 import com.eden.lottery.entity.ResidenceEventHistory;
 import com.eden.lottery.service.ResidenceEventService;
+import com.eden.lottery.utils.ResidenceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -27,17 +28,17 @@ public class ResidenceEventHistoryController {
         try {
             List<ResidenceEventHistory> history = residenceEventService.getResidenceEventHistory(residence);
             Map<String, Object> stats = residenceEventService.getEventHistoryStats(residence);
-            
+
             return ResponseEntity.ok(Map.of(
-                "success", true,
-                "residence", residence,
-                "history", history,
-                "stats", stats
+                    "success", true,
+                    "residence", residence,
+                    "history", history,
+                    "stats", stats
             ));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(Map.of(
-                "success", false,
-                "message", "获取事件历史失败: " + e.getMessage()
+                    "success", false,
+                    "message", "获取事件历史失败: " + e.getMessage()
             ));
         }
     }
@@ -47,23 +48,23 @@ public class ResidenceEventHistoryController {
      */
     @GetMapping("/{residence}/{limit}")
     public ResponseEntity<Map<String, Object>> getResidenceEventHistoryWithLimit(
-            @PathVariable String residence, 
+            @PathVariable String residence,
             @PathVariable int limit) {
         try {
             List<ResidenceEventHistory> history = residenceEventService.getResidenceEventHistory(residence, limit);
             Map<String, Object> stats = residenceEventService.getEventHistoryStats(residence);
-            
+
             return ResponseEntity.ok(Map.of(
-                "success", true,
-                "residence", residence,
-                "limit", limit,
-                "history", history,
-                "stats", stats
+                    "success", true,
+                    "residence", residence,
+                    "limit", limit,
+                    "history", history,
+                    "stats", stats
             ));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(Map.of(
-                "success", false,
-                "message", "获取事件历史失败: " + e.getMessage()
+                    "success", false,
+                    "message", "获取事件历史失败: " + e.getMessage()
             ));
         }
     }
@@ -75,23 +76,23 @@ public class ResidenceEventHistoryController {
     public ResponseEntity<Map<String, Object>> clearResidenceEventHistory(@PathVariable String residence) {
         try {
             boolean success = residenceEventService.clearResidenceEventHistory(residence);
-            
+
             if (success) {
                 return ResponseEntity.ok(Map.of(
-                    "success", true,
-                    "message", "居所事件历史清理成功",
-                    "residence", residence
+                        "success", true,
+                        "message", "居所事件历史清理成功",
+                        "residence", residence
                 ));
             } else {
                 return ResponseEntity.status(500).body(Map.of(
-                    "success", false,
-                    "message", "清理事件历史失败"
+                        "success", false,
+                        "message", "清理事件历史失败"
                 ));
             }
         } catch (Exception e) {
             return ResponseEntity.status(500).body(Map.of(
-                "success", false,
-                "message", "清理事件历史失败: " + e.getMessage()
+                    "success", false,
+                    "message", "清理事件历史失败: " + e.getMessage()
             ));
         }
     }
@@ -103,15 +104,15 @@ public class ResidenceEventHistoryController {
     public ResponseEntity<Map<String, Object>> getEventHistoryStats(@PathVariable String residence) {
         try {
             Map<String, Object> stats = residenceEventService.getEventHistoryStats(residence);
-            
+
             return ResponseEntity.ok(Map.of(
-                "success", true,
-                "data", stats
+                    "success", true,
+                    "data", stats
             ));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(Map.of(
-                "success", false,
-                "message", "获取统计信息失败: " + e.getMessage()
+                    "success", false,
+                    "message", "获取统计信息失败: " + e.getMessage()
             ));
         }
     }
@@ -122,22 +123,22 @@ public class ResidenceEventHistoryController {
     @GetMapping("/overview")
     public ResponseEntity<Map<String, Object>> getAllResidenceEventHistoryOverview() {
         try {
-            String[] residences = {"castle", "park", "city_hall", "white_dove_house", "palace"};
+            String[] residences = ResidenceUtils.getAllResidences();
             Map<String, Map<String, Object>> overview = new java.util.HashMap<>();
-            
+
             for (String residence : residences) {
                 Map<String, Object> stats = residenceEventService.getEventHistoryStats(residence);
                 overview.put(residence, stats);
             }
-            
+
             return ResponseEntity.ok(Map.of(
-                "success", true,
-                "overview", overview
+                    "success", true,
+                    "overview", overview
             ));
         } catch (Exception e) {
             return ResponseEntity.status(500).body(Map.of(
-                "success", false,
-                "message", "获取概览失败: " + e.getMessage()
+                    "success", false,
+                    "message", "获取概览失败: " + e.getMessage()
             ));
         }
     }

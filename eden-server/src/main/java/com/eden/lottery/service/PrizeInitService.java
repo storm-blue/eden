@@ -2,6 +2,7 @@ package com.eden.lottery.service;
 
 import com.eden.lottery.entity.Prize;
 import com.eden.lottery.mapper.PrizeMapper;
+import com.eden.lottery.utils.ResidenceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,7 +10,6 @@ import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
 import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
 
 import javax.sql.DataSource;
 import java.sql.Connection;
@@ -27,21 +27,21 @@ import java.util.List;
 @Service
 @Order(1) // 确保最先执行
 public class PrizeInitService implements ApplicationRunner {
-    
+
     private static final Logger logger = LoggerFactory.getLogger(PrizeInitService.class);
-    
+
     @Autowired
     private PrizeMapper prizeMapper;
-    
+
     @Autowired
     private DataSource dataSource;
-    
+
     @Override
     public void run(ApplicationArguments args) {
         try {
             // 首先执行数据库迁移
             performDatabaseMigration();
-            
+
             // 然后初始化奖品数据
             initializePrizes();
         } catch (Exception e) {
@@ -49,115 +49,115 @@ public class PrizeInitService implements ApplicationRunner {
             throw new RuntimeException("服务初始化失败", e);
         }
     }
-    
+
     /**
      * 执行数据库迁移
      */
     private void performDatabaseMigration() {
         logger.info("开始数据库迁移检查...");
-        
+
         try (Connection connection = dataSource.getConnection()) {
             // 检查并迁移users表
             checkAndMigrateUsersTable(connection);
-            
+
             // 检查并创建居住历史表
             checkAndCreateResidenceHistoryTable(connection);
-            
+
             // 检查并创建居所事件表
             checkAndCreateResidenceEventsTable(connection);
-            
+
             // 检查并创建居所事件历史表
             checkAndCreateResidenceEventHistoryTable(connection);
-            
+
             // 检查并迁移居所事件表字段
             checkAndMigrateResidenceEventsTable(connection);
-            
+
             logger.info("数据库迁移检查完成");
         } catch (Exception e) {
             logger.error("数据库迁移失败", e);
             throw new RuntimeException("数据库迁移失败", e);
         }
     }
-    
+
     /**
      * 检查并迁移users表
      */
     private void checkAndMigrateUsersTable(Connection connection) throws Exception {
         List<String> columns = getTableColumns(connection, "users");
-        
+
         // 检查wish_count列是否存在
         if (!columns.contains("wish_count")) {
             logger.info("users表缺少wish_count列，添加列...");
             addWishCountColumn(connection);
         }
-        
+
         // 检查residence列是否存在
         if (!columns.contains("residence")) {
             logger.info("users表缺少residence列，添加列...");
             addResidenceColumn(connection);
         }
-        
+
         // 检查avatar_path列是否存在
         if (!columns.contains("avatar_path")) {
             logger.info("users表缺少avatar_path列，添加列...");
             addAvatarPathColumn(connection);
         }
-        
+
         logger.info("users表结构检查完成");
     }
-    
+
     /**
      * 获取表的所有列名
      */
     private List<String> getTableColumns(Connection connection, String tableName) throws Exception {
         List<String> columns = new ArrayList<>();
         DatabaseMetaData metaData = connection.getMetaData();
-        
+
         try (ResultSet rs = metaData.getColumns(null, null, tableName, null)) {
             while (rs.next()) {
                 columns.add(rs.getString("COLUMN_NAME").toLowerCase());
             }
         }
-        
+
         return columns;
     }
-    
+
     /**
      * 添加wish_count列到users表
      */
     private void addWishCountColumn(Connection connection) throws Exception {
         String sql = "ALTER TABLE users ADD COLUMN wish_count INTEGER NOT NULL DEFAULT 0";
-        
+
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(sql);
             logger.info("wish_count列添加成功");
         }
     }
-    
+
     /**
      * 添加residence列到users表
      */
     private void addResidenceColumn(Connection connection) throws Exception {
         String sql = "ALTER TABLE users ADD COLUMN residence VARCHAR(20) DEFAULT NULL";
-        
+
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(sql);
             logger.info("residence列添加成功");
         }
     }
-    
+
     /**
      * 添加avatar_path列到users表
      */
     private void addAvatarPathColumn(Connection connection) throws Exception {
         String sql = "ALTER TABLE users ADD COLUMN avatar_path VARCHAR(255) DEFAULT NULL";
-        
+
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(sql);
             logger.info("avatar_path列添加成功");
         }
     }
-    
+
     /**
      * 检查并创建居住历史表
      */
@@ -170,7 +170,7 @@ public class PrizeInitService implements ApplicationRunner {
             logger.info("residence_history表已存在");
         }
     }
-    
+
     /**
      * 检查表是否存在
      */
@@ -180,42 +180,42 @@ public class PrizeInitService implements ApplicationRunner {
             return rs.next();
         }
     }
-    
+
     /**
      * 创建居住历史表
      */
     private void createResidenceHistoryTable(Connection connection) throws Exception {
         String sql = """
-            CREATE TABLE residence_history (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id VARCHAR(50) NOT NULL,
-                residence VARCHAR(20) NOT NULL,
-                previous_residence VARCHAR(20) DEFAULT NULL,
-                change_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                ip_address VARCHAR(45),
-                user_agent VARCHAR(500)
-            )
-            """;
-        
+                CREATE TABLE residence_history (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    user_id VARCHAR(50) NOT NULL,
+                    residence VARCHAR(20) NOT NULL,
+                    previous_residence VARCHAR(20) DEFAULT NULL,
+                    change_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    ip_address VARCHAR(45),
+                    user_agent VARCHAR(500)
+                )
+                """;
+
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(sql);
             logger.info("residence_history表创建成功");
-            
+
             // 创建索引
             createResidenceHistoryIndexes(connection);
         }
     }
-    
+
     /**
      * 创建居住历史表的索引
      */
     private void createResidenceHistoryIndexes(Connection connection) throws Exception {
         String[] indexSqls = {
-            "CREATE INDEX IF NOT EXISTS idx_residence_history_user_id ON residence_history(user_id)",
-            "CREATE INDEX IF NOT EXISTS idx_residence_history_residence ON residence_history(residence)",
-            "CREATE INDEX IF NOT EXISTS idx_residence_history_change_time ON residence_history(change_time)"
+                "CREATE INDEX IF NOT EXISTS idx_residence_history_user_id ON residence_history(user_id)",
+                "CREATE INDEX IF NOT EXISTS idx_residence_history_residence ON residence_history(residence)",
+                "CREATE INDEX IF NOT EXISTS idx_residence_history_change_time ON residence_history(change_time)"
         };
-        
+
         try (Statement stmt = connection.createStatement()) {
             for (String indexSql : indexSqls) {
                 stmt.execute(indexSql);
@@ -296,84 +296,84 @@ public class PrizeInitService implements ApplicationRunner {
         prize.setId(id);
         return prize;
     }
-    
+
     /**
      * 检查并创建居所事件表
      */
     private void checkAndCreateResidenceEventsTable(Connection connection) throws Exception {
         DatabaseMetaData metaData = connection.getMetaData();
         ResultSet tables = metaData.getTables(null, null, "residence_events", null);
-        
+
         if (!tables.next()) {
             logger.info("residence_events表不存在，创建表...");
             createResidenceEventsTable(connection);
         } else {
             logger.info("residence_events表已存在");
         }
-        
+
         tables.close();
     }
-    
+
     /**
      * 创建居所事件表
      */
     private void createResidenceEventsTable(Connection connection) throws Exception {
         String createTableSql = """
-            CREATE TABLE residence_events (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                residence VARCHAR(20) NOT NULL UNIQUE,
-                event_data TEXT NOT NULL DEFAULT '[]',
-                show_heart_effect INTEGER NOT NULL DEFAULT 0,
-                special_text TEXT,
-                show_special_effect INTEGER NOT NULL DEFAULT 0,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-            """;
-        
+                CREATE TABLE residence_events (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    residence VARCHAR(20) NOT NULL UNIQUE,
+                    event_data TEXT NOT NULL DEFAULT '[]',
+                    show_heart_effect INTEGER NOT NULL DEFAULT 0,
+                    special_text TEXT,
+                    show_special_effect INTEGER NOT NULL DEFAULT 0,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+                """;
+
         try (Statement statement = connection.createStatement()) {
             statement.execute(createTableSql);
             logger.info("residence_events表创建成功");
-            
+
             // 创建索引
             statement.execute("CREATE INDEX IF NOT EXISTS idx_residence_events_residence ON residence_events(residence)");
             statement.execute("CREATE INDEX IF NOT EXISTS idx_residence_events_updated_at ON residence_events(updated_at)");
             logger.info("residence_events表索引创建成功");
-            
+
             // 初始化默认事件数据
             initializeDefaultResidenceEvents(connection);
         }
     }
-    
+
     /**
      * 初始化默认居所事件数据
      */
     private void initializeDefaultResidenceEvents(Connection connection) throws Exception {
-        String[] residences = {"castle", "city_hall", "palace", "dove_house", "park"};
-        String[] residenceNames = {"🏰 城堡", "🏛️ 市政厅", "🏯 行宫", "🕊️ 小白鸽家", "🌳 公园"};
-        
+        String[] residences = ResidenceUtils.getAllResidences();
+
         String insertSql = """
-            INSERT OR REPLACE INTO residence_events (residence, event_data, show_heart_effect, special_text, show_special_effect, created_at, updated_at)
-            VALUES (?, ?, ?, ?, ?, datetime('now'), datetime('now'))
-            """;
-        
+                INSERT OR REPLACE INTO residence_events (residence, event_data, show_heart_effect, special_text, show_special_effect, created_at, updated_at)
+                VALUES (?, ?, ?, ?, ?, datetime('now'), datetime('now'))
+                """;
+
         try (var preparedStatement = connection.prepareStatement(insertSql)) {
-            for (int i = 0; i < residences.length; i++) {
+            for (String residence : residences) {
+                String residenceName = ResidenceUtils.getDisplayName(residence);
                 // 创建默认的多条事件数据
                 String eventData = String.format("""
-                    [
-                        {
-                            "description": "%s 平静如常...",
-                            "colors": ["#888888", "#aaaaaa"]
-                        },
-                        {
-                            "description": "微风轻拂过%s",
-                            "colors": ["#87CEEB", "#B0E0E6"]
-                        }
-                    ]
-                    """, residenceNames[i], residenceNames[i]);
-                
-                preparedStatement.setString(1, residences[i]);
+                        [
+                            {
+                                "description": "%s 平静如常...",
+                                "colors": ["#888888", "#aaaaaa"]
+                            },
+                            {
+                                "description": "微风轻拂过%s",
+                                "colors": ["#87CEEB", "#B0E0E6"]
+                            }
+                        ]
+                        """, residenceName, residenceName);
+
+                preparedStatement.setString(1, residence);
                 preparedStatement.setString(2, eventData);
                 preparedStatement.setInt(3, 0); // 不显示爱心特效
                 preparedStatement.setString(4, null); // 无特殊文字
@@ -383,13 +383,13 @@ public class PrizeInitService implements ApplicationRunner {
             logger.info("默认居所事件数据初始化完成");
         }
     }
-    
+
     /**
      * 检查并迁移居所事件表
      */
     private void checkAndMigrateResidenceEventsTable(Connection connection) throws Exception {
         DatabaseMetaData metaData = connection.getMetaData();
-        
+
         // 检查special_text字段是否存在
         ResultSet columns = metaData.getColumns(null, null, "residence_events", "special_text");
         if (!columns.next()) {
@@ -400,7 +400,7 @@ public class PrizeInitService implements ApplicationRunner {
             }
         }
         columns.close();
-        
+
         // 检查show_special_effect字段是否存在
         columns = metaData.getColumns(null, null, "residence_events", "show_special_effect");
         if (!columns.next()) {
@@ -415,45 +415,45 @@ public class PrizeInitService implements ApplicationRunner {
         }
         columns.close();
     }
-    
+
     /**
      * 检查并创建居所事件历史表
      */
     private void checkAndCreateResidenceEventHistoryTable(Connection connection) throws Exception {
         DatabaseMetaData metaData = connection.getMetaData();
         ResultSet tables = metaData.getTables(null, null, "residence_event_history", null);
-        
+
         if (!tables.next()) {
             logger.info("residence_event_history表不存在，创建表...");
             createResidenceEventHistoryTable(connection);
         } else {
             logger.info("residence_event_history表已存在");
         }
-        
+
         tables.close();
     }
-    
+
     /**
      * 创建居所事件历史表
      */
     private void createResidenceEventHistoryTable(Connection connection) throws Exception {
         String createTableSql = """
-            CREATE TABLE residence_event_history (
-                id INTEGER PRIMARY KEY AUTOINCREMENT,
-                residence VARCHAR(20) NOT NULL,
-                event_data TEXT NOT NULL,
-                residents_info TEXT,
-                show_heart_effect INTEGER NOT NULL DEFAULT 0,
-                special_text TEXT,
-                show_special_effect INTEGER NOT NULL DEFAULT 0,
-                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-            )
-            """;
-        
+                CREATE TABLE residence_event_history (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    residence VARCHAR(20) NOT NULL,
+                    event_data TEXT NOT NULL,
+                    residents_info TEXT,
+                    show_heart_effect INTEGER NOT NULL DEFAULT 0,
+                    special_text TEXT,
+                    show_special_effect INTEGER NOT NULL DEFAULT 0,
+                    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                )
+                """;
+
         try (Statement statement = connection.createStatement()) {
             statement.execute(createTableSql);
             logger.info("residence_event_history表创建成功");
-            
+
             // 创建索引
             statement.execute("CREATE INDEX IF NOT EXISTS idx_residence_event_history_residence ON residence_event_history(residence)");
             statement.execute("CREATE INDEX IF NOT EXISTS idx_residence_event_history_created_at ON residence_event_history(created_at)");
