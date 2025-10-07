@@ -65,11 +65,6 @@ public final class ResidenceConstants {
      */
     public static final String PALACE_NAME = "行宫🏯";
 
-    /**
-     * 小白鸽家显示名称（兼容旧数据）
-     */
-    public static final String DOVE_HOUSE_NAME = "🕊️ 小白鸽家";
-
     // ==================== 居所数组常量 ====================
 
     /**

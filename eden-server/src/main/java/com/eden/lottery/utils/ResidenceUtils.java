@@ -50,7 +50,7 @@ public final class ResidenceUtils {
                  ResidenceConstants.PARK,
                  ResidenceConstants.CITY_HALL,
                  ResidenceConstants.WHITE_DOVE_HOUSE,
-                 ResidenceConstants.PALACE -> true; // 兼容旧数据
+                 ResidenceConstants.PALACE -> true;
             default -> false;
         };
     }
