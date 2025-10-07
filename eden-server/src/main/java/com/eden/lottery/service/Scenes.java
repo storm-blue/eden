@@ -607,14 +607,13 @@ public final class Scenes {
     );
 
     public static List<ResidenceEventItem> TWO__GY__16 = List.of(
-            new ResidenceEventItem("💕 公园的凉亭里下起了小雨 💕", "special"),
-            new ResidenceEventItem("💕 \"星斗哥哥，被困住了呢～\" 秦小淮看着外面的雨 💕", "special"),
-            new ResidenceEventItem("💕 \"那就在这里等雨停\" 💕", "special"),
-            new ResidenceEventItem("💕 \"不如我们做点别的来打发时间……\" 💕", "special"),
-            new ResidenceEventItem("💕 \"小骚猫想在雨声中被疼爱……\" 💕", "special"),
-            new ResidenceEventItem("💕 李星斗将她抱在石桌上：\"雨声会掩盖你的叫声\" 💕", "special"),
-            new ResidenceEventItem("💕 \"啊，在凉亭里做爱爱，雨声好浪漫……\" 💕", "special"),
-            new ResidenceEventItem("💕 雨声滴答，为他们的亲密增添了浪漫 💕", "special")
+            new ResidenceEventItem("💕 公园的凉亭里下起了雨 💕", "special"),
+            new ResidenceEventItem("💕 \"星斗哥哥……我们去雨里好不好？\" 💕", "special"),
+            new ResidenceEventItem("💕 雨水迅速打湿了两人的头发，秦小淮突然吻了过来 💕", "special"),
+            new ResidenceEventItem("💕 \"星斗哥哥，操死小淮……\" 秦小淮喘息着说 💕", "special"),
+            new ResidenceEventItem("💕 原来小淮宝宝喜欢雨中play……李星斗抬起她的腿轻轻插了进去 💕", "special"),
+            new ResidenceEventItem("💕 \"星斗哥哥别走，不要离开小淮……\" 秦小淮入戏了 💕", "special"),
+            new ResidenceEventItem("💕 \"我不走，我会永远和小淮宝宝在一起……\" 💕", "special")
     );
 
     public static List<ResidenceEventItem> TWO__GY__17 = List.of(
@@ -1013,16 +1012,15 @@ public final class Scenes {
     );
 
     public static List<ResidenceEventItem> TWO__SZT__03 = List.of(
-            new ResidenceEventItem("💕 市长办公室里，秦小淮趴在办公桌上 💕", "special"),
-            new ResidenceEventItem("💕 \"在这种地方被插好羞耻……\" 她脸红得像苹果 💕", "special"),
-            new ResidenceEventItem("💕 \"越是这样越刺激，不是吗？\" 李星斗俯身在她耳边 💕", "special"),
-            new ResidenceEventItem("💕 \"啊……市长椅子上的权力味道……\" 💕", "special"),
-            new ResidenceEventItem("💕 \"小骚猫想在权力的中心被疼爱吗？\" 💕", "special"),
-            new ResidenceEventItem("💕 \"想要……星斗哥哥……在这里狠狠插小骚猫……\" 💕", "special"),
-            new ResidenceEventItem("💕 \"那就让整个市政厅听到你的叫声\" 💕", "special"),
-            new ResidenceEventItem("💕 \"不敢……会被所有人听到的……\" 她兴奋地颤抖 💕", "special"),
-            new ResidenceEventItem("💕 \"就是要让他们知道小骚猫有多淫荡\" 💕", "special"),
-            new ResidenceEventItem("💕 威严的办公室见证着他们在权力顶峰的疯狂 💕", "special")
+            new ResidenceEventItem("💕 市长办公室里，秦小淮躺在办公桌上 💕", "special"),
+            new ResidenceEventItem("💕 \"在这种地方被插……\" 她脸红得像苹果 💕", "special"),
+            new ResidenceEventItem("💕 \"下次当着大家的面操你\" 李星斗俯身在她耳边说 💕", "special"),
+            new ResidenceEventItem("💕 \"不要……\" 秦小淮的声音像小猫 💕", "special"),
+            new ResidenceEventItem("💕 李星斗俯下身去，用牙齿咬住了她湿漉漉的花瓣 💕", "special"),
+            new ResidenceEventItem("💕 \"星斗哥哥……快来日你的小骚猫……\" 秦小淮受不了了 💕", "special"),
+            new ResidenceEventItem("💕 \"遵命小乖宝陛下\" 一阵激烈的啪啪啪声音响起 💕", "special"),
+            new ResidenceEventItem("💕 \"轻点……会被听到的……\" 💕", "special"),
+            new ResidenceEventItem("💕 \"听到怕什么？\" 生气的李星斗更用力了！ 💕", "special")
     );
 
     public static List<ResidenceEventItem> TWO__SZT__04 = List.of(

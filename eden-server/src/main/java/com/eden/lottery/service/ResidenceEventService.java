@@ -204,13 +204,16 @@ public class ResidenceEventService {
             case "park":
                 // 公园场景：使用公园双人场景池（18个）
                 scenePool = List.of(
-                        Scenes.TWO__GY__01
+                        Scenes.TWO__GY__01,
+                        Scenes.TWO__GY__16
                 );
                 break;
             case "city_hall":
                 // 市政厅场景：使用市政厅双人场景池（18个）
                 scenePool = List.of(
-                        Scenes.TWO__SZT__01, Scenes.TWO__SZT__02
+                        Scenes.TWO__SZT__01,
+                        Scenes.TWO__SZT__02,
+                        Scenes.TWO__SZT__03
                 );
                 break;
             default:
