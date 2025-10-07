@@ -19,16 +19,16 @@ public interface ResidenceEventHistoryMapper {
     int insertEventHistory(ResidenceEventHistory eventHistory);
 
     /**
-     * 根据居所获取最近的事件历史（限制数量，倒序排列）
+     * 根据居所获取最近的事件历史（限制数量，按ID正序排列）
      */
-    @Select("SELECT * FROM residence_event_history WHERE residence = #{residence} " +
-            "ORDER BY created_at DESC LIMIT #{limit}")
+    @Select("SELECT * FROM (SELECT * FROM residence_event_history WHERE residence = #{residence} " +
+            "ORDER BY id DESC LIMIT #{limit}) ORDER BY id ASC")
     List<ResidenceEventHistory> getRecentEventHistory(@Param("residence") String residence, @Param("limit") int limit);
 
     /**
-     * 获取指定居所的所有事件历史（倒序排列）
+     * 获取指定居所的所有事件历史（按ID正序排列）
      */
-    @Select("SELECT * FROM residence_event_history WHERE residence = #{residence} ORDER BY created_at DESC")
+    @Select("SELECT * FROM residence_event_history WHERE residence = #{residence} ORDER BY id ASC")
     List<ResidenceEventHistory> getAllEventHistory(@Param("residence") String residence);
 
     /**
@@ -45,11 +45,11 @@ public interface ResidenceEventHistoryMapper {
 
     /**
      * 清理超过指定数量的旧记录（保留最新的N条）
-     * SQLite兼容版本：使用ROWID进行删除
+     * SQLite兼容版本：使用ROWID进行删除，按ID排序
      */
     @Delete("DELETE FROM residence_event_history WHERE residence = #{residence} AND ROWID NOT IN " +
             "(SELECT ROWID FROM residence_event_history WHERE residence = #{residence} " +
-            "ORDER BY created_at DESC LIMIT #{keepCount})")
+            "ORDER BY id DESC LIMIT #{keepCount})")
     int cleanupOldEventHistory(@Param("residence") String residence, @Param("keepCount") int keepCount);
 
     /**
