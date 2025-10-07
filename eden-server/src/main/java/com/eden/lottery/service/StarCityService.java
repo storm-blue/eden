@@ -6,6 +6,7 @@ import com.eden.lottery.entity.User;
 import com.eden.lottery.mapper.LotteryRecordMapper;
 import com.eden.lottery.mapper.StarCityMapper;
 import com.eden.lottery.mapper.UserMapper;
+import com.eden.lottery.utils.ResidenceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -274,7 +275,7 @@ public class StarCityService {
         logger.info("获取所有建筑的居住人员");
 
         Map<String, List<String>> result = new HashMap<>();
-        String[] buildings = {"castle", "park", "city_hall", "white_dove_house", "palace"};
+        String[] buildings = ResidenceUtils.getAllResidences();
 
         for (String building : buildings) {
             try {
@@ -310,14 +311,14 @@ public class StarCityService {
 
         try {
             // 验证建筑名称
-            if (!isValidBuilding(toBuilding)) {
+            if (ResidenceUtils.isInvalidResidence(toBuilding)) {
                 logger.error("无效的目标建筑: {}", toBuilding);
                 return false;
             }
 
             // 检查是否为相同建筑（避免无意义的移动）
             if (toBuilding.equals(fromBuilding)) {
-                logger.debug("用户 {} 已在目标建筑 {} 中，无需移动", username, getBuildingDisplayName(toBuilding));
+                logger.debug("用户 {} 已在目标建筑 {} 中，无需移动", username, ResidenceUtils.getDisplayName(toBuilding));
                 return false;
             }
 
@@ -328,8 +329,8 @@ public class StarCityService {
             generateMoveEvents(username, fromBuilding, toBuilding);
 
             logger.info("用户 {} 成功从 {} 移动到 {} ({})",
-                    username, getBuildingDisplayName(fromBuilding),
-                    getBuildingDisplayName(toBuilding), moveReason);
+                    username, ResidenceUtils.getDisplayName(fromBuilding),
+                    ResidenceUtils.getDisplayName(toBuilding), moveReason);
             return true;
 
         } catch (Exception e) {
@@ -355,8 +356,8 @@ public class StarCityService {
             generateArrivalEvent(username, toResidence);
 
             logger.info("已为用户 {} 的移动生成居所事件：{} -> {}", username,
-                    getBuildingDisplayName(fromResidence),
-                    getBuildingDisplayName(toResidence));
+                    ResidenceUtils.getDisplayName(fromResidence),
+                    ResidenceUtils.getDisplayName(toResidence));
 
         } catch (Exception e) {
             logger.error("生成用户 {} 移动事件时发生错误: {}", username, e.getMessage(), e);
@@ -371,9 +372,9 @@ public class StarCityService {
             // 创建离开事件
             List<com.eden.lottery.dto.ResidenceEventItem> events = new ArrayList<>();
             events.add(new com.eden.lottery.dto.ResidenceEventItem(
-                    username + " 离开了" + getBuildingDisplayName(residence), "normal"));
+                    username + " 离开了" + ResidenceUtils.getDisplayName(residence), "normal"));
             events.add(new com.eden.lottery.dto.ResidenceEventItem(
-                    getBuildingDisplayName(residence) + "变得安静了...", "normal"));
+                    ResidenceUtils.getDisplayName(residence) + "变得安静了...", "normal"));
 
             // 序列化为JSON
             com.google.gson.Gson gson = new com.google.gson.Gson();
@@ -382,7 +383,7 @@ public class StarCityService {
             // 更新居所事件
             residenceEventService.updateResidenceEvent(residence, eventData, false, null, false);
 
-            logger.debug("生成离开事件：{} 离开了 {}", username, getBuildingDisplayName(residence));
+            logger.debug("生成离开事件：{} 离开了 {}", username, ResidenceUtils.getDisplayName(residence));
 
         } catch (Exception e) {
             logger.error("生成离开事件失败，用户: {}, 居所: {}", username, residence, e);
@@ -397,9 +398,9 @@ public class StarCityService {
             // 创建入住事件
             List<com.eden.lottery.dto.ResidenceEventItem> events = new ArrayList<>();
             events.add(new com.eden.lottery.dto.ResidenceEventItem(
-                    username + " 入住了" + getBuildingDisplayName(residence), "normal"));
+                    username + " 入住了" + ResidenceUtils.getDisplayName(residence), "normal"));
             events.add(new com.eden.lottery.dto.ResidenceEventItem(
-                    getBuildingDisplayName(residence) + "迎来了新的住客", "normal"));
+                    ResidenceUtils.getDisplayName(residence) + "迎来了新的住客", "normal"));
 
             // 序列化为JSON
             com.google.gson.Gson gson = new com.google.gson.Gson();
@@ -408,42 +409,10 @@ public class StarCityService {
             // 更新居所事件
             residenceEventService.updateResidenceEvent(residence, eventData, false, null, false);
 
-            logger.debug("生成入住事件：{} 入住了 {}", username, getBuildingDisplayName(residence));
+            logger.debug("生成入住事件：{} 入住了 {}", username, ResidenceUtils.getDisplayName(residence));
 
         } catch (Exception e) {
             logger.error("生成入住事件失败，用户: {}, 居所: {}", username, residence, e);
         }
-    }
-
-    /**
-     * 验证建筑名称是否有效
-     *
-     * @param building 建筑名称
-     * @return 是否有效
-     */
-    private boolean isValidBuilding(String building) {
-        return building != null &&
-                (building.equals("castle") ||
-                        building.equals("park") ||
-                        building.equals("city_hall") ||
-                        building.equals("white_dove_house") ||
-                        building.equals("palace"));
-    }
-
-    /**
-     * 获取建筑的显示名称
-     *
-     * @param building 建筑key
-     * @return 显示名称
-     */
-    public String getBuildingDisplayName(String building) {
-        return switch (building) {
-            case "castle" -> "城堡🏰";
-            case "park" -> "公园🌳";
-            case "city_hall" -> "市政厅🏛️";
-            case "white_dove_house" -> "小白鸽家🕊️";
-            case "palace" -> "行宫🏯";
-            default -> building;
-        };
     }
 }

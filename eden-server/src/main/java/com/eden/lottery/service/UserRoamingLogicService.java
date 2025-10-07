@@ -1,7 +1,9 @@
 package com.eden.lottery.service;
 
+import com.eden.lottery.constants.ResidenceConstants;
 import com.eden.lottery.entity.User;
 import com.eden.lottery.mapper.UserMapper;
+import com.eden.lottery.utils.ResidenceUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
@@ -35,13 +37,14 @@ public class UserRoamingLogicService {
         logger.debug("为用户 {} 确定新居所，当前居所: {}", username, currentResidence);
 
         return switch (username) {
-            case "小白鸽" -> performSimpleRandomMove(username, currentResidence, getAllResidences());
+            case "小白鸽" -> performSimpleRandomMove(username, currentResidence, ResidenceUtils.getAllResidences());
             case "存子" -> performCunziMove(username, currentResidence);
-            case "白婆婆" -> performSimpleRandomMove(username, currentResidence, new String[]{"park", "white_dove_house"});
-            case "大祭祀" -> performSimpleRandomMove(username, currentResidence, new String[]{"palace", "castle", "park"});
-            case "严伯升" -> performSimpleRandomMove(username, currentResidence, new String[]{"castle", "city_hall"});
+            case "白婆婆" -> performSimpleRandomMove(username, currentResidence, ResidenceConstants.BAIPOPO_PREFERRED);
+            case "大祭祀" -> performSimpleRandomMove(username, currentResidence, ResidenceConstants.DAJIZI_PREFERRED);
+            case "严伯升" ->
+                    performSimpleRandomMove(username, currentResidence, ResidenceConstants.YANBOSHENG_PREFERRED);
             default -> {
-                logger.debug("用户 {} 保持在当前居所: {}", username, getResidenceDisplayName(currentResidence));
+                logger.debug("用户 {} 保持在当前居所: {}", username, ResidenceUtils.getDisplayName(currentResidence));
                 yield null;
             }
         };
@@ -51,13 +54,13 @@ public class UserRoamingLogicService {
      * 执行简单的随机移动逻辑
      * 适用于大部分用户的移动逻辑
      *
-     * @param username 用户名
-     * @param currentResidence 当前居所
+     * @param username            用户名
+     * @param currentResidence    当前居所
      * @param availableResidences 可选居所列表
      * @return 新居所名称，如果不移动则返回null
      */
     private String performSimpleRandomMove(String username, String currentResidence, String[] availableResidences) {
-        logger.debug("执行{}的移动逻辑，当前居所: {}", username, getResidenceDisplayName(currentResidence));
+        logger.debug("执行{}的移动逻辑，当前居所: {}", username, ResidenceUtils.getDisplayName(currentResidence));
 
         // 过滤掉当前居所，避免"移动"到相同位置
         List<String> targetResidences = new ArrayList<>(Arrays.asList(availableResidences));
@@ -69,8 +72,8 @@ public class UserRoamingLogicService {
             String newResidence = targetResidences.get(randomIndex);
 
             logger.info("{}将从 {} 移动到 {}", username,
-                    getResidenceDisplayName(currentResidence),
-                    getResidenceDisplayName(newResidence));
+                    ResidenceUtils.getDisplayName(currentResidence),
+                    ResidenceUtils.getDisplayName(newResidence));
 
             return newResidence;
         }
@@ -97,7 +100,7 @@ public class UserRoamingLogicService {
             // 根据情况确定移动概率
             double moveChance;
             String logMessage;
-            
+
             if (hasQinXiaohuai && hasLiXingdou) {
                 moveChance = 0.10;
                 logMessage = "秦小淮和李星斗都在当前居所，移动概率: 10%";
@@ -110,14 +113,14 @@ public class UserRoamingLogicService {
                 logMessage = "秦小淮和李星斗都不在当前居所，正常随机移动";
             }
 
-            logger.info("存子移动逻辑: {} (当前居所: {})", logMessage, getResidenceDisplayName(currentResidence));
+            logger.info("存子移动逻辑: {} (当前居所: {})", logMessage, ResidenceUtils.getDisplayName(currentResidence));
 
             // 根据概率决定是否移动
             double random = Math.random();
             if (random < moveChance) {
                 // 使用统一的随机移动逻辑
-                String newResidence = performSimpleRandomMove(username, currentResidence, getAllResidences());
-                
+                String newResidence = performSimpleRandomMove(username, currentResidence, ResidenceUtils.getAllResidences());
+
                 if (newResidence != null) {
                     logger.info("存子移动决策成功 (随机值: {}, 阈值: {})", random, moveChance);
                     return newResidence;
@@ -131,37 +134,5 @@ public class UserRoamingLogicService {
         }
 
         return null;
-    }
-
-    /**
-     * 获取所有可用的居所列表
-     *
-     * @return 所有可用居所的列表
-     */
-    public String[] getAllResidences() {
-        return new String[]{
-                "castle",           // 城堡🏰
-                "park",             // 公园🌳
-                "city_hall",        // 市政厅🏛️
-                "white_dove_house", // 小白鸽家🕊️
-                "palace"            // 行宫🏯
-        };
-    }
-
-    /**
-     * 获取居所的显示名称
-     *
-     * @param residence 居所key
-     * @return 居所的显示名称
-     */
-    public String getResidenceDisplayName(String residence) {
-        return switch (residence) {
-            case "castle" -> "城堡🏰";
-            case "park" -> "公园🌳";
-            case "city_hall" -> "市政厅🏛️";
-            case "white_dove_house" -> "小白鸽家🕊️";
-            case "palace" -> "行宫🏯";
-            default -> residence;
-        };
     }
 }

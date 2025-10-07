@@ -6,6 +6,7 @@ import com.eden.lottery.entity.User;
 import com.eden.lottery.entity.ResidenceHistory;
 import com.eden.lottery.service.ResidenceHistoryService;
 import com.eden.lottery.service.StarCityService;
+import com.eden.lottery.utils.ResidenceUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +55,7 @@ public class ResidenceController {
             Map<String, Object> result = new HashMap<>();
             result.put("userId", userId);
             result.put("residence", user.getResidence());
-            result.put("residenceName", getResidenceName(user.getResidence()));
+            result.put("residenceName", ResidenceUtils.getDisplayName(user.getResidence()));
 
             return ApiResponse.success("获取居住地点成功", result);
         } catch (Exception e) {
@@ -82,7 +83,7 @@ public class ResidenceController {
             }
 
             // 验证居住地点是否有效
-            if (!isValidResidence(residence)) {
+            if (ResidenceUtils.isInvalidResidence(residence)) {
                 return ApiResponse.error("无效的居住地点");
             }
 
@@ -100,8 +101,8 @@ public class ResidenceController {
                 Map<String, Object> result = new HashMap<>();
                 result.put("userId", userId);
                 result.put("residence", residence);
-                result.put("residenceName", getResidenceName(residence));
-                result.put("message", "您已经居住在" + getResidenceName(residence) + "了！");
+                result.put("residenceName", ResidenceUtils.getDisplayName(residence));
+                result.put("message", "您已经居住在" + ResidenceUtils.getDisplayName(residence) + "了！");
                 return ApiResponse.success("设置居住地点成功", result);
             }
 
@@ -120,12 +121,12 @@ public class ResidenceController {
             Map<String, Object> result = new HashMap<>();
             result.put("userId", userId);
             result.put("residence", residence);
-            result.put("residenceName", getResidenceName(residence));
+            result.put("residenceName", ResidenceUtils.getDisplayName(residence));
             result.put("previousResidence", previousResidence);
-            result.put("previousResidenceName", getResidenceName(previousResidence));
-            result.put("message", "居住地点设置成功！欢迎入住" + getResidenceName(residence) + "！");
+            result.put("previousResidenceName", ResidenceUtils.getDisplayName(previousResidence));
+            result.put("message", "居住地点设置成功！欢迎入住" + ResidenceUtils.getDisplayName(residence) + "！");
 
-            logger.info("用户 {} 从 {} 搬迁到 {}", userId, getResidenceName(previousResidence), getResidenceName(residence));
+            logger.info("用户 {} 从 {} 搬迁到 {}", userId, ResidenceUtils.getDisplayName(previousResidence), ResidenceUtils.getDisplayName(residence));
             return ApiResponse.success("设置居住地点成功", result);
         } catch (Exception e) {
             logger.error("设置用户居住地点失败: {}", e.getMessage(), e);
@@ -144,7 +145,7 @@ public class ResidenceController {
             }
 
             // 验证居住地点是否有效
-            if (!isValidResidence(residence)) {
+            if (ResidenceUtils.isInvalidResidence(residence)) {
                 return ApiResponse.error("无效的居住地点");
             }
 
@@ -153,7 +154,7 @@ public class ResidenceController {
 
             Map<String, Object> result = new HashMap<>();
             result.put("residence", residence);
-            result.put("residenceName", getResidenceName(residence));
+            result.put("residenceName", ResidenceUtils.getDisplayName(residence));
             result.put("residents", residents);
             result.put("residentCount", residents.size());
 
@@ -201,7 +202,7 @@ public class ResidenceController {
             }
 
             // 验证居住地点是否有效
-            if (!isValidResidence(residence)) {
+            if (ResidenceUtils.isInvalidResidence(residence)) {
                 return ApiResponse.error("无效的居住地点");
             }
 
@@ -225,41 +226,6 @@ public class ResidenceController {
         } catch (Exception e) {
             logger.error("获取居住统计失败: {}", e.getMessage(), e);
             return ApiResponse.error("获取居住统计失败: " + e.getMessage());
-        }
-    }
-
-    /**
-     * 验证居住地点是否有效
-     */
-    private boolean isValidResidence(String residence) {
-        return "castle".equals(residence) ||
-                "city_hall".equals(residence) ||
-                "palace".equals(residence) ||
-                "dove_house".equals(residence) ||
-                "park".equals(residence);
-    }
-
-    /**
-     * 获取居住地点的中文名称
-     */
-    private String getResidenceName(String residence) {
-        if (residence == null) {
-            return "未选择";
-        }
-
-        switch (residence) {
-            case "castle":
-                return "城堡 🏰";
-            case "city_hall":
-                return "市政厅 🏛️";
-            case "palace":
-                return "行宫 🏯";
-            case "dove_house":
-                return "小白鸽家 🕊️";
-            case "park":
-                return "公园 🌳";
-            default:
-                return "未知地点";
         }
     }
 
