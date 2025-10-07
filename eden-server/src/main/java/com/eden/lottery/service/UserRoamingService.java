@@ -6,6 +6,7 @@ import org.springframework.scheduling.annotation.Scheduled;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.TimeUnit;
@@ -61,6 +62,9 @@ public class UserRoamingService {
                             if (moveSuccess) {
                                 movedUsers++;
                                 logger.info("用户 {} 从 {} 漫游到 {}", username, currentBuilding, newBuilding);
+                                
+                                // 🔥 新增：为离开和入住的居所生成相应事件
+                                generateMoveEvents(username, currentBuilding, newBuilding);
                             } else {
                                 logger.warn("用户 {} 从 {} 移动到 {} 失败", username, currentBuilding, newBuilding);
                             }
@@ -105,5 +109,102 @@ public class UserRoamingService {
                 "totalRoamingCount", "待实现",
                 "systemStatus", "运行中"
         );
+    }
+
+    /**
+     * 为用户移动生成居所事件
+     * 为离开的居所生成"xxx离开了"事件，为入住的居所生成"xxx入住了"事件
+     * 
+     * @param username 移动的用户名
+     * @param fromResidence 离开的居所
+     * @param toResidence 入住的居所
+     */
+    private void generateMoveEvents(String username, String fromResidence, String toResidence) {
+        try {
+            // 为离开的居所生成事件
+            generateDepartureEvent(username, fromResidence);
+            
+            // 为入住的居所生成事件
+            generateArrivalEvent(username, toResidence);
+            
+            logger.info("已为用户 {} 的移动生成居所事件：{} -> {}", username, 
+                    getResidenceDisplayName(fromResidence), 
+                    getResidenceDisplayName(toResidence));
+                    
+        } catch (Exception e) {
+            logger.error("生成用户 {} 移动事件时发生错误: {}", username, e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 生成离开事件
+     */
+    private void generateDepartureEvent(String username, String residence) {
+        try {
+            // 创建离开事件
+            List<com.eden.lottery.dto.ResidenceEventItem> events = new ArrayList<>();
+            events.add(new com.eden.lottery.dto.ResidenceEventItem(
+                username + " 离开了" + getResidenceDisplayName(residence), "normal"));
+            events.add(new com.eden.lottery.dto.ResidenceEventItem(
+                getResidenceDisplayName(residence) + "变得安静了...", "normal"));
+            
+            // 序列化为JSON
+            com.google.gson.Gson gson = new com.google.gson.Gson();
+            String eventData = gson.toJson(events);
+            
+            // 更新居所事件
+            residenceEventService.updateResidenceEvent(residence, eventData, false, null, false);
+            
+            logger.debug("生成离开事件：{} 离开了 {}", username, getResidenceDisplayName(residence));
+            
+        } catch (Exception e) {
+            logger.error("生成离开事件失败，用户: {}, 居所: {}", username, residence, e);
+        }
+    }
+
+    /**
+     * 生成入住事件
+     */
+    private void generateArrivalEvent(String username, String residence) {
+        try {
+            // 创建入住事件
+            List<com.eden.lottery.dto.ResidenceEventItem> events = new ArrayList<>();
+            events.add(new com.eden.lottery.dto.ResidenceEventItem(
+                username + " 入住了" + getResidenceDisplayName(residence), "normal"));
+            events.add(new com.eden.lottery.dto.ResidenceEventItem(
+                getResidenceDisplayName(residence) + "迎来了新的住客", "normal"));
+            
+            // 序列化为JSON
+            com.google.gson.Gson gson = new com.google.gson.Gson();
+            String eventData = gson.toJson(events);
+            
+            // 更新居所事件
+            residenceEventService.updateResidenceEvent(residence, eventData, false, null, false);
+            
+            logger.debug("生成入住事件：{} 入住了 {}", username, getResidenceDisplayName(residence));
+            
+        } catch (Exception e) {
+            logger.error("生成入住事件失败，用户: {}, 居所: {}", username, residence, e);
+        }
+    }
+
+    /**
+     * 获取居所的显示名称
+     */
+    private String getResidenceDisplayName(String residence) {
+        switch (residence) {
+            case "castle":
+                return "城堡🏰";
+            case "park":
+                return "公园🌳";
+            case "city_hall":
+                return "市政厅🏛️";
+            case "white_dove_house":
+                return "小白鸽家🕊️";
+            case "palace":
+                return "行宫🏯";
+            default:
+                return residence;
+        }
     }
 }

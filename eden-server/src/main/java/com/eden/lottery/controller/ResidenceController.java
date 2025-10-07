@@ -294,20 +294,68 @@ public class ResidenceController {
      */
     private void refreshResidenceEvents(String userId, String newResidence, String previousResidence) {
         try {
-            // 刷新新居所的事件（用户搬入）
-            if (newResidence != null && !newResidence.trim().isEmpty()) {
-                residenceEventService.generateResidenceEvent(newResidence);
-                logger.info("已刷新新居所事件: {} (用户 {} 搬入)", getResidenceName(newResidence), userId);
+            // 为旧居所生成离开事件（用户搬出）
+            if (previousResidence != null && !previousResidence.trim().isEmpty() && !previousResidence.equals(newResidence)) {
+                generateDepartureEvent(userId, previousResidence);
+                logger.info("已生成离开事件: {} 离开了 {}", userId, getResidenceName(previousResidence));
             }
 
-            // 刷新旧居所的事件（用户搬出）
-            if (previousResidence != null && !previousResidence.trim().isEmpty() && !previousResidence.equals(newResidence)) {
-                residenceEventService.generateResidenceEvent(previousResidence);
-                logger.info("已刷新旧居所事件: {} (用户 {} 搬出)", getResidenceName(previousResidence), userId);
+            // 为新居所生成入住事件（用户搬入）
+            if (newResidence != null && !newResidence.trim().isEmpty()) {
+                generateArrivalEvent(userId, newResidence);
+                logger.info("已生成入住事件: {} 入住了 {}", userId, getResidenceName(newResidence));
             }
         } catch (Exception e) {
             logger.error("刷新居所事件失败 - 用户: {}, 新居所: {}, 旧居所: {}, 错误: {}", 
                     userId, newResidence, previousResidence, e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 生成离开事件
+     */
+    private void generateDepartureEvent(String username, String residence) {
+        try {
+            // 创建离开事件
+            List<com.eden.lottery.dto.ResidenceEventItem> events = new java.util.ArrayList<>();
+            events.add(new com.eden.lottery.dto.ResidenceEventItem(
+                username + " 离开了" + getResidenceName(residence), "normal"));
+            events.add(new com.eden.lottery.dto.ResidenceEventItem(
+                getResidenceName(residence) + "变得安静了...", "normal"));
+            
+            // 序列化为JSON
+            com.google.gson.Gson gson = new com.google.gson.Gson();
+            String eventData = gson.toJson(events);
+            
+            // 更新居所事件
+            residenceEventService.updateResidenceEvent(residence, eventData, false, null, false);
+            
+        } catch (Exception e) {
+            logger.error("生成离开事件失败，用户: {}, 居所: {}", username, residence, e);
+        }
+    }
+
+    /**
+     * 生成入住事件
+     */
+    private void generateArrivalEvent(String username, String residence) {
+        try {
+            // 创建入住事件
+            List<com.eden.lottery.dto.ResidenceEventItem> events = new java.util.ArrayList<>();
+            events.add(new com.eden.lottery.dto.ResidenceEventItem(
+                username + " 入住了" + getResidenceName(residence), "normal"));
+            events.add(new com.eden.lottery.dto.ResidenceEventItem(
+                getResidenceName(residence) + "迎来了新的住客", "normal"));
+            
+            // 序列化为JSON
+            com.google.gson.Gson gson = new com.google.gson.Gson();
+            String eventData = gson.toJson(events);
+            
+            // 更新居所事件
+            residenceEventService.updateResidenceEvent(residence, eventData, false, null, false);
+            
+        } catch (Exception e) {
+            logger.error("生成入住事件失败，用户: {}, 居所: {}", username, residence, e);
         }
     }
 }
