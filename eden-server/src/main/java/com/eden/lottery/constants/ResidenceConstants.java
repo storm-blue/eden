@@ -71,21 +71,4 @@ public final class ResidenceConstants {
      * 所有居所代码数组
      */
     public static final String[] ALL_RESIDENCES = {CASTLE, PARK, CITY_HALL, WHITE_DOVE_HOUSE, PALACE};
-
-    // ==================== 用户偏好居所常量 ====================
-
-    /**
-     * 白婆婆偏好的居所
-     */
-    public static final String[] BAIPOPO_PREFERRED = {PARK, WHITE_DOVE_HOUSE};
-
-    /**
-     * 大祭祀偏好的居所
-     */
-    public static final String[] DAJIZI_PREFERRED = {PALACE, CASTLE, PARK};
-
-    /**
-     * 严伯升偏好的居所
-     */
-    public static final String[] YANBOSHENG_PREFERRED = {CASTLE, CITY_HALL};
 }

@@ -39,10 +39,12 @@ public class UserRoamingLogicService {
         return switch (username) {
             case "小白鸽" -> performSimpleRandomMove(username, currentResidence, ResidenceUtils.getAllResidences());
             case "存子" -> performCunziMove(username, currentResidence);
-            case "白婆婆" -> performSimpleRandomMove(username, currentResidence, ResidenceConstants.BAIPOPO_PREFERRED);
-            case "大祭祀" -> performSimpleRandomMove(username, currentResidence, ResidenceConstants.DAJIZI_PREFERRED);
-            case "严伯升" ->
-                    performSimpleRandomMove(username, currentResidence, ResidenceConstants.YANBOSHENG_PREFERRED);
+            case "白婆婆" -> performSimpleRandomMove(username, currentResidence, 
+                    new String[]{ResidenceConstants.PARK, ResidenceConstants.WHITE_DOVE_HOUSE});
+            case "大祭祀" -> performSimpleRandomMove(username, currentResidence, 
+                    new String[]{ResidenceConstants.PALACE, ResidenceConstants.CASTLE, ResidenceConstants.PARK});
+            case "严伯升" -> performSimpleRandomMove(username, currentResidence, 
+                    new String[]{ResidenceConstants.CASTLE, ResidenceConstants.CITY_HALL});
             default -> {
                 logger.debug("用户 {} 保持在当前居所: {}", username, ResidenceUtils.getDisplayName(currentResidence));
                 yield null;

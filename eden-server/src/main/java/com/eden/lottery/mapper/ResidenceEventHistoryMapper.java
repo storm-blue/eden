@@ -19,16 +19,16 @@ public interface ResidenceEventHistoryMapper {
     int insertEventHistory(ResidenceEventHistory eventHistory);
 
     /**
-     * 根据居所获取最近的事件历史（限制数量）
+     * 根据居所获取最近的事件历史（限制数量，倒序排列）
      */
     @Select("SELECT * FROM residence_event_history WHERE residence = #{residence} " +
-            "ORDER BY created_at ASC LIMIT #{limit}")
+            "ORDER BY created_at DESC LIMIT #{limit}")
     List<ResidenceEventHistory> getRecentEventHistory(@Param("residence") String residence, @Param("limit") int limit);
 
     /**
-     * 获取指定居所的所有事件历史
+     * 获取指定居所的所有事件历史（倒序排列）
      */
-    @Select("SELECT * FROM residence_event_history WHERE residence = #{residence} ORDER BY created_at ASC")
+    @Select("SELECT * FROM residence_event_history WHERE residence = #{residence} ORDER BY created_at DESC")
     List<ResidenceEventHistory> getAllEventHistory(@Param("residence") String residence);
 
     /**

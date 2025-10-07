@@ -345,8 +345,8 @@ public class ResidenceEventService {
             // 插入历史记录
             int result = residenceEventHistoryMapper.insertEventHistory(history);
 
-            // 清理旧记录，保留最新的20条
-            residenceEventHistoryMapper.cleanupOldEventHistory(residence, 20);
+            // 清理旧记录，保留最新的10条
+            residenceEventHistoryMapper.cleanupOldEventHistory(residence, 10);
 
             logger.debug("记录事件历史成功，居所: {}, 插入结果: {}", residence, result > 0 ? "成功" : "失败");
         } catch (Exception e) {
@@ -371,11 +371,11 @@ public class ResidenceEventService {
     }
 
     /**
-     * 获取指定居所的事件历史（最近20条）
+     * 获取指定居所的事件历史（最近10条）
      */
     public List<ResidenceEventHistory> getResidenceEventHistory(String residence) {
         try {
-            return residenceEventHistoryMapper.getRecentEventHistory(residence, 20);
+            return residenceEventHistoryMapper.getRecentEventHistory(residence, 10);
         } catch (Exception e) {
             logger.error("获取事件历史失败，居所: {}", residence, e);
             return new ArrayList<>();
@@ -383,11 +383,11 @@ public class ResidenceEventService {
     }
 
     /**
-     * 获取指定居所的事件历史（指定数量）
+     * 获取指定居所的事件历史（指定数量，最多10条）
      */
     public List<ResidenceEventHistory> getResidenceEventHistory(String residence, int limit) {
         try {
-            return residenceEventHistoryMapper.getRecentEventHistory(residence, Math.max(1, Math.min(limit, 50)));
+            return residenceEventHistoryMapper.getRecentEventHistory(residence, Math.max(1, Math.min(limit, 10)));
         } catch (Exception e) {
             logger.error("获取事件历史失败，居所: {}, 限制数量: {}", residence, limit, e);
             return new ArrayList<>();
