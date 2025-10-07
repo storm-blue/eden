@@ -142,7 +142,7 @@ public class UserRoamingLogicService {
                     int randomIndex = (int) (Math.random() * targetResidences.size());
                     String newResidence = targetResidences.get(randomIndex);
 
-                    logger.info("存子将从 {} 移动到 {} (随机值: {:.3f}, 阈值: {:.3f})",
+                    logger.info("存子将从 {} 移动到 {} (随机值: {}, 阈值: {})",
                             getResidenceDisplayName(currentResidence),
                             getResidenceDisplayName(newResidence),
                             random, moveChance);
@@ -150,7 +150,7 @@ public class UserRoamingLogicService {
                     return newResidence;
                 }
             } else {
-                logger.info("存子不移动 (随机值: {:.3f}, 阈值: {:.3f})", random, moveChance);
+                logger.info("存子不移动 (随机值: {}, 阈值: {})", random, moveChance);
             }
 
         } catch (Exception e) {
@@ -158,20 +158,6 @@ public class UserRoamingLogicService {
         }
 
         return null;
-    }
-
-    /**
-     * 检查用户是否应该参与漫游
-     *
-     * @param username 用户名
-     * @return true表示参与漫游，false表示跳过
-     */
-    public boolean shouldUserParticipateInRoaming(String username) {
-        // TODO: 在这里实现用户筛选逻辑
-        // 例如：某些特殊用户可能不参与自动漫游
-
-        // 默认所有用户都参与漫游
-        return true;
     }
 
     /**
@@ -196,20 +182,14 @@ public class UserRoamingLogicService {
      * @return 居所的显示名称
      */
     public String getResidenceDisplayName(String residence) {
-        switch (residence) {
-            case "castle":
-                return "城堡🏰";
-            case "park":
-                return "公园🌳";
-            case "city_hall":
-                return "市政厅🏛️";
-            case "white_dove_house":
-                return "小白鸽家🕊️";
-            case "palace":
-                return "行宫🏯";
-            default:
-                return residence;
-        }
+        return switch (residence) {
+            case "castle" -> "城堡🏰";
+            case "park" -> "公园🌳";
+            case "city_hall" -> "市政厅🏛️";
+            case "white_dove_house" -> "小白鸽家🕊️";
+            case "palace" -> "行宫🏯";
+            default -> residence;
+        };
     }
 
     /**
