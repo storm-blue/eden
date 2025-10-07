@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 public class ResidenceEvent {
     
     private Long id;
-    private String residence; // 居所类型：castle, city_hall, palace, dove_house, park
+    private String residence; // 居所类型
     private String eventData; // 事件数据（JSON格式，包含多条事件描述和对应颜色）
     private Boolean showHeartEffect; // 是否显示爱心特效
     private String specialText; // 特殊文字（如情侣组合文字）

@@ -30,7 +30,7 @@ public class UserRoamingLogicService {
      * 确定用户的新居所
      *
      * @param username         用户名
-     * @param currentResidence 当前居所（如：castle, park, city_hall, white_dove_house, palace）
+     * @param currentResidence 当前居所
      * @return 新居所名称，如果不需要移动则返回null或当前居所
      */
     public String determineNewResidence(String username, String currentResidence) {

@@ -557,7 +557,7 @@ const LotteryLuckyWheel = () => {
 
     // 加载所有居所的事件
     const loadAllResidenceEvents = async () => {
-        const residences = ['castle', 'city_hall', 'palace', 'dove_house', 'park']
+        const residences = ['castle', 'city_hall', 'palace', 'white_dove_house', 'park']
         const events = {}
         
         try {
@@ -723,7 +723,7 @@ const LotteryLuckyWheel = () => {
         castle: {name: '城堡', emoji: '🏰', key: 'castle'},
         city_hall: {name: '市政厅', emoji: '🏛️', key: 'city_hall'},
         palace: {name: '行宫', emoji: '🏯', key: 'palace'},
-        dove_house: {name: '小白鸽家', emoji: '🕊️', key: 'dove_house'},
+        white_dove_house: {name: '小白鸽家', emoji: '🕊️', key: 'white_dove_house'},
         park: {name: '公园', emoji: '🌳', key: 'park'}
     }
 
@@ -760,7 +760,7 @@ const LotteryLuckyWheel = () => {
 
     // 加载所有建筑的居住人员信息
     const loadAllBuildingResidents = async () => {
-        const buildings = ['castle', 'city_hall', 'palace', 'dove_house', 'park']
+        const buildings = ['castle', 'city_hall', 'palace', 'white_dove_house', 'park']
         const residentsData = {}
         const allUserIds = []
         
@@ -1169,7 +1169,7 @@ const LotteryLuckyWheel = () => {
             castle: { top: '23%', left: '48%' },
             city_hall: { top: '12%', left: '72%' },
             palace: { top: '8%', left: '23%' },
-            dove_house: { top: '31%', left: '61%' },
+            white_dove_house: { top: '31%', left: '61%' },
             park: { top: '50%', left: '40%' }
         }
 
@@ -1647,7 +1647,7 @@ const LotteryLuckyWheel = () => {
 
                     {/* 小白鸽家 - 左下方 */}
                     <div
-                        onClick={() => handleBuildingClick('dove_house')}
+                        onClick={() => handleBuildingClick('white_dove_house')}
                         style={{
                             position: 'absolute',
                             top: '31%',
@@ -1678,7 +1678,7 @@ const LotteryLuckyWheel = () => {
                         title="小白鸽家 🕊️ - 点击选择居住"
                     >
                         {/* 特殊情侣飘动爱心 */}
-                        {allBuildingResidents.dove_house && isSpecialCouple(allBuildingResidents.dove_house) && (
+                        {allBuildingResidents.white_dove_house && isSpecialCouple(allBuildingResidents.white_dove_house) && (
                             <div style={{
                                 position: 'absolute',
                                 top: '-25px', // 从-35px调整到-25px，更贴近白圈
@@ -1696,7 +1696,7 @@ const LotteryLuckyWheel = () => {
                     </div>
 
                     {/* 小白鸽家居民头像列表 */}
-                    {allBuildingResidents.dove_house && renderResidentAvatars('dove_house', allBuildingResidents.dove_house)}
+                    {allBuildingResidents.white_dove_house && renderResidentAvatars('white_dove_house', allBuildingResidents.white_dove_house)}
 
                     {/* 公园 - 右下方 */}
                     <div

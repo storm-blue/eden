@@ -28,7 +28,7 @@ CREATE TABLE IF NOT EXISTS users (
     remaining_draws INTEGER NOT NULL DEFAULT 0,
     daily_draws INTEGER NOT NULL DEFAULT 3,
     wish_count INTEGER NOT NULL DEFAULT 0,  -- 可用许愿次数
-    residence VARCHAR(20) DEFAULT NULL,     -- 居住地点: 'castle', 'city_hall', 'palace', 'dove_house', 'park'
+    residence VARCHAR(20) DEFAULT NULL,     -- 居住地点
     avatar_path VARCHAR(255) DEFAULT NULL,  -- 头像文件路径
     create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
@@ -90,7 +90,7 @@ CREATE INDEX IF NOT EXISTS idx_star_city_last_update ON star_city(last_update_ti
 CREATE TABLE IF NOT EXISTS residence_history (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     user_id VARCHAR(50) NOT NULL,                          -- 用户ID
-    residence VARCHAR(20) NOT NULL,                        -- 居住地点: 'castle', 'city_hall', 'palace', 'dove_house', 'park'
+    residence VARCHAR(20) NOT NULL,                        -- 居住地点
     previous_residence VARCHAR(20) DEFAULT NULL,           -- 之前的居住地点
     change_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,       -- 搬迁时间
     ip_address VARCHAR(45),                                -- 用户IP地址
@@ -105,7 +105,7 @@ CREATE INDEX IF NOT EXISTS idx_residence_history_change_time ON residence_histor
 -- 居所事件表
 CREATE TABLE IF NOT EXISTS residence_events (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    residence VARCHAR(20) NOT NULL UNIQUE,                     -- 居所类型：castle, city_hall, palace, dove_house, park
+    residence VARCHAR(20) NOT NULL UNIQUE,                     -- 居所类型
     event_data TEXT NOT NULL DEFAULT '[]',                     -- 事件数据（JSON数组格式，包含多条事件描述和对应颜色）
     show_heart_effect INTEGER NOT NULL DEFAULT 0,              -- 是否显示爱心特效 (0: false, 1: true)
     special_text TEXT,                                         -- 特殊文字（如情侣组合文字）
