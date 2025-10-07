@@ -248,7 +248,8 @@ public class ResidenceEventService {
             case "city_hall" ->
                 // 市政厅场景：使用市政厅三人场景池（18个）
                     List.of(
-                            Scenes.THREE__SZT__06
+                            Scenes.THREE__SZT__06,
+                            Scenes.THREE__SZT__12
                     );
             default ->
                 // 城堡等其他场景：使用城堡三人场景池（18个）
