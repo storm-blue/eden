@@ -610,7 +610,7 @@ public final class Scenes {
             new ResidenceEventItem("💕 公园的凉亭里下起了雨 💕", "special"),
             new ResidenceEventItem("💕 \"星斗哥哥……我们去雨里好不好？\" 💕", "special"),
             new ResidenceEventItem("💕 雨水迅速打湿了两人的头发，秦小淮突然吻了过来 💕", "special"),
-            new ResidenceEventItem("💕 \"星斗哥哥，操死小淮……\" 秦小淮喘息着说 💕", "special"),
+            new ResidenceEventItem("💕 \"星斗哥哥，日我……\" 秦小淮喘息着说 💕", "special"),
             new ResidenceEventItem("💕 原来小淮宝宝喜欢雨中play……李星斗抬起她的腿轻轻插了进去 💕", "special"),
             new ResidenceEventItem("💕 \"星斗哥哥别走，不要离开小淮……\" 秦小淮入戏了 💕", "special"),
             new ResidenceEventItem("💕 \"我不走，我会永远和小淮宝宝在一起……\" 💕", "special")
