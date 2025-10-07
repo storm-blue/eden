@@ -1,5 +1,8 @@
 package com.eden.lottery.service;
 
+import com.eden.lottery.entity.User;
+import com.eden.lottery.mapper.UserMapper;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,6 +21,9 @@ public class UserRoamingLogicService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserRoamingLogicService.class);
 
+    @Autowired
+    private UserMapper userMapper;
+
     /**
      * 确定用户的新居所
      *
@@ -28,33 +34,126 @@ public class UserRoamingLogicService {
     public String determineNewResidence(String username, String currentResidence) {
         logger.debug("为用户 {} 确定新居所，当前居所: {}", username, currentResidence);
 
-        // "小白鸽" 可以去所有地方
-        if ("存子".equals(username) || "小白鸽".equals(username)) {
-            // 获取所有可用居所
-            String[] availableResidences = getAvailableResidences();
-
-            // 过滤掉当前居所，避免"移动"到相同位置
-            List<String> targetResidences = new ArrayList<>(Arrays.asList(availableResidences));
-
-            // 如果有可选的居所，随机选择一个
-            if (!targetResidences.isEmpty()) {
-                int randomIndex = (int) (Math.random() * targetResidences.size());
-                String newResidence = targetResidences.get(randomIndex);
-
-                logger.info("用户 {} 将从 {} 移动到 {}", username,
-                        getResidenceDisplayName(currentResidence),
-                        getResidenceDisplayName(newResidence));
-
-                return newResidence;
-            }
+        // 小白鸽可以去所有地方，随机移动
+        if ("小白鸽".equals(username)) {
+            return performRandomMove(username, currentResidence);
         }
 
+        // 存子的特殊移动逻辑
         if ("存子".equals(username)) {
-            // TODO 如果当前居所中秦小淮和李星斗任意一个人在，移动的概率为30%。如果秦小淮和李星斗都在，移动的概率为10%。
+            return performCunziMove(username, currentResidence);
         }
 
-        // 其他用户或没有可移动的居所时，不移动
+        // 白婆婆的特殊移动逻辑
+        if ("白婆婆".equals(username)) {
+            // TODO 白婆婆可能去公园、小白鸽家
+        }
+
+        // 大祭祀的特殊移动逻辑
+        if ("大祭祀".equals(username)) {
+            // TODO 大祭司可能去行宫、城堡、公园
+        }
+
+        // 严伯升的特殊移动逻辑
+        if ("严伯升".equals(username)) {
+            // TODO 严伯升可能去城堡、市政厅
+        }
+
+        // 其他用户不移动
         logger.debug("用户 {} 保持在当前居所: {}", username, getResidenceDisplayName(currentResidence));
+        return null;
+    }
+
+    /**
+     * 执行随机移动（适用于小白鸽）
+     */
+    private String performRandomMove(String username, String currentResidence) {
+        // 获取所有可用居所
+        String[] availableResidences = getAvailableResidences();
+
+        // 过滤掉当前居所，避免"移动"到相同位置
+        List<String> targetResidences = new ArrayList<>(Arrays.asList(availableResidences));
+        targetResidences.remove(currentResidence);
+
+        // 如果有可选的居所，随机选择一个
+        if (!targetResidences.isEmpty()) {
+            int randomIndex = (int) (Math.random() * targetResidences.size());
+            String newResidence = targetResidences.get(randomIndex);
+
+            logger.info("用户 {} 将从 {} 移动到 {}", username,
+                    getResidenceDisplayName(currentResidence),
+                    getResidenceDisplayName(newResidence));
+
+            return newResidence;
+        }
+        
+        return null;
+    }
+
+    /**
+     * 执行存子的移动逻辑
+     */
+    private String performCunziMove(String username, String currentResidence) {
+        try {
+            // 获取当前居所中的所有用户
+            List<User> currentResidents = userMapper.selectByResidence(currentResidence);
+            
+            // 检查秦小淮和李星斗是否在当前居所
+            boolean hasQinXiaohuai = currentResidents.stream()
+                .anyMatch(user -> "秦小淮".equals(user.getUserId()));
+            boolean hasLiXingdou = currentResidents.stream()
+                .anyMatch(user -> "李星斗".equals(user.getUserId()));
+            
+            double moveChance = 0.0;
+            String logMessage = "";
+            
+            if (hasQinXiaohuai && hasLiXingdou) {
+                // 如果秦小淮和李星斗都在，移动概率为10%
+                moveChance = 0.10;
+                logMessage = "秦小淮和李星斗都在当前居所，移动概率: 10%";
+            } else if (hasQinXiaohuai || hasLiXingdou) {
+                // 如果秦小淮和李星斗任意一个人在，移动概率为30%
+                moveChance = 0.30;
+                String presentPerson = hasQinXiaohuai ? "秦小淮" : "李星斗";
+                logMessage = String.format("%s在当前居所，移动概率: 30%%", presentPerson);
+            } else {
+                // 如果秦小淮和李星斗都不在，按照原逻辑随机移动
+                moveChance = 1.0;
+                logMessage = "秦小淮和李星斗都不在当前居所，正常随机移动";
+            }
+            
+            logger.info("存子移动逻辑: {} (当前居所: {})", logMessage, getResidenceDisplayName(currentResidence));
+            
+            // 根据概率决定是否移动
+            double random = Math.random();
+            if (random < moveChance) {
+                // 获取所有可用居所
+                String[] availableResidences = getAvailableResidences();
+                
+                // 过滤掉当前居所，避免"移动"到相同位置
+                List<String> targetResidences = new ArrayList<>(Arrays.asList(availableResidences));
+                targetResidences.remove(currentResidence);
+                
+                // 如果有可选的居所，随机选择一个
+                if (!targetResidences.isEmpty()) {
+                    int randomIndex = (int) (Math.random() * targetResidences.size());
+                    String newResidence = targetResidences.get(randomIndex);
+                    
+                    logger.info("存子将从 {} 移动到 {} (随机值: {:.3f}, 阈值: {:.3f})", 
+                            getResidenceDisplayName(currentResidence),
+                            getResidenceDisplayName(newResidence),
+                            random, moveChance);
+                    
+                    return newResidence;
+                }
+            } else {
+                logger.info("存子不移动 (随机值: {:.3f}, 阈值: {:.3f})", random, moveChance);
+            }
+            
+        } catch (Exception e) {
+            logger.error("查询存子移动逻辑时发生错误: {}", e.getMessage(), e);
+        }
+        
         return null;
     }
 
