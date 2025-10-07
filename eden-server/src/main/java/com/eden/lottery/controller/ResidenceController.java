@@ -5,13 +5,14 @@ import com.eden.lottery.mapper.UserMapper;
 import com.eden.lottery.entity.User;
 import com.eden.lottery.entity.ResidenceHistory;
 import com.eden.lottery.service.ResidenceHistoryService;
-import com.eden.lottery.service.ResidenceEventService;
+import com.eden.lottery.service.StarCityService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
+
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -33,7 +34,7 @@ public class ResidenceController {
     private ResidenceHistoryService residenceHistoryService;
 
     @Autowired
-    private ResidenceEventService residenceEventService;
+    private StarCityService starCityService;
 
     /**
      * 获取用户当前居住地点
@@ -67,7 +68,7 @@ public class ResidenceController {
      */
     @PostMapping("/set")
     public ApiResponse<Map<String, Object>> setUserResidence(@RequestBody Map<String, String> request,
-                                                           HttpServletRequest httpRequest) {
+                                                             HttpServletRequest httpRequest) {
         try {
             String userId = request.get("userId");
             String residence = request.get("residence");
@@ -105,15 +106,16 @@ public class ResidenceController {
             }
 
             // 更新用户居住地点
-            userMapper.updateResidence(userId, residence);
+            boolean moveSuccess = starCityService.moveUserToBuilding(userId, previousResidence, residence, "manual");
+
+            if (!moveSuccess) {
+                return ApiResponse.error("移动用户居所失败");
+            }
 
             // 记录居住历史
             String ipAddress = getClientIpAddress(httpRequest);
             String userAgent = httpRequest.getHeader("User-Agent");
             residenceHistoryService.recordResidenceChange(userId, residence, previousResidence, ipAddress, userAgent);
-
-            // 刷新相关居所的事件
-            refreshResidenceEvents(userId, residence, previousResidence);
 
             Map<String, Object> result = new HashMap<>();
             result.put("userId", userId);
@@ -231,10 +233,10 @@ public class ResidenceController {
      */
     private boolean isValidResidence(String residence) {
         return "castle".equals(residence) ||
-               "city_hall".equals(residence) ||
-               "palace".equals(residence) ||
-               "dove_house".equals(residence) ||
-               "park".equals(residence);
+                "city_hall".equals(residence) ||
+                "palace".equals(residence) ||
+                "dove_house".equals(residence) ||
+                "park".equals(residence);
     }
 
     /**
@@ -244,7 +246,7 @@ public class ResidenceController {
         if (residence == null) {
             return "未选择";
         }
-        
+
         switch (residence) {
             case "castle":
                 return "城堡 🏰";
@@ -266,19 +268,19 @@ public class ResidenceController {
      */
     private String getClientIpAddress(HttpServletRequest request) {
         String ip = request.getHeader("X-Forwarded-For");
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("Proxy-Client-IP");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("WL-Proxy-Client-IP");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("HTTP_CLIENT_IP");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getHeader("HTTP_X_FORWARDED_FOR");
         }
-        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) {
+        if (ip == null || ip.isEmpty() || "unknown".equalsIgnoreCase(ip)) {
             ip = request.getRemoteAddr();
         }
         // 如果是多个IP，取第一个
@@ -286,76 +288,5 @@ public class ResidenceController {
             ip = ip.split(",")[0].trim();
         }
         return ip;
-    }
-
-    /**
-     * 刷新相关居所的事件
-     * 当用户移动时，需要刷新新居所和旧居所的事件
-     */
-    private void refreshResidenceEvents(String userId, String newResidence, String previousResidence) {
-        try {
-            // 为旧居所生成离开事件（用户搬出）
-            if (previousResidence != null && !previousResidence.trim().isEmpty() && !previousResidence.equals(newResidence)) {
-                generateDepartureEvent(userId, previousResidence);
-                logger.info("已生成离开事件: {} 离开了 {}", userId, getResidenceName(previousResidence));
-            }
-
-            // 为新居所生成入住事件（用户搬入）
-            if (newResidence != null && !newResidence.trim().isEmpty()) {
-                generateArrivalEvent(userId, newResidence);
-                logger.info("已生成入住事件: {} 入住了 {}", userId, getResidenceName(newResidence));
-            }
-        } catch (Exception e) {
-            logger.error("刷新居所事件失败 - 用户: {}, 新居所: {}, 旧居所: {}, 错误: {}", 
-                    userId, newResidence, previousResidence, e.getMessage(), e);
-        }
-    }
-
-    /**
-     * 生成离开事件
-     */
-    private void generateDepartureEvent(String username, String residence) {
-        try {
-            // 创建离开事件
-            List<com.eden.lottery.dto.ResidenceEventItem> events = new java.util.ArrayList<>();
-            events.add(new com.eden.lottery.dto.ResidenceEventItem(
-                username + " 离开了" + getResidenceName(residence), "normal"));
-            events.add(new com.eden.lottery.dto.ResidenceEventItem(
-                getResidenceName(residence) + "变得安静了...", "normal"));
-            
-            // 序列化为JSON
-            com.google.gson.Gson gson = new com.google.gson.Gson();
-            String eventData = gson.toJson(events);
-            
-            // 更新居所事件
-            residenceEventService.updateResidenceEvent(residence, eventData, false, null, false);
-            
-        } catch (Exception e) {
-            logger.error("生成离开事件失败，用户: {}, 居所: {}", username, residence, e);
-        }
-    }
-
-    /**
-     * 生成入住事件
-     */
-    private void generateArrivalEvent(String username, String residence) {
-        try {
-            // 创建入住事件
-            List<com.eden.lottery.dto.ResidenceEventItem> events = new java.util.ArrayList<>();
-            events.add(new com.eden.lottery.dto.ResidenceEventItem(
-                username + " 入住了" + getResidenceName(residence), "normal"));
-            events.add(new com.eden.lottery.dto.ResidenceEventItem(
-                getResidenceName(residence) + "迎来了新的住客", "normal"));
-            
-            // 序列化为JSON
-            com.google.gson.Gson gson = new com.google.gson.Gson();
-            String eventData = gson.toJson(events);
-            
-            // 更新居所事件
-            residenceEventService.updateResidenceEvent(residence, eventData, false, null, false);
-            
-        } catch (Exception e) {
-            logger.error("生成入住事件失败，用户: {}, 居所: {}", username, residence, e);
-        }
     }
 }

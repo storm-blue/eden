@@ -29,9 +29,12 @@ public class StarCityService {
 
     @Autowired
     private LotteryRecordMapper lotteryRecordMapper;
-    
+
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private ResidenceEventService residenceEventService;
 
     /**
      * 获取星星城数据
@@ -74,10 +77,10 @@ public class StarCityService {
     public void dailyUpdate() {
         // 先确保有数据
         StarCity current = getStarCity();
-        
+
         // 执行每日更新
         starCityMapper.dailyUpdate();
-        
+
         // 重新计算等级
         StarCity updated = starCityMapper.getStarCity();
         if (updated != null) {
@@ -89,6 +92,7 @@ public class StarCityService {
 
     /**
      * 应用每小时人口增长加成（特殊居住组合）
+     *
      * @param bonusPopulation 增长的人口数量
      */
     @Transactional
@@ -96,22 +100,22 @@ public class StarCityService {
         if (bonusPopulation <= 0) {
             return;
         }
-        
+
         // 先确保有数据
         StarCity current = getStarCity();
-        
+
         // 应用人口增长加成
         starCityMapper.addPopulation(bonusPopulation);
-        
+
         // 重新计算等级
         StarCity updated = starCityMapper.getStarCity();
         if (updated != null) {
             updated.setLevel(updated.calculateLevel());
             updated.setUpdateTime(LocalDateTime.now());
             starCityMapper.updateStarCity(updated);
-            
-            logger.info("应用特殊居住组合人口加成：+{} 人口，当前人口：{}", 
-                       bonusPopulation, updated.getPopulation());
+
+            logger.info("应用特殊居住组合人口加成：+{} 人口，当前人口：{}",
+                    bonusPopulation, updated.getPopulation());
         }
     }
 
@@ -119,20 +123,14 @@ public class StarCityService {
      * 获取等级信息
      */
     public String getLevelInfo(int level) {
-        switch (level) {
-            case 1:
-                return "新兴小镇 - 人口10万，食物10万，幸福指数10";
-            case 2:
-                return "繁荣城镇 - 人口20万，食物20万，幸福指数30";
-            case 3:
-                return "现代都市 - 人口40万，食物40万，幸福指数50";
-            case 4:
-                return "超级城市 - 人口70万，食物70万，幸福指数80";
-            case 5:
-                return "梦幻星城 - 人口100万，食物100万，幸福指数100";
-            default:
-                return "未知等级";
-        }
+        return switch (level) {
+            case 1 -> "新兴小镇 - 人口10万，食物10万，幸福指数10";
+            case 2 -> "繁荣城镇 - 人口20万，食物20万，幸福指数30";
+            case 3 -> "现代都市 - 人口40万，食物40万，幸福指数50";
+            case 4 -> "超级城市 - 人口70万，食物70万，幸福指数80";
+            case 5 -> "梦幻星城 - 人口100万，食物100万，幸福指数100";
+            default -> "未知等级";
+        };
     }
 
     /**
@@ -156,7 +154,8 @@ public class StarCityService {
 
     /**
      * 处理用户捐献
-     * @param userId 用户ID
+     *
+     * @param userId    用户ID
      * @param prizeType 奖品类型
      * @return 捐献结果
      */
@@ -170,7 +169,7 @@ public class StarCityService {
 
             // 2. 获取当前星星城数据
             StarCity starCity = getStarCity();
-            
+
             // 3. 根据奖品类型增加对应数值
             switch (prizeType) {
                 case "🍰 吃的～":
@@ -186,15 +185,15 @@ public class StarCityService {
                 default:
                     return false;
             }
-            
+
             // 4. 更新星星城数据
             starCity.setLevel(starCity.calculateLevel());
             starCity.setUpdateTime(LocalDateTime.now());
             starCityMapper.updateStarCity(starCity);
-            
+
             // 5. 删除用户的奖品记录
             removeUserPrize(userId, prizeType);
-            
+
             return true;
         } catch (Exception e) {
             e.printStackTrace();
@@ -222,11 +221,11 @@ public class StarCityService {
      */
     public List<Map<String, Object>> getUserDonationPrizes(String userId) {
         logger.info("获取用户可捐献奖品列表，用户ID: {}", userId);
-        
+
         // 获取用户的抽奖记录
         List<LotteryRecord> records = lotteryRecordMapper.selectByUserId(userId, 0, 1000);
         logger.info("查询到用户 {} 的抽奖记录数量: {}", userId, records.size());
-        
+
         // 统计可捐献的奖品
         Map<String, Integer> prizeCount = new HashMap<>();
         for (LotteryRecord record : records) {
@@ -242,9 +241,9 @@ public class StarCityService {
                 logger.warn("发现空奖品记录，记录ID: {}", record.getId());
             }
         }
-        
+
         logger.info("统计结果: {}", prizeCount);
-        
+
         // 转换为返回格式
         List<Map<String, Object>> result = new ArrayList<>();
         for (Map.Entry<String, Integer> entry : prizeCount.entrySet()) {
@@ -256,101 +255,195 @@ public class StarCityService {
                 result.add(prizeInfo);
             }
         }
-        
+
         // 按名称排序
         result.sort((a, b) -> ((String) a.get("name")).compareTo((String) b.get("name")));
-        
+
         logger.info("返回可捐献奖品列表，数量: {}", result.size());
         return result;
     }
-    
+
     // ==================== 用户漫游系统相关方法 ====================
-    
+
     /**
      * 获取所有建筑的居住人员
+     *
      * @return 建筑名称 -> 居住人员列表的映射
      */
     public Map<String, List<String>> getAllBuildingResidents() {
         logger.info("获取所有建筑的居住人员");
-        
+
         Map<String, List<String>> result = new HashMap<>();
         String[] buildings = {"castle", "park", "city_hall", "white_dove_house", "palace"};
-        
+
         for (String building : buildings) {
             try {
                 List<User> residents = userMapper.selectByResidence(building);
                 List<String> usernames = residents.stream()
-                    .map(User::getUserId)
-                    .collect(Collectors.toList());
+                        .map(User::getUserId)
+                        .collect(Collectors.toList());
                 result.put(building, usernames);
-                
+
                 logger.debug("建筑 {} 的居住人员: {}", building, usernames);
             } catch (Exception e) {
                 logger.error("获取建筑 {} 的居住人员失败: {}", building, e.getMessage(), e);
                 result.put(building, new ArrayList<>());
             }
         }
-        
+
         return result;
     }
-    
+
     /**
-     * 移动用户到新建筑
-     * @param username 用户名
+     * 移动用户到新建筑（完整版本，包含事件生成）
+     * 这是统一的用户移动方法，支持自动漫游和手动移动
+     *
+     * @param username     用户名
      * @param fromBuilding 原建筑
-     * @param toBuilding 目标建筑
+     * @param toBuilding   目标建筑
+     * @param moveReason   移动原因（"roaming" 或 "manual"）
      * @return 移动是否成功
      */
     @Transactional
-    public boolean moveUserToBuilding(String username, String fromBuilding, String toBuilding) {
-        logger.info("移动用户 {} 从 {} 到 {}", username, fromBuilding, toBuilding);
-        
+    public boolean moveUserToBuilding(String username, String fromBuilding, String toBuilding, String moveReason) {
+        logger.info("移动用户 {} 从 {} 到 {} (原因: {})", username, fromBuilding, toBuilding, moveReason);
+
         try {
             // 验证建筑名称
             if (!isValidBuilding(toBuilding)) {
                 logger.error("无效的目标建筑: {}", toBuilding);
                 return false;
             }
-            
+
+            // 检查是否为相同建筑（避免无意义的移动）
+            if (toBuilding.equals(fromBuilding)) {
+                logger.debug("用户 {} 已在目标建筑 {} 中，无需移动", username, getBuildingDisplayName(toBuilding));
+                return false;
+            }
+
             // 更新用户居住地
             userMapper.updateResidence(username, toBuilding);
-            
-            logger.info("用户 {} 成功从 {} 移动到 {}", username, fromBuilding, toBuilding);
+
+            // 生成移动事件
+            generateMoveEvents(username, fromBuilding, toBuilding);
+
+            logger.info("用户 {} 成功从 {} 移动到 {} ({})",
+                    username, getBuildingDisplayName(fromBuilding),
+                    getBuildingDisplayName(toBuilding), moveReason);
             return true;
-            
+
         } catch (Exception e) {
             logger.error("移动用户 {} 从 {} 到 {} 失败: {}", username, fromBuilding, toBuilding, e.getMessage(), e);
             return false;
         }
     }
-    
+
+    /**
+     * 为用户移动生成居所事件
+     * 为离开的居所生成"xxx离开了"事件，为入住的居所生成"xxx入住了"事件
+     *
+     * @param username      移动的用户名
+     * @param fromResidence 离开的居所
+     * @param toResidence   入住的居所
+     */
+    private void generateMoveEvents(String username, String fromResidence, String toResidence) {
+        try {
+            // 为离开的居所生成事件
+            generateDepartureEvent(username, fromResidence);
+
+            // 为入住的居所生成事件
+            generateArrivalEvent(username, toResidence);
+
+            logger.info("已为用户 {} 的移动生成居所事件：{} -> {}", username,
+                    getBuildingDisplayName(fromResidence),
+                    getBuildingDisplayName(toResidence));
+
+        } catch (Exception e) {
+            logger.error("生成用户 {} 移动事件时发生错误: {}", username, e.getMessage(), e);
+        }
+    }
+
+    /**
+     * 生成离开事件
+     */
+    private void generateDepartureEvent(String username, String residence) {
+        try {
+            // 创建离开事件
+            List<com.eden.lottery.dto.ResidenceEventItem> events = new ArrayList<>();
+            events.add(new com.eden.lottery.dto.ResidenceEventItem(
+                    username + " 离开了" + getBuildingDisplayName(residence), "normal"));
+            events.add(new com.eden.lottery.dto.ResidenceEventItem(
+                    getBuildingDisplayName(residence) + "变得安静了...", "normal"));
+
+            // 序列化为JSON
+            com.google.gson.Gson gson = new com.google.gson.Gson();
+            String eventData = gson.toJson(events);
+
+            // 更新居所事件
+            residenceEventService.updateResidenceEvent(residence, eventData, false, null, false);
+
+            logger.debug("生成离开事件：{} 离开了 {}", username, getBuildingDisplayName(residence));
+
+        } catch (Exception e) {
+            logger.error("生成离开事件失败，用户: {}, 居所: {}", username, residence, e);
+        }
+    }
+
+    /**
+     * 生成入住事件
+     */
+    private void generateArrivalEvent(String username, String residence) {
+        try {
+            // 创建入住事件
+            List<com.eden.lottery.dto.ResidenceEventItem> events = new ArrayList<>();
+            events.add(new com.eden.lottery.dto.ResidenceEventItem(
+                    username + " 入住了" + getBuildingDisplayName(residence), "normal"));
+            events.add(new com.eden.lottery.dto.ResidenceEventItem(
+                    getBuildingDisplayName(residence) + "迎来了新的住客", "normal"));
+
+            // 序列化为JSON
+            com.google.gson.Gson gson = new com.google.gson.Gson();
+            String eventData = gson.toJson(events);
+
+            // 更新居所事件
+            residenceEventService.updateResidenceEvent(residence, eventData, false, null, false);
+
+            logger.debug("生成入住事件：{} 入住了 {}", username, getBuildingDisplayName(residence));
+
+        } catch (Exception e) {
+            logger.error("生成入住事件失败，用户: {}, 居所: {}", username, residence, e);
+        }
+    }
+
     /**
      * 验证建筑名称是否有效
+     *
      * @param building 建筑名称
      * @return 是否有效
      */
     private boolean isValidBuilding(String building) {
-        return building != null && 
-               (building.equals("castle") || 
-                building.equals("park") || 
-                building.equals("city_hall") || 
-                building.equals("white_dove_house") || 
-                building.equals("palace"));
+        return building != null &&
+                (building.equals("castle") ||
+                        building.equals("park") ||
+                        building.equals("city_hall") ||
+                        building.equals("white_dove_house") ||
+                        building.equals("palace"));
     }
-    
+
     /**
      * 获取建筑的显示名称
+     *
      * @param building 建筑key
      * @return 显示名称
      */
     public String getBuildingDisplayName(String building) {
-        switch (building) {
-            case "castle": return "城堡🏰";
-            case "park": return "公园🌳";
-            case "city_hall": return "市政厅🏛️";
-            case "white_dove_house": return "小白鸽家🕊️";
-            case "palace": return "行宫🏯";
-            default: return building;
-        }
+        return switch (building) {
+            case "castle" -> "城堡🏰";
+            case "park" -> "公园🌳";
+            case "city_hall" -> "市政厅🏛️";
+            case "white_dove_house" -> "小白鸽家🕊️";
+            case "palace" -> "行宫🏯";
+            default -> building;
+        };
     }
 }
