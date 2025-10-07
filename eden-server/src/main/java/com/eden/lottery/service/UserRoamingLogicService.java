@@ -46,17 +46,17 @@ public class UserRoamingLogicService {
 
         // 白婆婆的特殊移动逻辑
         if ("白婆婆".equals(username)) {
-            // TODO 白婆婆可能去公园、小白鸽家
+            return performBaipopoMove(username, currentResidence);
         }
 
         // 大祭祀的特殊移动逻辑
         if ("大祭祀".equals(username)) {
-            // TODO 大祭司可能去行宫、城堡、公园
+            return performDajiziMove(username, currentResidence);
         }
 
         // 严伯升的特殊移动逻辑
         if ("严伯升".equals(username)) {
-            // TODO 严伯升可能去城堡、市政厅
+            return performYanboshengMove(username, currentResidence);
         }
 
         // 其他用户不移动
@@ -207,5 +207,107 @@ public class UserRoamingLogicService {
             default:
                 return residence;
         }
+    }
+
+    /**
+     * 执行白婆婆的移动逻辑
+     * 白婆婆可能去公园、小白鸽家
+     */
+    private String performBaipopoMove(String username, String currentResidence) {
+        logger.debug("执行白婆婆的移动逻辑，当前居所: {}", getResidenceDisplayName(currentResidence));
+        
+        // 白婆婆的可选居所：公园、小白鸽家
+        String[] preferredResidences = {"park", "white_dove_house"};
+        
+        // 过滤掉当前居所
+        List<String> targetResidences = new ArrayList<>();
+        for (String residence : preferredResidences) {
+            if (!residence.equals(currentResidence)) {
+                targetResidences.add(residence);
+            }
+        }
+        
+        // 如果有可选的居所，随机选择一个
+        if (!targetResidences.isEmpty()) {
+            int randomIndex = (int) (Math.random() * targetResidences.size());
+            String newResidence = targetResidences.get(randomIndex);
+            
+            logger.info("白婆婆将从 {} 移动到 {}", 
+                    getResidenceDisplayName(currentResidence),
+                    getResidenceDisplayName(newResidence));
+            
+            return newResidence;
+        }
+        
+        logger.debug("白婆婆没有可移动的居所，保持当前位置");
+        return null;
+    }
+
+    /**
+     * 执行大祭祀的移动逻辑
+     * 大祭祀可能去行宫、城堡、公园
+     */
+    private String performDajiziMove(String username, String currentResidence) {
+        logger.debug("执行大祭祀的移动逻辑，当前居所: {}", getResidenceDisplayName(currentResidence));
+        
+        // 大祭祀的可选居所：行宫、城堡、公园
+        String[] preferredResidences = {"palace", "castle", "park"};
+        
+        // 过滤掉当前居所
+        List<String> targetResidences = new ArrayList<>();
+        for (String residence : preferredResidences) {
+            if (!residence.equals(currentResidence)) {
+                targetResidences.add(residence);
+            }
+        }
+        
+        // 如果有可选的居所，随机选择一个
+        if (!targetResidences.isEmpty()) {
+            int randomIndex = (int) (Math.random() * targetResidences.size());
+            String newResidence = targetResidences.get(randomIndex);
+            
+            logger.info("大祭祀将从 {} 移动到 {}", 
+                    getResidenceDisplayName(currentResidence),
+                    getResidenceDisplayName(newResidence));
+            
+            return newResidence;
+        }
+        
+        logger.debug("大祭祀没有可移动的居所，保持当前位置");
+        return null;
+    }
+
+    /**
+     * 执行严伯升的移动逻辑
+     * 严伯升可能去城堡、市政厅
+     */
+    private String performYanboshengMove(String username, String currentResidence) {
+        logger.debug("执行严伯升的移动逻辑，当前居所: {}", getResidenceDisplayName(currentResidence));
+        
+        // 严伯升的可选居所：城堡、市政厅
+        String[] preferredResidences = {"castle", "city_hall"};
+        
+        // 过滤掉当前居所
+        List<String> targetResidences = new ArrayList<>();
+        for (String residence : preferredResidences) {
+            if (!residence.equals(currentResidence)) {
+                targetResidences.add(residence);
+            }
+        }
+        
+        // 如果有可选的居所，随机选择一个
+        if (!targetResidences.isEmpty()) {
+            int randomIndex = (int) (Math.random() * targetResidences.size());
+            String newResidence = targetResidences.get(randomIndex);
+            
+            logger.info("严伯升将从 {} 移动到 {}", 
+                    getResidenceDisplayName(currentResidence),
+                    getResidenceDisplayName(newResidence));
+            
+            return newResidence;
+        }
+        
+        logger.debug("严伯升没有可移动的居所，保持当前位置");
+        return null;
     }
 }
