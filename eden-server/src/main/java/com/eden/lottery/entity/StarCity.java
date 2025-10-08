@@ -58,7 +58,6 @@ public class StarCity {
 
     public void setPopulation(Long population) {
         this.population = population;
-        this.level = calculateLevel(); // 重新计算等级
     }
 
     public Long getFood() {
@@ -67,7 +66,6 @@ public class StarCity {
 
     public void setFood(Long food) {
         this.food = food;
-        this.level = calculateLevel(); // 重新计算等级
     }
 
     public Integer getHappiness() {
@@ -76,7 +74,6 @@ public class StarCity {
 
     public void setHappiness(Integer happiness) {
         this.happiness = happiness;
-        this.level = calculateLevel(); // 重新计算等级
     }
 
     public Integer getLevel() {
