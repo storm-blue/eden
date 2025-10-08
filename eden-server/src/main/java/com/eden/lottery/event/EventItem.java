@@ -3,17 +3,17 @@ package com.eden.lottery.event;
 /**
  * 居所事件项DTO - 用于类型安全的JSON序列化和反序列化
  */
-public class ResidenceEventItem {
+public class EventItem {
     
     private String description;  // 事件描述
     private String type;         // 事件类型：special, normal
     private String[] colors;     // 颜色数组（向后兼容，可选）
     
     // 默认构造函数
-    public ResidenceEventItem() {}
+    public EventItem() {}
     
     // 主要构造函数
-    public ResidenceEventItem(String description, String type) {
+    public EventItem(String description, String type) {
         this.description = description;
         this.type = type;
         // 根据类型设置默认颜色
@@ -25,7 +25,7 @@ public class ResidenceEventItem {
     }
     
     // 完整构造函数（向后兼容）
-    public ResidenceEventItem(String description, String type, String[] colors) {
+    public EventItem(String description, String type, String[] colors) {
         this.description = description;
         this.type = type;
         this.colors = colors;

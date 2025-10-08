@@ -3,7 +3,7 @@ package com.eden.lottery.service;
 import com.eden.lottery.entity.LotteryRecord;
 import com.eden.lottery.entity.StarCity;
 import com.eden.lottery.entity.User;
-import com.eden.lottery.event.ResidenceEventItem;
+import com.eden.lottery.event.EventItem;
 import com.eden.lottery.mapper.LotteryRecordMapper;
 import com.eden.lottery.mapper.StarCityMapper;
 import com.eden.lottery.mapper.UserMapper;
@@ -360,10 +360,10 @@ public class StarCityService {
     private void generateDepartureEvent(String username, String residence) {
         try {
             // 创建离开事件
-            List<ResidenceEventItem> events = new ArrayList<>();
-            events.add(new ResidenceEventItem(
+            List<EventItem> events = new ArrayList<>();
+            events.add(new EventItem(
                     username + " 离开了" + ResidenceUtils.getDisplayName(residence), "normal"));
-            events.add(new ResidenceEventItem(
+            events.add(new EventItem(
                     ResidenceUtils.getDisplayName(residence) + "变得安静了...", "normal"));
 
             // 序列化为JSON
@@ -386,10 +386,10 @@ public class StarCityService {
     private void generateArrivalEvent(String username, String residence) {
         try {
             // 创建入住事件
-            List<ResidenceEventItem> events = new ArrayList<>();
-            events.add(new ResidenceEventItem(
+            List<EventItem> events = new ArrayList<>();
+            events.add(new EventItem(
                     username + " 入住了" + ResidenceUtils.getDisplayName(residence), "normal"));
-            events.add(new ResidenceEventItem(
+            events.add(new EventItem(
                     ResidenceUtils.getDisplayName(residence) + "迎来了新的住客", "normal"));
 
             // 序列化为JSON

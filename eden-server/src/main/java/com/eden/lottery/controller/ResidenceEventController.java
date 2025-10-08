@@ -1,6 +1,6 @@
 package com.eden.lottery.controller;
 
-import com.eden.lottery.event.ResidenceEventItem;
+import com.eden.lottery.event.EventItem;
 import com.eden.lottery.entity.ResidenceEvent;
 import com.eden.lottery.entity.User;
 import com.eden.lottery.mapper.UserMapper;
@@ -37,7 +37,7 @@ public class ResidenceEventController {
 
     // Gson实例用于JSON序列化和反序列化
     private final Gson gson = new Gson();
-    private final Type eventListType = new TypeToken<List<ResidenceEventItem>>() {
+    private final Type eventListType = new TypeToken<List<EventItem>>() {
     }.getType();
 
     /**
@@ -72,11 +72,11 @@ public class ResidenceEventController {
 
             if (event != null) {
                 // 使用Gson解析事件数据
-                List<ResidenceEventItem> eventItems = parseEventDataWithGson(event.getEventData());
+                List<EventItem> eventItems = parseEventDataWithGson(event.getEventData());
 
                 // 转换为前端期望的格式
                 List<Map<String, Object>> events = new ArrayList<>();
-                for (ResidenceEventItem item : eventItems) {
+                for (EventItem item : eventItems) {
                     Map<String, Object> eventMap = new HashMap<>();
                     eventMap.put("description", item.getDescription());
                     eventMap.put("type", item.getType());
@@ -273,27 +273,27 @@ public class ResidenceEventController {
      * @param eventDataJson JSON格式的事件数据
      * @return 解析后的事件列表
      */
-    private List<ResidenceEventItem> parseEventDataWithGson(String eventDataJson) {
+    private List<EventItem> parseEventDataWithGson(String eventDataJson) {
         if (eventDataJson == null || eventDataJson.trim().isEmpty() || eventDataJson.equals("[]")) {
             // 返回默认事件
-            List<ResidenceEventItem> defaultEvents = new ArrayList<>();
-            defaultEvents.add(new ResidenceEventItem("暂无事件", "normal"));
+            List<EventItem> defaultEvents = new ArrayList<>();
+            defaultEvents.add(new EventItem("暂无事件", "normal"));
             return defaultEvents;
         }
 
         try {
             // 使用Gson反序列化
-            List<ResidenceEventItem> events = gson.fromJson(eventDataJson, eventListType);
+            List<EventItem> events = gson.fromJson(eventDataJson, eventListType);
 
             if (events == null || events.isEmpty()) {
                 // 如果解析结果为空，返回默认事件
-                List<ResidenceEventItem> defaultEvents = new ArrayList<>();
-                defaultEvents.add(new ResidenceEventItem("事件解析为空", "normal"));
+                List<EventItem> defaultEvents = new ArrayList<>();
+                defaultEvents.add(new EventItem("事件解析为空", "normal"));
                 return defaultEvents;
             }
 
             // 确保每个事件都有正确的type和colors
-            for (ResidenceEventItem event : events) {
+            for (EventItem event : events) {
                 if (event.getType() == null) {
                     event.setType("normal");
                 }
@@ -311,8 +311,8 @@ public class ResidenceEventController {
         } catch (Exception e) {
             logger.warn("使用Gson解析事件数据失败: {}", eventDataJson, e);
             // 返回错误事件
-            List<ResidenceEventItem> errorEvents = new ArrayList<>();
-            errorEvents.add(new ResidenceEventItem("事件数据格式错误", "normal",
+            List<EventItem> errorEvents = new ArrayList<>();
+            errorEvents.add(new EventItem("事件数据格式错误", "normal",
                     new String[]{"#ff6b6b", "#feca57"}));
             return errorEvents;
         }

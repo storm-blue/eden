@@ -1,6 +1,6 @@
 package com.eden.lottery.service;
 
-import com.eden.lottery.event.ResidenceEventItem;
+import com.eden.lottery.event.EventItem;
 import com.eden.lottery.entity.ResidenceEvent;
 import com.eden.lottery.entity.ResidenceEventHistory;
 import com.eden.lottery.entity.User;
@@ -41,7 +41,7 @@ public class ResidenceEventService {
 
     // Gson实例用于JSON序列化和反序列化
     private final Gson gson = new Gson();
-    private final Type eventListType = new TypeToken<List<ResidenceEventItem>>() {
+    private final Type eventListType = new TypeToken<List<EventItem>>() {
     }.getType();
 
     /**
@@ -123,7 +123,7 @@ public class ResidenceEventService {
             }
         }
 
-        List<ResidenceEventItem> event = Scenes.getEvent(residence, usernames);
+        List<EventItem> event = Scenes.getEvent(residence, usernames);
         // 使用Gson序列化为JSON
         String eventData = gson.toJson(event);
         return updateResidenceEvent(residence, eventData, true, null, true);
