@@ -1610,6 +1610,80 @@ const LotteryLuckyWheel = () => {
                         color: 'white'
                     }}>
 
+                    {/* 雨天特效 */}
+                    <div style={{
+                        position: 'absolute',
+                        top: 0,
+                        left: 0,
+                        right: 0,
+                        bottom: 0,
+                        pointerEvents: 'none',
+                        zIndex: 15,
+                        overflow: 'hidden'
+                    }}>
+                        {/* 雨滴 */}
+                        {[...Array(isMobileDevice ? 50 : 80)].map((_, i) => {
+                            const delay = Math.random() * 3;
+                            const duration = 0.8 + Math.random() * 0.4;
+                            const left = Math.random() * 110;
+                            const startTop = -10 - Math.random() * 15;
+
+                            return (
+                                <div
+                                    key={`rain-${i}`}
+                                    style={{
+                                        position: 'absolute',
+                                        left: `${left}%`,
+                                        top: `${startTop}%`,
+                                        width: '2px',
+                                        height: '25px',
+                                        background: 'linear-gradient(180deg, transparent, rgba(174, 194, 224, 0.7), rgba(174, 194, 224, 0.9))',
+                                        animation: `rainDrop ${duration}s linear infinite`,
+                                        animationDelay: `${delay}s`,
+                                        opacity: 0.9,
+                                        willChange: 'transform',
+                                        transform: 'translateZ(0)',
+                                        transformOrigin: 'top center'
+                                    }}
+                                />
+                            );
+                        })}
+
+                        {/* 雨雾效果 */}
+                        <div style={{
+                            position: 'absolute',
+                            top: 0,
+                            left: 0,
+                            right: 0,
+                            bottom: 0,
+                            background: 'linear-gradient(to bottom, rgba(100, 120, 150, 0.15), transparent 40%)',
+                            pointerEvents: 'none'
+                        }}/>
+
+                        {/* 地面水花效果 */}
+                        {[...Array(isMobileDevice ? 12 : 20)].map((_, i) => {
+                            const delay = Math.random() * 2;
+                            const left = Math.random() * 100;
+
+                            return (
+                                <div
+                                    key={`splash-${i}`}
+                                    style={{
+                                        position: 'absolute',
+                                        left: `${left}%`,
+                                        bottom: '5%',
+                                        width: '4px',
+                                        height: '4px',
+                                        borderRadius: '50%',
+                                        background: 'rgba(174, 194, 224, 0.6)',
+                                        animation: `rainSplash 1.2s ease-out infinite`,
+                                        animationDelay: `${delay}s`
+                                    }}
+                                />
+                            );
+                        })}
+                    </div>
+
                     {/* 标题 */}
                     <h2 style={{
                         fontSize: '42px',
