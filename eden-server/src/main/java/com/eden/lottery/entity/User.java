@@ -74,6 +74,7 @@ public class User {
         this.dailyDraws = dailyDraws;
         this.remainingDraws = dailyDraws; // 初始剩余次数等于每日次数
         this.wishCount = 0; // 初始许愿次数为0
+        this.stamina = 5; // 初始耐力值为5
         this.createTime = LocalDateTime.now();
         this.updateTime = LocalDateTime.now();
         this.lastRefreshDate = LocalDateTime.now();
