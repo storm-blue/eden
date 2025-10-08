@@ -248,6 +248,9 @@ const LotteryLuckyWheel = () => {
     const [selectedResident, setSelectedResident] = useState(null)
     const [residentDetailInfo, setResidentDetailInfo] = useState(null)
     const [loadingResidentDetail, setLoadingResidentDetail] = useState(false)
+    
+    // 耐力不足提示弹框
+    const [showNoStaminaModal, setShowNoStaminaModal] = useState(false)
 
     // 用户头像预览弹框状态
     const [showAvatarPreview, setShowAvatarPreview] = useState(false)
@@ -856,7 +859,7 @@ const LotteryLuckyWheel = () => {
 
             const data = await response.json()
             if (data.success) {
-                console.log(`${selectedBuilding.name} 事件刷新成功`)
+                console.log(`${selectedBuilding.name} 事件刷新成功，剩余耐力: ${data.stamina}/5`)
                 
                 // 重新加载当前居所的事件
                 const eventResponse = await fetch(`/api/residence-events/${selectedBuilding.key}`)
@@ -870,13 +873,16 @@ const LotteryLuckyWheel = () => {
                     console.log(`${selectedBuilding.name} 事件已更新`)
                 }
                 
-                // 显示成功提示，包含剩余耐力信息
-                const staminaInfo = data.stamina !== undefined ? `\n剩余耐力: ${data.stamina}/5` : ''
-                alert(`✨ ${selectedBuilding.name} 事件已刷新！${staminaInfo}`)
+                // 不弹窗，只在控制台记录
             } else {
-                // 如果是耐力不足的提示，显示特殊消息
+                // 如果是耐力不足的提示，显示弹框
                 console.error('刷新事件失败:', data.message)
-                alert(data.message)
+                if (data.message === '你已经精疲力尽了，歇会吧') {
+                    setShowNoStaminaModal(true)
+                } else {
+                    // 其他错误用alert
+                    alert(data.message)
+                }
             }
         } catch (error) {
             console.error('刷新事件失败:', error)
@@ -3787,6 +3793,99 @@ const LotteryLuckyWheel = () => {
                             }}
                         >
                             关闭
+                        </button>
+                    </div>
+                </div>
+            )}
+
+            {/* 耐力不足提示弹框 */}
+            {showNoStaminaModal && (
+                <div
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 100001,
+                        backdropFilter: 'blur(5px)'
+                    }}
+                    onClick={() => setShowNoStaminaModal(false)}
+                >
+                    <div
+                        style={{
+                            background: 'linear-gradient(135deg, rgba(255, 240, 245, 0.95), rgba(255, 228, 230, 0.95))',
+                            borderRadius: '20px',
+                            padding: '40px',
+                            maxWidth: '400px',
+                            width: '90%',
+                            textAlign: 'center',
+                            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.2)',
+                            border: '2px solid rgba(255, 182, 193, 0.5)',
+                            backdropFilter: 'blur(10px)',
+                            position: 'relative',
+                            animation: 'fadeInScale 0.3s ease-out'
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* 表情图标 */}
+                        <div style={{
+                            fontSize: '50px',
+                            marginBottom: '20px',
+                            animation: 'pulse 2s ease-in-out infinite'
+                        }}>
+                            😴
+                        </div>
+
+                        {/* 提示文字 */}
+                        <h3 style={{
+                            fontSize: '24px',
+                            fontWeight: 'bold',
+                            marginBottom: '15px',
+                            color: '#d63031',
+                            textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)'
+                        }}>
+                            精疲力尽了！
+                        </h3>
+
+                        <p style={{
+                            fontSize: '16px',
+                            color: '#666',
+                            lineHeight: '1.6',
+                            marginBottom: '25px'
+                        }}>
+                            休息一下，每30分钟会自动恢复
+                        </p>
+
+                        {/* 确定按钮 */}
+                        <button
+                            onClick={() => setShowNoStaminaModal(false)}
+                            style={{
+                                background: 'linear-gradient(135deg, #ff6b6b, #ee5a52)',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '25px',
+                                padding: '12px 40px',
+                                fontSize: '16px',
+                                fontWeight: 'bold',
+                                cursor: 'pointer',
+                                boxShadow: '0 4px 15px rgba(255, 107, 107, 0.3)',
+                                transition: 'all 0.3s ease'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.transform = 'scale(1.05)'
+                                e.target.style.boxShadow = '0 6px 20px rgba(255, 107, 107, 0.4)'
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.transform = 'scale(1)'
+                                e.target.style.boxShadow = '0 4px 15px rgba(255, 107, 107, 0.3)'
+                            }}
+                        >
+                            知道了
                         </button>
                     </div>
                 </div>
