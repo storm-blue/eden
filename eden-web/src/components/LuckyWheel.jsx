@@ -2299,7 +2299,7 @@ const LotteryLuckyWheel = () => {
                         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
                         borderRadius: '20px',
                         padding: '30px',
-                        maxWidth: isMobileDevice ? '750px' : '500px',
+                        maxWidth: '630px',
                         width: isMobileDevice ? '95%' : '90%',
                         minHeight: 'auto',
                         maxHeight: isMobileDevice ? '400px' : '80vh',
