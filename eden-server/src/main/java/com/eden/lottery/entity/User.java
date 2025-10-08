@@ -38,6 +38,16 @@ public class User {
     private String avatarPath;
     
     /**
+     * 用户简介
+     */
+    private String profile;
+    
+    /**
+     * 用户状态
+     */
+    private String status;
+    
+    /**
      * 创建时间
      */
     private LocalDateTime createTime;
@@ -113,6 +123,22 @@ public class User {
         this.avatarPath = avatarPath;
     }
 
+    public String getProfile() {
+        return profile;
+    }
+
+    public void setProfile(String profile) {
+        this.profile = profile;
+    }
+
+    public String getStatus() {
+        return status;
+    }
+
+    public void setStatus(String status) {
+        this.status = status;
+    }
+
     public LocalDateTime getCreateTime() {
         return createTime;
     }
@@ -146,6 +172,8 @@ public class User {
                 ", wishCount=" + wishCount +
                 ", residence='" + residence + '\'' +
                 ", avatarPath='" + avatarPath + '\'' +
+                ", profile='" + profile + '\'' +
+                ", status='" + status + '\'' +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 ", lastRefreshDate=" + lastRefreshDate +

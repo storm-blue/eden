@@ -246,6 +246,8 @@ const LotteryLuckyWheel = () => {
     // 居民头像详情弹框状态
     const [showResidentDetail, setShowResidentDetail] = useState(false)
     const [selectedResident, setSelectedResident] = useState(null)
+    const [residentDetailInfo, setResidentDetailInfo] = useState(null)
+    const [loadingResidentDetail, setLoadingResidentDetail] = useState(false)
     
     // 用户头像预览弹框状态
     const [showAvatarPreview, setShowAvatarPreview] = useState(false)
@@ -1143,19 +1145,51 @@ const LotteryLuckyWheel = () => {
     }
 
     // 处理居民头像点击
-    const handleResidentAvatarClick = (userId, avatarPath) => {
+    const handleResidentAvatarClick = async (userId, avatarPath) => {
         console.log('点击居民头像:', userId, avatarPath)
         setSelectedResident({
             userId: userId,
             avatarPath: avatarPath
         })
         setShowResidentDetail(true)
+        
+        // 获取用户详细信息
+        await fetchResidentDetailInfo(userId)
+    }
+
+    // 获取居民详细信息
+    const fetchResidentDetailInfo = async (userId) => {
+        if (!userId) return
+        
+        setLoadingResidentDetail(true)
+        try {
+            const response = await fetch(`/api/user-info/${userId}`)
+            if (response.ok) {
+                const data = await response.json()
+                if (data.success) {
+                    setResidentDetailInfo(data.userInfo)
+                } else {
+                    console.error('获取用户详细信息失败:', data.message)
+                    setResidentDetailInfo(null)
+                }
+            } else {
+                console.error('获取用户详细信息失败:', response.statusText)
+                setResidentDetailInfo(null)
+            }
+        } catch (error) {
+            console.error('获取用户详细信息时发生错误:', error)
+            setResidentDetailInfo(null)
+        } finally {
+            setLoadingResidentDetail(false)
+        }
     }
 
     // 关闭居民详情弹框
     const closeResidentDetail = () => {
         setShowResidentDetail(false)
         setSelectedResident(null)
+        setResidentDetailInfo(null)
+        setLoadingResidentDetail(false)
     }
 
     // 渲染居民头像列表
@@ -3407,23 +3441,110 @@ const LotteryLuckyWheel = () => {
               {selectedResident.userId}
             </h3>
 
-            {/* 装饰性信息 */}
-            <div style={{
-              padding: '15px 20px',
-              background: 'rgba(255, 255, 255, 0.6)',
-              borderRadius: '15px',
-              border: '1px solid rgba(255, 255, 255, 0.8)',
-              color: '#666',
-              fontSize: '14px',
-              lineHeight: '1.6'
-            }}>
-              <div style={{ marginBottom: '5px' }}>
-                ✨ 星星城居民
+            {/* 用户状态 */}
+            {loadingResidentDetail ? (
+              <div style={{
+                padding: '10px',
+                color: '#666',
+                fontSize: '14px',
+                fontStyle: 'italic'
+              }}>
+                加载中...
               </div>
-              <div>
-                🏠 安居乐业中
+            ) : residentDetailInfo ? (
+              <>
+                {/* 状态显示 */}
+                <div style={{
+                  padding: '8px 16px',
+                  background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                  borderRadius: '20px',
+                  color: 'white',
+                  fontSize: '14px',
+                  fontWeight: '500',
+                  marginBottom: '15px',
+                  display: 'inline-block',
+                  boxShadow: '0 2px 8px rgba(102, 126, 234, 0.3)'
+                }}>
+                  📍 {residentDetailInfo.status || '在线'}
+                </div>
+
+                {/* 居住地显示 */}
+                {residentDetailInfo.residenceName && (
+                  <div style={{
+                    padding: '8px 16px',
+                    background: 'rgba(255, 255, 255, 0.7)',
+                    borderRadius: '15px',
+                    color: '#555',
+                    fontSize: '14px',
+                    marginBottom: '15px',
+                    border: '1px solid rgba(255, 255, 255, 0.8)'
+                  }}>
+                    🏠 居住在 {residentDetailInfo.residenceName}
+                  </div>
+                )}
+
+                {/* 用户简介 */}
+                <div style={{
+                  padding: '15px 20px',
+                  background: 'rgba(255, 255, 255, 0.6)',
+                  borderRadius: '15px',
+                  border: '1px solid rgba(255, 255, 255, 0.8)',
+                  color: '#666',
+                  fontSize: '14px',
+                  lineHeight: '1.6',
+                  textAlign: 'left',
+                  minHeight: '60px'
+                }}>
+                  <div style={{
+                    fontSize: '12px',
+                    color: '#999',
+                    marginBottom: '8px',
+                    textTransform: 'uppercase',
+                    letterSpacing: '0.5px'
+                  }}>
+                    个人简介
+                  </div>
+                  <div>
+                    {residentDetailInfo.profile || '这个人很神秘，什么都没有留下...'}
+                  </div>
+                </div>
+
+                {/* 其他信息 */}
+                <div style={{
+                  marginTop: '15px',
+                  padding: '12px 16px',
+                  background: 'rgba(255, 255, 255, 0.4)',
+                  borderRadius: '12px',
+                  fontSize: '12px',
+                  color: '#777',
+                  display: 'flex',
+                  justifyContent: 'space-between',
+                  flexWrap: 'wrap',
+                  gap: '8px'
+                }}>
+                  <span>🎯 剩余抽奖: {residentDetailInfo.remainingDraws || 0}次</span>
+                  <span>⭐ 许愿次数: {residentDetailInfo.wishCount || 0}次</span>
+                </div>
+              </>
+            ) : (
+              /* 装饰性信息（当API调用失败时的后备显示） */
+              <div style={{
+                padding: '15px 20px',
+                background: 'rgba(255, 255, 255, 0.6)',
+                borderRadius: '15px',
+                border: '1px solid rgba(255, 255, 255, 0.8)',
+                color: '#666',
+                fontSize: '14px',
+                lineHeight: '1.6'
+              }}>
+                <div style={{ marginBottom: '5px' }}>
+                  ✨ 星星城居民
+                </div>
+                <div>
+                  🏠 安居乐业中
+                </div>
               </div>
-            </div>
+            )}
           </div>
         </div>
       )}

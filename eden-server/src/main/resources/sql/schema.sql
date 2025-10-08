@@ -30,6 +30,8 @@ CREATE TABLE IF NOT EXISTS users (
     wish_count INTEGER NOT NULL DEFAULT 0,  -- 可用许愿次数
     residence VARCHAR(20) DEFAULT NULL,     -- 居住地点
     avatar_path VARCHAR(255) DEFAULT NULL,  -- 头像文件路径
+    profile TEXT DEFAULT NULL,              -- 用户简介
+    status VARCHAR(100) DEFAULT NULL,       -- 用户状态
     create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_refresh_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP

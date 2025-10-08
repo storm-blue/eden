@@ -10,6 +10,8 @@
         <result property="wishCount" column="wish_count"/>
         <result property="residence" column="residence"/>
         <result property="avatarPath" column="avatar_path"/>
+        <result property="profile" column="profile"/>
+        <result property="status" column="status"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
         <result property="lastRefreshDate" column="last_refresh_date"/>
@@ -17,13 +19,13 @@
 
     <!-- 插入用户 -->
     <insert id="insert" parameterType="com.eden.lottery.entity.User">
-        INSERT INTO users (user_id, remaining_draws, daily_draws, wish_count, residence, avatar_path, create_time, update_time, last_refresh_date)
-        VALUES (#{userId}, #{remainingDraws}, #{dailyDraws}, #{wishCount}, #{residence}, #{avatarPath}, #{createTime}, #{updateTime}, #{lastRefreshDate})
+        INSERT INTO users (user_id, remaining_draws, daily_draws, wish_count, residence, avatar_path, profile, status, create_time, update_time, last_refresh_date)
+        VALUES (#{userId}, #{remainingDraws}, #{dailyDraws}, #{wishCount}, #{residence}, #{avatarPath}, #{profile}, #{status}, #{createTime}, #{updateTime}, #{lastRefreshDate})
     </insert>
 
     <!-- 根据用户ID查询用户 -->
     <select id="selectByUserId" parameterType="string" resultMap="UserResultMap">
-        SELECT user_id, remaining_draws, daily_draws, wish_count, residence, avatar_path, create_time, update_time, last_refresh_date
+        SELECT user_id, remaining_draws, daily_draws, wish_count, residence, avatar_path, profile, status, create_time, update_time, last_refresh_date
         FROM users
         WHERE user_id = #{userId}
     </select>
@@ -36,6 +38,8 @@
             wish_count = #{wishCount},
             residence = #{residence},
             avatar_path = #{avatarPath},
+            profile = #{profile},
+            status = #{status},
             update_time = #{updateTime},
             last_refresh_date = #{lastRefreshDate}
         WHERE user_id = #{userId}
@@ -83,9 +87,34 @@
         WHERE user_id = #{userId}
     </update>
 
+    <!-- 更新用户简介 -->
+    <update id="updateProfile">
+        UPDATE users
+        SET profile = #{profile},
+            update_time = datetime('now', 'localtime')
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 更新用户状态 -->
+    <update id="updateStatus">
+        UPDATE users
+        SET status = #{status},
+            update_time = datetime('now', 'localtime')
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 更新用户简介和状态 -->
+    <update id="updateProfileAndStatus">
+        UPDATE users
+        SET profile = #{profile},
+            status = #{status},
+            update_time = datetime('now', 'localtime')
+        WHERE user_id = #{userId}
+    </update>
+
     <!-- 根据居住地点查询用户列表 -->
     <select id="selectByResidence" parameterType="string" resultMap="UserResultMap">
-        SELECT user_id, remaining_draws, daily_draws, wish_count, residence, avatar_path, create_time, update_time, last_refresh_date
+        SELECT user_id, remaining_draws, daily_draws, wish_count, residence, avatar_path, profile, status, create_time, update_time, last_refresh_date
         FROM users
         WHERE residence = #{residence}
         ORDER BY create_time ASC
@@ -102,7 +131,7 @@
 
     <!-- 获取需要刷新的用户列表 -->
     <select id="selectUsersNeedRefresh" resultMap="UserResultMap">
-        SELECT user_id, remaining_draws, daily_draws, wish_count, residence, avatar_path, create_time, update_time, last_refresh_date
+        SELECT user_id, remaining_draws, daily_draws, wish_count, residence, avatar_path, profile, status, create_time, update_time, last_refresh_date
         FROM users
         WHERE date(last_refresh_date) &lt; date(#{todayStart})
     </select>
@@ -118,14 +147,14 @@
 
     <!-- 获取所有用户 -->
     <select id="selectAll" resultMap="UserResultMap">
-        SELECT user_id, remaining_draws, daily_draws, wish_count, residence, avatar_path, create_time, update_time, last_refresh_date
+        SELECT user_id, remaining_draws, daily_draws, wish_count, residence, avatar_path, profile, status, create_time, update_time, last_refresh_date
         FROM users
         ORDER BY create_time DESC
     </select>
 
     <!-- 获取所有有居住地点的用户 -->
     <select id="selectAllWithResidence" resultMap="UserResultMap">
-        SELECT user_id, remaining_draws, daily_draws, wish_count, residence, avatar_path, create_time, update_time, last_refresh_date
+        SELECT user_id, remaining_draws, daily_draws, wish_count, residence, avatar_path, profile, status, create_time, update_time, last_refresh_date
         FROM users
         WHERE residence IS NOT NULL AND residence != ''
         ORDER BY residence, create_time ASC

@@ -103,6 +103,18 @@ public class PrizeInitService implements ApplicationRunner {
             addAvatarPathColumn(connection);
         }
 
+        // 检查profile列是否存在
+        if (!columns.contains("profile")) {
+            logger.info("users表缺少profile列，添加列...");
+            addProfileColumn(connection);
+        }
+
+        // 检查status列是否存在
+        if (!columns.contains("status")) {
+            logger.info("users表缺少status列，添加列...");
+            addStatusColumn(connection);
+        }
+
         logger.info("users表结构检查完成");
     }
 
@@ -155,6 +167,40 @@ public class PrizeInitService implements ApplicationRunner {
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(sql);
             logger.info("avatar_path列添加成功");
+        }
+    }
+
+    /**
+     * 添加profile列到users表
+     */
+    private void addProfileColumn(Connection connection) throws Exception {
+        String sql = "ALTER TABLE users ADD COLUMN profile TEXT DEFAULT NULL";
+
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(sql);
+            logger.info("profile列添加成功");
+            
+            // 为现有用户设置默认简介
+            String updateSql = "UPDATE users SET profile = '这个人很神秘，什么都没有留下...' WHERE profile IS NULL";
+            stmt.execute(updateSql);
+            logger.info("为现有用户设置默认简介");
+        }
+    }
+
+    /**
+     * 添加status列到users表
+     */
+    private void addStatusColumn(Connection connection) throws Exception {
+        String sql = "ALTER TABLE users ADD COLUMN status VARCHAR(100) DEFAULT NULL";
+
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(sql);
+            logger.info("status列添加成功");
+            
+            // 为现有用户设置默认状态
+            String updateSql = "UPDATE users SET status = '安居乐业中' WHERE status IS NULL";
+            stmt.execute(updateSql);
+            logger.info("为现有用户设置默认状态");
         }
     }
 

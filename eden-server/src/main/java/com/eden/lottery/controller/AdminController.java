@@ -757,4 +757,171 @@ public class AdminController {
         return null;
     }
 
+    /**
+     * 更新用户简介
+     */
+    @PostMapping("/users/{userId}/profile")
+    public Map<String, Object> updateUserProfile(
+            @PathVariable String userId,
+            @RequestBody Map<String, String> request,
+            HttpServletRequest httpRequest) {
+        
+        Map<String, Object> response = new java.util.HashMap<>();
+        
+        try {
+            // 验证管理员权限
+            if (isInvalidAdmin(httpRequest)) {
+                response.put("success", false);
+                response.put("message", "无效的管理员会话");
+                return response;
+            }
+
+            String profile = request.get("profile");
+            if (profile == null) {
+                response.put("success", false);
+                response.put("message", "简介内容不能为空");
+                return response;
+            }
+
+            // 检查用户是否存在
+            User user = adminService.getUserById(userId);
+            if (user == null) {
+                response.put("success", false);
+                response.put("message", "用户不存在");
+                return response;
+            }
+
+            // 更新用户简介
+            boolean success = adminService.updateUserProfile(userId, profile);
+            if (success) {
+                response.put("success", true);
+                response.put("message", "用户简介更新成功");
+                logger.info("管理员更新用户 {} 的简介: {}", userId, profile);
+            } else {
+                response.put("success", false);
+                response.put("message", "更新用户简介失败");
+            }
+            
+            return response;
+            
+        } catch (Exception e) {
+            logger.error("管理员更新用户简介失败", e);
+            response.put("success", false);
+            response.put("message", "更新用户简介失败: " + e.getMessage());
+            return response;
+        }
+    }
+
+    /**
+     * 更新用户状态
+     */
+    @PostMapping("/users/{userId}/status")
+    public Map<String, Object> updateUserStatus(
+            @PathVariable String userId,
+            @RequestBody Map<String, String> request,
+            HttpServletRequest httpRequest) {
+        
+        Map<String, Object> response = new java.util.HashMap<>();
+        
+        try {
+            // 验证管理员权限
+            if (isInvalidAdmin(httpRequest)) {
+                response.put("success", false);
+                response.put("message", "无效的管理员会话");
+                return response;
+            }
+
+            String status = request.get("status");
+            if (status == null) {
+                response.put("success", false);
+                response.put("message", "状态内容不能为空");
+                return response;
+            }
+
+            // 检查用户是否存在
+            User user = adminService.getUserById(userId);
+            if (user == null) {
+                response.put("success", false);
+                response.put("message", "用户不存在");
+                return response;
+            }
+
+            // 更新用户状态
+            boolean success = adminService.updateUserStatus(userId, status);
+            if (success) {
+                response.put("success", true);
+                response.put("message", "用户状态更新成功");
+                logger.info("管理员更新用户 {} 的状态: {}", userId, status);
+            } else {
+                response.put("success", false);
+                response.put("message", "更新用户状态失败");
+            }
+            
+            return response;
+            
+        } catch (Exception e) {
+            logger.error("管理员更新用户状态失败", e);
+            response.put("success", false);
+            response.put("message", "更新用户状态失败: " + e.getMessage());
+            return response;
+        }
+    }
+
+    /**
+     * 批量更新用户简介和状态
+     */
+    @PostMapping("/users/{userId}/profile-status")
+    public Map<String, Object> updateUserProfileAndStatus(
+            @PathVariable String userId,
+            @RequestBody Map<String, String> request,
+            HttpServletRequest httpRequest) {
+        
+        Map<String, Object> response = new java.util.HashMap<>();
+        
+        try {
+            // 验证管理员权限
+            if (isInvalidAdmin(httpRequest)) {
+                response.put("success", false);
+                response.put("message", "无效的管理员会话");
+                return response;
+            }
+
+            String profile = request.get("profile");
+            String status = request.get("status");
+            
+            if (profile == null && status == null) {
+                response.put("success", false);
+                response.put("message", "简介和状态不能都为空");
+                return response;
+            }
+
+            // 检查用户是否存在
+            User user = adminService.getUserById(userId);
+            if (user == null) {
+                response.put("success", false);
+                response.put("message", "用户不存在");
+                return response;
+            }
+
+            // 批量更新用户简介和状态
+            boolean success = adminService.updateUserProfileAndStatus(userId, profile, status);
+            if (success) {
+                response.put("success", true);
+                response.put("message", "用户信息更新成功");
+                logger.info("管理员批量更新用户 {} 信息 - 简介: {}, 状态: {}", userId, profile, status);
+            } else {
+                response.put("success", false);
+                response.put("message", "更新用户信息失败");
+            }
+            
+            return response;
+            
+        } catch (Exception e) {
+            logger.error("管理员批量更新用户信息失败", e);
+            response.put("success", false);
+            response.put("message", "更新用户信息失败: " + e.getMessage());
+            return response;
+        }
+    }
+
 }

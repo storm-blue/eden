@@ -144,12 +144,76 @@ public class UserService {
     }
     
     /**
+     * 获取用户详细信息（包含别名方法）
+     * @param userId 用户ID
+     * @return 用户信息，如果不存在返回null
+     */
+    public User getUserByUserId(String userId) {
+        return getUserById(userId);
+    }
+    
+    /**
      * 获取用户详细信息
      * @param userId 用户ID
      * @return 用户信息，如果不存在返回null
      */
     public User getUserInfo(String userId) {
         return getUserById(userId);
+    }
+    
+    /**
+     * 更新用户简介
+     * @param userId 用户ID
+     * @param profile 用户简介
+     * @return 是否更新成功
+     */
+    @Transactional
+    public boolean updateProfile(String userId, String profile) {
+        try {
+            userMapper.updateProfile(userId, profile);
+            logger.info("用户 {} 简介更新成功: {}", userId, profile);
+            return true;
+        } catch (Exception e) {
+            logger.error("更新用户 {} 简介失败: {}", userId, e.getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * 更新用户状态
+     * @param userId 用户ID
+     * @param status 用户状态
+     * @return 是否更新成功
+     */
+    @Transactional
+    public boolean updateStatus(String userId, String status) {
+        try {
+            userMapper.updateStatus(userId, status);
+            logger.info("用户 {} 状态更新成功: {}", userId, status);
+            return true;
+        } catch (Exception e) {
+            logger.error("更新用户 {} 状态失败: {}", userId, e.getMessage());
+            return false;
+        }
+    }
+    
+    /**
+     * 批量更新用户简介和状态
+     * @param userId 用户ID
+     * @param profile 用户简介
+     * @param status 用户状态
+     * @return 是否更新成功
+     */
+    @Transactional
+    public boolean updateProfileAndStatus(String userId, String profile, String status) {
+        try {
+            userMapper.updateProfileAndStatus(userId, profile, status);
+            logger.info("用户 {} 信息批量更新成功 - 简介: {}, 状态: {}", userId, profile, status);
+            return true;
+        } catch (Exception e) {
+            logger.error("批量更新用户 {} 信息失败: {}", userId, e.getMessage());
+            return false;
+        }
     }
     
     /**

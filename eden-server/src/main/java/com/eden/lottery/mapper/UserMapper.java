@@ -54,6 +54,21 @@ public interface UserMapper {
     void updateAvatar(@Param("userId") String userId, @Param("avatarPath") String avatarPath);
     
     /**
+     * 更新用户简介
+     */
+    void updateProfile(@Param("userId") String userId, @Param("profile") String profile);
+    
+    /**
+     * 更新用户状态
+     */
+    void updateStatus(@Param("userId") String userId, @Param("status") String status);
+    
+    /**
+     * 更新用户简介和状态
+     */
+    void updateProfileAndStatus(@Param("userId") String userId, @Param("profile") String profile, @Param("status") String status);
+    
+    /**
      * 根据居住地点查询用户列表
      */
     List<User> selectByResidence(@Param("residence") String residence);

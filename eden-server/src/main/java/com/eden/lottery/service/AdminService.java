@@ -147,4 +147,50 @@ public class AdminService {
         long currentTime = System.currentTimeMillis();
         adminSessions.entrySet().removeIf(entry -> currentTime > entry.getValue());
     }
+    
+    /**
+     * 获取用户信息（管理员功能）
+     */
+    public User getUserById(String userId) {
+        return userService.getUserById(userId);
+    }
+    
+    /**
+     * 更新用户简介（管理员功能）
+     */
+    public boolean updateUserProfile(String userId, String profile) {
+        boolean success = userService.updateProfile(userId, profile);
+        if (success) {
+            logger.info("管理员更新用户 {} 的简介: {}", userId, profile);
+        } else {
+            logger.warn("管理员更新用户 {} 简介失败", userId);
+        }
+        return success;
+    }
+    
+    /**
+     * 更新用户状态（管理员功能）
+     */
+    public boolean updateUserStatus(String userId, String status) {
+        boolean success = userService.updateStatus(userId, status);
+        if (success) {
+            logger.info("管理员更新用户 {} 的状态: {}", userId, status);
+        } else {
+            logger.warn("管理员更新用户 {} 状态失败", userId);
+        }
+        return success;
+    }
+    
+    /**
+     * 批量更新用户简介和状态（管理员功能）
+     */
+    public boolean updateUserProfileAndStatus(String userId, String profile, String status) {
+        boolean success = userService.updateProfileAndStatus(userId, profile, status);
+        if (success) {
+            logger.info("管理员批量更新用户 {} 信息 - 简介: {}, 状态: {}", userId, profile, status);
+        } else {
+            logger.warn("管理员批量更新用户 {} 信息失败", userId);
+        }
+        return success;
+    }
 }
