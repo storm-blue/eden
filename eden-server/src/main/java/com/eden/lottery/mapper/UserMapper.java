@@ -99,6 +99,16 @@ public interface UserMapper {
     List<User> selectAllWithResidence();
     
     /**
+     * 扣减用户耐力值
+     */
+    void decreaseStamina(@Param("userId") String userId);
+    
+    /**
+     * 批量刷新所有用户耐力值到5
+     */
+    void batchRefreshStamina();
+    
+    /**
      * 删除用户
      */
     void deleteByUserId(@Param("userId") String userId);

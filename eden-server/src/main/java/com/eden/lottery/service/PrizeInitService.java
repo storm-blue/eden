@@ -115,6 +115,12 @@ public class PrizeInitService implements ApplicationRunner {
             addStatusColumn(connection);
         }
 
+        // 检查stamina列是否存在
+        if (!columns.contains("stamina")) {
+            logger.info("users表缺少stamina列，添加列...");
+            addStaminaColumn(connection);
+        }
+
         logger.info("users表结构检查完成");
     }
 
@@ -201,6 +207,23 @@ public class PrizeInitService implements ApplicationRunner {
             String updateSql = "UPDATE users SET status = '安居乐业中' WHERE status IS NULL";
             stmt.execute(updateSql);
             logger.info("为现有用户设置默认状态");
+        }
+    }
+
+    /**
+     * 添加stamina列到users表
+     */
+    private void addStaminaColumn(Connection connection) throws Exception {
+        String sql = "ALTER TABLE users ADD COLUMN stamina INTEGER NOT NULL DEFAULT 5";
+
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(sql);
+            logger.info("stamina列添加成功");
+            
+            // 为现有用户设置默认耐力值
+            String updateSql = "UPDATE users SET stamina = 5 WHERE stamina IS NULL OR stamina = 0";
+            stmt.execute(updateSql);
+            logger.info("为现有用户设置默认耐力值");
         }
     }
 

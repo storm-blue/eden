@@ -36,7 +36,7 @@ public final class Scenes {
 
             // 检查场景要求的用户是否都在当前用户列表中
             // 并且用户列表的数量要匹配（确保精确匹配）
-            if (users.size() == sceneUsers.size() && new HashSet<>(users).containsAll(sceneUsers)) {
+            if (new HashSet<>(users).containsAll(sceneUsers)) {
                 matchedScene = scene;
                 break; // 找到精确匹配的场景，立即使用
             }

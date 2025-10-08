@@ -3,6 +3,7 @@ package com.eden.lottery.controller;
 import com.eden.lottery.event.ResidenceEventItem;
 import com.eden.lottery.entity.ResidenceEvent;
 import com.eden.lottery.entity.User;
+import com.eden.lottery.mapper.UserMapper;
 import com.eden.lottery.service.ResidenceEventService;
 import com.eden.lottery.utils.ResidenceUtils;
 import com.google.gson.Gson;
@@ -30,6 +31,9 @@ public class ResidenceEventController {
 
     @Autowired
     private ResidenceEventService residenceEventService;
+
+    @Autowired
+    private UserMapper userMapper;
 
     // Gson实例用于JSON序列化和反序列化
     private final Gson gson = new Gson();
@@ -143,13 +147,16 @@ public class ResidenceEventController {
     }
 
     /**
-     * 手动刷新指定居所的事件
+     * 手动刷新指定居所的事件（搞点事情功能）
      *
      * @param residence 居所类型
+     * @param requestBody 请求体，包含userId
      * @return 刷新结果
      */
     @PostMapping("/refresh/{residence}")
-    public Map<String, Object> refreshResidenceEvent(@PathVariable String residence) {
+    public Map<String, Object> refreshResidenceEvent(
+            @PathVariable String residence,
+            @RequestBody Map<String, String> requestBody) {
         Map<String, Object> response = new HashMap<>();
 
         try {
@@ -160,15 +167,48 @@ public class ResidenceEventController {
                 return response;
             }
 
+            // 获取用户ID
+            String userId = requestBody.get("userId");
+            if (userId == null || userId.isEmpty()) {
+                response.put("success", false);
+                response.put("message", "用户ID不能为空");
+                return response;
+            }
+
+            // 查询用户信息
+            User user = userMapper.selectByUserId(userId);
+            if (user == null) {
+                response.put("success", false);
+                response.put("message", "用户不存在");
+                return response;
+            }
+
+            // 检查耐力值
+            Integer stamina = user.getStamina();
+            if (stamina == null || stamina <= 0) {
+                response.put("success", false);
+                response.put("message", "你已经精疲力尽了，歇会吧");
+                response.put("stamina", 0);
+                return response;
+            }
+
+            // 扣减耐力值
+            userMapper.decreaseStamina(userId);
+
+            // 刷新居所事件
             boolean success = residenceEventService.generateResidenceEvent(residence);
 
             if (success) {
+                // 重新查询用户获取最新耐力值
+                user = userMapper.selectByUserId(userId);
                 response.put("success", true);
                 response.put("message", "居所事件刷新成功");
                 response.put("data", Map.of(
                         "residence", residence,
                         "residenceName", ResidenceUtils.getDisplayName(residence)
                 ));
+                response.put("stamina", user.getStamina());
+                logger.info("用户 {} 搞了点事情，当前耐力: {}", userId, user.getStamina());
             } else {
                 response.put("success", false);
                 response.put("message", "居所事件刷新失败");

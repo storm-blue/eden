@@ -32,6 +32,7 @@ CREATE TABLE IF NOT EXISTS users (
     avatar_path VARCHAR(255) DEFAULT NULL,  -- 头像文件路径
     profile TEXT DEFAULT NULL,              -- 用户简介
     status VARCHAR(100) DEFAULT NULL,       -- 用户状态
+    stamina INTEGER NOT NULL DEFAULT 5,     -- 耐力值（用于搞事情功能）
     create_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     update_time TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     last_refresh_date TIMESTAMP DEFAULT CURRENT_TIMESTAMP

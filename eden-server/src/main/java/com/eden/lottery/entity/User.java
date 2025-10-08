@@ -48,6 +48,11 @@ public class User {
     private String status;
     
     /**
+     * 耐力值（用于搞事情功能，最大值5）
+     */
+    private Integer stamina;
+    
+    /**
      * 创建时间
      */
     private LocalDateTime createTime;
@@ -139,6 +144,14 @@ public class User {
         this.status = status;
     }
 
+    public Integer getStamina() {
+        return stamina;
+    }
+
+    public void setStamina(Integer stamina) {
+        this.stamina = stamina;
+    }
+
     public LocalDateTime getCreateTime() {
         return createTime;
     }
@@ -174,6 +187,7 @@ public class User {
                 ", avatarPath='" + avatarPath + '\'' +
                 ", profile='" + profile + '\'' +
                 ", status='" + status + '\'' +
+                ", stamina=" + stamina +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 ", lastRefreshDate=" + lastRefreshDate +

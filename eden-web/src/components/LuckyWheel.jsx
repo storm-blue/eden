@@ -836,19 +836,22 @@ const LotteryLuckyWheel = () => {
 
     // 刷新当前居所事件
     const refreshCurrentResidenceEvents = async () => {
-        if (!selectedBuilding) {
+        if (!selectedBuilding || !userName) {
             return
         }
 
         try {
             console.log(`正在刷新 ${selectedBuilding.name} 的事件...`)
             
-            // 调用后端刷新单个居所事件接口
+            // 调用后端刷新单个居所事件接口，传递userId
             const response = await fetch(`/api/residence-events/refresh/${selectedBuilding.key}`, {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json'
-                }
+                },
+                body: JSON.stringify({
+                    userId: userName
+                })
             })
 
             const data = await response.json()
@@ -867,11 +870,13 @@ const LotteryLuckyWheel = () => {
                     console.log(`${selectedBuilding.name} 事件已更新`)
                 }
                 
-                // 显示成功提示
-                alert(`✨ ${selectedBuilding.name} 事件已刷新！`)
+                // 显示成功提示，包含剩余耐力信息
+                const staminaInfo = data.stamina !== undefined ? `\n剩余耐力: ${data.stamina}/5` : ''
+                alert(`✨ ${selectedBuilding.name} 事件已刷新！${staminaInfo}`)
             } else {
+                // 如果是耐力不足的提示，显示特殊消息
                 console.error('刷新事件失败:', data.message)
-                alert(`刷新事件失败: ${data.message}`)
+                alert(data.message)
             }
         } catch (error) {
             console.error('刷新事件失败:', error)
