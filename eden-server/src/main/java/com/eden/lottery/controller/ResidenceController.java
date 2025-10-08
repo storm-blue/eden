@@ -7,9 +7,9 @@ import com.eden.lottery.entity.ResidenceHistory;
 import com.eden.lottery.service.ResidenceHistoryService;
 import com.eden.lottery.service.StarCityService;
 import com.eden.lottery.utils.ResidenceUtils;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,13 +28,13 @@ public class ResidenceController {
 
     private static final Logger logger = LoggerFactory.getLogger(ResidenceController.class);
 
-    @Autowired
+    @Resource
     private UserMapper userMapper;
 
-    @Autowired
+    @Resource
     private ResidenceHistoryService residenceHistoryService;
 
-    @Autowired
+    @Resource
     private StarCityService starCityService;
 
     /**

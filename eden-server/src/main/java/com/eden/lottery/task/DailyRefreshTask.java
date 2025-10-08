@@ -2,9 +2,9 @@ package com.eden.lottery.task;
 
 import com.eden.lottery.service.StarCityService;
 import com.eden.lottery.service.UserService;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -16,10 +16,10 @@ public class DailyRefreshTask {
     
     private static final Logger logger = LoggerFactory.getLogger(DailyRefreshTask.class);
     
-    @Autowired
+    @Resource
     private UserService userService;
     
-    @Autowired
+    @Resource
     private StarCityService starCityService;
     
     /**

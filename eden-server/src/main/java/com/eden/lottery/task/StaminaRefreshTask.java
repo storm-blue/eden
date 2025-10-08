@@ -1,9 +1,9 @@
 package com.eden.lottery.task;
 
 import com.eden.lottery.mapper.UserMapper;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -16,7 +16,7 @@ public class StaminaRefreshTask {
 
     private static final Logger logger = LoggerFactory.getLogger(StaminaRefreshTask.class);
 
-    @Autowired
+    @Resource
     private UserMapper userMapper;
 
     /**

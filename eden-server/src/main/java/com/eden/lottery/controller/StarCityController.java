@@ -4,7 +4,7 @@ import com.eden.lottery.dto.ApiResponse;
 import com.eden.lottery.entity.StarCity;
 import com.eden.lottery.service.StarCityService;
 import com.eden.lottery.service.SpecialResidenceService;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.HashMap;
@@ -18,10 +18,10 @@ import java.util.Map;
 @RequestMapping("/api/star-city")
 public class StarCityController {
 
-    @Autowired
+    @Resource
     private StarCityService starCityService;
 
-    @Autowired
+    @Resource
     private SpecialResidenceService specialResidenceService;
 
     /**

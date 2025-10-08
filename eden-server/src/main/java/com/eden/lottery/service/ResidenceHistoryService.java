@@ -3,9 +3,9 @@ package com.eden.lottery.service;
 import com.eden.lottery.entity.ResidenceHistory;
 import com.eden.lottery.mapper.ResidenceHistoryMapper;
 import com.eden.lottery.utils.ResidenceUtils;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,7 +21,7 @@ public class ResidenceHistoryService {
 
     private static final Logger logger = LoggerFactory.getLogger(ResidenceHistoryService.class);
 
-    @Autowired
+    @Resource
     private ResidenceHistoryMapper residenceHistoryMapper;
 
     /**

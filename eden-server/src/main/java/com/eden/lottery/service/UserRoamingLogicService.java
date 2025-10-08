@@ -4,7 +4,7 @@ import com.eden.lottery.constants.ResidenceConstants;
 import com.eden.lottery.entity.User;
 import com.eden.lottery.mapper.UserMapper;
 import com.eden.lottery.utils.ResidenceUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,7 +23,7 @@ public class UserRoamingLogicService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserRoamingLogicService.class);
 
-    @Autowired
+    @Resource
     private UserMapper userMapper;
 
     /**

@@ -9,10 +9,10 @@ import com.eden.lottery.service.LotteryService;
 import com.eden.lottery.service.UserService;
 import com.eden.lottery.service.UserAttemptService;
 import com.eden.lottery.entity.User;
+import jakarta.annotation.Resource;
 import jakarta.servlet.http.HttpServletRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -28,13 +28,13 @@ public class LotteryController {
 
     private static final Logger logger = LoggerFactory.getLogger(LotteryController.class);
 
-    @Autowired
+    @Resource
     private LotteryService lotteryService;
     
-    @Autowired
+    @Resource
     private UserService userService;
     
-    @Autowired
+    @Resource
     private UserAttemptService userAttemptService;
 
     /**

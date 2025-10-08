@@ -1,23 +1,19 @@
 package com.eden.lottery.service;
 
-import com.eden.lottery.constants.ResidenceConstants;
 import com.eden.lottery.event.ResidenceEventItem;
 import com.eden.lottery.entity.ResidenceEvent;
 import com.eden.lottery.entity.ResidenceEventHistory;
 import com.eden.lottery.entity.User;
 import com.eden.lottery.event.Scenes;
-import com.eden.lottery.event.scene.CastleScenes;
-import com.eden.lottery.event.scene.CityHallScenes;
-import com.eden.lottery.event.scene.ParkScenes;
 import com.eden.lottery.mapper.ResidenceEventMapper;
 import com.eden.lottery.mapper.ResidenceEventHistoryMapper;
 import com.eden.lottery.mapper.UserMapper;
 import com.eden.lottery.utils.ResidenceUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.lang.reflect.Type;
@@ -34,13 +30,13 @@ public class ResidenceEventService {
 
     private static final Logger logger = LoggerFactory.getLogger(ResidenceEventService.class);
 
-    @Autowired
+    @Resource
     private ResidenceEventMapper residenceEventMapper;
 
-    @Autowired
+    @Resource
     private ResidenceEventHistoryMapper residenceEventHistoryMapper;
 
-    @Autowired
+    @Resource
     private UserMapper userMapper;
 
     // Gson实例用于JSON序列化和反序列化

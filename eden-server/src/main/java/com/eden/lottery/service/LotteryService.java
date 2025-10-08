@@ -6,9 +6,9 @@ import com.eden.lottery.entity.Prize;
 import com.eden.lottery.entity.User;
 import com.eden.lottery.mapper.LotteryRecordMapper;
 import com.eden.lottery.mapper.PrizeMapper;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -27,13 +27,13 @@ public class LotteryService {
     private static final Logger logger = LoggerFactory.getLogger(LotteryService.class);
     private final SecureRandom random = new SecureRandom();
 
-    @Autowired
+    @Resource
     private PrizeMapper prizeMapper;
 
-    @Autowired
+    @Resource
     private LotteryRecordMapper recordMapper;
 
-    @Autowired
+    @Resource
     private UserService userService;
 
     /**

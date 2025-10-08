@@ -3,9 +3,9 @@ package com.eden.lottery.service;
 import com.eden.lottery.entity.Prize;
 import com.eden.lottery.mapper.PrizeMapper;
 import com.eden.lottery.utils.ResidenceUtils;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.ApplicationArguments;
 import org.springframework.boot.ApplicationRunner;
 import org.springframework.core.annotation.Order;
@@ -30,10 +30,10 @@ public class PrizeInitService implements ApplicationRunner {
 
     private static final Logger logger = LoggerFactory.getLogger(PrizeInitService.class);
 
-    @Autowired
+    @Resource
     private PrizeMapper prizeMapper;
 
-    @Autowired
+    @Resource
     private DataSource dataSource;
 
     @Override

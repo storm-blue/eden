@@ -3,7 +3,7 @@ package com.eden.lottery.controller;
 import com.eden.lottery.entity.ResidenceEventHistory;
 import com.eden.lottery.service.ResidenceEventService;
 import com.eden.lottery.utils.ResidenceUtils;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,7 +17,7 @@ import java.util.Map;
 @RequestMapping("/api/residence-event-history")
 public class ResidenceEventHistoryController {
 
-    @Autowired
+    @Resource
     private ResidenceEventService residenceEventService;
 
     /**

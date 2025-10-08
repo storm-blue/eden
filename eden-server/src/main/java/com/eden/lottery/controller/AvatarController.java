@@ -3,9 +3,9 @@ package com.eden.lottery.controller;
 import com.eden.lottery.dto.ApiResponse;
 import com.eden.lottery.mapper.UserMapper;
 import com.eden.lottery.entity.User;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -15,9 +15,6 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.UUID;
@@ -32,7 +29,7 @@ public class AvatarController {
 
     private static final Logger logger = LoggerFactory.getLogger(AvatarController.class);
 
-    @Autowired
+    @Resource
     private UserMapper userMapper;
 
     // 头像存储目录

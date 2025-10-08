@@ -2,13 +2,12 @@ package com.eden.lottery.service;
 
 import com.eden.lottery.entity.Wish;
 import com.eden.lottery.mapper.WishMapper;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Random;
 
@@ -20,7 +19,7 @@ public class WishService {
     
     private static final Logger logger = LoggerFactory.getLogger(WishService.class);
     
-    @Autowired
+    @Resource
     private WishMapper wishMapper;
     
     private final Random random = new Random();

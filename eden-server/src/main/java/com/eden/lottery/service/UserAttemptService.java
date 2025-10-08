@@ -2,7 +2,7 @@ package com.eden.lottery.service;
 
 import com.eden.lottery.entity.UserAttempt;
 import com.eden.lottery.mapper.UserAttemptMapper;
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,7 +15,7 @@ import java.util.List;
 @Service
 public class UserAttemptService {
     
-    @Autowired
+    @Resource
     private UserAttemptMapper userAttemptMapper;
     
     /**

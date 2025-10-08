@@ -8,9 +8,9 @@ import com.eden.lottery.service.ResidenceEventService;
 import com.eden.lottery.utils.ResidenceUtils;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.lang.reflect.Type;
@@ -29,10 +29,10 @@ public class ResidenceEventController {
 
     private static final Logger logger = LoggerFactory.getLogger(ResidenceEventController.class);
 
-    @Autowired
+    @Resource
     private ResidenceEventService residenceEventService;
 
-    @Autowired
+    @Resource
     private UserMapper userMapper;
 
     // Gson实例用于JSON序列化和反序列化

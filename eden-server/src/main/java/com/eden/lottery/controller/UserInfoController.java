@@ -3,9 +3,9 @@ package com.eden.lottery.controller;
 import com.eden.lottery.entity.User;
 import com.eden.lottery.service.UserService;
 import com.eden.lottery.utils.ResidenceUtils;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -22,7 +22,7 @@ public class UserInfoController {
 
     private static final Logger logger = LoggerFactory.getLogger(UserInfoController.class);
 
-    @Autowired
+    @Resource
     private UserService userService;
 
     /**

@@ -1,6 +1,6 @@
 package com.eden.lottery.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.slf4j.Logger;
@@ -8,7 +8,6 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 /**
  * 用户漫游系统服务
@@ -19,13 +18,13 @@ public class UserRoamingService {
 
     private static final Logger logger = LoggerFactory.getLogger(UserRoamingService.class);
 
-    @Autowired
+    @Resource
     private StarCityService starCityService;
 
-    @Autowired
+    @Resource
     private UserRoamingLogicService roamingLogicService; // 用户自定义漫游逻辑
 
-    @Autowired
+    @Resource
     private ResidenceEventService residenceEventService; // 居所事件服务
 
     /**

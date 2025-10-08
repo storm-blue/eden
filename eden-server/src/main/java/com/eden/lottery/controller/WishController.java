@@ -4,10 +4,9 @@ import com.eden.lottery.dto.ApiResponse;
 import com.eden.lottery.entity.Wish;
 import com.eden.lottery.service.UserService;
 import com.eden.lottery.service.WishService;
-import jakarta.servlet.http.HttpServletRequest;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.*;
 
@@ -23,10 +22,10 @@ public class WishController {
 
     private static final Logger logger = LoggerFactory.getLogger(WishController.class);
 
-    @Autowired
+    @Resource
     private WishService wishService;
     
-    @Autowired
+    @Resource
     private UserService userService;
 
     /**

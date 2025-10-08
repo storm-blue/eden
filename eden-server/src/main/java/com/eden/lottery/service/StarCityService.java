@@ -8,9 +8,9 @@ import com.eden.lottery.mapper.LotteryRecordMapper;
 import com.eden.lottery.mapper.StarCityMapper;
 import com.eden.lottery.mapper.UserMapper;
 import com.eden.lottery.utils.ResidenceUtils;
+import jakarta.annotation.Resource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -26,16 +26,16 @@ public class StarCityService {
 
     private static final Logger logger = LoggerFactory.getLogger(StarCityService.class);
 
-    @Autowired
+    @Resource
     private StarCityMapper starCityMapper;
 
-    @Autowired
+    @Resource
     private LotteryRecordMapper lotteryRecordMapper;
 
-    @Autowired
+    @Resource
     private UserMapper userMapper;
 
-    @Autowired
+    @Resource
     private ResidenceEventService residenceEventService;
 
     /**
