@@ -910,39 +910,11 @@ const LotteryLuckyWheel = () => {
         }
     }
 
-    // 滚动到底部的函数
-    const scrollToBottom = () => {
-        // 使用多种方法确保滚动到底部
-        const scrollContainer = document.querySelector('.residence-event-scroll')
-        if (scrollContainer) {
-            // 方法1: 直接设置scrollTop
-            scrollContainer.scrollTop = scrollContainer.scrollHeight
-            
-            // 方法2: 使用requestAnimationFrame确保DOM更新完成
-            requestAnimationFrame(() => {
-                scrollContainer.scrollTop = scrollContainer.scrollHeight
-                
-                // 方法3: 再次确保滚动到底部
-                setTimeout(() => {
-                    scrollContainer.scrollTop = scrollContainer.scrollHeight
-                }, 50)
-            })
-        }
-    }
-
     // 显示事件历史弹窗
     const showResidenceEventHistory = () => {
         if (selectedBuilding) {
             fetchEventHistory(selectedBuilding.key)
             setShowEventHistory(true)
-            
-            // 延时滚动到底部，确保弹窗完全显示
-            setTimeout(() => {
-                const scrollContainer = document.querySelector('.residence-event-scroll')
-                if (scrollContainer) {
-                    scrollContainer.scrollTop = scrollContainer.scrollHeight
-                }
-            }, 300)
         }
     }
 
@@ -983,16 +955,6 @@ const LotteryLuckyWheel = () => {
             }, audioDelay)
         }
     }, [showStarCity])
-
-    // 监听事件历史数据变化，自动滚动到底部
-    useEffect(() => {
-        if (showEventHistory && eventHistory.length > 0 && !loadingEventHistory) {
-            // 延时执行滚动，确保DOM完全渲染
-            setTimeout(() => {
-                scrollToBottom()
-            }, 200)
-        }
-    }, [eventHistory, showEventHistory, loadingEventHistory])
 
     // 页面加载时自动获取已保存用户的信息
     useEffect(() => {
