@@ -831,7 +831,52 @@ const LotteryLuckyWheel = () => {
     // 检查当前用户是否已经在该居所中
     const isUserAlreadyInResidence = (residents, currentUser) => {
         if (!residents || !currentUser) return false
-        return residents.some(resident => resident.username === currentUser)
+        return residents.some(resident => resident.userId === currentUser)
+    }
+
+    // 刷新当前居所事件
+    const refreshCurrentResidenceEvents = async () => {
+        if (!selectedBuilding) {
+            return
+        }
+
+        try {
+            console.log(`正在刷新 ${selectedBuilding.name} 的事件...`)
+            
+            // 调用后端刷新单个居所事件接口
+            const response = await fetch(`/api/residence-events/refresh/${selectedBuilding.key}`, {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            })
+
+            const data = await response.json()
+            if (data.success) {
+                console.log(`${selectedBuilding.name} 事件刷新成功`)
+                
+                // 重新加载当前居所的事件
+                const eventResponse = await fetch(`/api/residence-events/${selectedBuilding.key}`)
+                const eventData = await eventResponse.json()
+                
+                if (eventData.success) {
+                    setResidenceEvents(prev => ({
+                        ...prev,
+                        [selectedBuilding.key]: eventData.data
+                    }))
+                    console.log(`${selectedBuilding.name} 事件已更新`)
+                }
+                
+                // 显示成功提示
+                alert(`✨ ${selectedBuilding.name} 事件已刷新！`)
+            } else {
+                console.error('刷新事件失败:', data.message)
+                alert(`刷新事件失败: ${data.message}`)
+            }
+        } catch (error) {
+            console.error('刷新事件失败:', error)
+            alert('刷新事件失败，请稍后重试')
+        }
     }
 
     // 确认居住选择
@@ -2482,58 +2527,60 @@ const LotteryLuckyWheel = () => {
                                 </div>
                             )}
                             <button
-                                onClick={isUserAlreadyInResidence(buildingResidents, userName) ? undefined : confirmResidence}
-                                disabled={isUserAlreadyInResidence(buildingResidents, userName)}
+                                onClick={isUserAlreadyInResidence(buildingResidents, userName) ? refreshCurrentResidenceEvents : confirmResidence}
+                                disabled={false}
                                 style={{
                                     background: isUserAlreadyInResidence(buildingResidents, userName)
-                                        ? 'rgba(128, 128, 128, 0.3)' // 灰色表示已居住
+                                        ? 'linear-gradient(135deg, #ff9800, #f57c00)' // 橙色表示搞事情
                                         : isDangerousResidence(buildingResidents, userName)
                                             ? 'linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)'
                                             : 'rgba(255, 255, 255, 0.2)',
-                                    color: isUserAlreadyInResidence(buildingResidents, userName)
-                                        ? 'rgba(255, 255, 255, 0.6)' // 淡化文字颜色
-                                        : 'white',
+                                    color: 'white',
                                     borderRadius: '25px',
                                     padding: '12px 25px',
                                     fontSize: '16px',
-                                    cursor: isUserAlreadyInResidence(buildingResidents, userName) ? 'not-allowed' : 'pointer',
+                                    cursor: 'pointer',
                                     transition: 'all 0.3s ease',
                                     backdropFilter: 'blur(10px)',
                                     border: isUserAlreadyInResidence(buildingResidents, userName)
-                                        ? '1px solid rgba(128, 128, 128, 0.3)'
+                                        ? '1px solid rgba(255, 152, 0, 0.5)'
                                         : isDangerousResidence(buildingResidents, userName)
                                             ? '1px solid rgba(255, 107, 107, 0.5)'
                                             : '1px solid rgba(255, 255, 255, 0.3)',
                                     fontWeight: 'bold',
-                                    boxShadow: isDangerousResidence(buildingResidents, userName) && !isUserAlreadyInResidence(buildingResidents, userName)
-                                        ? '0 4px 15px rgba(255, 107, 107, 0.3)'
-                                        : 'none',
-                                    opacity: isUserAlreadyInResidence(buildingResidents, userName) ? 0.7 : 1
+                                    boxShadow: isUserAlreadyInResidence(buildingResidents, userName)
+                                        ? '0 4px 15px rgba(255, 152, 0, 0.3)'
+                                        : isDangerousResidence(buildingResidents, userName)
+                                            ? '0 4px 15px rgba(255, 107, 107, 0.3)'
+                                            : 'none',
+                                    opacity: 1
                                 }}
                                 onMouseEnter={(e) => {
-                                    if (!isUserAlreadyInResidence(buildingResidents, userName)) {
-                                        if (isDangerousResidence(buildingResidents, userName)) {
-                                            e.target.style.background = 'linear-gradient(135deg, #ff5252 0%, #d32f2f 100%)'
-                                            e.target.style.boxShadow = '0 6px 20px rgba(255, 107, 107, 0.4)'
-                                        } else {
-                                            e.target.style.background = 'rgba(255, 255, 255, 0.3)'
-                                        }
-                                        e.target.style.transform = 'scale(1.05)'
+                                    if (isUserAlreadyInResidence(buildingResidents, userName)) {
+                                        e.target.style.background = 'linear-gradient(135deg, #ffb74d, #ff9800)'
+                                        e.target.style.boxShadow = '0 6px 20px rgba(255, 152, 0, 0.4)'
+                                    } else if (isDangerousResidence(buildingResidents, userName)) {
+                                        e.target.style.background = 'linear-gradient(135deg, #ff5252 0%, #d32f2f 100%)'
+                                        e.target.style.boxShadow = '0 6px 20px rgba(255, 107, 107, 0.4)'
+                                    } else {
+                                        e.target.style.background = 'rgba(255, 255, 255, 0.3)'
                                     }
+                                    e.target.style.transform = 'scale(1.05)'
                                 }}
                                 onMouseLeave={(e) => {
-                                    if (!isUserAlreadyInResidence(buildingResidents, userName)) {
-                                        if (isDangerousResidence(buildingResidents, userName)) {
-                                            e.target.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)'
-                                            e.target.style.boxShadow = '0 4px 15px rgba(255, 107, 107, 0.3)'
-                                        } else {
-                                            e.target.style.background = 'rgba(255, 255, 255, 0.2)'
-                                        }
-                                        e.target.style.transform = 'scale(1)'
+                                    if (isUserAlreadyInResidence(buildingResidents, userName)) {
+                                        e.target.style.background = 'linear-gradient(135deg, #ff9800, #f57c00)'
+                                        e.target.style.boxShadow = '0 4px 15px rgba(255, 152, 0, 0.3)'
+                                    } else if (isDangerousResidence(buildingResidents, userName)) {
+                                        e.target.style.background = 'linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)'
+                                        e.target.style.boxShadow = '0 4px 15px rgba(255, 107, 107, 0.3)'
+                                    } else {
+                                        e.target.style.background = 'rgba(255, 255, 255, 0.2)'
                                     }
+                                    e.target.style.transform = 'scale(1)'
                                 }}
                             >
-                                {isUserAlreadyInResidence(buildingResidents, userName) ? '已居住' : '居住'}
+                                {isUserAlreadyInResidence(buildingResidents, userName) ? '搞点事情' : '居住'}
                             </button>
                             <button
                                 onClick={showResidenceEventHistory}
@@ -2547,8 +2594,7 @@ const LotteryLuckyWheel = () => {
                                     transition: 'all 0.3s ease',
                                     backdropFilter: 'blur(10px)',
                                     border: '1px solid rgba(255, 255, 255, 0.3)',
-                                    fontWeight: 'bold',
-                                    marginLeft: '10px'
+                                    fontWeight: 'bold'
                                 }}
                                 onMouseEnter={(e) => {
                                     e.target.style.background = 'rgba(255, 255, 255, 0.25)'
@@ -2559,7 +2605,7 @@ const LotteryLuckyWheel = () => {
                                     e.target.style.transform = 'scale(1)'
                                 }}
                             >
-                                📜 历史
+                                历史
                             </button>
                             <button
                                 onClick={() => {

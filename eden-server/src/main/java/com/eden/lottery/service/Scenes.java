@@ -2,7 +2,6 @@ package com.eden.lottery.service;
 
 import com.eden.lottery.dto.ResidenceEventItem;
 
-import java.util.ArrayList;
 import java.util.List;
 
 public final class Scenes {

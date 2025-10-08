@@ -143,6 +143,47 @@ public class ResidenceEventController {
     }
 
     /**
+     * 手动刷新指定居所的事件
+     *
+     * @param residence 居所类型
+     * @return 刷新结果
+     */
+    @PostMapping("/refresh/{residence}")
+    public Map<String, Object> refreshResidenceEvent(@PathVariable String residence) {
+        Map<String, Object> response = new HashMap<>();
+
+        try {
+            // 验证居所类型
+            if (ResidenceUtils.isInvalidResidence(residence)) {
+                response.put("success", false);
+                response.put("message", "无效的居所类型");
+                return response;
+            }
+
+            boolean success = residenceEventService.generateResidenceEvent(residence);
+
+            if (success) {
+                response.put("success", true);
+                response.put("message", "居所事件刷新成功");
+                response.put("data", Map.of(
+                        "residence", residence,
+                        "residenceName", ResidenceUtils.getDisplayName(residence)
+                ));
+            } else {
+                response.put("success", false);
+                response.put("message", "居所事件刷新失败");
+            }
+
+        } catch (Exception e) {
+            logger.error("刷新居所事件失败，居所: {}", residence, e);
+            response.put("success", false);
+            response.put("message", "刷新居所事件失败: " + e.getMessage());
+        }
+
+        return response;
+    }
+
+    /**
      * 手动更新指定居所的事件
      *
      * @param residence   居所类型
