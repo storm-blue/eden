@@ -1,4 +1,4 @@
-package com.eden.lottery.dto;
+package com.eden.lottery.event;
 
 /**
  * 居所事件项DTO - 用于类型安全的JSON序列化和反序列化

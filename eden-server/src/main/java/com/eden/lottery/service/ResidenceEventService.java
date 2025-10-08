@@ -1,10 +1,14 @@
 package com.eden.lottery.service;
 
 import com.eden.lottery.constants.ResidenceConstants;
-import com.eden.lottery.dto.ResidenceEventItem;
+import com.eden.lottery.event.ResidenceEventItem;
 import com.eden.lottery.entity.ResidenceEvent;
 import com.eden.lottery.entity.ResidenceEventHistory;
 import com.eden.lottery.entity.User;
+import com.eden.lottery.event.Scenes;
+import com.eden.lottery.event.scene.CastleScenes;
+import com.eden.lottery.event.scene.CityHallScenes;
+import com.eden.lottery.event.scene.ParkScenes;
 import com.eden.lottery.mapper.ResidenceEventMapper;
 import com.eden.lottery.mapper.ResidenceEventHistoryMapper;
 import com.eden.lottery.mapper.UserMapper;
@@ -113,156 +117,21 @@ public class ResidenceEventService {
 
         List<User> residents = userMapper.selectByResidence(residence);
 
-        // TODO: 用户手动实现具体的事件生成逻辑
         logger.info("生成居所事件 - 居所: {}, 人员数量: {}", residence, residents != null ? residents.size() : 0);
 
+        List<String> usernames = new ArrayList<>();
 
-        // 检查是否是特殊情侣组合
-        SpecialCoupleResult specialResult = checkSpecialCouple(residents);
-
-        List<ResidenceEventItem> events = new ArrayList<>();
-
-        if (specialResult.isSpecialCouple) {
-            // 特殊情侣组合，生成特殊类型事件
-            if (specialResult.isThreePerson) {
-                // 三人组合 - 根据居所类型随机选择场景
-                List<ResidenceEventItem> randomScene = getRandomThreePersonScene(residence);
-                events.addAll(randomScene);
-            } else {
-                // 两人组合 - 根据居所类型随机选择场景
-                List<ResidenceEventItem> randomScene = getRandomTwoPersonScene(residence);
-                events.addAll(randomScene);
+        if (residents != null) {
+            for (User user : residents) {
+                usernames.add(user.getUserId());
             }
-
-            // 使用Gson序列化为JSON
-            String eventData = gson.toJson(events);
-            return updateResidenceEvent(residence, eventData, true, null, true);
-        } else {
-            // 普通情况，生成普通类型事件
-            events.add(new ResidenceEventItem(ResidenceUtils.getDisplayName(residence) + " 平静如常...", "normal"));
-            events.add(new ResidenceEventItem("微风轻拂过" + ResidenceUtils.getDisplayName(residence), "normal"));
-
-            // 使用Gson序列化为JSON
-            String eventData = gson.toJson(events);
-            return updateResidenceEvent(residence, eventData, false, null, false);
-        }
-    }
-
-    /**
-     * 检查是否是特殊情侣组合
-     *
-     * @param residents 居住人员列表
-     * @return 特殊情侣检查结果
-     */
-    private SpecialCoupleResult checkSpecialCouple(List<User> residents) {
-        if (residents == null || residents.isEmpty()) {
-            return new SpecialCoupleResult(false, false);
         }
 
-        // 提取用户名列表
-        List<String> userNames = residents.stream()
-                .map(User::getUserId)
-                .toList();
-
-        // 检查三人组合：秦小淮、李星斗、存子
-        if (userNames.contains("秦小淮") &&
-                userNames.contains("李星斗") &&
-                userNames.contains("存子")) {
-            return new SpecialCoupleResult(true, true);
-        }
-
-        // 检查两人组合：秦小淮、李星斗
-        if (userNames.contains("秦小淮") &&
-                userNames.contains("李星斗")) {
-            return new SpecialCoupleResult(true, false);
-        }
-
-        return new SpecialCoupleResult(false, false);
+        List<ResidenceEventItem> event = Scenes.getEvent(residence, usernames);
+        // 使用Gson序列化为JSON
+        String eventData = gson.toJson(event);
+        return updateResidenceEvent(residence, eventData, true, null, true);
     }
-
-    /**
-     * 特殊情侣检查结果内部类
-     */
-    private static class SpecialCoupleResult {
-        public final boolean isSpecialCouple;
-        public final boolean isThreePerson;
-
-        public SpecialCoupleResult(boolean isSpecialCouple, boolean isThreePerson) {
-            this.isSpecialCouple = isSpecialCouple;
-            this.isThreePerson = isThreePerson;
-        }
-    }
-
-    /**
-     * 根据居所类型获取随机两人场景
-     *
-     * @param residence 居所类型
-     * @return 随机选择的两人场景
-     */
-    private List<ResidenceEventItem> getRandomTwoPersonScene(String residence) {
-        List<List<ResidenceEventItem>> scenePool;
-
-        scenePool = switch (residence) {
-            case ResidenceConstants.PARK ->
-                // 公园场景：使用公园双人场景池（18个）
-                    List.of(
-                            Scenes.TWO__GY__01,
-                            Scenes.TWO__GY__16
-                    );
-            case ResidenceConstants.CITY_HALL ->
-                // 市政厅场景：使用市政厅双人场景池（18个）
-                    List.of(
-                            Scenes.TWO__SZT__01,
-                            Scenes.TWO__SZT__02,
-                            Scenes.TWO__SZT__03
-                    );
-            default ->
-                // 城堡等其他场景：使用城堡双人场景池（18个）
-                    List.of(
-                            Scenes.TWO__CB__01,
-                            Scenes.TWO__CB__02,
-                            Scenes.TWO__CB__03,
-                            Scenes.TWO__CB__07,
-                            Scenes.TWO__CB__08,
-                            Scenes.TWO__CB__11,
-                            Scenes.TWO__CB__19,
-                            Scenes.TWO__CB__21,
-                            Scenes.TWO__CB__25
-                    );
-        };
-
-        return scenePool.get((int) (Math.random() * scenePool.size()));
-    }
-
-    /**
-     * 根据居所类型获取随机三人场景
-     *
-     * @param residence 居所类型
-     * @return 随机选择的三人场景
-     */
-    private List<ResidenceEventItem> getRandomThreePersonScene(String residence) {
-        List<List<ResidenceEventItem>> scenePool = switch (residence) {
-            case ResidenceConstants.PARK ->
-                // 公园场景：使用公园三人场景池（18个）
-                    List.of(
-                            Scenes.THREE__GY__02, Scenes.THREE__GY__03, Scenes.THREE__GY__08
-                    );
-            case ResidenceConstants.CITY_HALL ->
-                // 市政厅场景：使用市政厅三人场景池（18个）
-                    List.of(
-                            Scenes.THREE__SZT__06,
-                            Scenes.THREE__SZT__12
-                    );
-            default ->
-                // 城堡等其他场景：使用城堡三人场景池（18个）
-                    List.of(
-                            Scenes.THREE__CB__02, Scenes.THREE__CB__23, Scenes.THREE__CB__24
-                    );
-        };
-
-        return scenePool.get((int) (Math.random() * scenePool.size()));
-    }
-
 
     /**
      * 刷新所有居所的事件

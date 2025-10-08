@@ -1,6 +1,6 @@
 package com.eden.lottery.controller;
 
-import com.eden.lottery.dto.ResidenceEventItem;
+import com.eden.lottery.event.ResidenceEventItem;
 import com.eden.lottery.entity.ResidenceEvent;
 import com.eden.lottery.entity.User;
 import com.eden.lottery.service.ResidenceEventService;
