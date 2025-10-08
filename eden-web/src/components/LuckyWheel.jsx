@@ -1271,6 +1271,10 @@ const LotteryLuckyWheel = () => {
                 background: 'linear-gradient(135deg, #2196F3, #1976D2)',
                 boxShadow: '0 2px 8px rgba(33, 150, 243, 0.3)'
             },
+            '工作中': {
+                background: 'linear-gradient(135deg, #2196F3, #1976D2)',
+                boxShadow: '0 2px 8px rgba(33, 150, 243, 0.3)'
+            },
             '幻想中': {
                 background: 'linear-gradient(135deg, #E91E63, #C2185B)',
                 boxShadow: '0 2px 8px rgba(233, 30, 99, 0.3)'
@@ -1286,7 +1290,7 @@ const LotteryLuckyWheel = () => {
         }
 
         // 如果找不到对应状态，使用默认的绿色
-        return statusColors[status] || statusColors['在线']
+        return statusColors[status] || statusColors['安居乐业中']
     }
 
     // 渲染居民头像列表
