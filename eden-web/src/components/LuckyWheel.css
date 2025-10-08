@@ -2808,7 +2808,7 @@
     /* 重置居住选择弹窗内容的定位，避免继承父级的transform */
     .residence-modal-overlay.force-landscape .residence-modal-content {
         position: relative !important;
-        max-width: 580px !important;
+        max-width: 650px !important;
         width: 95% !important;
         min-height: auto !important;
         max-height: 400px !important;

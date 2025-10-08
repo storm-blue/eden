@@ -2393,17 +2393,22 @@ const LotteryLuckyWheel = () => {
                         <div style={{
                             background: 'rgba(255, 255, 255, 0.1)',
                             borderRadius: '15px',
-                            padding: '15px', // 从20px减少到15px
+                            padding: '10px', // 从20px减少到15px
                             marginBottom: '15px', // 从25px减少到15px
                             position: 'relative',
-                            zIndex: 2
+                            zIndex: 2,
+                            flex: 1, // 允许这个区域占据剩余空间
+                            display: 'flex',
+                            flexDirection: 'column',
+                            minHeight: 0 // 重要：允许flex子元素收缩到小于内容高度
                         }}>
                             <div style={{
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 gap: '12px',
-                                marginBottom: '6px' // 从8px减少到6px
+                                marginBottom: '6px', // 从8px减少到6px
+                                flexShrink: 0 // 防止标题被压缩
                             }}>
                                 <div style={{
                                     fontSize: '48px'
@@ -2424,7 +2429,8 @@ const LotteryLuckyWheel = () => {
                                 opacity: 0.9,
                                 marginBottom: '12px', // 从15px减少到12px
                                 position: 'relative',
-                                zIndex: 2
+                                zIndex: 2,
+                                flexShrink: 0 // 防止居住人员区域被压缩
                             }}>
                                 {loadingResidents ? (
                                     <div style={{
@@ -2452,7 +2458,6 @@ const LotteryLuckyWheel = () => {
                                                 alignItems: 'center',
                                                 justifyContent: 'center',
                                                 gap: '8px',
-                                                marginBottom: '6px', // 从8px减少到6px
                                                 flexWrap: 'wrap'
                                             }}>
                                                 <span style={{fontSize: '14px'}}>
@@ -2473,52 +2478,51 @@ const LotteryLuckyWheel = () => {
                                             <div style={{
                                                 color: 'rgba(255, 255, 255, 0.6)',
                                                 fontSize: '12px',
-                                                marginBottom: '6px', // 从8px减少到6px
                                                 textAlign: 'center'
                                             }}>
                                                 当前居住人员：暂无居住人员
                                             </div>
                                         )}
-
-                                        {/* 居所事件显示 */}
-                                        {selectedBuilding && residenceEvents[selectedBuilding.key] && (
-                                            <div
-                                                className="residence-event-scroll"
-                                                style={{
-                                                    marginTop: '10px',
-                                                    maxHeight: isMobileDevice ? '120px' : '150px', // 根据设备调整最大高度
-                                                    overflowY: 'auto', // 超出时显示垂直滚动条
-                                                    paddingRight: '5px', // 为滚动条留出空间
-                                                    minHeight: 'auto' // 允许内容自适应高度
-                                                }}
-                                            >
-                                                {/* 渲染多条事件 */}
-                                                {residenceEvents[selectedBuilding.key].events && residenceEvents[selectedBuilding.key].events.map((event, index) => (
-                                                    <div key={index} style={{
-                                                        marginBottom: index < residenceEvents[selectedBuilding.key].events.length - 1 ? '6px' : '0',
-                                                        textAlign: 'center'
-                                                    }}>
-                                                        <div style={{
-                                                            fontSize: event.type === 'special' ? '16px' : '14px',
-                                                            fontWeight: event.type === 'special' ? 'bold' : '500',
-                                                            lineHeight: '1.4',
-                                                            color: event.type === 'special' ? '#ff69b4' : 'rgba(255, 255, 255, 0.9)',
-                                                            textShadow: event.type === 'special'
-                                                                ? '0 0 10px rgba(255, 105, 180, 0.5)'
-                                                                : 'none',
-                                                            animation: event.type === 'special'
-                                                                ? 'loveGlow 2s ease-in-out infinite alternate'
-                                                                : 'none'
-                                                        }}>
-                                                            {event.description || '未知事件'}
-                                                        </div>
-                                                    </div>
-                                                ))}
-                                            </div>
-                                        )}
                                     </>
                                 )}
                             </div>
+
+                            {/* 居所事件显示 */}
+                            {selectedBuilding && residenceEvents[selectedBuilding.key] && (
+                                <div
+                                    className="residence-event-scroll"
+                                    style={{
+                                        paddingRight: '5px', // 为滚动条留出空间
+                                        flex: 1, // 占据剩余空间
+                                        overflowY: 'auto', // 允许垂直滚动
+                                        minHeight: 0, // 允许收缩
+                                        WebkitOverflowScrolling: 'touch' // iOS平滑滚动
+                                    }}
+                                >
+                                    {/* 渲染多条事件 */}
+                                    {residenceEvents[selectedBuilding.key].events && residenceEvents[selectedBuilding.key].events.map((event, index) => (
+                                        <div key={index} style={{
+                                            marginBottom: index < residenceEvents[selectedBuilding.key].events.length - 1 ? '6px' : '0',
+                                            textAlign: 'center'
+                                        }}>
+                                            <div style={{
+                                                fontSize: event.type === 'special' ? '16px' : '14px',
+                                                fontWeight: event.type === 'special' ? 'bold' : '500',
+                                                lineHeight: '1.4',
+                                                color: event.type === 'special' ? '#ff69b4' : 'rgba(255, 255, 255, 0.9)',
+                                                textShadow: event.type === 'special'
+                                                    ? '0 0 10px rgba(255, 105, 180, 0.5)'
+                                                    : 'none',
+                                                animation: event.type === 'special'
+                                                    ? 'loveGlow 2s ease-in-out infinite alternate'
+                                                    : 'none'
+                                            }}>
+                                                {event.description || '未知事件'}
+                                            </div>
+                                        </div>
+                                    ))}
+                                </div>
+                            )}
                         </div>
 
                         {/* 按钮区域 */}
@@ -2527,7 +2531,8 @@ const LotteryLuckyWheel = () => {
                             gap: '15px',
                             justifyContent: 'center',
                             position: 'relative',
-                            zIndex: 2
+                            zIndex: 2,
+                            flexShrink: 0 // 防止按钮区域被压缩
                         }}>
                             {/* 危险警告文字 */}
                             {isDangerousResidence(buildingResidents, userName) && (
