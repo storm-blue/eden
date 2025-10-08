@@ -4,101 +4,101 @@ import './LuckyWheel.css'
 import AvatarCrop from './AvatarCrop'
 
 const LotteryLuckyWheel = () => {
-  const [prizes, setPrizes] = useState([
-    { 
+    const [prizes, setPrizes] = useState([
+        {
             background: '#ffcdd2', // 浅粉红色 🌈
-      fonts: [{ 
-        text: '🍰', 
+            fonts: [{
+                text: '🍰',
                 top: '15%',
                 fontSize: '30px'
-      }, { 
+            }, {
                 text: '吃的～',
                 top: '55%',
-        fontSize: '16px',
+                fontSize: '16px',
                 fontColor: '#333',
-        fontWeight: 'bold'
-      }] 
-    },
-    { 
+                fontWeight: 'bold'
+            }]
+        },
+        {
             background: '#ffe0b2', // 浅橙色 🌈
-      fonts: [{ 
-        text: '🥤', 
+            fonts: [{
+                text: '🥤',
                 top: '15%',
-        fontSize: '35px'
-      }, { 
+                fontSize: '35px'
+            }, {
                 text: '喝的～',
                 top: '55%',
-        fontSize: '16px',
+                fontSize: '16px',
                 fontColor: '#333',
-        fontWeight: 'bold'
-      }] 
-    },
-    { 
+                fontWeight: 'bold'
+            }]
+        },
+        {
             background: '#fff9c4', // 浅黄色 🌈
-      fonts: [{ 
-        text: '❤️', 
+            fonts: [{
+                text: '❤️',
                 top: '15%',
-        fontSize: '35px'
-      }, { 
+                fontSize: '35px'
+            }, {
                 text: '爱',
                 top: '55%',
-        fontSize: '18px',
-        fontColor: '#333',
-        fontWeight: 'bold'
-      }] 
-    },
-    { 
+                fontSize: '18px',
+                fontColor: '#333',
+                fontWeight: 'bold'
+            }]
+        },
+        {
             background: '#c8e6c9', // 浅绿色 🌈
-      fonts: [{ 
-        text: '💸', 
+            fonts: [{
+                text: '💸',
                 top: '15%',
-        fontSize: '35px'
-      }, { 
-        text: '空空如也', 
+                fontSize: '35px'
+            }, {
+                text: '空空如也',
                 top: '55%',
-        fontSize: '14px',
+                fontSize: '14px',
                 fontColor: '#333',
-        fontWeight: 'bold'
-      }] 
-    },
-    { 
+                fontWeight: 'bold'
+            }]
+        },
+        {
             background: '#b3e5fc', // 浅青色 🌈
-      fonts: [{ 
-        text: '🧧', 
+            fonts: [{
+                text: '🧧',
                 top: '15%',
-        fontSize: '35px'
-      }, { 
-        text: '红包', 
+                fontSize: '35px'
+            }, {
+                text: '红包',
                 top: '55%',
-        fontSize: '18px',
-        fontColor: '#333',
-        fontWeight: 'bold'
-      }] 
-    },
-    { 
-            background: '#bbdefb', // 浅蓝色 🌈
-      fonts: [{ 
-        text: '🔄', 
-                top: '15%',
-                fontSize: '30px'
-      }, { 
-        text: '再转一次', 
-                top: '55%',
-        fontSize: '14px',
+                fontSize: '18px',
                 fontColor: '#333',
-        fontWeight: 'bold'
-      }] 
-    },
-    { 
-            background: '#e1bee7', // 浅紫色 🌈
-      fonts: [{ 
-        text: '🎁', 
+                fontWeight: 'bold'
+            }]
+        },
+        {
+            background: '#bbdefb', // 浅蓝色 🌈
+            fonts: [{
+                text: '🔄',
                 top: '15%',
                 fontSize: '30px'
-      }, { 
-        text: '随机礼物', 
+            }, {
+                text: '再转一次',
                 top: '55%',
-        fontSize: '14px',
+                fontSize: '14px',
+                fontColor: '#333',
+                fontWeight: 'bold'
+            }]
+        },
+        {
+            background: '#e1bee7', // 浅紫色 🌈
+            fonts: [{
+                text: '🎁',
+                top: '15%',
+                fontSize: '30px'
+            }, {
+                text: '随机礼物',
+                top: '55%',
+                fontSize: '14px',
                 fontColor: '#333',
                 fontWeight: 'bold'
             }]
@@ -128,77 +128,77 @@ const LotteryLuckyWheel = () => {
                 top: '55%',
                 fontSize: '14px',
                 fontColor: '#333',
-        fontWeight: 'bold'
-      }] 
-    },
-  ])
+                fontWeight: 'bold'
+            }]
+        },
+    ])
 
-  const [blocks, setBlocks] = useState([
-    { 
+    const [blocks, setBlocks] = useState([
+        {
             padding: '10px',
-      background: '#ff6ec7', // 亮粉色外圈 🌈
-      paddingColor: '#ffea00'
-    },
-    { 
+            background: '#ff6ec7', // 亮粉色外圈 🌈
+            paddingColor: '#ffea00'
+        },
+        {
             padding: '10px',
-      background: '#ffffff', // 纯白色内圈
-      paddingColor: '#00e5ff'
-    }
-  ])
+            background: '#ffffff', // 纯白色内圈
+            paddingColor: '#00e5ff'
+        }
+    ])
 
-  const [buttons, setButtons] = useState([
-    { 
-      radius: '55px', 
+    const [buttons, setButtons] = useState([
+        {
+            radius: '55px',
             background: '#ff6ec7', // 明亮红色外圈 🌈
         },
         {
             radius: '50px',
             background: '#fff5ca' // 纯白中圈
-    },
-    { 
-      radius: '45px', 
+        },
+        {
+            radius: '45px',
             background: '#f0caff' // 纯白中圈
         },
         {
             radius: '40px',
             background: '#fdeeff' // 纯白中圈
-    },
-    { 
-      radius: '35px', 
+        },
+        {
+            radius: '35px',
             background: '#678cff', // 明亮蓝色内圈 🌈
-      pointer: true, // 官方指针配置
+            pointer: true, // 官方指针配置
             fonts: []
-    }
-  ])
+        }
+    ])
 
-  // 转盘配置
-  const [defaultConfig, setDefaultConfig] = useState({
-    gutter: 8,
-    offsetDegree: 0,
-    speed: 20,
-    accelerationTime: 3000,
-    decelerationTime: 3000
-  })
+    // 转盘配置
+    const [defaultConfig, setDefaultConfig] = useState({
+        gutter: 8,
+        offsetDegree: 0,
+        speed: 20,
+        accelerationTime: 3000,
+        decelerationTime: 3000
+    })
 
-  // 指针样式配置 - 让指针更细一些
-  const [defaultStyle, setDefaultStyle] = useState({
-    pointer: {
-      style: 'triangle',
-      background: '#ff1744',
-      borderColor: '#ffffff', 
-      borderWidth: 0.5, // 更细的边框
-      width: 10, // 指针宽度
-      height: 20 // 保持长度
-    }
-  })
+    // 指针样式配置 - 让指针更细一些
+    const [defaultStyle, setDefaultStyle] = useState({
+        pointer: {
+            style: 'triangle',
+            background: '#ff1744',
+            borderColor: '#ffffff',
+            borderWidth: 0.5, // 更细的边框
+            width: 10, // 指针宽度
+            height: 20 // 保持长度
+        }
+    })
 
-  const myLucky = useRef()
+    const myLucky = useRef()
     const starCityAudioRef = useRef() // 星星城背景音乐引用
-  const [isSpinning, setIsSpinning] = useState(false)
-  const [result, setResult] = useState('')
+    const [isSpinning, setIsSpinning] = useState(false)
+    const [result, setResult] = useState('')
     const [currentPrize, setCurrentPrize] = useState('') // 存储后端返回的奖品名称
     const [isMusicPlaying, setIsMusicPlaying] = useState(false) // 音乐播放状态
-    
+
     // 星星城背景音乐（简化为单个文件）
     const starCityMusicUrl = '/audio/star-city-bg.mp3'
     const [userName, setUserName] = useState(() => {
@@ -242,27 +242,27 @@ const LotteryLuckyWheel = () => {
     const [showAvatarCrop, setShowAvatarCrop] = useState(false) // 是否显示头像裁剪弹窗
     const [userAvatar, setUserAvatar] = useState(null) // 用户头像路径
     const [userAvatars, setUserAvatars] = useState({}) // 缓存所有用户头像 {userId: avatarPath}
-    
+
     // 居民头像详情弹框状态
     const [showResidentDetail, setShowResidentDetail] = useState(false)
     const [selectedResident, setSelectedResident] = useState(null)
     const [residentDetailInfo, setResidentDetailInfo] = useState(null)
     const [loadingResidentDetail, setLoadingResidentDetail] = useState(false)
-    
+
     // 用户头像预览弹框状态
     const [showAvatarPreview, setShowAvatarPreview] = useState(false)
-    
+
     // 居所事件状态
     const [residenceEvents, setResidenceEvents] = useState({})
 
     // 奖品名称映射（与后端保持一致）
-  const prizeNames = [
+    const prizeNames = [
         '🍰 吃的～',
         '🥤 喝的～',
         '❤️ 爱',
-    '💸 空空如也',
-    '🧧 红包',
-    '🔄 再转一次',
+        '💸 空空如也',
+        '🧧 红包',
+        '🔄 再转一次',
         '🎁 随机礼物',
         '💬 陪聊服务',
         '✨ 许愿一次'
@@ -493,7 +493,7 @@ const LotteryLuckyWheel = () => {
         checkScreenSize()
 
         // 🔥 CPU优化：使用passive监听器提升性能
-        const options = { passive: true }
+        const options = {passive: true}
         window.addEventListener('resize', checkScreenSize, options)
         window.addEventListener('orientationchange', () => {
             setTimeout(checkScreenSize, 200)
@@ -544,7 +544,7 @@ const LotteryLuckyWheel = () => {
         try {
             const response = await fetch(`/api/residence-events/${residence}`)
             const result = await response.json()
-            
+
             if (result.success) {
                 return result.data
             } else {
@@ -561,7 +561,7 @@ const LotteryLuckyWheel = () => {
     const loadAllResidenceEvents = async () => {
         const residences = ['castle', 'city_hall', 'palace', 'white_dove_house', 'park']
         const events = {}
-        
+
         try {
             await Promise.all(residences.map(async (residence) => {
                 const eventData = await fetchResidenceEvent(residence)
@@ -569,7 +569,7 @@ const LotteryLuckyWheel = () => {
                     events[residence] = eventData
                 }
             }))
-            
+
             setResidenceEvents(events)
             console.log('所有居所事件加载完成:', events)
         } catch (error) {
@@ -642,7 +642,7 @@ const LotteryLuckyWheel = () => {
                 switch (prizeType) {
                     case '🍰 吃的～':
                         effectMessage = '食物 +1万'
-        break
+                        break
                     case '🥤 喝的～':
                         effectMessage = '食物 +0.5万，幸福 +1'
                         break
@@ -765,12 +765,12 @@ const LotteryLuckyWheel = () => {
         const buildings = ['castle', 'city_hall', 'palace', 'white_dove_house', 'park']
         const residentsData = {}
         const allUserIds = []
-        
+
         try {
             for (const building of buildings) {
                 const response = await fetch(`/api/residence/residents/${building}`)
                 const data = await response.json()
-                
+
                 if (data.success) {
                     residentsData[building] = data.data.residents || []
                     // 收集所有用户ID用于批量获取头像
@@ -781,12 +781,12 @@ const LotteryLuckyWheel = () => {
                 }
             }
             setAllBuildingResidents(residentsData)
-            
+
             // 批量获取所有居民的头像
             if (allUserIds.length > 0) {
                 await fetchMultipleUserAvatars([...new Set(allUserIds)]) // 去重
             }
-            
+
         } catch (error) {
             console.error('加载建筑居住人员失败:', error)
         }
@@ -809,12 +809,12 @@ const LotteryLuckyWheel = () => {
     // 检查是否是危险居住组合（秦小淮要住进只有李星斗的地方）
     const isDangerousResidence = (residents, currentUser) => {
         if (!currentUser || !residents) return false
-        
+
         // 如果当前用户是秦小淮，且居所只有李星斗一个人
         if (currentUser === '秦小淮' && residents.length === 1) {
             return residents[0].userId === '李星斗'
         }
-        
+
         return false
     }
 
@@ -888,7 +888,7 @@ const LotteryLuckyWheel = () => {
     // 获取事件历史
     const fetchEventHistory = async (residence) => {
         if (!residence) return
-        
+
         setLoadingEventHistory(true)
         try {
             const response = await fetch(`/api/residence-event-history/${residence}`)
@@ -948,7 +948,7 @@ const LotteryLuckyWheel = () => {
             fetchSpecialCombos() // 获取特殊居住组合状态
             loadAllBuildingResidents() // 加载所有建筑的居住人员信息
             loadAllResidenceEvents() // 加载所有居所事件
-            
+
             // 🔥 修复双重下载：移除独立的预加载，直接播放
             // 音频会在首次播放时自动加载
             const audioDelay = isMobileDevice ? 2000 : 1000 // 移动端延迟更久
@@ -1025,7 +1025,7 @@ const LotteryLuckyWheel = () => {
             if (result.success) {
                 setUserInfo(result.data)
                 console.log('获取用户信息成功:', result.data)
-                
+
                 // 同时获取用户头像信息
                 fetchUserAvatar(userId)
             } else {
@@ -1044,8 +1044,8 @@ const LotteryLuckyWheel = () => {
 
             if (result.success && result.data.avatarPath) {
                 // 后端返回相对路径，前端拼接完整地址
-                const fullAvatarUrl = result.data.avatarPath.startsWith('http') 
-                    ? result.data.avatarPath 
+                const fullAvatarUrl = result.data.avatarPath.startsWith('http')
+                    ? result.data.avatarPath
                     : window.location.origin + result.data.avatarPath
                 setUserAvatar(fullAvatarUrl)
                 console.log('获取用户头像成功:', result.data)
@@ -1062,25 +1062,25 @@ const LotteryLuckyWheel = () => {
     // 批量获取多个用户的头像
     const fetchMultipleUserAvatars = async (userIds) => {
         const newAvatars = {}
-        
+
         // 过滤出还没有缓存的用户ID
         const uncachedUserIds = userIds.filter(userId => !userAvatars[userId])
-        
+
         if (uncachedUserIds.length === 0) {
             return // 所有头像都已缓存
         }
-        
+
         try {
             // 并发获取所有未缓存的用户头像
             const promises = uncachedUserIds.map(async (userId) => {
                 try {
                     const response = await fetch(`/api/avatar/${userId}`)
                     const result = await response.json()
-                    
+
                     if (result.success && result.data.avatarPath) {
                         // 后端返回相对路径，前端拼接完整地址
-                        const fullAvatarUrl = result.data.avatarPath.startsWith('http') 
-                            ? result.data.avatarPath 
+                        const fullAvatarUrl = result.data.avatarPath.startsWith('http')
+                            ? result.data.avatarPath
                             : window.location.origin + result.data.avatarPath
                         newAvatars[userId] = fullAvatarUrl
                     } else {
@@ -1091,12 +1091,12 @@ const LotteryLuckyWheel = () => {
                     newAvatars[userId] = null
                 }
             })
-            
+
             await Promise.all(promises)
-            
+
             // 更新头像缓存
             setUserAvatars(prev => ({...prev, ...newAvatars}))
-            
+
         } catch (error) {
             console.error('批量获取用户头像失败:', error)
         }
@@ -1105,8 +1105,8 @@ const LotteryLuckyWheel = () => {
     // 头像上传成功回调
     const handleAvatarSave = (avatarPath) => {
         // 后端返回相对路径，前端拼接完整地址
-        const fullAvatarUrl = avatarPath.startsWith('http') 
-            ? avatarPath 
+        const fullAvatarUrl = avatarPath.startsWith('http')
+            ? avatarPath
             : window.location.origin + avatarPath
         setUserAvatar(fullAvatarUrl)
         console.log('头像上传成功:', avatarPath)
@@ -1152,7 +1152,7 @@ const LotteryLuckyWheel = () => {
             avatarPath: avatarPath
         })
         setShowResidentDetail(true)
-        
+
         // 获取用户详细信息
         await fetchResidentDetailInfo(userId)
     }
@@ -1160,7 +1160,7 @@ const LotteryLuckyWheel = () => {
     // 获取居民详细信息
     const fetchResidentDetailInfo = async (userId) => {
         if (!userId) return
-        
+
         setLoadingResidentDetail(true)
         try {
             const response = await fetch(`/api/user-info/${userId}`)
@@ -1192,6 +1192,47 @@ const LotteryLuckyWheel = () => {
         setLoadingResidentDetail(false)
     }
 
+    // 根据状态获取颜色配置
+    const getStatusStyle = (status) => {
+        const statusColors = {
+            '安居乐业中': {
+                background: 'linear-gradient(135deg, #4CAF50, #45a049)',
+                boxShadow: '0 2px 8px rgba(76, 175, 80, 0.3)'
+            },
+            '忙碌中': {
+                background: 'linear-gradient(135deg, #2196F3, #1976D2)',
+                boxShadow: '0 2px 8px rgba(33, 150, 243, 0.3)'
+            },
+            '沉吟中': {
+                background: 'linear-gradient(135deg, #2196F3, #1976D2)',
+                boxShadow: '0 2px 8px rgba(33, 150, 243, 0.3)'
+            },
+            '装酷中': {
+                background: 'linear-gradient(135deg, #2196F3, #1976D2)',
+                boxShadow: '0 2px 8px rgba(33, 150, 243, 0.3)'
+            },
+            '思考中': {
+                background: 'linear-gradient(135deg, #2196F3, #1976D2)',
+                boxShadow: '0 2px 8px rgba(33, 150, 243, 0.3)'
+            },
+            '幻想中': {
+                background: 'linear-gradient(135deg, #E91E63, #C2185B)',
+                boxShadow: '0 2px 8px rgba(233, 30, 99, 0.3)'
+            },
+            '兽性大发中': {
+                background: 'linear-gradient(135deg, #E91E63, #C2185B)',
+                boxShadow: '0 2px 8px rgba(233, 30, 99, 0.3)'
+            },
+            '发情中': {
+                background: 'linear-gradient(135deg, #E91E63, #C2185B)',
+                boxShadow: '0 2px 8px rgba(233, 30, 99, 0.3)'
+            },
+        }
+
+        // 如果找不到对应状态，使用默认的绿色
+        return statusColors[status] || statusColors['在线']
+    }
+
     // 渲染居民头像列表
     const renderResidentAvatars = (buildingType, residents) => {
         if (!residents || residents.length === 0) {
@@ -1200,11 +1241,11 @@ const LotteryLuckyWheel = () => {
 
         // 根据建筑类型确定位置
         const buildingPositions = {
-            castle: { top: '23%', left: '48%' },
-            city_hall: { top: '12%', left: '72%' },
-            palace: { top: '8%', left: '23%' },
-            white_dove_house: { top: '31%', left: '61%' },
-            park: { top: '50%', left: '40%' }
+            castle: {top: '23%', left: '48%'},
+            city_hall: {top: '12%', left: '72%'},
+            palace: {top: '8%', left: '23%'},
+            white_dove_house: {top: '31%', left: '61%'},
+            park: {top: '50%', left: '40%'}
         }
 
         const position = buildingPositions[buildingType]
@@ -1353,11 +1394,11 @@ const LotteryLuckyWheel = () => {
                 }
 
                 // 后端抽奖成功，开始转盘动画
-    myLucky.current.play()
-    
+                myLucky.current.play()
+
                 // 延迟停止转盘，让动画更自然
-    setTimeout(() => {
-      myLucky.current.stop(selectedIndex)
+                setTimeout(() => {
+                    myLucky.current.stop(selectedIndex)
                 }, 1500)
 
                 // 刷新用户信息以显示最新的剩余次数
@@ -1375,7 +1416,7 @@ const LotteryLuckyWheel = () => {
     }
 
     const onEnd = async (prize) => {
-    setIsSpinning(false)
+        setIsSpinning(false)
 
         // 优先使用后端返回的奖品名称，如果没有则尝试解析转盘返回的索引
         if (currentPrize) {
@@ -1416,7 +1457,7 @@ const LotteryLuckyWheel = () => {
                 setShowLoveEffect(true)
                 // 不自动隐藏，等待用户点击
             } else {
-    setResult(prizeText)
+                setResult(prizeText)
             }
 
             // 检查是否抽到"再转一次"
@@ -1438,7 +1479,7 @@ const LotteryLuckyWheel = () => {
         const newUserName = tempName.trim()
         setUserName(newUserName)
         setShowNameInput(false)
-        
+
         // 保存用户名到localStorage
         localStorage.setItem('eden_userName', newUserName)
 
@@ -1476,10 +1517,10 @@ const LotteryLuckyWheel = () => {
     const handleLoveContinue = () => {
         setShowLoveEffect(false)
         // 爱心特效结束后不需要额外操作
-  }
+    }
 
-  return (
-    <div className="lucky-lottery-container">
+    return (
+        <div className="lucky-lottery-container">
             {/* 星星城背景音乐（彻底修复双重下载） */}
             <audio
                 ref={starCityAudioRef}
@@ -1504,7 +1545,7 @@ const LotteryLuckyWheel = () => {
                         justifyContent: 'center',
                         color: 'white'
                     }}>
-                    
+
                     {/* 标题 */}
                     <h2 style={{
                         fontSize: '42px',
@@ -1921,8 +1962,8 @@ const LotteryLuckyWheel = () => {
                                     animation: 'loveGlow 2s ease-in-out infinite alternate'
                                 }}>
                                     <div style={{
-                                        fontSize: '8px', 
-                                        color: '#FF69B4', 
+                                        fontSize: '8px',
+                                        color: '#FF69B4',
                                         marginBottom: '1px',
                                         fontWeight: 'bold',
                                         textAlign: 'center'
@@ -1930,7 +1971,7 @@ const LotteryLuckyWheel = () => {
                                         💕 爱情加成 💕
                                     </div>
                                     <div style={{
-                                        fontSize: '8px', 
+                                        fontSize: '8px',
                                         lineHeight: '1.1',
                                         textAlign: 'center',
                                         color: '#FFB6C1'
@@ -2223,17 +2264,17 @@ const LotteryLuckyWheel = () => {
                                 {[...Array(isMobileDevice ? 8 : 8)].map((_, i) => {
                                     // 🔥 CPU优化：使用预定义位置，减少Math.random()计算
                                     const positions = [
-                                        { left: 15, top: 20 },
-                                        { left: 85, top: 30 },
-                                        { left: 10, top: 70 },
-                                        { left: 90, top: 80 },
-                                        { left: 20, top: 50 },
-                                        { left: 80, top: 60 },
-                                        { left: 25, top: 85 },
-                                        { left: 75, top: 15 }
+                                        {left: 15, top: 20},
+                                        {left: 85, top: 30},
+                                        {left: 10, top: 70},
+                                        {left: 90, top: 80},
+                                        {left: 20, top: 50},
+                                        {left: 80, top: 60},
+                                        {left: 25, top: 85},
+                                        {left: 75, top: 15}
                                     ]
                                     const pos = positions[i] || positions[0]
-                                    
+
                                     return (
                                         <div
                                             key={i}
@@ -2255,15 +2296,15 @@ const LotteryLuckyWheel = () => {
                                         </div>
                                     );
                                 })}
-                                
+
                                 {/* 🔥 CPU优化：移动端移除装饰性爱心，减少CPU负担 */}
                                 {!isMobileDevice && [...Array(3)].map((_, i) => {
                                     // 顶部区域的爱心
                                     const isTopArea = i < 3;
-                                    const topPosition = isTopArea 
+                                    const topPosition = isTopArea
                                         ? Math.random() * 20 // 顶部 0-20%
                                         : 80 + Math.random() * 15; // 底部 80-95%
-                                    
+
                                     return (
                                         <div
                                             key={`decoration-${i}`}
@@ -2377,7 +2418,7 @@ const LotteryLuckyWheel = () => {
 
                                         {/* 居所事件显示 */}
                                         {selectedBuilding && residenceEvents[selectedBuilding.key] && (
-                                            <div 
+                                            <div
                                                 className="residence-event-scroll"
                                                 style={{
                                                     marginTop: '10px',
@@ -2398,11 +2439,11 @@ const LotteryLuckyWheel = () => {
                                                             fontWeight: event.type === 'special' ? 'bold' : '500',
                                                             lineHeight: '1.4',
                                                             color: event.type === 'special' ? '#ff69b4' : 'rgba(255, 255, 255, 0.9)',
-                                                            textShadow: event.type === 'special' 
-                                                                ? '0 0 10px rgba(255, 105, 180, 0.5)' 
+                                                            textShadow: event.type === 'special'
+                                                                ? '0 0 10px rgba(255, 105, 180, 0.5)'
                                                                 : 'none',
-                                                            animation: event.type === 'special' 
-                                                                ? 'loveGlow 2s ease-in-out infinite alternate' 
+                                                            animation: event.type === 'special'
+                                                                ? 'loveGlow 2s ease-in-out infinite alternate'
                                                                 : 'none'
                                                         }}>
                                                             {event.description || '未知事件'}
@@ -2446,10 +2487,10 @@ const LotteryLuckyWheel = () => {
                                 style={{
                                     background: isUserAlreadyInResidence(buildingResidents, userName)
                                         ? 'rgba(128, 128, 128, 0.3)' // 灰色表示已居住
-                                        : isDangerousResidence(buildingResidents, userName) 
-                                            ? 'linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)' 
+                                        : isDangerousResidence(buildingResidents, userName)
+                                            ? 'linear-gradient(135deg, #ff6b6b 0%, #ee5a52 100%)'
                                             : 'rgba(255, 255, 255, 0.2)',
-                                    color: isUserAlreadyInResidence(buildingResidents, userName) 
+                                    color: isUserAlreadyInResidence(buildingResidents, userName)
                                         ? 'rgba(255, 255, 255, 0.6)' // 淡化文字颜色
                                         : 'white',
                                     borderRadius: '25px',
@@ -2581,71 +2622,71 @@ const LotteryLuckyWheel = () => {
                 </div>
             )}
 
-      {/* 用户头像 - 左上角 */}
-      {userName && userInfo && userInfo.message !== '用户不存在' && (
-          <div 
-              className="main-page-avatar"
-              onClick={(e) => {
-                  e.stopPropagation()
-                  handleAvatarClick()
-              }}
-              style={{
-                  position: 'fixed',
-                  top: '20px',
-                  left: '20px',
-                  width: '60px',
-                  height: '60px',
-                  borderRadius: '50%',
-                  backgroundImage: userAvatar ? `url(${userAvatar})` : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                  backgroundSize: 'cover',
-                  backgroundPosition: 'center',
-                  backgroundRepeat: 'no-repeat',
-                  border: '3px solid rgba(255, 255, 255, 0.8)',
-                  cursor: 'pointer',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  transition: 'all 0.3s ease',
-                  boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
-                  zIndex: 1000,
-                  pointerEvents: 'auto',
-                  overflow: 'hidden', // 确保内容不会溢出圆形边界
-                  boxSizing: 'border-box' // 确保边框包含在尺寸内
-              }}
-              onMouseEnter={(e) => {
-                  e.target.style.transform = 'scale(1.1)';
-                  e.target.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.4)';
-              }}
-              onMouseLeave={(e) => {
-                  e.target.style.transform = 'scale(1)';
-                  e.target.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
-              }}
-          >
-              {!userAvatar && (
-                  <div style={{
-                      fontSize: '24px',
-                      color: 'white',
-                      textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
-                      display: 'flex',
-                      alignItems: 'center',
-                      justifyContent: 'center',
-                      width: '100%',
-                      height: '100%',
-                      marginTop: '-4px'
-                  }}>
-                      📷
-                  </div>
-              )}
-          </div>
-      )}
+            {/* 用户头像 - 左上角 */}
+            {userName && userInfo && userInfo.message !== '用户不存在' && (
+                <div
+                    className="main-page-avatar"
+                    onClick={(e) => {
+                        e.stopPropagation()
+                        handleAvatarClick()
+                    }}
+                    style={{
+                        position: 'fixed',
+                        top: '20px',
+                        left: '20px',
+                        width: '60px',
+                        height: '60px',
+                        borderRadius: '50%',
+                        backgroundImage: userAvatar ? `url(${userAvatar})` : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                        border: '3px solid rgba(255, 255, 255, 0.8)',
+                        cursor: 'pointer',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transition: 'all 0.3s ease',
+                        boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
+                        zIndex: 1000,
+                        pointerEvents: 'auto',
+                        overflow: 'hidden', // 确保内容不会溢出圆形边界
+                        boxSizing: 'border-box' // 确保边框包含在尺寸内
+                    }}
+                    onMouseEnter={(e) => {
+                        e.target.style.transform = 'scale(1.1)';
+                        e.target.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.4)';
+                    }}
+                    onMouseLeave={(e) => {
+                        e.target.style.transform = 'scale(1)';
+                        e.target.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)';
+                    }}
+                >
+                    {!userAvatar && (
+                        <div style={{
+                            fontSize: '24px',
+                            color: 'white',
+                            textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            width: '100%',
+                            height: '100%',
+                            marginTop: '-4px'
+                        }}>
+                            📷
+                        </div>
+                    )}
+                </div>
+            )}
 
-      {/* 标题 */}
-      <div className="header">
-        <h1 className="title">🎪 Eden欢乐抽奖 🎪</h1>
+            {/* 标题 */}
+            <div className="header">
+                <h1 className="title">🎪 Eden欢乐抽奖 🎪</h1>
                 <p className="subtitle">
                     {userName ? `${userName}，转动转盘，好运连连！` : '转动转盘，好运连连！'}
                 </p>
-      </div>
+            </div>
 
             {/* 帮助按钮 - 右上角 */}
             {userName && (
@@ -2661,21 +2702,21 @@ const LotteryLuckyWheel = () => {
                 </button>
             )}
 
-      {/* 转盘区域 */}
-      <div className="wheel-container">
-        <LuckyWheel
-          ref={myLucky}
-          width="380px"
-          height="380px"
-          prizes={prizes}
-          blocks={blocks}
-          buttons={buttons}
-          defaultConfig={defaultConfig}
-          defaultStyle={defaultStyle}
+            {/* 转盘区域 */}
+            <div className="wheel-container">
+                <LuckyWheel
+                    ref={myLucky}
+                    width="380px"
+                    height="380px"
+                    prizes={prizes}
+                    blocks={blocks}
+                    buttons={buttons}
+                    defaultConfig={defaultConfig}
+                    defaultStyle={defaultStyle}
                     onStart={() => {
                     }} // 点击抽奖按钮会触发
-          onEnd={onEnd}
-        />
+                    onEnd={onEnd}
+                />
                 {/* 转盘中心显示剩余次数 */}
                 {userName && (
                     <div className="wheel-center-info">
@@ -2690,10 +2731,10 @@ const LotteryLuckyWheel = () => {
                         </div>
                     </div>
                 )}
-      </div>
+            </div>
 
-      {/* 控制按钮 */}
-      <div className="controls">
+            {/* 控制按钮 */}
+            <div className="controls">
                 {/* 用户信息行 */}
                 {userName && (
                     <div className="user-info-row">
@@ -2712,7 +2753,7 @@ const LotteryLuckyWheel = () => {
 
                         {/* 许愿入口按钮 - 用户姓名右侧，只对存在的用户显示 */}
                         {userInfo && userInfo.message !== "用户不存在" && (
-        <button 
+                            <button
                                 className="wish-entrance-button-inline"
                                 onClick={() => setShowWishPage(true)}
                                 title={`进入许愿页面 ${userInfo && userInfo.wishCount > 0 ? `(${userInfo.wishCount}次许愿机会)` : '(暂无许愿机会)'}`}
@@ -2721,13 +2762,13 @@ const LotteryLuckyWheel = () => {
                                 {userInfo && userInfo.wishCount > 0 && (
                                     <span className="wish-count-badge">{userInfo.wishCount}</span>
                                 )}
-        </button>
+                            </button>
                         )}
                     </div>
                 )}
-        
+
                 {/* 开始抽奖按钮 */}
-        <button 
+                <button
                     className={`spin-button ${isSpinning || !userName || !userInfo || showWelcomeEffect || !welcomeEffectFinished || userInfo.remainingDraws <= 0 ? 'disabled' : ''}`}
                     onClick={startSpin}
                     disabled={isSpinning || !userName || !userInfo || showWelcomeEffect || !welcomeEffectFinished || userInfo.remainingDraws <= 0}
@@ -2738,15 +2779,15 @@ const LotteryLuckyWheel = () => {
                                 (!userInfo || userInfo.message === "用户不存在") ? '👤 用户不存在' :
                                     (userInfo.remainingDraws <= 0) ? '🚫 次数已用完' :
                                         '🎲 转动命运'}
-        </button>
-      </div>
+                </button>
+            </div>
 
-      {/* 结果显示 */}
-      {result && (
-        <div className="result-modal">
-          <div className="result-content">
-            <h2 className="result-title">🎉 恭喜你获得 🎉</h2>
-            <div className="result-prize">{result}</div>
+            {/* 结果显示 */}
+            {result && (
+                <div className="result-modal">
+                    <div className="result-content">
+                        <h2 className="result-title">🎉 恭喜你获得 🎉</h2>
+                        <div className="result-prize">{result}</div>
                         <div className="result-description">
                             {getRandomPrizeDescription(result)}
                         </div>
@@ -2773,15 +2814,15 @@ const LotteryLuckyWheel = () => {
                                 </button>
                             </div>
                         ) : (
-            <button 
-              className="continue-button"
+                            <button
+                                className="continue-button"
                                 onClick={() => {
                                     setResult('')
                                     setCurrentPrize('')
                                 }}
-            >
-              继续游戏
-            </button>
+                            >
+                                继续游戏
+                            </button>
                         )}
                     </div>
                 </div>
@@ -3109,599 +3150,598 @@ const LotteryLuckyWheel = () => {
                                 <div className="wish-tooltip-arrow"></div>
                             </div>
                         )}
-          </div>
-        </div>
-      )}
+                    </div>
+                </div>
+            )}
 
-      {/* 装饰元素 */}
-      <div className="decorations">
-        <div className="star star-1">⭐</div>
-        <div className="star star-2">🌟</div>
-        <div className="star star-3">✨</div>
-        <div className="star star-4">💫</div>
-      </div>
-      
-      {/* 头像裁剪弹窗 */}
-      <AvatarCrop
-        isOpen={showAvatarCrop}
-        onClose={() => setShowAvatarCrop(false)}
-        onSave={handleAvatarSave}
-        userName={userName}
-      />
+            {/* 装饰元素 */}
+            <div className="decorations">
+                <div className="star star-1">⭐</div>
+                <div className="star star-2">🌟</div>
+                <div className="star star-3">✨</div>
+                <div className="star star-4">💫</div>
+            </div>
 
-      {/* 用户头像预览弹框 */}
-      {showAvatarPreview && userAvatar && (
-        <div 
-          className={`avatar-preview-overlay ${isMobileDevice ? 'force-landscape' : ''}`}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.8)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 100000,
-            backdropFilter: 'blur(8px)'
-          }}
-          onClick={closeAvatarPreview}
-        >
-          <div 
-            className="avatar-preview-content"
-            style={{
-              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 248, 255, 0.95))',
-              borderRadius: '25px',
-              padding: '40px',
-              maxWidth: '450px',
-              width: '90%',
-              textAlign: 'center',
-              boxShadow: '0 25px 50px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.2)',
-              border: '2px solid rgba(255, 255, 255, 0.3)',
-              backdropFilter: 'blur(15px)',
-              position: 'relative',
-              animation: 'fadeInScale 0.3s ease-out'
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* 关闭按钮 */}
-            <button
-              onClick={closeAvatarPreview}
-              style={{
-                position: 'absolute',
-                top: '20px',
-                right: '20px',
-                width: '35px',
-                height: '35px',
-                borderRadius: '50%',
-                border: 'none',
-                background: 'rgba(255, 255, 255, 0.8)',
-                color: '#666',
-                fontSize: '18px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.2s ease',
-                boxShadow: '0 3px 10px rgba(0, 0, 0, 0.15)'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.background = 'rgba(255, 255, 255, 1)'
-                e.target.style.color = '#333'
-                e.target.style.transform = 'scale(1.1)'
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.background = 'rgba(255, 255, 255, 0.8)'
-                e.target.style.color = '#666'
-                e.target.style.transform = 'scale(1)'
-              }}
-            >
-              ✕
-            </button>
-
-            {/* 标题 */}
-            <h3 style={{
-              margin: '0 0 25px',
-              fontSize: '28px',
-              fontWeight: '600',
-              color: '#333',
-              textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
-              background: 'linear-gradient(135deg, #667eea, #764ba2)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text'
-            }}>
-              我的头像
-            </h3>
-
-            {/* 头像显示 */}
-            <div style={{
-              width: '200px',
-              height: '200px',
-              borderRadius: '50%',
-              margin: '0 auto 30px',
-              overflow: 'hidden',
-              border: '5px solid rgba(255, 255, 255, 0.9)',
-              boxShadow: '0 15px 40px rgba(0, 0, 0, 0.3), inset 0 0 0 2px rgba(255, 255, 255, 0.4)',
-              background: `url(${userAvatar})`,
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-              position: 'relative',
-              transition: 'all 0.3s ease'
-            }}
-            onMouseEnter={(e) => {
-              e.target.style.transform = 'scale(1.05)'
-              e.target.style.boxShadow = '0 20px 50px rgba(0, 0, 0, 0.4), inset 0 0 0 2px rgba(255, 255, 255, 0.6)'
-            }}
-            onMouseLeave={(e) => {
-              e.target.style.transform = 'scale(1)'
-              e.target.style.boxShadow = '0 15px 40px rgba(0, 0, 0, 0.3), inset 0 0 0 2px rgba(255, 255, 255, 0.4)'
-            }}
+            {/* 头像裁剪弹窗 */}
+            <AvatarCrop
+                isOpen={showAvatarCrop}
+                onClose={() => setShowAvatarCrop(false)}
+                onSave={handleAvatarSave}
+                userName={userName}
             />
 
-            {/* 用户名显示 */}
-            <div style={{
-              margin: '0 0 25px',
-              fontSize: '20px',
-              fontWeight: '500',
-              color: '#555',
-              background: 'rgba(255, 255, 255, 0.7)',
-              padding: '12px 20px',
-              borderRadius: '15px',
-              border: '1px solid rgba(255, 255, 255, 0.8)',
-              boxShadow: '0 3px 10px rgba(0, 0, 0, 0.1)'
-            }}>
-              👤 {userName}
-            </div>
+            {/* 用户头像预览弹框 */}
+            {showAvatarPreview && userAvatar && (
+                <div
+                    className={`avatar-preview-overlay ${isMobileDevice ? 'force-landscape' : ''}`}
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'rgba(0, 0, 0, 0.8)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 100000,
+                        backdropFilter: 'blur(8px)'
+                    }}
+                    onClick={closeAvatarPreview}
+                >
+                    <div
+                        className="avatar-preview-content"
+                        style={{
+                            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 248, 255, 0.95))',
+                            borderRadius: '25px',
+                            padding: '40px',
+                            maxWidth: '450px',
+                            width: '90%',
+                            textAlign: 'center',
+                            boxShadow: '0 25px 50px rgba(0, 0, 0, 0.4), 0 0 0 1px rgba(255, 255, 255, 0.2)',
+                            border: '2px solid rgba(255, 255, 255, 0.3)',
+                            backdropFilter: 'blur(15px)',
+                            position: 'relative',
+                            animation: 'fadeInScale 0.3s ease-out'
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* 关闭按钮 */}
+                        <button
+                            onClick={closeAvatarPreview}
+                            style={{
+                                position: 'absolute',
+                                top: '20px',
+                                right: '20px',
+                                width: '35px',
+                                height: '35px',
+                                borderRadius: '50%',
+                                border: 'none',
+                                background: 'rgba(255, 255, 255, 0.8)',
+                                color: '#666',
+                                fontSize: '18px',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                transition: 'all 0.2s ease',
+                                boxShadow: '0 3px 10px rgba(0, 0, 0, 0.15)'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.background = 'rgba(255, 255, 255, 1)'
+                                e.target.style.color = '#333'
+                                e.target.style.transform = 'scale(1.1)'
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.background = 'rgba(255, 255, 255, 0.8)'
+                                e.target.style.color = '#666'
+                                e.target.style.transform = 'scale(1)'
+                            }}
+                        >
+                            ✕
+                        </button>
 
-            {/* 操作按钮 */}
-            <div style={{
-              display: 'flex',
-              gap: '15px',
-              justifyContent: 'center',
-              flexWrap: 'wrap'
-            }}>
-              <button
-                onClick={openAvatarCropFromPreview}
-                style={{
-                  padding: '12px 25px',
-                  borderRadius: '25px',
-                  border: 'none',
-                  background: 'linear-gradient(135deg, #667eea, #764ba2)',
-                  color: 'white',
-                  fontSize: '16px',
-                  fontWeight: '500',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  boxShadow: '0 5px 15px rgba(102, 126, 234, 0.4)',
-                  minWidth: '120px'
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.transform = 'translateY(-2px)'
-                  e.target.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.6)'
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.transform = 'translateY(0)'
-                  e.target.style.boxShadow = '0 5px 15px rgba(102, 126, 234, 0.4)'
-                }}
-              >
-                替换头像
-              </button>
-              
-              <button
-                onClick={closeAvatarPreview}
-                style={{
-                  padding: '12px 25px',
-                  borderRadius: '25px',
-                  border: '2px solid rgba(255, 255, 255, 0.8)',
-                  background: 'rgba(255, 255, 255, 0.8)',
-                  color: '#666',
-                  fontSize: '16px',
-                  fontWeight: '500',
-                  cursor: 'pointer',
-                  transition: 'all 0.3s ease',
-                  boxShadow: '0 3px 10px rgba(0, 0, 0, 0.1)',
-                  minWidth: '120px'
-                }}
-                onMouseEnter={(e) => {
-                  e.target.style.background = 'rgba(255, 255, 255, 1)'
-                  e.target.style.color = '#333'
-                  e.target.style.transform = 'translateY(-2px)'
-                  e.target.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.2)'
-                }}
-                onMouseLeave={(e) => {
-                  e.target.style.background = 'rgba(255, 255, 255, 0.8)'
-                  e.target.style.color = '#666'
-                  e.target.style.transform = 'translateY(0)'
-                  e.target.style.boxShadow = '0 3px 10px rgba(0, 0, 0, 0.1)'
-                }}
-              >
-                保持当前
-              </button>
-            </div>
-          </div>
-        </div>
-      )}
+                        {/* 标题 */}
+                        <h3 style={{
+                            margin: '0 0 25px',
+                            fontSize: '28px',
+                            fontWeight: '600',
+                            color: '#333',
+                            textShadow: '0 2px 4px rgba(0, 0, 0, 0.1)',
+                            background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                            WebkitBackgroundClip: 'text',
+                            WebkitTextFillColor: 'transparent',
+                            backgroundClip: 'text'
+                        }}>
+                            我的头像
+                        </h3>
 
-      {/* 居民头像详情弹框 */}
-      {showResidentDetail && selectedResident && (
-        <div 
-          className={`resident-detail-overlay ${isMobileDevice ? 'force-landscape' : ''}`}
-          style={{
-            position: 'fixed',
-            top: 0,
-            left: 0,
-            width: '100%',
-            height: '100%',
-            backgroundColor: 'rgba(0, 0, 0, 0.7)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 100000,
-            backdropFilter: 'blur(5px)'
-          }}
-          onClick={closeResidentDetail}
-        >
-          <div 
-            className="resident-detail-content"
-            style={{
-              background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 248, 255, 0.95))',
-              borderRadius: '20px',
-              padding: '30px',
-              maxWidth: '400px',
-              width: '90%',
-              textAlign: 'center',
-              boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.2)',
-              border: '2px solid rgba(255, 255, 255, 0.3)',
-              backdropFilter: 'blur(10px)',
-              position: 'relative',
-              animation: 'fadeInScale 0.3s ease-out'
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* 关闭按钮 */}
-            <button
-              onClick={closeResidentDetail}
-              style={{
-                position: 'absolute',
-                top: '15px',
-                right: '15px',
-                width: '30px',
-                height: '30px',
-                borderRadius: '50%',
-                border: 'none',
-                background: 'rgba(255, 255, 255, 0.8)',
-                color: '#666',
-                fontSize: '16px',
-                cursor: 'pointer',
-                display: 'flex',
-                alignItems: 'center',
-                justifyContent: 'center',
-                transition: 'all 0.2s ease',
-                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.background = 'rgba(255, 255, 255, 1)'
-                e.target.style.color = '#333'
-                e.target.style.transform = 'scale(1.1)'
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.background = 'rgba(255, 255, 255, 0.8)'
-                e.target.style.color = '#666'
-                e.target.style.transform = 'scale(1)'
-              }}
-            >
-              ✕
-            </button>
+                        {/* 头像显示 */}
+                        <div style={{
+                            width: '200px',
+                            height: '200px',
+                            borderRadius: '50%',
+                            margin: '0 auto 30px',
+                            overflow: 'hidden',
+                            border: '5px solid rgba(255, 255, 255, 0.9)',
+                            boxShadow: '0 15px 40px rgba(0, 0, 0, 0.3), inset 0 0 0 2px rgba(255, 255, 255, 0.4)',
+                            background: `url(${userAvatar})`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
+                            position: 'relative',
+                            transition: 'all 0.3s ease'
+                        }}
+                             onMouseEnter={(e) => {
+                                 e.target.style.transform = 'scale(1.05)'
+                                 e.target.style.boxShadow = '0 20px 50px rgba(0, 0, 0, 0.4), inset 0 0 0 2px rgba(255, 255, 255, 0.6)'
+                             }}
+                             onMouseLeave={(e) => {
+                                 e.target.style.transform = 'scale(1)'
+                                 e.target.style.boxShadow = '0 15px 40px rgba(0, 0, 0, 0.3), inset 0 0 0 2px rgba(255, 255, 255, 0.4)'
+                             }}
+                        />
 
-            {/* 头像显示 */}
-            <div style={{
-              width: '200px',
-              height: '200px',
-              borderRadius: '50%',
-              margin: '0 auto 20px',
-              overflow: 'hidden',
-              border: '4px solid rgba(255, 255, 255, 0.8)',
-              boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.3)',
-              background: selectedResident.avatarPath 
-                ? `url(${selectedResident.avatarPath})` 
-                : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              backgroundSize: 'cover',
-              backgroundPosition: 'center',
-              backgroundRepeat: 'no-repeat',
-              display: 'flex',
-              alignItems: 'center',
-              justifyContent: 'center'
-            }}>
-              {!selectedResident.avatarPath && (
-                <div style={{
-                  fontSize: '80px',
-                  color: 'rgba(255, 255, 255, 0.8)',
-                  textShadow: '0 2px 10px rgba(0, 0, 0, 0.3)'
-                }}>
-                  👤
-                </div>
-              )}
-            </div>
+                        {/* 用户名显示 */}
+                        <div style={{
+                            margin: '0 0 25px',
+                            fontSize: '20px',
+                            fontWeight: '500',
+                            color: '#555',
+                            background: 'rgba(255, 255, 255, 0.7)',
+                            padding: '12px 20px',
+                            borderRadius: '15px',
+                            border: '1px solid rgba(255, 255, 255, 0.8)',
+                            boxShadow: '0 3px 10px rgba(0, 0, 0, 0.1)'
+                        }}>
+                            👤 {userName}
+                        </div>
 
-            {/* 用户名和状态 */}
-            {loadingResidentDetail ? (
-              <>
-                <h3 style={{
-                  margin: '0 0 15px',
-                  fontSize: '24px',
-                  fontWeight: '600',
-                  color: '#333',
-                  textShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-                  background: 'linear-gradient(135deg, #667eea, #764ba2)',
-                  WebkitBackgroundClip: 'text',
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text'
-                }}>
-                  {selectedResident.userId}
-                </h3>
-                <div style={{
-                  padding: '10px',
-                  color: '#666',
-                  fontSize: '14px',
-                  fontStyle: 'italic'
-                }}>
-                  加载中...
-                </div>
-              </>
-            ) : residentDetailInfo ? (
-              <>
-                {/* 用户名和状态并排显示 */}
-                <div style={{
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center',
-                  gap: '15px',
-                  marginBottom: '15px',
-                  flexWrap: 'wrap'
-                }}>
-                  <h3 style={{
-                    margin: '0',
-                    fontSize: '24px',
-                    fontWeight: '600',
-                    color: '#333',
-                    textShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-                    background: 'linear-gradient(135deg, #667eea, #764ba2)',
-                    WebkitBackgroundClip: 'text',
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text'
-                  }}>
-                    {selectedResident.userId}
-                  </h3>
-                  
-                  <div style={{
-                    padding: '6px 12px',
-                    background: 'linear-gradient(135deg, #667eea, #764ba2)',
-                    borderRadius: '15px',
-                    color: 'white',
-                    fontSize: '12px',
-                    fontWeight: '500',
-                    boxShadow: '0 2px 8px rgba(102, 126, 234, 0.3)',
-                    whiteSpace: 'nowrap'
-                  }}>
-                    {residentDetailInfo.status || '在线'}
-                  </div>
-                </div>
+                        {/* 操作按钮 */}
+                        <div style={{
+                            display: 'flex',
+                            gap: '15px',
+                            justifyContent: 'center',
+                            flexWrap: 'wrap'
+                        }}>
+                            <button
+                                onClick={openAvatarCropFromPreview}
+                                style={{
+                                    padding: '12px 25px',
+                                    borderRadius: '25px',
+                                    border: 'none',
+                                    background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                                    color: 'white',
+                                    fontSize: '16px',
+                                    fontWeight: '500',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.3s ease',
+                                    boxShadow: '0 5px 15px rgba(102, 126, 234, 0.4)',
+                                    minWidth: '120px'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.target.style.transform = 'translateY(-2px)'
+                                    e.target.style.boxShadow = '0 8px 25px rgba(102, 126, 234, 0.6)'
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.target.style.transform = 'translateY(0)'
+                                    e.target.style.boxShadow = '0 5px 15px rgba(102, 126, 234, 0.4)'
+                                }}
+                            >
+                                替换头像
+                            </button>
 
-                {/* 用户简介 */}
-                <div style={{
-                  padding: '15px 20px',
-                  background: 'rgba(255, 255, 255, 0.6)',
-                  borderRadius: '15px',
-                  border: '1px solid rgba(255, 255, 255, 0.8)',
-                  color: '#666',
-                  fontSize: '14px',
-                  lineHeight: '1.6',
-                  textAlign: 'center',
-                  minHeight: '60px',
-                  display: 'flex',
-                  alignItems: 'center',
-                  justifyContent: 'center'
-                }}>
-                  <div>
-                    {residentDetailInfo.profile || '这个人很神秘，什么都没有留下...'}
-                  </div>
+                            <button
+                                onClick={closeAvatarPreview}
+                                style={{
+                                    padding: '12px 25px',
+                                    borderRadius: '25px',
+                                    border: '2px solid rgba(255, 255, 255, 0.8)',
+                                    background: 'rgba(255, 255, 255, 0.8)',
+                                    color: '#666',
+                                    fontSize: '16px',
+                                    fontWeight: '500',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.3s ease',
+                                    boxShadow: '0 3px 10px rgba(0, 0, 0, 0.1)',
+                                    minWidth: '120px'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.target.style.background = 'rgba(255, 255, 255, 1)'
+                                    e.target.style.color = '#333'
+                                    e.target.style.transform = 'translateY(-2px)'
+                                    e.target.style.boxShadow = '0 5px 15px rgba(0, 0, 0, 0.2)'
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.target.style.background = 'rgba(255, 255, 255, 0.8)'
+                                    e.target.style.color = '#666'
+                                    e.target.style.transform = 'translateY(0)'
+                                    e.target.style.boxShadow = '0 3px 10px rgba(0, 0, 0, 0.1)'
+                                }}
+                            >
+                                保持当前
+                            </button>
+                        </div>
+                    </div>
                 </div>
-              </>
-            ) : (
-              /* 装饰性信息（当API调用失败时的后备显示） */
-              <div style={{
-                padding: '15px 20px',
-                background: 'rgba(255, 255, 255, 0.6)',
-                borderRadius: '15px',
-                border: '1px solid rgba(255, 255, 255, 0.8)',
-                color: '#666',
-                fontSize: '14px',
-                lineHeight: '1.6'
-              }}>
-                <div style={{ marginBottom: '5px' }}>
-                  ✨ 星星城居民
-                </div>
-                <div>
-                  🏠 安居乐业中
-                </div>
-              </div>
             )}
-          </div>
-        </div>
-      )}
 
-      {/* 事件历史弹窗 */}
-      {showEventHistory && selectedBuilding && (
-        <div
-          className={`residence-modal-overlay ${isMobileDevice ? 'force-landscape' : ''}`}
-          style={{
-            position: 'fixed',
-            top: isMobileDevice ? '50%' : 0,
-            left: isMobileDevice ? '50%' : 0,
-            width: '100%',
-            height: '100%',
-            background: 'rgba(0, 0, 0, 0.8)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 100001,
-            transform: isMobileDevice ? 'translate(-50%, -50%) rotate(90deg)' : 'none',
-            transformOrigin: 'center center'
-          }}
-          onClick={() => setShowEventHistory(false)}
-        >
-          <div
-            className="residence-modal-content"
-            style={{
-              background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-              borderRadius: '20px',
-              padding: '20px',
-              maxWidth: isMobileDevice ? '750px' : '600px',
-              width: isMobileDevice ? '95%' : '90%',
-              height: isMobileDevice ? '400px' : 'auto',
-              maxHeight: isMobileDevice ? '400px' : '80vh',
-              textAlign: 'center',
-              boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
-              border: '2px solid rgba(255, 255, 255, 0.2)',
-              color: 'white',
-              fontSize: isMobileDevice ? '14px' : '16px',
-              position: 'relative',
-              overflow: 'hidden',
-              display: 'flex',
-              flexDirection: 'column'
-            }}
-            onClick={(e) => e.stopPropagation()}
-          >
-            {/* 标题 */}
-            <div style={{ 
-              display: 'flex', 
-              alignItems: 'center', 
-              justifyContent: 'center', 
-              marginBottom: isMobileDevice ? '15px' : '20px',
-              fontSize: isMobileDevice ? '18px' : '20px',
-              fontWeight: 'bold',
-              flexShrink: 0
-            }}>
-              <span style={{ marginRight: '10px', fontSize: '24px' }}>
+            {/* 居民头像详情弹框 */}
+            {showResidentDetail && selectedResident && (
+                <div
+                    className={`resident-detail-overlay ${isMobileDevice ? 'force-landscape' : ''}`}
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        backgroundColor: 'rgba(0, 0, 0, 0.7)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 100000,
+                        backdropFilter: 'blur(5px)'
+                    }}
+                    onClick={closeResidentDetail}
+                >
+                    <div
+                        className="resident-detail-content"
+                        style={{
+                            background: 'linear-gradient(135deg, rgba(255, 255, 255, 0.95), rgba(240, 248, 255, 0.95))',
+                            borderRadius: '20px',
+                            padding: '30px',
+                            maxWidth: '400px',
+                            width: '90%',
+                            textAlign: 'center',
+                            boxShadow: '0 20px 40px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(255, 255, 255, 0.2)',
+                            border: '2px solid rgba(255, 255, 255, 0.3)',
+                            backdropFilter: 'blur(10px)',
+                            position: 'relative',
+                            animation: 'fadeInScale 0.3s ease-out'
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* 关闭按钮 */}
+                        <button
+                            onClick={closeResidentDetail}
+                            style={{
+                                position: 'absolute',
+                                top: '15px',
+                                right: '15px',
+                                width: '30px',
+                                height: '30px',
+                                borderRadius: '50%',
+                                border: 'none',
+                                background: 'rgba(255, 255, 255, 0.8)',
+                                color: '#666',
+                                fontSize: '16px',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                transition: 'all 0.2s ease',
+                                boxShadow: '0 2px 8px rgba(0, 0, 0, 0.1)'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.background = 'rgba(255, 255, 255, 1)'
+                                e.target.style.color = '#333'
+                                e.target.style.transform = 'scale(1.1)'
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.background = 'rgba(255, 255, 255, 0.8)'
+                                e.target.style.color = '#666'
+                                e.target.style.transform = 'scale(1)'
+                            }}
+                        >
+                            ✕
+                        </button>
+
+                        {/* 头像显示 */}
+                        <div style={{
+                            width: '200px',
+                            height: '200px',
+                            borderRadius: '50%',
+                            margin: '0 auto 20px',
+                            overflow: 'hidden',
+                            border: '4px solid rgba(255, 255, 255, 0.8)',
+                            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.2), inset 0 0 0 1px rgba(255, 255, 255, 0.3)',
+                            background: selectedResident.avatarPath
+                                ? `url(${selectedResident.avatarPath})`
+                                : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            backgroundRepeat: 'no-repeat',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}>
+                            {!selectedResident.avatarPath && (
+                                <div style={{
+                                    fontSize: '80px',
+                                    color: 'rgba(255, 255, 255, 0.8)',
+                                    textShadow: '0 2px 10px rgba(0, 0, 0, 0.3)'
+                                }}>
+                                    👤
+                                </div>
+                            )}
+                        </div>
+
+                        {/* 用户名和状态 */}
+                        {loadingResidentDetail ? (
+                            <>
+                                <h3 style={{
+                                    margin: '0 0 15px',
+                                    fontSize: '24px',
+                                    fontWeight: '600',
+                                    color: '#333',
+                                    textShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+                                    background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                                    WebkitBackgroundClip: 'text',
+                                    WebkitTextFillColor: 'transparent',
+                                    backgroundClip: 'text'
+                                }}>
+                                    {selectedResident.userId}
+                                </h3>
+                                <div style={{
+                                    padding: '10px',
+                                    color: '#666',
+                                    fontSize: '14px',
+                                    fontStyle: 'italic'
+                                }}>
+                                    加载中...
+                                </div>
+                            </>
+                        ) : residentDetailInfo ? (
+                            <>
+                                {/* 用户名和状态并排显示 */}
+                                <div style={{
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center',
+                                    gap: '15px',
+                                    marginBottom: '15px',
+                                    flexWrap: 'wrap'
+                                }}>
+                                    <h3 style={{
+                                        margin: '0',
+                                        fontSize: '24px',
+                                        fontWeight: '600',
+                                        color: '#333',
+                                        textShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+                                        background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                                        WebkitBackgroundClip: 'text',
+                                        WebkitTextFillColor: 'transparent',
+                                        backgroundClip: 'text'
+                                    }}>
+                                        {selectedResident.userId}
+                                    </h3>
+
+                                    <div style={{
+                                        padding: '6px 12px',
+                                        borderRadius: '15px',
+                                        color: 'white',
+                                        fontSize: '12px',
+                                        fontWeight: '500',
+                                        whiteSpace: 'nowrap',
+                                        ...getStatusStyle(residentDetailInfo.status || '在线')
+                                    }}>
+                                        {residentDetailInfo.status || '在线'}
+                                    </div>
+                                </div>
+
+                                {/* 用户简介 */}
+                                <div style={{
+                                    padding: '15px 20px',
+                                    background: 'rgba(255, 255, 255, 0.6)',
+                                    borderRadius: '15px',
+                                    border: '1px solid rgba(255, 255, 255, 0.8)',
+                                    color: '#666',
+                                    fontSize: '14px',
+                                    lineHeight: '1.6',
+                                    textAlign: 'center',
+                                    minHeight: '60px',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}>
+                                    <div>
+                                        {residentDetailInfo.profile || '这个人很神秘，什么都没有留下...'}
+                                    </div>
+                                </div>
+                            </>
+                        ) : (
+                            /* 装饰性信息（当API调用失败时的后备显示） */
+                            <div style={{
+                                padding: '15px 20px',
+                                background: 'rgba(255, 255, 255, 0.6)',
+                                borderRadius: '15px',
+                                border: '1px solid rgba(255, 255, 255, 0.8)',
+                                color: '#666',
+                                fontSize: '14px',
+                                lineHeight: '1.6'
+                            }}>
+                                <div style={{marginBottom: '5px'}}>
+                                    ✨ 星星城居民
+                                </div>
+                                <div>
+                                    🏠 安居乐业中
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+            )}
+
+            {/* 事件历史弹窗 */}
+            {showEventHistory && selectedBuilding && (
+                <div
+                    className={`residence-modal-overlay ${isMobileDevice ? 'force-landscape' : ''}`}
+                    style={{
+                        position: 'fixed',
+                        top: isMobileDevice ? '50%' : 0,
+                        left: isMobileDevice ? '50%' : 0,
+                        width: '100%',
+                        height: '100%',
+                        background: 'rgba(0, 0, 0, 0.8)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 100001,
+                        transform: isMobileDevice ? 'translate(-50%, -50%) rotate(90deg)' : 'none',
+                        transformOrigin: 'center center'
+                    }}
+                    onClick={() => setShowEventHistory(false)}
+                >
+                    <div
+                        className="residence-modal-content"
+                        style={{
+                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                            borderRadius: '20px',
+                            padding: '20px',
+                            maxWidth: isMobileDevice ? '750px' : '600px',
+                            width: isMobileDevice ? '95%' : '90%',
+                            height: isMobileDevice ? '400px' : 'auto',
+                            maxHeight: isMobileDevice ? '400px' : '80vh',
+                            textAlign: 'center',
+                            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+                            border: '2px solid rgba(255, 255, 255, 0.2)',
+                            color: 'white',
+                            fontSize: isMobileDevice ? '14px' : '16px',
+                            position: 'relative',
+                            overflow: 'hidden',
+                            display: 'flex',
+                            flexDirection: 'column'
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* 标题 */}
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            marginBottom: isMobileDevice ? '15px' : '20px',
+                            fontSize: isMobileDevice ? '18px' : '20px',
+                            fontWeight: 'bold',
+                            flexShrink: 0
+                        }}>
+              <span style={{marginRight: '10px', fontSize: '24px'}}>
                 {selectedBuilding.icon}
               </span>
-              <span>{selectedBuilding.name} - 事件历史</span>
-            </div>
+                            <span>{selectedBuilding.name} - 事件历史</span>
+                        </div>
 
-            {/* 历史列表 */}
-            <div 
-              ref={(el) => {
-                if (el && eventHistory.length > 0) {
-                  // 直接设置滚动到底部
-                  el.scrollTop = el.scrollHeight
-                }
-              }}
-              style={{
-                height: isMobileDevice ? '250px' : '400px',
-                overflowY: 'auto',
-                marginBottom: isMobileDevice ? '15px' : '20px',
-                paddingRight: '10px',
-                flex: 1,
-                minHeight: 0
-              }} 
-              className="residence-event-scroll"
-            >
-              {loadingEventHistory ? (
-                <div style={{ padding: '20px', color: 'rgba(255, 255, 255, 0.7)' }}>
-                  加载中...
-                </div>
-              ) : eventHistory.length === 0 ? (
-                <div style={{ padding: '20px', color: 'rgba(255, 255, 255, 0.7)' }}>
-                  暂无历史记录
-                </div>
-              ) : (
-                eventHistory.map((history, index) => (
-                  <div
-                    key={history.id || index}
-                    style={{
-                      background: 'rgba(255, 255, 255, 0.1)',
-                      borderRadius: '15px',
-                      padding: '15px',
-                      marginBottom: '15px',
-                      textAlign: 'left',
-                      border: '1px solid rgba(255, 255, 255, 0.2)'
-                    }}
-                  >
-                    {/* 时间和居住人员 */}
-                    <div style={{
-                      display: 'flex',
-                      justifyContent: 'space-between',
-                      alignItems: 'center',
-                      marginBottom: '10px',
-                      fontSize: '12px',
-                      color: 'rgba(255, 255, 255, 0.8)'
-                    }}>
-                      <span>⏰ {formatHistoryTime(history.createdAt)}</span>
-                      <span>
+                        {/* 历史列表 */}
+                        <div
+                            ref={(el) => {
+                                if (el && eventHistory.length > 0) {
+                                    // 直接设置滚动到底部
+                                    el.scrollTop = el.scrollHeight
+                                }
+                            }}
+                            style={{
+                                height: isMobileDevice ? '250px' : '400px',
+                                overflowY: 'auto',
+                                marginBottom: isMobileDevice ? '15px' : '20px',
+                                paddingRight: '10px',
+                                flex: 1,
+                                minHeight: 0
+                            }}
+                            className="residence-event-scroll"
+                        >
+                            {loadingEventHistory ? (
+                                <div style={{padding: '20px', color: 'rgba(255, 255, 255, 0.7)'}}>
+                                    加载中...
+                                </div>
+                            ) : eventHistory.length === 0 ? (
+                                <div style={{padding: '20px', color: 'rgba(255, 255, 255, 0.7)'}}>
+                                    暂无历史记录
+                                </div>
+                            ) : (
+                                eventHistory.map((history, index) => (
+                                    <div
+                                        key={history.id || index}
+                                        style={{
+                                            background: 'rgba(255, 255, 255, 0.1)',
+                                            borderRadius: '15px',
+                                            padding: '15px',
+                                            marginBottom: '15px',
+                                            textAlign: 'left',
+                                            border: '1px solid rgba(255, 255, 255, 0.2)'
+                                        }}
+                                    >
+                                        {/* 时间和居住人员 */}
+                                        <div style={{
+                                            display: 'flex',
+                                            justifyContent: 'space-between',
+                                            alignItems: 'center',
+                                            marginBottom: '10px',
+                                            fontSize: '12px',
+                                            color: 'rgba(255, 255, 255, 0.8)'
+                                        }}>
+                                            <span>⏰ {formatHistoryTime(history.createdAt)}</span>
+                                            <span>
                         👥 {JSON.parse(history.residentsInfo || '[]').join(', ') || '无人'}
                       </span>
-                    </div>
+                                        </div>
 
-                    {/* 事件列表 */}
-                    <div>
-                      {parseEventData(history.eventData).map((event, eventIndex) => (
-                        <div
-                          key={eventIndex}
-                          style={{
-                            marginBottom: '8px',
-                            color: event.type === 'special' 
-                              ? '#ffb3d9' 
-                              : 'rgba(255, 255, 255, 0.9)',
-                            fontSize: '14px',
-                            textShadow: event.type === 'special' 
-                              ? '0 0 10px rgba(255, 105, 180, 0.5)' 
-                              : 'none'
-                          }}
-                        >
-                          {event.description}
+                                        {/* 事件列表 */}
+                                        <div>
+                                            {parseEventData(history.eventData).map((event, eventIndex) => (
+                                                <div
+                                                    key={eventIndex}
+                                                    style={{
+                                                        marginBottom: '8px',
+                                                        color: event.type === 'special'
+                                                            ? '#ffb3d9'
+                                                            : 'rgba(255, 255, 255, 0.9)',
+                                                        fontSize: '14px',
+                                                        textShadow: event.type === 'special'
+                                                            ? '0 0 10px rgba(255, 105, 180, 0.5)'
+                                                            : 'none'
+                                                    }}
+                                                >
+                                                    {event.description}
+                                                </div>
+                                            ))}
+                                        </div>
+                                    </div>
+                                ))
+                            )}
                         </div>
-                      ))}
-                    </div>
-                  </div>
-                ))
-              )}
-            </div>
 
-            {/* 关闭按钮 */}
-            <button
-              onClick={() => setShowEventHistory(false)}
-              style={{
-                background: 'rgba(255, 255, 255, 0.2)',
-                color: 'white',
-                borderRadius: '25px',
-                padding: isMobileDevice ? '10px 20px' : '12px 25px',
-                fontSize: isMobileDevice ? '14px' : '16px',
-                cursor: 'pointer',
-                transition: 'all 0.3s ease',
-                backdropFilter: 'blur(10px)',
-                border: '1px solid rgba(255, 255, 255, 0.3)',
-                fontWeight: 'bold',
-                flexShrink: 0
-              }}
-              onMouseEnter={(e) => {
-                e.target.style.background = 'rgba(255, 255, 255, 0.3)'
-                e.target.style.transform = 'scale(1.05)'
-              }}
-              onMouseLeave={(e) => {
-                e.target.style.background = 'rgba(255, 255, 255, 0.2)'
-                e.target.style.transform = 'scale(1)'
-              }}
-            >
-              关闭
-            </button>
-          </div>
+                        {/* 关闭按钮 */}
+                        <button
+                            onClick={() => setShowEventHistory(false)}
+                            style={{
+                                background: 'rgba(255, 255, 255, 0.2)',
+                                color: 'white',
+                                borderRadius: '25px',
+                                padding: isMobileDevice ? '10px 20px' : '12px 25px',
+                                fontSize: isMobileDevice ? '14px' : '16px',
+                                cursor: 'pointer',
+                                transition: 'all 0.3s ease',
+                                backdropFilter: 'blur(10px)',
+                                border: '1px solid rgba(255, 255, 255, 0.3)',
+                                fontWeight: 'bold',
+                                flexShrink: 0
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.background = 'rgba(255, 255, 255, 0.3)'
+                                e.target.style.transform = 'scale(1.05)'
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.background = 'rgba(255, 255, 255, 0.2)'
+                                e.target.style.transform = 'scale(1)'
+                            }}
+                        >
+                            关闭
+                        </button>
+                    </div>
+                </div>
+            )}
         </div>
-      )}
-    </div>
-  )
+    )
 }
 
 export default LotteryLuckyWheel
