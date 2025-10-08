@@ -3426,62 +3426,69 @@ const LotteryLuckyWheel = () => {
               )}
             </div>
 
-            {/* 用户名显示 */}
-            <h3 style={{
-              margin: '0 0 15px',
-              fontSize: '24px',
-              fontWeight: '600',
-              color: '#333',
-              textShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
-              background: 'linear-gradient(135deg, #667eea, #764ba2)',
-              WebkitBackgroundClip: 'text',
-              WebkitTextFillColor: 'transparent',
-              backgroundClip: 'text'
-            }}>
-              {selectedResident.userId}
-            </h3>
-
-            {/* 用户状态 */}
+            {/* 用户名和状态 */}
             {loadingResidentDetail ? (
-              <div style={{
-                padding: '10px',
-                color: '#666',
-                fontSize: '14px',
-                fontStyle: 'italic'
-              }}>
-                加载中...
-              </div>
+              <>
+                <h3 style={{
+                  margin: '0 0 15px',
+                  fontSize: '24px',
+                  fontWeight: '600',
+                  color: '#333',
+                  textShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+                  background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                  WebkitBackgroundClip: 'text',
+                  WebkitTextFillColor: 'transparent',
+                  backgroundClip: 'text'
+                }}>
+                  {selectedResident.userId}
+                </h3>
+                <div style={{
+                  padding: '10px',
+                  color: '#666',
+                  fontSize: '14px',
+                  fontStyle: 'italic'
+                }}>
+                  加载中...
+                </div>
+              </>
             ) : residentDetailInfo ? (
               <>
-                {/* 状态显示 */}
+                {/* 用户名和状态并排显示 */}
                 <div style={{
-                  padding: '8px 16px',
-                  background: 'linear-gradient(135deg, #667eea, #764ba2)',
-                  borderRadius: '20px',
-                  color: 'white',
-                  fontSize: '14px',
-                  fontWeight: '500',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center',
+                  gap: '15px',
                   marginBottom: '15px',
-                  display: 'inline-block',
-                  boxShadow: '0 2px 8px rgba(102, 126, 234, 0.3)'
+                  flexWrap: 'wrap'
                 }}>
-                  📍 {residentDetailInfo.status || '在线'}
-                </div>
-
-                {/* 居住地显示 */}
-                {residentDetailInfo.residenceName && (
-                  <div style={{
-                    padding: '8px 16px',
-                    background: 'rgba(255, 255, 255, 0.7)',
-                    borderRadius: '15px',
-                    color: '#555',
-                    fontSize: '14px',
-                    marginBottom: '15px',
-                    border: '1px solid rgba(255, 255, 255, 0.8)'
+                  <h3 style={{
+                    margin: '0',
+                    fontSize: '24px',
+                    fontWeight: '600',
+                    color: '#333',
+                    textShadow: '0 1px 3px rgba(0, 0, 0, 0.1)',
+                    background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                    WebkitBackgroundClip: 'text',
+                    WebkitTextFillColor: 'transparent',
+                    backgroundClip: 'text'
                   }}>
-                    🏠 居住在 {residentDetailInfo.residenceName}
+                    {selectedResident.userId}
+                  </h3>
+                  
+                  <div style={{
+                    padding: '6px 12px',
+                    background: 'linear-gradient(135deg, #667eea, #764ba2)',
+                    borderRadius: '15px',
+                    color: 'white',
+                    fontSize: '12px',
+                    fontWeight: '500',
+                    boxShadow: '0 2px 8px rgba(102, 126, 234, 0.3)',
+                    whiteSpace: 'nowrap'
+                  }}>
+                    {residentDetailInfo.status || '在线'}
                   </div>
-                )}
+                </div>
 
                 {/* 用户简介 */}
                 <div style={{
@@ -3492,38 +3499,15 @@ const LotteryLuckyWheel = () => {
                   color: '#666',
                   fontSize: '14px',
                   lineHeight: '1.6',
-                  textAlign: 'left',
-                  minHeight: '60px'
+                  textAlign: 'center',
+                  minHeight: '60px',
+                  display: 'flex',
+                  alignItems: 'center',
+                  justifyContent: 'center'
                 }}>
-                  <div style={{
-                    fontSize: '12px',
-                    color: '#999',
-                    marginBottom: '8px',
-                    textTransform: 'uppercase',
-                    letterSpacing: '0.5px'
-                  }}>
-                    个人简介
-                  </div>
                   <div>
                     {residentDetailInfo.profile || '这个人很神秘，什么都没有留下...'}
                   </div>
-                </div>
-
-                {/* 其他信息 */}
-                <div style={{
-                  marginTop: '15px',
-                  padding: '12px 16px',
-                  background: 'rgba(255, 255, 255, 0.4)',
-                  borderRadius: '12px',
-                  fontSize: '12px',
-                  color: '#777',
-                  display: 'flex',
-                  justifyContent: 'space-between',
-                  flexWrap: 'wrap',
-                  gap: '8px'
-                }}>
-                  <span>🎯 剩余抽奖: {residentDetailInfo.remainingDraws || 0}次</span>
-                  <span>⭐ 许愿次数: {residentDetailInfo.wishCount || 0}次</span>
                 </div>
               </>
             ) : (

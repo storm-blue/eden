@@ -106,6 +106,8 @@ public class AdminController {
                         public final String userId = user.getUserId();
                         public final Integer remainingDraws = user.getRemainingDraws();
                         public final Integer dailyDraws = user.getDailyDraws();
+                        public final String profile = user.getProfile();
+                        public final String status = user.getStatus();
                         public final String createTime = user.getCreateTime().toString();
                         public final String lastRefreshDate = user.getLastRefreshDate().toString();
                     })
