@@ -248,7 +248,7 @@ const LotteryLuckyWheel = () => {
     const [selectedResident, setSelectedResident] = useState(null)
     const [residentDetailInfo, setResidentDetailInfo] = useState(null)
     const [loadingResidentDetail, setLoadingResidentDetail] = useState(false)
-    
+
     // 耐力不足提示弹框
     const [showNoStaminaModal, setShowNoStaminaModal] = useState(false)
 
@@ -845,7 +845,7 @@ const LotteryLuckyWheel = () => {
 
         try {
             console.log(`正在刷新 ${selectedBuilding.name} 的事件...`)
-            
+
             // 调用后端刷新单个居所事件接口，传递userId
             const response = await fetch(`/api/residence-events/refresh/${selectedBuilding.key}`, {
                 method: 'POST',
@@ -860,11 +860,11 @@ const LotteryLuckyWheel = () => {
             const data = await response.json()
             if (data.success) {
                 console.log(`${selectedBuilding.name} 事件刷新成功，剩余耐力: ${data.stamina}/5`)
-                
+
                 // 重新加载当前居所的事件
                 const eventResponse = await fetch(`/api/residence-events/${selectedBuilding.key}`)
                 const eventData = await eventResponse.json()
-                
+
                 if (eventData.success) {
                     setResidenceEvents(prev => ({
                         ...prev,
@@ -872,7 +872,7 @@ const LotteryLuckyWheel = () => {
                     }))
                     console.log(`${selectedBuilding.name} 事件已更新`)
                 }
-                
+
                 // 不弹窗，只在控制台记录
             } else {
                 // 如果是耐力不足的提示，显示弹框
@@ -1272,6 +1272,10 @@ const LotteryLuckyWheel = () => {
                 boxShadow: '0 2px 8px rgba(33, 150, 243, 0.3)'
             },
             '工作中': {
+                background: 'linear-gradient(135deg, #2196F3, #1976D2)',
+                boxShadow: '0 2px 8px rgba(33, 150, 243, 0.3)'
+            },
+            '学习中': {
                 background: 'linear-gradient(135deg, #2196F3, #1976D2)',
                 boxShadow: '0 2px 8px rgba(33, 150, 243, 0.3)'
             },
