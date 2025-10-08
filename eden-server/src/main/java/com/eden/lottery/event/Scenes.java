@@ -17,7 +17,7 @@ public final class Scenes {
             ResidenceConstants.PARK, ParkScenes.scenes,
             ResidenceConstants.CITY_HALL, CityHallScenes.scenes,
             ResidenceConstants.WHITE_DOVE_HOUSE, WhiteDoveHouseScenes.scenes,
-            ResidenceConstants.PALACE, ParkScenes.scenes
+            ResidenceConstants.PALACE, PalaceScenes.scenes
     );
 
     public static List<ResidenceEventItem> getEvent(String residence, List<String> users) {

@@ -31,7 +31,7 @@ public class UserRoamingService {
     /**
      * 定时任务：每半小时执行一次用户漫游
      */
-    @Scheduled(fixedDelay = 30, timeUnit = TimeUnit.MINUTES)
+    @Scheduled(cron = "0 10,40 * * * ?")
     public void executeUserRoaming() {
         logger.info("开始执行用户漫游系统...");
 
