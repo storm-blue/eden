@@ -11,6 +11,7 @@ public class StarCity {
     private Long food;           // 食物数量
     private Integer happiness;   // 幸福指数
     private Integer level;       // 当前等级
+    private String weather;      // 天气状态: sunny, rainy, snowy, cloudy, night
     private LocalDateTime lastUpdateTime; // 最后更新时间
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
@@ -108,6 +109,14 @@ public class StarCity {
         this.updateTime = updateTime;
     }
 
+    public String getWeather() {
+        return weather;
+    }
+
+    public void setWeather(String weather) {
+        this.weather = weather;
+    }
+
     @Override
     public String toString() {
         return "StarCity{" +
@@ -116,6 +125,7 @@ public class StarCity {
                 ", food=" + food +
                 ", happiness=" + happiness +
                 ", level=" + level +
+                ", weather='" + weather + '\'' +
                 ", lastUpdateTime=" + lastUpdateTime +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +

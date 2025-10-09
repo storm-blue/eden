@@ -1610,7 +1610,7 @@ const LotteryLuckyWheel = () => {
                         color: 'white'
                     }}>
 
-                    {/* 雨天特效 */}
+                    {/* 天气特效层 */}
                     <div style={{
                         position: 'absolute',
                         top: 0,
@@ -1621,7 +1621,10 @@ const LotteryLuckyWheel = () => {
                         zIndex: 15,
                         overflow: 'hidden'
                     }}>
-                        {/* 雨滴 */}
+                        {/* 雨天特效 */}
+                        {starCityData?.weather === 'rainy' && (
+                            <>
+                                {/* 雨滴 */}
                         {[...Array(isMobileDevice ? 50 : 80)].map((_, i) => {
                             const delay = Math.random() * 3;
                             const duration = 0.8 + Math.random() * 0.4;
@@ -1682,6 +1685,170 @@ const LotteryLuckyWheel = () => {
                                 />
                             );
                         })}
+                            </>
+                        )}
+
+                        {/* 雪天特效 */}
+                        {starCityData?.weather === 'snowy' && (
+                            <>
+                                {/* 雪花 */}
+                                {[...Array(isMobileDevice ? 40 : 60)].map((_, i) => {
+                                    const delay = Math.random() * 5;
+                                    const duration = 3 + Math.random() * 2;
+                                    const left = Math.random() * 110;
+                                    const startTop = -10 - Math.random() * 20;
+                                    const size = 8 + Math.random() * 8;
+                                    
+                                    return (
+                                        <div
+                                            key={`snow-${i}`}
+                                            style={{
+                                                position: 'absolute',
+                                                left: `${left}%`,
+                                                top: `${startTop}%`,
+                                                fontSize: `${size}px`,
+                                                animation: `snowFall ${duration}s linear infinite`,
+                                                animationDelay: `${delay}s`,
+                                                opacity: 0.9,
+                                                willChange: 'transform',
+                                                transform: 'translateZ(0)'
+                                            }}
+                                        >
+                                            ❄️
+                                        </div>
+                                    );
+                                })}
+                            </>
+                        )}
+
+                        {/* 多云特效 */}
+                        {starCityData?.weather === 'cloudy' && (
+                            <>
+                                {/* 云朵 */}
+                                {[...Array(isMobileDevice ? 4 : 6)].map((_, i) => {
+                                    const duration = 20 + i * 5;
+                                    const delay = i * 3;
+                                    const top = 5 + i * 12;
+                                    
+                                    return (
+                                        <div
+                                            key={`cloud-${i}`}
+                                            style={{
+                                                position: 'absolute',
+                                                top: `${top}%`,
+                                                left: '-10%',
+                                                fontSize: '60px',
+                                                opacity: 0.6,
+                                                animation: `cloudMove ${duration}s linear infinite`,
+                                                animationDelay: `${delay}s`,
+                                                willChange: 'transform',
+                                                transform: 'translateZ(0)'
+                                            }}
+                                        >
+                                            ☁️
+                                        </div>
+                                    );
+                                })}
+                            </>
+                        )}
+
+                        {/* 夜晚特效 */}
+                        {starCityData?.weather === 'night' && (
+                            <>
+                                {/* 月亮 */}
+                                <div style={{
+                                    position: 'absolute',
+                                    top: '15%',
+                                    right: '15%',
+                                    fontSize: '60px',
+                                    animation: 'moonGlow 3s ease-in-out infinite',
+                                    zIndex: 5,
+                                    pointerEvents: 'none',
+                                    willChange: 'transform',
+                                    transform: 'translateZ(0)'
+                                }}>
+                                    🌙
+                                </div>
+                                
+                                {/* 星星 */}
+                                {[...Array(isMobileDevice ? 15 : 25)].map((_, i) => {
+                                    const top = Math.random() * 60;
+                                    const left = Math.random() * 100;
+                                    const delay = Math.random() * 3;
+                                    const duration = 1.5 + Math.random() * 1.5;
+                                    
+                                    return (
+                                        <div
+                                            key={`star-${i}`}
+                                            style={{
+                                                position: 'absolute',
+                                                top: `${top}%`,
+                                                left: `${left}%`,
+                                                fontSize: '12px',
+                                                animation: `starTwinkle ${duration}s ease-in-out infinite`,
+                                                animationDelay: `${delay}s`,
+                                                pointerEvents: 'none',
+                                                zIndex: 5,
+                                                willChange: 'opacity',
+                                                transform: 'translateZ(0)'
+                                            }}
+                                        >
+                                            ⭐
+                                        </div>
+                                    );
+                                })}
+                                
+                                {/* 夜晚遮罩 */}
+                                <div style={{
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    background: 'rgba(0, 10, 30, 0.4)',
+                                    pointerEvents: 'none'
+                                }} />
+                            </>
+                        )}
+
+                        {/* 晴天特效 */}
+                        {starCityData?.weather === 'sunny' && (
+                            <>
+                                {/* 太阳 */}
+                                <div style={{
+                                    position: 'absolute',
+                                    top: '10%',
+                                    right: '10%',
+                                    width: '80px',
+                                    height: '80px',
+                                    background: 'radial-gradient(circle, rgba(255, 215, 0, 0.8) 0%, transparent 70%)',
+                                    borderRadius: '50%',
+                                    boxShadow: '0 0 60px rgba(255, 215, 0, 0.6)',
+                                    animation: 'sunRotate 20s linear infinite',
+                                    pointerEvents: 'none',
+                                    zIndex: 5,
+                                    willChange: 'transform',
+                                    transform: 'translateZ(0)'
+                                }}>
+                                    {/* 太阳光线 */}
+                                    {[...Array(12)].map((_, i) => (
+                                        <div
+                                            key={`ray-${i}`}
+                                            style={{
+                                                position: 'absolute',
+                                                top: '50%',
+                                                left: '50%',
+                                                width: '4px',
+                                                height: '40px',
+                                                background: 'linear-gradient(transparent, rgba(255, 215, 0, 0.6))',
+                                                transform: `rotate(${i * 30}deg) translateY(-60px)`,
+                                                transformOrigin: '2px 60px'
+                                            }}
+                                        />
+                                    ))}
+                                </div>
+                            </>
+                        )}
                     </div>
 
                     {/* 标题 */}

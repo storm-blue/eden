@@ -38,6 +38,7 @@ public class StarCityController {
             result.put("food", starCity.getFood());
             result.put("happiness", starCity.getHappiness());
             result.put("level", starCity.getLevel());
+            result.put("weather", starCity.getWeather());
             result.put("lastUpdateTime", starCity.getLastUpdateTime());
             
             // 格式化显示
@@ -181,6 +182,7 @@ public class StarCityController {
             result.put("food", starCity.getFood());
             result.put("happiness", starCity.getHappiness());
             result.put("level", starCity.getLevel());
+            result.put("weather", starCity.getWeather());
             result.put("lastUpdateTime", starCity.getLastUpdateTime());
             
             // 格式化显示

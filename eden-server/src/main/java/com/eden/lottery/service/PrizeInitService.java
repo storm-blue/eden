@@ -72,6 +72,9 @@ public class PrizeInitService implements ApplicationRunner {
             // 检查并迁移居所事件表字段
             checkAndMigrateResidenceEventsTable(connection);
 
+            // 检查并迁移星星城表
+            checkAndMigrateStarCityTable(connection);
+
             logger.info("数据库迁移检查完成");
         } catch (Exception e) {
             logger.error("数据库迁移失败", e);
@@ -527,6 +530,34 @@ public class PrizeInitService implements ApplicationRunner {
             statement.execute("CREATE INDEX IF NOT EXISTS idx_residence_event_history_residence ON residence_event_history(residence)");
             statement.execute("CREATE INDEX IF NOT EXISTS idx_residence_event_history_created_at ON residence_event_history(created_at)");
             logger.info("residence_event_history表索引创建成功");
+        }
+    }
+
+    /**
+     * 检查并迁移星星城表
+     */
+    private void checkAndMigrateStarCityTable(Connection connection) throws Exception {
+        List<String> columns = getTableColumns(connection, "star_city");
+
+        // 检查weather列是否存在
+        if (!columns.contains("weather")) {
+            logger.info("star_city表缺少weather列，添加列...");
+            addWeatherColumn(connection);
+        }
+    }
+
+    /**
+     * 添加weather列到star_city表
+     */
+    private void addWeatherColumn(Connection connection) throws Exception {
+        try (Statement statement = connection.createStatement()) {
+            // 添加weather列，默认为sunny
+            statement.execute("ALTER TABLE star_city ADD COLUMN weather VARCHAR(20) DEFAULT 'sunny'");
+            logger.info("weather列添加成功");
+            
+            // 为现有数据设置默认天气为sunny
+            statement.execute("UPDATE star_city SET weather = 'sunny' WHERE weather IS NULL");
+            logger.info("已为现有数据设置默认天气");
         }
     }
 }

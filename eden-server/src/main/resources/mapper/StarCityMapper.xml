@@ -9,6 +9,7 @@
         <result column="food" property="food"/>
         <result column="happiness" property="happiness"/>
         <result column="level" property="level"/>
+        <result column="weather" property="weather"/>
         <result column="last_update_time" property="lastUpdateTime"/>
         <result column="create_time" property="createTime"/>
         <result column="update_time" property="updateTime"/>
@@ -16,7 +17,7 @@
 
     <!-- 获取星星城数据 -->
     <select id="getStarCity" resultMap="StarCityResultMap">
-        SELECT id, population, food, happiness, level, last_update_time, create_time, update_time
+        SELECT id, population, food, happiness, level, weather, last_update_time, create_time, update_time
         FROM star_city 
         ORDER BY id DESC 
         LIMIT 1
@@ -24,8 +25,8 @@
 
     <!-- 插入星星城数据 -->
     <insert id="insertStarCity" parameterType="com.eden.lottery.entity.StarCity">
-        INSERT INTO star_city (population, food, happiness, level, last_update_time, create_time, update_time)
-        VALUES (#{population}, #{food}, #{happiness}, #{level}, #{lastUpdateTime}, #{createTime}, #{updateTime})
+        INSERT INTO star_city (population, food, happiness, level, weather, last_update_time, create_time, update_time)
+        VALUES (#{population}, #{food}, #{happiness}, #{level}, #{weather}, #{lastUpdateTime}, #{createTime}, #{updateTime})
     </insert>
 
     <!-- 更新星星城数据 -->
@@ -35,6 +36,7 @@
             food = #{food},
             happiness = #{happiness},
             level = #{level},
+            weather = #{weather},
             last_update_time = #{lastUpdateTime},
             update_time = #{updateTime}
         WHERE id = #{id}
