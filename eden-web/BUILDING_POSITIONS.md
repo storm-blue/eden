@@ -6,13 +6,13 @@
 
 ## 配置位置
 
-建筑位置配置在 `LuckyWheel.jsx` 的 `getBuildingPositions()` 函数中：
+建筑位置配置在 `LuckyWheel.jsx` 的 `getBuildingPositions()` 函数中。每个等级都有独立的位置配置：
 
 ```javascript
 // 根据星星城等级获取建筑位置配置
 const getBuildingPositions = (level) => {
-    // 默认位置（LV1-LV2）
-    const defaultPositions = {
+    // LV1 位置
+    const lv1Positions = {
         castle: {top: '23%', left: '48%'},
         city_hall: {top: '12%', left: '72%'},
         palace: {top: '8%', left: '23%'},
@@ -20,7 +20,16 @@ const getBuildingPositions = (level) => {
         park: {top: '50%', left: '40%'}
     }
 
-    // LV3-LV4 位置
+    // LV2 位置
+    const lv2Positions = {
+        castle: {top: '32%', left: '50%'},
+        city_hall: {top: '18%', left: '76%'},
+        palace: {top: '20%', left: '18%'},
+        white_dove_house: {top: '55%', left: '40%'},
+        park: {top: '38%', left: '63%'}
+    }
+
+    // LV3 位置
     const lv3Positions = {
         castle: {top: '25%', left: '50%'},
         city_hall: {top: '15%', left: '70%'},
@@ -29,7 +38,16 @@ const getBuildingPositions = (level) => {
         park: {top: '52%', left: '38%'}
     }
 
-    // LV5+ 位置
+    // LV4 位置
+    const lv4Positions = {
+        castle: {top: '25%', left: '50%'},
+        city_hall: {top: '15%', left: '70%'},
+        palace: {top: '10%', left: '25%'},
+        white_dove_house: {top: '35%', left: '63%'},
+        park: {top: '52%', left: '38%'}
+    }
+
+    // LV5 位置
     const lv5Positions = {
         castle: {top: '28%', left: '52%'},
         city_hall: {top: '18%', left: '68%'},
@@ -38,13 +56,19 @@ const getBuildingPositions = (level) => {
         park: {top: '55%', left: '35%'}
     }
 
-    // 根据等级返回对应位置
-    if (level >= 5) {
+    // 根据等级精确返回对应位置
+    if (level == 5) {
         return lv5Positions
-    } else if (level >= 3) {
+    } else if (level == 4) {
+        return lv4Positions
+    } else if (level == 3) {
         return lv3Positions
+    } else if (level == 2) {
+        return lv2Positions
+    } else if (level == 1) {
+        return lv1Positions
     } else {
-        return defaultPositions
+        return lv1Positions  // 默认使用LV1位置
     }
 }
 ```
@@ -59,11 +83,17 @@ const getBuildingPositions = (level) => {
 | white_dove_house | 小白鸽家 | 🕊️ |
 | park | 公园 | 🌳 |
 
-## 等级分段
+## 等级配置
 
-- **LV1-LV2**: 使用 `defaultPositions`
-- **LV3-LV4**: 使用 `lv3Positions`
-- **LV5+**: 使用 `lv5Positions`
+每个等级都有独立的位置配置，一一对应：
+
+- **LV1**: 使用 `lv1Positions`
+- **LV2**: 使用 `lv2Positions`
+- **LV3**: 使用 `lv3Positions`
+- **LV4**: 使用 `lv4Positions`
+- **LV5**: 使用 `lv5Positions`
+
+如果等级超出范围，默认使用 `lv1Positions`。
 
 ## 如何调整建筑位置
 
@@ -84,36 +114,46 @@ const getBuildingPositions = (level) => {
 
 在 `LuckyWheel.jsx` 中找到对应等级的位置配置，修改百分比值。
 
-例如，如果LV5的城堡在图片中心偏上，可以这样设置：
+例如，如果LV2的城堡在图片中心偏下，可以这样设置：
 ```javascript
-const lv5Positions = {
-    castle: {top: '30%', left: '50%'},  // 30%表示距离顶部30%，50%表示水平居中
-    // ... 其他建筑
+const lv2Positions = {
+    castle: {top: '32%', left: '50%'},  // 32%表示距离顶部32%，50%表示水平居中
+    city_hall: {top: '18%', left: '76%'},
+    palace: {top: '20%', left: '18%'},
+    white_dove_house: {top: '55%', left: '40%'},
+    park: {top: '38%', left: '63%'}
 }
 ```
 
-### 4. 添加新等级段
+### 4. 添加新等级
 
-如果需要为更高等级添加不同的位置配置，可以在 `getBuildingPositions()` 函数中添加新的条件：
+如果需要为更高等级（如LV6、LV7）添加位置配置：
 
+**步骤 1**: 在 `getBuildingPositions()` 函数中添加新的位置配置对象：
 ```javascript
-// LV10+ 位置
-const lv10Positions = {
+// LV6 位置
+const lv6Positions = {
     castle: {top: '35%', left: '55%'},
-    // ... 其他建筑
-}
-
-// 在返回逻辑中添加
-if (level >= 10) {
-    return lv10Positions
-} else if (level >= 5) {
-    return lv5Positions
-} else if (level >= 3) {
-    return lv3Positions
-} else {
-    return defaultPositions
+    city_hall: {top: '22%', left: '65%'},
+    palace: {top: '15%', left: '30%'},
+    white_dove_house: {top: '42%', left: '68%'},
+    park: {top: '58%', left: '32%'}
 }
 ```
+
+**步骤 2**: 在返回逻辑中添加新的判断条件：
+```javascript
+// 根据等级精确返回对应位置
+if (level == 6) {
+    return lv6Positions
+} else if (level == 5) {
+    return lv5Positions
+} else if (level == 4) {
+    return lv4Positions
+// ... 其他等级
+```
+
+**注意**: 确保按照等级从高到低的顺序添加判断条件。
 
 ## 注意事项
 

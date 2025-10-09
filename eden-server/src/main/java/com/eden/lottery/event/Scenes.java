@@ -20,13 +20,13 @@ public final class Scenes {
             ResidenceConstants.PALACE, PalaceScenes.scenes
     );
 
-    public static List<EventItem> getEvent(String residence, List<String> users) {
+    public static Event getEvent(String residence, List<String> users) {
 
         // 1. 根据居所code 获取对应的场景列表
         List<Scene> residenceScenes = scenes.get(residence);
         if (residenceScenes == null || residenceScenes.isEmpty()) {
             // 如果没有找到对应居所的场景，返回默认事件
-            return List.of(new EventItem("暂无事件", "normal"));
+            return new Event(false, List.of(new EventItem("暂无事件", "normal")));
         }
 
         // 2. 根据用户列表按照顺序匹配符合用户名要求的场景
@@ -50,20 +50,19 @@ public final class Scenes {
 
         // 如果还是没有找到场景，返回默认事件
         if (matchedScene == null) {
-            return List.of(new EventItem("暂无事件", "normal"));
+            return new Event(false, List.of(new EventItem("暂无事件", "normal")));
         }
 
         // 3. 随机选取场景中的事件
         List<Event> events = matchedScene.getEvents();
         if (events == null || events.isEmpty()) {
-            return List.of(new EventItem("暂无事件", "normal"));
+            return new Event(false, List.of(new EventItem("暂无事件", "normal")));
         }
 
         // 随机选择一个事件
         int randomIndex = (int) (Math.random() * events.size());
-        Event selectedEvent = events.get(randomIndex);
 
         // 4. 返回事件的items
-        return selectedEvent.getItems();
+        return events.get(randomIndex);
     }
 }

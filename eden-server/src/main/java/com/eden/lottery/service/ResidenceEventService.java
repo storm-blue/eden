@@ -1,5 +1,6 @@
 package com.eden.lottery.service;
 
+import com.eden.lottery.event.Event;
 import com.eden.lottery.event.EventItem;
 import com.eden.lottery.entity.ResidenceEvent;
 import com.eden.lottery.entity.ResidenceEventHistory;
@@ -91,18 +92,6 @@ public class ResidenceEventService {
     }
 
     /**
-     * 更新居所事件（向后兼容的重载方法）
-     *
-     * @param residence       居所类型
-     * @param eventData       事件数据（JSON格式）
-     * @param showHeartEffect 是否显示爱心特效
-     * @return 是否更新成功
-     */
-    public boolean updateResidenceEvent(String residence, String eventData, Boolean showHeartEffect) {
-        return updateResidenceEvent(residence, eventData, showHeartEffect, null, false);
-    }
-
-    /**
      * 生成居所事件（集成特殊情侣逻辑）
      * 这个方法会被定时任务调用，用于为每个居所生成新的事件
      *
@@ -123,10 +112,10 @@ public class ResidenceEventService {
             }
         }
 
-        List<EventItem> event = Scenes.getEvent(residence, usernames);
+        Event event = Scenes.getEvent(residence, usernames);
         // 使用Gson序列化为JSON
         String eventData = gson.toJson(event);
-        return updateResidenceEvent(residence, eventData, true, null, true);
+        return updateResidenceEvent(residence, eventData, event.isShowSpecialEffect(), null, event.isShowSpecialEffect());
     }
 
     /**

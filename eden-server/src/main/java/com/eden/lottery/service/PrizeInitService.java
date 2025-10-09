@@ -188,7 +188,7 @@ public class PrizeInitService implements ApplicationRunner {
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(sql);
             logger.info("profile列添加成功");
-            
+
             // 为现有用户设置默认简介
             String updateSql = "UPDATE users SET profile = '这个人很神秘，什么都没有留下...' WHERE profile IS NULL";
             stmt.execute(updateSql);
@@ -205,7 +205,7 @@ public class PrizeInitService implements ApplicationRunner {
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(sql);
             logger.info("status列添加成功");
-            
+
             // 为现有用户设置默认状态
             String updateSql = "UPDATE users SET status = '安居乐业中' WHERE status IS NULL";
             stmt.execute(updateSql);
@@ -222,7 +222,7 @@ public class PrizeInitService implements ApplicationRunner {
         try (Statement stmt = connection.createStatement()) {
             stmt.execute(sql);
             logger.info("stamina列添加成功");
-            
+
             // 为现有用户设置默认耐力值
             String updateSql = "UPDATE users SET stamina = 5 WHERE stamina IS NULL OR stamina = 0";
             stmt.execute(updateSql);
@@ -554,7 +554,7 @@ public class PrizeInitService implements ApplicationRunner {
             // 添加weather列，默认为sunny
             statement.execute("ALTER TABLE star_city ADD COLUMN weather VARCHAR(20) DEFAULT 'sunny'");
             logger.info("weather列添加成功");
-            
+
             // 为现有数据设置默认天气为sunny
             statement.execute("UPDATE star_city SET weather = 'sunny' WHERE weather IS NULL");
             logger.info("已为现有数据设置默认天气");
