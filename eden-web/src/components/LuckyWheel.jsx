@@ -2018,9 +2018,9 @@ const LotteryLuckyWheel = () => {
                                     position: 'absolute',
                                     top: '5%',
                                     right: '5%',
-                                    width: '80px',
-                                    height: '80px',
-                                    background: 'radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(255, 250, 200, 0.95) 30%, rgba(255, 230, 100, 0.7) 55%, rgba(255, 220, 80, 0.3) 70%, transparent 100%)',
+                                    width: isMobileDevice ? '60px' : '80px',
+                                    height: isMobileDevice ? '60px' : '80px',
+                                    background: 'radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(255, 250, 200, 0.95) 25%, rgba(255, 240, 150, 0.75) 45%, rgba(255, 230, 120, 0.45) 60%, rgba(255, 220, 100, 0.2) 75%, rgba(255, 210, 80, 0.08) 88%, transparent 100%)',
                                     borderRadius: '50%',
                                     boxShadow: '0 0 100px rgba(255, 255, 255, 0.9), 0 0 150px rgba(255, 245, 150, 0.7), 0 0 200px rgba(255, 230, 100, 0.4)',
                                     pointerEvents: 'none',
@@ -2038,6 +2038,9 @@ const LotteryLuckyWheel = () => {
                                     const startWidth = 15 + Math.random() * 15; // 起始宽度 15-30px
                                     const endWidth = 60 + Math.random() * 30; // 结束宽度 60-90px（不超过太阳直径）
                                     
+                                    const sunSize = isMobileDevice ? 60 : 80;
+                                    const sunCenter = sunSize / 2;
+                                    
                                     return (
                                         <div
                                             key={`sunbeam-${i}`}
@@ -2045,17 +2048,17 @@ const LotteryLuckyWheel = () => {
                                                 position: 'absolute',
                                                 top: '5%', // 太阳左上角Y坐标（与太阳位置同步）
                                                 right: '5%', // 太阳左上角X坐标（与太阳位置同步）
-                                                width: '80px', // 太阳宽度
-                                                height: '80px', // 太阳高度
+                                                width: `${sunSize}px`, // 太阳宽度
+                                                height: `${sunSize}px`, // 太阳高度
                                                 pointerEvents: 'none',
                                                 zIndex: 3
                                             }}
                                         >
                                             <div style={{
                                                 position: 'absolute',
-                                                left: '40px', // 从太阳中心出发（80px的一半）
-                                                top: `calc(40px - ${startWidth / 2}px)`, // 垂直居中对齐
-                                                width: '900px', // 光束长度
+                                                left: `${sunCenter}px`, // 从太阳中心出发
+                                                top: `${sunCenter}px`, // 从太阳中心的Y坐标开始
+                                                width: '1300px', // 光束长度
                                                 height: `${startWidth}px`,
                                                 background: `linear-gradient(to right, 
                                                     rgba(255, 255, 255, 0.4), 
@@ -2068,7 +2071,7 @@ const LotteryLuckyWheel = () => {
                                                 animationDelay: `${delay}s`,
                                                 opacity: 0,
                                                 filter: 'blur(2px)',
-                                                // 使用CSS变量控制宽度变化
+                                                // 使用CSS变量控制宽度变化和垂直居中
                                                 '--beam-start-width': `${startWidth}px`,
                                                 '--beam-end-width': `${endWidth}px`,
                                                 '--beam-half-start': `${startWidth / 2}px`,
