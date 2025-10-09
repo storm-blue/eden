@@ -1867,36 +1867,78 @@ const LotteryLuckyWheel = () => {
                                 {/* 太阳 */}
                                 <div style={{
                                     position: 'absolute',
-                                    top: '10%',
-                                    right: '10%',
+                                    top: '5%',
+                                    right: '5%',
                                     width: '80px',
                                     height: '80px',
-                                    background: 'radial-gradient(circle, rgba(255, 215, 0, 0.8) 0%, transparent 70%)',
+                                    background: 'radial-gradient(circle, rgba(255, 255, 255, 1) 0%, rgba(255, 250, 200, 0.95) 30%, rgba(255, 230, 100, 0.7) 55%, rgba(255, 220, 80, 0.3) 70%, transparent 100%)',
                                     borderRadius: '50%',
-                                    boxShadow: '0 0 60px rgba(255, 215, 0, 0.6)',
-                                    animation: 'sunRotate 20s linear infinite',
+                                    boxShadow: '0 0 100px rgba(255, 255, 255, 0.9), 0 0 150px rgba(255, 245, 150, 0.7), 0 0 200px rgba(255, 230, 100, 0.4)',
                                     pointerEvents: 'none',
                                     zIndex: 5,
-                                    willChange: 'transform',
-                                    transform: 'translateZ(0)'
-                                }}>
-                                    {/* 太阳光线 */}
-                                    {[...Array(12)].map((_, i) => (
+                                    animation: 'sunPulse 4s ease-in-out infinite'
+                                }} />
+                                
+                                {/* 阳光光束 - 从太阳向左下角90度扇形区域发射 */}
+                                {[...Array(isMobileDevice ? 3 : 7)].map((_, i) => {
+                                    const beamCount = isMobileDevice ? 5 : 7;
+                                    // 左下角90度扇形：从90度（正下方）到180度（正左方）
+                                    const angle = 140 + (i / (beamCount - 1)) * 60; // 均匀分布在90度范围内
+                                    const duration = 8 + Math.random() * 4; // 8-12秒
+                                    const delay = i * 1.8; // 错开出现时间
+                                    const startWidth = 15 + Math.random() * 15; // 起始宽度 15-30px
+                                    const endWidth = 60 + Math.random() * 30; // 结束宽度 60-90px（不超过太阳直径）
+                                    
+                                    return (
                                         <div
-                                            key={`ray-${i}`}
+                                            key={`sunbeam-${i}`}
                                             style={{
                                                 position: 'absolute',
-                                                top: '50%',
-                                                left: '50%',
-                                                width: '4px',
-                                                height: '40px',
-                                                background: 'linear-gradient(transparent, rgba(255, 215, 0, 0.6))',
-                                                transform: `rotate(${i * 30}deg) translateY(-60px)`,
-                                                transformOrigin: '2px 60px'
+                                                top: '5%', // 太阳左上角Y坐标（与太阳位置同步）
+                                                right: '5%', // 太阳左上角X坐标（与太阳位置同步）
+                                                width: '80px', // 太阳宽度
+                                                height: '80px', // 太阳高度
+                                                pointerEvents: 'none',
+                                                zIndex: 3
                                             }}
-                                        />
-                                    ))}
-                                </div>
+                                        >
+                                            <div style={{
+                                                position: 'absolute',
+                                                left: '40px', // 从太阳中心出发（80px的一半）
+                                                top: `calc(40px - ${startWidth / 2}px)`, // 垂直居中对齐
+                                                width: '900px', // 光束长度
+                                                height: `${startWidth}px`,
+                                                background: `linear-gradient(to right, 
+                                                    rgba(255, 255, 255, 0.4), 
+                                                    rgba(255, 255, 200, 0.3) 30%, 
+                                                    rgba(255, 255, 150, 0.15) 60%, 
+                                                    transparent)`,
+                                                transformOrigin: '0 50%', // 从左侧中心点旋转
+                                                transform: `rotate(${angle}deg)`,
+                                                animation: `sunbeamShine ${duration}s ease-in-out infinite`,
+                                                animationDelay: `${delay}s`,
+                                                opacity: 0,
+                                                filter: 'blur(2px)',
+                                                // 使用CSS变量控制宽度变化
+                                                '--beam-start-width': `${startWidth}px`,
+                                                '--beam-end-width': `${endWidth}px`,
+                                                '--beam-half-start': `${startWidth / 2}px`,
+                                                '--beam-half-end': `${endWidth / 2}px`
+                                            }} />
+                                        </div>
+                                    );
+                                })}
+                                
+                                {/* 温暖的整体色调 */}
+                                <div style={{
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    background: 'radial-gradient(circle at 90% 10%, rgba(255, 220, 100, 0.12), transparent 50%)',
+                                    pointerEvents: 'none'
+                                }}/>
                             </>
                         )}
                     </div>

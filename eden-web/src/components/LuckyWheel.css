@@ -3935,12 +3935,48 @@
     }
 }
 
-/* 晴天太阳旋转动画 */
-@keyframes sunRotate {
+/* 晴天太阳呼吸动画 */
+@keyframes sunPulse {
+    0%, 100% {
+        transform: translateZ(0) scale(1);
+        box-shadow: 0 0 100px rgba(255, 255, 255, 0.9), 0 0 150px rgba(255, 245, 150, 0.7), 0 0 200px rgba(255, 230, 100, 0.4);
+    }
+    50% {
+        transform: translateZ(0) scale(1.05);
+        box-shadow: 0 0 120px rgba(255, 255, 255, 1), 0 0 180px rgba(255, 245, 150, 0.8), 0 0 250px rgba(255, 230, 100, 0.5);
+    }
+}
+
+/* 晴天光束闪耀动画 */
+@keyframes sunbeamShine {
     0% {
-        transform: translateZ(0) rotate(0deg);
+        opacity: 0;
+        height: var(--beam-start-width, 20px);
+        top: calc(40px - var(--beam-half-start, 10px));
+        width: 0;
+    }
+    15% {
+        opacity: 0.6;
+        height: var(--beam-start-width, 20px);
+        top: calc(40px - var(--beam-half-start, 10px));
+        width: 300px;
+    }
+    50% {
+        opacity: 0.8;
+        height: var(--beam-end-width, 100px);
+        top: calc(40px - var(--beam-half-end, 50px));
+        width: 600px;
+    }
+    85% {
+        opacity: 0.4;
+        height: var(--beam-end-width, 100px);
+        top: calc(40px - var(--beam-half-end, 50px));
+        width: 600px;
     }
     100% {
-        transform: translateZ(0) rotate(360deg);
+        opacity: 0;
+        height: var(--beam-start-width, 20px);
+        top: calc(40px - var(--beam-half-start, 10px));
+        width: 600px;
     }
 }
