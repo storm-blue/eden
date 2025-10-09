@@ -247,6 +247,70 @@ const LotteryLuckyWheel = () => {
     const [showResidentDetail, setShowResidentDetail] = useState(false)
     const [selectedResident, setSelectedResident] = useState(null)
     const [residentDetailInfo, setResidentDetailInfo] = useState(null)
+
+    // 根据星星城等级获取建筑位置配置
+    const getBuildingPositions = (level) => {
+        const lv1Positions = {
+            castle: {top: '23%', left: '48%'},
+            city_hall: {top: '12%', left: '72%'},
+            palace: {top: '8%', left: '23%'},
+            white_dove_house: {top: '31%', left: '61%'},
+            park: {top: '50%', left: '40%'}
+        }
+
+        const lv2Positions = {
+            castle: {top: '32%', left: '50%'},
+            city_hall: {top: '18%', left: '76%'},
+            palace: {top: '20%', left: '18%'},
+            white_dove_house: {top: '55%', left: '40%'},
+            park: {top: '38%', left: '63%'}
+        }
+
+        const lv3Positions = {
+            castle: {top: '25%', left: '50%'},
+            city_hall: {top: '15%', left: '70%'},
+            palace: {top: '10%', left: '25%'},
+            white_dove_house: {top: '35%', left: '63%'},
+            park: {top: '52%', left: '38%'}
+        }
+
+        const lv4Positions = {
+            castle: {top: '25%', left: '50%'},
+            city_hall: {top: '15%', left: '70%'},
+            palace: {top: '10%', left: '25%'},
+            white_dove_house: {top: '35%', left: '63%'},
+            park: {top: '52%', left: '38%'}
+        }
+
+        // LV5+ 位置
+        const lv5Positions = {
+            castle: {top: '28%', left: '52%'},
+            city_hall: {top: '18%', left: '68%'},
+            palace: {top: '12%', left: '28%'},
+            white_dove_house: {top: '38%', left: '65%'},
+            park: {top: '55%', left: '35%'}
+        }
+
+        // 根据等级返回对应位置
+        if (level == 5) {
+            return lv5Positions
+        } else if (level == 4) {
+            return lv4Positions
+        } else if (level == 3) {
+            return lv3Positions
+        } else if (level == 2) {
+            return lv2Positions
+        } else if (level == 1) {
+            return lv1Positions
+        } else {
+            return lv1Positions
+        }
+    }
+
+    // 获取当前等级的建筑位置
+    const currentBuildingPositions = useMemo(() => {
+        return getBuildingPositions(starCityData?.level || 1)
+    }, [starCityData?.level])
     const [loadingResidentDetail, setLoadingResidentDetail] = useState(false)
 
     // 耐力不足提示弹框
@@ -1303,16 +1367,8 @@ const LotteryLuckyWheel = () => {
             return null
         }
 
-        // 根据建筑类型确定位置
-        const buildingPositions = {
-            castle: {top: '23%', left: '48%'},
-            city_hall: {top: '12%', left: '72%'},
-            palace: {top: '8%', left: '23%'},
-            white_dove_house: {top: '31%', left: '61%'},
-            park: {top: '50%', left: '40%'}
-        }
-
-        const position = buildingPositions[buildingType]
+        // 使用当前等级的建筑位置
+        const position = currentBuildingPositions[buildingType]
         if (!position) return null
 
         return (
@@ -2196,8 +2252,8 @@ const LotteryLuckyWheel = () => {
                         onClick={() => handleBuildingClick('castle')}
                         style={{
                             position: 'absolute',
-                            top: '23%',
-                            left: '48%',
+                            top: currentBuildingPositions.castle.top,
+                            left: currentBuildingPositions.castle.left,
                             transform: 'translate(-50%, -50%)',
                             width: '12px', // 从15px缩小到12px
                             height: '12px', // 从15px缩小到12px
@@ -2249,8 +2305,8 @@ const LotteryLuckyWheel = () => {
                         onClick={() => handleBuildingClick('city_hall')}
                         style={{
                             position: 'absolute',
-                            top: '12%',
-                            left: '72%',
+                            top: currentBuildingPositions.city_hall.top,
+                            left: currentBuildingPositions.city_hall.left,
                             transform: 'translate(-50%, -50%)',
                             width: '12px', // 保持12px
                             height: '12px', // 保持12px
@@ -2302,8 +2358,8 @@ const LotteryLuckyWheel = () => {
                         onClick={() => handleBuildingClick('palace')}
                         style={{
                             position: 'absolute',
-                            top: '8%',
-                            left: '23%',
+                            top: currentBuildingPositions.palace.top,
+                            left: currentBuildingPositions.palace.left,
                             transform: 'translate(-50%, -50%)',
                             width: '12px', // 从15px缩小到12px
                             height: '12px', // 从15px缩小到12px
@@ -2355,8 +2411,8 @@ const LotteryLuckyWheel = () => {
                         onClick={() => handleBuildingClick('white_dove_house')}
                         style={{
                             position: 'absolute',
-                            top: '31%',
-                            left: '61%',
+                            top: currentBuildingPositions.white_dove_house.top,
+                            left: currentBuildingPositions.white_dove_house.left,
                             transform: 'translate(-50%, -50%)',
                             width: '12px', // 从15px缩小到12px
                             height: '12px', // 从15px缩小到12px
@@ -2408,8 +2464,8 @@ const LotteryLuckyWheel = () => {
                         onClick={() => handleBuildingClick('park')}
                         style={{
                             position: 'absolute',
-                            top: '50%',
-                            left: '40%',
+                            top: currentBuildingPositions.park.top,
+                            left: currentBuildingPositions.park.left,
                             transform: 'translate(-50%, -50%)',
                             width: '12px', // 从15px缩小到12px
                             height: '12px', // 从15px缩小到12px
