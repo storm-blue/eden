@@ -3935,15 +3935,17 @@
     }
 }
 
-/* 夜晚月亮发光动画 */
+/* 夜晚月亮发光动画 - 更柔和细腻 */
 @keyframes moonGlow {
     0%, 100% {
-        filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.6));
         transform: translateZ(0) scale(1);
+        opacity: 0.92;
+        filter: blur(0.5px);
     }
     50% {
-        filter: drop-shadow(0 0 30px rgba(255, 255, 255, 0.9));
-        transform: translateZ(0) scale(1.05);
+        transform: translateZ(0) scale(1.03);
+        opacity: 1;
+        filter: blur(0.3px);
     }
 }
 

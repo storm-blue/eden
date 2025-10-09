@@ -1932,24 +1932,71 @@ const LotteryLuckyWheel = () => {
                         {/* 夜晚特效 */}
                         {starCityData?.weather === 'night' && (
                             <>
-                                {/* 月亮 */}
+                                {/* 月牙 - CSS绘制的柔和月牙 */}
                                 <div style={{
                                     position: 'absolute',
-                                    top: '4%',
-                                    right: '4%',
-                                    fontSize: '60px',
-                                    animation: 'moonGlow 3s ease-in-out infinite',
+                                    top: '5%',
+                                    right: '5%',
+                                    width: isMobileDevice ? '50px' : '70px',
+                                    height: isMobileDevice ? '50px' : '70px',
+                                    animation: 'moonGlow 4s ease-in-out infinite',
                                     zIndex: 5,
                                     pointerEvents: 'none',
-                                    willChange: 'transform',
+                                    willChange: 'transform, opacity',
                                     transform: 'translateZ(0)'
                                 }}>
-                                    🌙
+                                    {/* 月牙主体 - 使用两个圆形叠加实现月牙效果 */}
+                                    <div style={{
+                                        position: 'relative',
+                                        width: '100%',
+                                        height: '100%'
+                                    }}>
+                                        {/* 完整的月亮 */}
+                                        <div style={{
+                                            position: 'absolute',
+                                            width: '100%',
+                                            height: '100%',
+                                            borderRadius: '50%',
+                                            background: 'radial-gradient(circle at 40% 35%, rgba(255, 255, 255, 1) 0%, rgba(250, 250, 255, 1) 15%, rgba(240, 242, 250, 0.98) 35%, rgba(230, 235, 245, 0.95) 55%, rgba(220, 225, 240, 0.85) 75%, rgba(210, 220, 235, 0.65) 90%, rgba(200, 210, 230, 0.4) 100%)',
+                                            boxShadow: `
+                                                0 0 35px rgba(255, 255, 255, 0.7),
+                                                0 0 60px rgba(240, 245, 255, 0.5),
+                                                0 0 90px rgba(220, 230, 255, 0.3)
+                                            `,
+                                            filter: 'blur(0.4px)'
+                                        }}>
+                                            {/* 月亮表面纹理 */}
+                                            <div style={{
+                                                position: 'absolute',
+                                                width: '100%',
+                                                height: '100%',
+                                                borderRadius: '50%',
+                                                background: `
+                                                    radial-gradient(circle at 35% 40%, rgba(210, 220, 235, 0.2) 0%, transparent 20%),
+                                                    radial-gradient(circle at 25% 60%, rgba(200, 210, 230, 0.15) 0%, transparent 18%),
+                                                    radial-gradient(circle at 40% 70%, rgba(190, 205, 225, 0.12) 0%, transparent 25%)
+                                                `,
+                                                opacity: 0.7
+                                            }} />
+                                        </div>
+                                        
+                                        {/* 遮挡阴影 - 创建月牙效果（左侧遮挡）*/}
+                                        <div style={{
+                                            position: 'absolute',
+                                            top: '-5%',
+                                            left: '-15%',
+                                            width: '85%',
+                                            height: '110%',
+                                            borderRadius: '50%',
+                                            background: 'radial-gradient(circle, rgba(10, 20, 45, 0.85) 0%, rgba(15, 25, 50, 0.75) 40%, rgba(20, 30, 55, 0.5) 65%, transparent 100%)',
+                                            filter: 'blur(3px)'
+                                        }} />
+                                    </div>
                                 </div>
                                 
                                 {/* 星星 - 分布在屏幕上半部边框10%区域 */}
-                                {[...Array(isMobileDevice ? 12 : 20)].map((_, i) => {
-                                    const starCount = isMobileDevice ? 12 : 20;
+                                {[...Array(isMobileDevice ? 30 : 50)].map((_, i) => {
+                                    const starCount = isMobileDevice ? 30 : 50;
                                     const quarterCount = Math.floor(starCount / 4);
                                     
                                     let top, left;
@@ -1975,6 +2022,8 @@ const LotteryLuckyWheel = () => {
                                     
                                     const delay = Math.random() * 3;
                                     const duration = 1.5 + Math.random() * 1.5;
+                                    const size = 2 + Math.random() * 2; // 星星大小 2-4px
+                                    const brightness = 0.6 + Math.random() * 0.4; // 亮度 0.6-1.0
                                     
                                     return (
                                         <div
@@ -1983,16 +2032,48 @@ const LotteryLuckyWheel = () => {
                                                 position: 'absolute',
                                                 top: `${top}%`,
                                                 left: `${left}%`,
-                                                fontSize: '12px',
+                                                width: `${size}px`,
+                                                height: `${size}px`,
                                                 animation: `starTwinkle ${duration}s ease-in-out infinite`,
                                                 animationDelay: `${delay}s`,
                                                 pointerEvents: 'none',
                                                 zIndex: 5,
-                                                willChange: 'opacity',
+                                                willChange: 'opacity, transform',
                                                 transform: 'translateZ(0)'
                                             }}
                                         >
-                                            ⭐
+                                            {/* 星星主体 - 圆形光点 */}
+                                            <div style={{
+                                                position: 'absolute',
+                                                width: '100%',
+                                                height: '100%',
+                                                borderRadius: '50%',
+                                                background: `radial-gradient(circle, rgba(255, 255, 255, ${brightness}) 0%, rgba(240, 245, 255, ${brightness * 0.8}) 40%, transparent 70%)`,
+                                                boxShadow: `
+                                                    0 0 ${size * 2}px rgba(255, 255, 255, ${brightness * 0.6}),
+                                                    0 0 ${size * 4}px rgba(200, 220, 255, ${brightness * 0.3})
+                                                `
+                                            }} />
+                                            
+                                            {/* 星星十字光芒 */}
+                                            <div style={{
+                                                position: 'absolute',
+                                                top: '50%',
+                                                left: '50%',
+                                                width: `${size * 3}px`,
+                                                height: '1px',
+                                                background: `linear-gradient(to right, transparent, rgba(255, 255, 255, ${brightness * 0.5}), transparent)`,
+                                                transform: 'translate(-50%, -50%)'
+                                            }} />
+                                            <div style={{
+                                                position: 'absolute',
+                                                top: '50%',
+                                                left: '50%',
+                                                width: '1px',
+                                                height: `${size * 3}px`,
+                                                background: `linear-gradient(to bottom, transparent, rgba(255, 255, 255, ${brightness * 0.5}), transparent)`,
+                                                transform: 'translate(-50%, -50%)'
+                                            }} />
                                         </div>
                                     );
                                 })}
