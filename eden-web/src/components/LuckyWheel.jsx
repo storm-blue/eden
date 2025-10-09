@@ -1627,9 +1627,17 @@ const LotteryLuckyWheel = () => {
                                 {/* 雨滴 */}
                         {[...Array(isMobileDevice ? 50 : 80)].map((_, i) => {
                             const delay = Math.random() * 3;
-                            const duration = 0.8 + Math.random() * 0.4;
+                            // 手机端速度降低20%：基础速度从0.8-1.2秒增加到0.96-1.44秒
+                            const baseDuration = 0.8 + Math.random() * 0.4;
+                            const duration = isMobileDevice ? baseDuration * 1.2 : baseDuration;
                             const left = Math.random() * 110;
                             const startTop = -10 - Math.random() * 15;
+                            
+                            // 随机水平偏移 2-5vw，方向随机
+                            const horizontalDrift = (2 + Math.random() * 3) * (Math.random() > 0.5 ? 1 : -1);
+                            
+                            // 随机选择一个倾斜角度（对应偏移方向）
+                            const rotation = horizontalDrift > 0 ? '2deg' : '-2deg';
 
                             return (
                                 <div
@@ -1645,8 +1653,10 @@ const LotteryLuckyWheel = () => {
                                         animationDelay: `${delay}s`,
                                         opacity: 0.9,
                                         willChange: 'transform',
-                                        transform: 'translateZ(0)',
-                                        transformOrigin: 'top center'
+                                        transform: `rotate(${rotation}) translateZ(0)`,
+                                        transformOrigin: 'top center',
+                                        // 使用CSS变量传递水平偏移
+                                        '--rain-drift': `${horizontalDrift}vw`
                                     }}
                                 />
                             );

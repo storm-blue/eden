@@ -3854,7 +3854,7 @@
 /* 雨天特效动画 */
 @keyframes rainDrop {
     0% {
-        transform: translateY(0) translateZ(0);
+        transform: translateY(0) translateX(0) translateZ(0);
         opacity: 0;
     }
     10% {
@@ -3864,7 +3864,7 @@
         opacity: 0.7;
     }
     100% {
-        transform: translateY(110vh) translateZ(0);
+        transform: translateY(110vh) translateX(var(--rain-drift, 0)) translateZ(0);
         opacity: 0;
     }
 }
