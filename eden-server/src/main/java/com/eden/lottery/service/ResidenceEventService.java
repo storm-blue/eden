@@ -114,7 +114,7 @@ public class ResidenceEventService {
 
         Event event = Scenes.getEvent(residence, usernames);
         // 使用Gson序列化为JSON
-        String eventData = gson.toJson(event);
+        String eventData = gson.toJson(event.getItems());
         return updateResidenceEvent(residence, eventData, event.isShowSpecialEffect(), null, event.isShowSpecialEffect());
     }
 
