@@ -1752,11 +1752,14 @@ const LotteryLuckyWheel = () => {
                         {/* 多云特效 */}
                         {starCityData?.weather === 'cloudy' && (
                             <>
-                                {/* 云朵 */}
-                                {[...Array(isMobileDevice ? 4 : 6)].map((_, i) => {
-                                    const duration = 20 + i * 5;
-                                    const delay = i * 3;
-                                    const top = 5 + i * 12;
+                                {/* CSS绘制的云朵 - 多种形状 */}
+                                {[...Array(isMobileDevice ? 5 : 8)].map((_, i) => {
+                                    const duration = 25 + Math.random() * 15; // 25-40秒
+                                    const delay = i * 4;
+                                    const top = 5 + Math.random() * 50; // 随机高度 5-55%
+                                    const scale = 0.6 + Math.random() * 0.6; // 随机大小 0.6-1.2
+                                    const opacity = 0.4 + Math.random() * 0.3; // 随机透明度 0.4-0.7
+                                    const cloudType = i % 3; // 3种云朵形状
                                     
                                     return (
                                         <div
@@ -1764,19 +1767,165 @@ const LotteryLuckyWheel = () => {
                                             style={{
                                                 position: 'absolute',
                                                 top: `${top}%`,
-                                                left: '-10%',
-                                                fontSize: '60px',
-                                                opacity: 0.6,
+                                                left: '-200px',
+                                                width: '120px',
+                                                height: '50px',
+                                                opacity: opacity,
                                                 animation: `cloudMove ${duration}s linear infinite`,
                                                 animationDelay: `${delay}s`,
                                                 willChange: 'transform',
-                                                transform: 'translateZ(0)'
+                                                transform: `scale(${scale}) translateZ(0)`,
+                                                filter: 'blur(1px)'
                                             }}
                                         >
-                                            ☁️
+                                            {/* 云朵类型1：圆润型 */}
+                                            {cloudType === 0 && (
+                                                <>
+                                                    <div style={{
+                                                        position: 'absolute',
+                                                        width: '50px',
+                                                        height: '20px',
+                                                        background: 'rgba(255, 255, 255, 0.9)',
+                                                        borderRadius: '50%',
+                                                        bottom: '0',
+                                                        left: '35px'
+                                                    }} />
+                                                    <div style={{
+                                                        position: 'absolute',
+                                                        width: '40px',
+                                                        height: '30px',
+                                                        background: 'rgba(255, 255, 255, 0.85)',
+                                                        borderRadius: '50%',
+                                                        bottom: '5px',
+                                                        left: '15px'
+                                                    }} />
+                                                    <div style={{
+                                                        position: 'absolute',
+                                                        width: '45px',
+                                                        height: '35px',
+                                                        background: 'rgba(255, 255, 255, 0.9)',
+                                                        borderRadius: '50%',
+                                                        top: '0',
+                                                        left: '30px'
+                                                    }} />
+                                                    <div style={{
+                                                        position: 'absolute',
+                                                        width: '35px',
+                                                        height: '25px',
+                                                        background: 'rgba(255, 255, 255, 0.8)',
+                                                        borderRadius: '50%',
+                                                        bottom: '3px',
+                                                        right: '10px'
+                                                    }} />
+                                                </>
+                                            )}
+                                            
+                                            {/* 云朵类型2：扁平型 */}
+                                            {cloudType === 1 && (
+                                                <>
+                                                    <div style={{
+                                                        position: 'absolute',
+                                                        width: '60px',
+                                                        height: '18px',
+                                                        background: 'rgba(255, 255, 255, 0.9)',
+                                                        borderRadius: '50%',
+                                                        bottom: '0',
+                                                        left: '30px'
+                                                    }} />
+                                                    <div style={{
+                                                        position: 'absolute',
+                                                        width: '45px',
+                                                        height: '25px',
+                                                        background: 'rgba(255, 255, 255, 0.88)',
+                                                        borderRadius: '50%',
+                                                        bottom: '8px',
+                                                        left: '10px'
+                                                    }} />
+                                                    <div style={{
+                                                        position: 'absolute',
+                                                        width: '38px',
+                                                        height: '28px',
+                                                        background: 'rgba(255, 255, 255, 0.85)',
+                                                        borderRadius: '50%',
+                                                        bottom: '5px',
+                                                        left: '45px'
+                                                    }} />
+                                                    <div style={{
+                                                        position: 'absolute',
+                                                        width: '32px',
+                                                        height: '20px',
+                                                        background: 'rgba(255, 255, 255, 0.82)',
+                                                        borderRadius: '50%',
+                                                        bottom: '2px',
+                                                        right: '15px'
+                                                    }} />
+                                                </>
+                                            )}
+                                            
+                                            {/* 云朵类型3：蓬松型 */}
+                                            {cloudType === 2 && (
+                                                <>
+                                                    <div style={{
+                                                        position: 'absolute',
+                                                        width: '42px',
+                                                        height: '38px',
+                                                        background: 'rgba(255, 255, 255, 0.9)',
+                                                        borderRadius: '50%',
+                                                        top: '5px',
+                                                        left: '25px'
+                                                    }} />
+                                                    <div style={{
+                                                        position: 'absolute',
+                                                        width: '38px',
+                                                        height: '32px',
+                                                        background: 'rgba(255, 255, 255, 0.87)',
+                                                        borderRadius: '50%',
+                                                        top: '0',
+                                                        left: '45px'
+                                                    }} />
+                                                    <div style={{
+                                                        position: 'absolute',
+                                                        width: '35px',
+                                                        height: '28px',
+                                                        background: 'rgba(255, 255, 255, 0.85)',
+                                                        borderRadius: '50%',
+                                                        top: '8px',
+                                                        left: '5px'
+                                                    }} />
+                                                    <div style={{
+                                                        position: 'absolute',
+                                                        width: '48px',
+                                                        height: '22px',
+                                                        background: 'rgba(255, 255, 255, 0.88)',
+                                                        borderRadius: '50%',
+                                                        bottom: '0',
+                                                        left: '20px'
+                                                    }} />
+                                                    <div style={{
+                                                        position: 'absolute',
+                                                        width: '30px',
+                                                        height: '24px',
+                                                        background: 'rgba(255, 255, 255, 0.83)',
+                                                        borderRadius: '50%',
+                                                        bottom: '5px',
+                                                        right: '12px'
+                                                    }} />
+                                                </>
+                                            )}
                                         </div>
                                     );
                                 })}
+                                
+                                {/* 灰色整体色调 */}
+                                <div style={{
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    background: 'linear-gradient(to bottom, rgba(200, 210, 220, 0.15), transparent 40%)',
+                                    pointerEvents: 'none'
+                                }}/>
                             </>
                         )}
 
