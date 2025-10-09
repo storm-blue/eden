@@ -1692,12 +1692,16 @@ const LotteryLuckyWheel = () => {
                         {starCityData?.weather === 'snowy' && (
                             <>
                                 {/* 雪花 */}
-                                {[...Array(isMobileDevice ? 40 : 60)].map((_, i) => {
-                                    const delay = Math.random() * 5;
-                                    const duration = 3 + Math.random() * 2;
+                                {[...Array(isMobileDevice ? 60 : 100)].map((_, i) => {
+                                    const delay = Math.random() * 8;
+                                    const duration = 4 + Math.random() * 3;
                                     const left = Math.random() * 110;
-                                    const startTop = -10 - Math.random() * 20;
-                                    const size = 8 + Math.random() * 8;
+                                    const startTop = -10 - Math.random() * 30;
+                                    const size = 6 + Math.random() * 10;
+                                    
+                                    // 为每片雪花生成独特的飘落轨迹
+                                    const driftDistance = 30 + Math.random() * 50; // 水平飘移距离
+                                    const swingCount = 2 + Math.random() * 3; // 摆动次数
                                     
                                     return (
                                         <div
@@ -1707,17 +1711,31 @@ const LotteryLuckyWheel = () => {
                                                 left: `${left}%`,
                                                 top: `${startTop}%`,
                                                 fontSize: `${size}px`,
-                                                animation: `snowFall ${duration}s linear infinite`,
+                                                animation: `snowFall ${duration}s ease-in-out infinite`,
                                                 animationDelay: `${delay}s`,
-                                                opacity: 0.9,
+                                                opacity: 0.85,
                                                 willChange: 'transform',
-                                                transform: 'translateZ(0)'
+                                                transform: 'translateZ(0)',
+                                                // 使用CSS变量传递飘落参数
+                                                '--drift-distance': `${driftDistance}px`,
+                                                '--swing-count': swingCount
                                             }}
                                         >
                                             ❄️
                                         </div>
                                     );
                                 })}
+                                
+                                {/* 雪雾效果 */}
+                                <div style={{
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    background: 'linear-gradient(to bottom, rgba(240, 248, 255, 0.1), transparent 30%)',
+                                    pointerEvents: 'none'
+                                }}/>
                             </>
                         )}
 
