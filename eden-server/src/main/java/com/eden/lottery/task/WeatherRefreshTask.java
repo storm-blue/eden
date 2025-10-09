@@ -41,7 +41,7 @@ public class WeatherRefreshTask {
      * cron表达式: 0 0 0/6 * * ? 表示每天的0点、6点、12点、18点执行
      */
     //@Scheduled(cron = "0 0 0/6 * * ?")
-    @Scheduled(fixedDelay = 3600, timeUnit = TimeUnit.SECONDS)
+    @Scheduled(fixedDelay = 360, timeUnit = TimeUnit.MINUTES)
     @Transactional
     public void refreshWeather() {
         try {
