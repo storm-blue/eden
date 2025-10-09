@@ -38,7 +38,7 @@ public class WeatherRefreshTask {
 
     /**
      * 每6小时执行一次天气刷新
-     * cron表达式: 0 0 0/6 * * ? 表示每天的0点、6点、12点、18点执行
+     * 晚上7点到凌晨5点之间强制为夜晚天气
      */
     //@Scheduled(cron = "0 0 0/6 * * ?")
     @Scheduled(fixedDelay = 360, timeUnit = TimeUnit.MINUTES)
@@ -55,15 +55,26 @@ public class WeatherRefreshTask {
                 return;
             }
 
-            // 随机选择新天气
             String oldWeather = starCity.getWeather();
-            String newWeather = WEATHER_TYPES[random.nextInt(WEATHER_TYPES.length)];
-
-            // 确保新天气与旧天气不同
-            int attempts = 0;
-            while (newWeather.equals(oldWeather) && attempts < 10) {
-                newWeather = WEATHER_TYPES[random.nextInt(WEATHER_TYPES.length)];
-                attempts++;
+            String newWeather;
+            
+            // 获取当前小时
+            LocalDateTime now = LocalDateTime.now();
+            int currentHour = now.getHour();
+            
+            // 判断是否在夜晚时段（19:00-05:00）
+            boolean isNightTime = currentHour >= 19 || currentHour < 5;
+            
+            if (isNightTime) {
+                // 晚上7点到凌晨5点之间，强制设置为夜晚
+                newWeather = "night";
+                logger.info("当前时段为夜晚（{}点），设置天气为night", currentHour);
+            } else {
+                // 白天时段（05:00-19:00），从其他天气中随机选择
+                String[] dayWeatherTypes = {"sunny", "rainy", "snowy", "cloudy"};
+                newWeather = dayWeatherTypes[random.nextInt(dayWeatherTypes.length)];
+                
+                logger.info("当前时段为白天（{}点），随机选择天气", currentHour);
             }
 
             // 更新天气
