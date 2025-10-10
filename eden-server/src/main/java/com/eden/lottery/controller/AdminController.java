@@ -13,6 +13,7 @@ import com.eden.lottery.service.UserAttemptService;
 import com.eden.lottery.service.WishService;
 import com.eden.lottery.service.ResidenceHistoryService;
 import com.eden.lottery.service.ResidenceEventService;
+import com.eden.lottery.task.UserStatusRefreshTask;
 import com.eden.lottery.entity.UserAttempt;
 import com.eden.lottery.utils.ResidenceUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -40,14 +41,16 @@ public class AdminController {
     private final WishService wishService;
     private final ResidenceHistoryService residenceHistoryService;
     private final ResidenceEventService residenceEventService;
+    private final UserStatusRefreshTask userStatusRefreshTask;
 
-    public AdminController(AdminService adminService, LotteryService lotteryService, UserAttemptService userAttemptService, WishService wishService, ResidenceHistoryService residenceHistoryService, ResidenceEventService residenceEventService) {
+    public AdminController(AdminService adminService, LotteryService lotteryService, UserAttemptService userAttemptService, WishService wishService, ResidenceHistoryService residenceHistoryService, ResidenceEventService residenceEventService, UserStatusRefreshTask userStatusRefreshTask) {
         this.adminService = adminService;
         this.lotteryService = lotteryService;
         this.userAttemptService = userAttemptService;
         this.wishService = wishService;
         this.residenceHistoryService = residenceHistoryService;
         this.residenceEventService = residenceEventService;
+        this.userStatusRefreshTask = userStatusRefreshTask;
     }
 
     /**
@@ -923,6 +926,31 @@ public class AdminController {
             response.put("success", false);
             response.put("message", "更新用户信息失败: " + e.getMessage());
             return response;
+        }
+    }
+
+    /**
+     * 手动触发用户状态刷新任务（测试用）
+     */
+    @PostMapping("/trigger-status-refresh")
+    public ApiResponse<Object> triggerStatusRefresh(HttpServletRequest request) {
+        try {
+            if (isInvalidAdmin(request)) {
+                return ApiResponse.error("未授权访问");
+            }
+            
+            logger.info("管理员手动触发用户状态刷新任务");
+            userStatusRefreshTask.refreshUserStatus();
+            
+            Object result = new Object() {
+                public final String message = "用户状态刷新任务已执行完成";
+                public final String nextScheduledTime = "下次自动执行：每小时的0分和30分";
+            };
+            
+            return ApiResponse.success("任务执行成功", result);
+        } catch (Exception e) {
+            logger.error("手动触发用户状态刷新失败", e);
+            return ApiResponse.error("任务执行失败: " + e.getMessage());
         }
     }
 
