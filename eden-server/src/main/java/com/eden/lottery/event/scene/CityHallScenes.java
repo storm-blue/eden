@@ -9,13 +9,13 @@ import java.util.List;
 public final class CityHallScenes {
 
     // 通用场景
-    public static List<EventItem> SZT__NORMAL = List.of(
+    public static List<EventItem> NORMAL = List.of(
             new EventItem("微风轻拂过城堡🏰", "normal"),
             new EventItem("城堡🏰 平静如常...", "normal")
     );
 
     // 市政厅双人场景
-    public static List<EventItem> TWO__SZT__01 = List.of(
+    public static List<EventItem> LXD_QXH__01 = List.of(
             new EventItem("💕 市政厅的议事厅里，秦小淮坐在会议桌上 💕", "special"),
             new EventItem("💕 \"星斗哥哥，这里会有人来的……\" 她紧张地四处张望 💕", "special"),
             new EventItem("💕 \"那就要快一点了\" 李星斗锁上了门 💕", "special"),
@@ -23,7 +23,7 @@ public final class CityHallScenes {
             new EventItem("💕 议事厅里很快传来压抑的喘息声 💕", "special")
     );
 
-    public static List<EventItem> TWO__SZT__02 = List.of(
+    public static List<EventItem> LXD_QXH__02 = List.of(
             new EventItem("💕 档案室的书架后面，两人紧紧拥抱 💕", "special"),
             new EventItem("💕 \"嘘……外面有脚步声\" 李星斗捂住她的嘴 💕", "special"),
             new EventItem("💕 秦小淮又紧张又有点兴奋，心跳得更快了 💕", "special"),
@@ -32,7 +32,7 @@ public final class CityHallScenes {
             new EventItem("💕 书架间回荡着她压抑的呻吟声 💕", "special")
     );
 
-    public static List<EventItem> TWO__SZT__03 = List.of(
+    public static List<EventItem> LXD_QXH__03 = List.of(
             new EventItem("💕 市长办公室里，秦小淮躺在办公桌上 💕", "special"),
             new EventItem("💕 \"在这种地方被插……\" 她脸红得像苹果 💕", "special"),
             new EventItem("💕 \"下次当着大家的面操你\" 李星斗俯身在她耳边说 💕", "special"),
@@ -44,7 +44,7 @@ public final class CityHallScenes {
             new EventItem("💕 \"听到怕什么？\" 生气的李星斗更用力了！ 💕", "special")
     );
 
-    public static List<EventItem> TWO__SZT__04 = List.of(
+    public static List<EventItem> LXD_QXH__04 = List.of(
             new EventItem("💕 楼梯间里，秦小淮被压在冰冷的墙上 💕", "special"),
             new EventItem("💕 \"有人上楼了！\" 她惊慌地推着李星斗 💕", "special"),
             new EventItem("💕 \"别动，他们听不见的\" 他坏笑着继续抚摸 💕", "special"),
@@ -57,7 +57,7 @@ public final class CityHallScenes {
             new EventItem("💕 紧张和刺激让她更加兴奋，完全湿透了 💕", "special")
     );
 
-    public static List<EventItem> TWO__SZT__05 = List.of(
+    public static List<EventItem> LXD_QXH__05 = List.of(
             new EventItem("💕 接待大厅的沙发上，深夜时分灯光昏暗 💕", "special"),
             new EventItem("💕 \"保安会巡逻的……\" 秦小淮紧张地四处张望 💕", "special"),
             new EventItem("💕 \"那我们就要安静一点\" 李星斗轻抚她的身体 💕", "special"),
@@ -70,7 +70,7 @@ public final class CityHallScenes {
             new EventItem("💕 大理石柱在月光下见证着他们的秘密激情 💕", "special")
     );
 
-    public static List<EventItem> TWO__SZT__06 = List.of(
+    public static List<EventItem> LXD_QXH__06 = List.of(
             new EventItem("💕 市政厅的钟楼里，古老的钟声在黄昏中回响 💕", "special"),
             new EventItem("💕 \"这里只有我们两个人……\" 她紧张又兴奋地说 💕", "special"),
             new EventItem("💕 \"钟声会掩盖我们的声音\" 李星斗轻抚她的脸 💕", "special"),
@@ -83,7 +83,7 @@ public final class CityHallScenes {
             new EventItem("💕 古老的钟摆在夕阳中见证着他们的激情时光 💕", "special")
     );
 
-    public static List<EventItem> TWO__SZT__07 = List.of(
+    public static List<EventItem> LXD_QXH__07 = List.of(
             new EventItem("💕 天台上，城市的夜景尽收眼底，星光璀璨 💕", "special"),
             new EventItem("💕 \"在这么高的地方……好害怕……\" 秦小淮紧紧抓着栏杆 💕", "special"),
             new EventItem("💕 \"别怕，我抱着你\" 李星斗从背后环抱住她 💕", "special"),
@@ -96,7 +96,7 @@ public final class CityHallScenes {
             new EventItem("💕 星空下，两人在城市之巅享受着最极致的激情 💕", "special")
     );
 
-    public static List<EventItem> TWO__SZT__08 = List.of(
+    public static List<EventItem> LXD_QXH__08 = List.of(
             new EventItem("💕 市政厅的地下室里，石墙厚重，灯光昏暗 💕", "special"),
             new EventItem("💕 \"这里好安静……\" 秦小淮紧紧抓着李星斗的手 💕", "special"),
             new EventItem("💕 \"那就让我来陪伴你\" 李星斗将她拉入怀中 💕", "special"),
@@ -109,7 +109,7 @@ public final class CityHallScenes {
             new EventItem("💕 厚重的石墙隔绝了外界，只剩下两人的激情回荡 💕", "special")
     );
 
-    public static List<EventItem> TWO__SZT__09 = List.of(
+    public static List<EventItem> LXD_QXH__09 = List.of(
             new EventItem("💕 洗手间里，秦小淮对着镜子整理头发 💕", "special"),
             new EventItem("💕 李星斗悄悄走进来，轻轻锁上了门 💕", "special"),
             new EventItem("💕 \"有人会敲门的……\" 她紧张地说 💕", "special"),
@@ -122,7 +122,7 @@ public final class CityHallScenes {
             new EventItem("💕 镜子映出了两人最私密的时刻，增添了视觉刺激 💕", "special")
     );
 
-    public static List<EventItem> TWO__SZT__10 = List.of(
+    public static List<EventItem> LXD_QXH__10 = List.of(
             new EventItem("💕 会客厅的窗帘后面，阳光透过缝隙斑驳洒落 💕", "special"),
             new EventItem("💕 \"外面有很多人经过……\" 秦小淮紧张地看着窗外 💕", "special"),
             new EventItem("💕 \"那就要保持安静\" 李星斗轻抚着她的唇 💕", "special"),
@@ -135,7 +135,7 @@ public final class CityHallScenes {
             new EventItem("💕 窗帘轻摆，掩盖着里面最甜蜜的秘密 💕", "special")
     );
 
-    public static List<EventItem> TWO__SZT__11 = List.of(
+    public static List<EventItem> LXD_QXH__11 = List.of(
             new EventItem("💕 储藏室里，文件柜之间的狭小空间 💕", "special"),
             new EventItem("💕 \"这里好挤……\" 秦小淮紧贴在李星斗身上 💕", "special"),
             new EventItem("💕 \"正好，这样更亲密\" 他紧紧拥抱着她 💕", "special"),
@@ -148,7 +148,7 @@ public final class CityHallScenes {
             new EventItem("💕 官方文件静静见证着他们在狭小空间里的激情 💕", "special")
     );
 
-    public static List<EventItem> TWO__SZT__12 = List.of(
+    public static List<EventItem> LXD_QXH__12 = List.of(
             new EventItem("💕 夜晚的市政厅大堂，只有值班的保安在远处 💕", "special"),
             new EventItem("💕 \"他在那边巡逻……\" 秦小淮小声说 💕", "special"),
             new EventItem("💕 \"那我们就要更小心一点\" 李星斗将她拉到柱子后 💕", "special"),
@@ -161,7 +161,7 @@ public final class CityHallScenes {
             new EventItem("💕 庄严的大堂在深夜里回荡着两人压抑的喘息声 💕", "special")
     );
 
-    public static List<EventItem> TWO__SZT__13 = List.of(
+    public static List<EventItem> LXD_QXH__13 = List.of(
             new EventItem("💕 市政厅的图书馆里，书香阵阵，一片寂静 💕", "special"),
             new EventItem("💕 \"在这么安静的地方……\" 秦小淮紧张地说 💕", "special"),
             new EventItem("💕 \"那就要保持绝对安静\" 李星斗轻柔地捂住她的嘴 💕", "special"),
@@ -174,7 +174,7 @@ public final class CityHallScenes {
             new EventItem("💕 书架间传来细微的摩擦声和压抑的呻吟 💕", "special")
     );
 
-    public static List<EventItem> TWO__SZT__14 = List.of(
+    public static List<EventItem> LXD_QXH__14 = List.of(
             new EventItem("💕 市政厅的展览厅里，古老的画像静静陈列 💕", "special"),
             new EventItem("💕 \"被这些画像看着好害羞……\" 秦小淮低下头 💕", "special"),
             new EventItem("💕 \"它们见证过更多的历史\" 李星斗轻抚她的脸 💕", "special"),
@@ -187,7 +187,7 @@ public final class CityHallScenes {
             new EventItem("💕 古老的画像在灯光下静静见证着他们现代的激情 💕", "special")
     );
 
-    public static List<EventItem> TWO__SZT__15 = List.of(
+    public static List<EventItem> LXD_QXH__15 = List.of(
             new EventItem("💕 市政厅的密室里，烛台微光闪烁，神秘莫测 💕", "special"),
             new EventItem("💕 \"这里会不会有人发现？\" 秦小淮担心地问 💕", "special"),
             new EventItem("💕 \"这是秘密房间，没人知道\" 李星斗拉她入怀 💕", "special"),
@@ -200,7 +200,7 @@ public final class CityHallScenes {
             new EventItem("💕 烛光为他们的秘密时光增添了最浪漫的氛围 💕", "special")
     );
 
-    public static List<EventItem> TWO__SZT__16 = List.of(
+    public static List<EventItem> LXD_QXH__16 = List.of(
             new EventItem("💕 市政厅的审判庭里，庄严肃穆，权威凛然 💕", "special"),
             new EventItem("💕 \"在法官台上……好刺激……\" 秦小淮羞涩地说 💕", "special"),
             new EventItem("💕 \"今天我来审判你\" 李星斗坏笑着说 💕", "special"),
@@ -213,7 +213,7 @@ public final class CityHallScenes {
             new EventItem("💕 正义女神的雕像静静注视着他们的审判游戏 💕", "special")
     );
 
-    public static List<EventItem> TWO__SZT__17 = List.of(
+    public static List<EventItem> LXD_QXH__17 = List.of(
             new EventItem("💕 市政厅的演讲台上，高台威严，聚光灯洒下 💕", "special"),
             new EventItem("💕 \"感觉像在舞台上表演\" 秦小淮脸红地说 💕", "special"),
             new EventItem("💕 \"那就给我表演一场\" 李星斗走上台 💕", "special"),
@@ -226,7 +226,7 @@ public final class CityHallScenes {
             new EventItem("💕 高台上，她的身体在聚光灯下格外迷人动人 💕", "special")
     );
 
-    public static List<EventItem> TWO__SZT__18 = List.of(
+    public static List<EventItem> LXD_QXH__18 = List.of(
             new EventItem("💕 市政厅的国旗台前，国旗在风中飘扬 💕", "special"),
             new EventItem("💕 \"在这里……会不会太不合适……\" 秦小淮担心地说 💕", "special"),
             new EventItem("💕 \"爱情没有不合适的地方\" 李星斗坚定地说 💕", "special"),
@@ -240,7 +240,7 @@ public final class CityHallScenes {
     );
 
     // 市政厅双人日常场景 (19-25)
-    public static List<EventItem> TWO__SZT__19 = List.of(
+    public static List<EventItem> LXD_QXH__19 = List.of(
             new EventItem("📋 市政厅办事大厅，两人在排队办证件", "normal"),
             new EventItem("✨ 秦小淮偷偷用魔法让前面的队伍移动更快", "normal"),
             new EventItem("😅 \"小淮，不能插队\" 李星斗拉住她", "normal"),
@@ -248,7 +248,7 @@ public final class CityHallScenes {
             new EventItem("💕 \"我的小法师总是这么善良\"", "normal")
     );
 
-    public static List<EventItem> TWO__SZT__20 = List.of(
+    public static List<EventItem> LXD_QXH__20 = List.of(
             new EventItem("📚 市政厅图书馆里，两人一起查资料", "normal"),
             new EventItem("✨ 秦小淮用魔法让需要的书自己飞过来", "normal"),
             new EventItem("📖 \"哇，这本书正好有我们要的内容！\" 李星斗惊喜", "normal"),
@@ -256,7 +256,7 @@ public final class CityHallScenes {
             new EventItem("🤗 \"我的小法师真是我的幸运星\"", "normal")
     );
 
-    public static List<EventItem> TWO__SZT__21 = List.of(
+    public static List<EventItem> LXD_QXH__21 = List.of(
             new EventItem("☕ 市政厅咖啡厅里，两人在下棋", "normal"),
             new EventItem("♟️ 李星斗专心思考每一步棋", "normal"),
             new EventItem("✨ 秦小淮用魔法让棋子偶尔\"不小心\"走错位置", "normal"),
@@ -264,7 +264,7 @@ public final class CityHallScenes {
             new EventItem("😘 \"可能是它想离我近一点吧～\"", "normal")
     );
 
-    public static List<EventItem> TWO__SZT__22 = List.of(
+    public static List<EventItem> LXD_QXH__22 = List.of(
             new EventItem("🌧️ 市政厅外下雨了，两人在等雨停", "normal"),
             new EventItem("✨ 秦小淮用魔法在头顶制造一个小晴天", "normal"),
             new EventItem("☀️ \"哇，只有我们这里是晴天！\" 路人惊奇地看", "normal"),
@@ -272,7 +272,7 @@ public final class CityHallScenes {
             new EventItem("💕 \"因为我想和星斗哥哥永远在阳光下\"", "normal")
     );
 
-    public static List<EventItem> TWO__SZT__23 = List.of(
+    public static List<EventItem> LXD_QXH__23 = List.of(
             new EventItem("🎨 市政厅艺术展览，两人在欣赏画作", "normal"),
             new EventItem("✨ 秦小淮用魔法让画中的花朵轻轻摇摆", "normal"),
             new EventItem("🌸 \"这幅画好像活了！\" 其他观众惊叹", "normal"),
@@ -280,7 +280,7 @@ public final class CityHallScenes {
             new EventItem("😋 \"艺术需要一点魔法的点缀嘛\"", "normal")
     );
 
-    public static List<EventItem> TWO__SZT__24 = List.of(
+    public static List<EventItem> LXD_QXH__24 = List.of(
             new EventItem("🍽️ 市政厅员工餐厅，两人一起吃午饭", "normal"),
             new EventItem("✨ 秦小淮用魔法让食物保持最佳温度", "normal"),
             new EventItem("🍲 \"这汤怎么一直这么热？\" 李星斗好奇", "normal"),
@@ -288,7 +288,7 @@ public final class CityHallScenes {
             new EventItem("💕 \"那我要多喝几碗爱的汤\"", "normal")
     );
 
-    public static List<EventItem> TWO__SZT__25 = List.of(
+    public static List<EventItem> LXD_QXH__25 = List.of(
             new EventItem("🌅 市政厅天台上看日出", "normal"),
             new EventItem("✨ 秦小淮用魔法让朝霞变得更加绚烂", "normal"),
             new EventItem("🌈 \"好美的日出！\" 李星斗感叹", "normal"),
@@ -297,7 +297,7 @@ public final class CityHallScenes {
     );
 
     // 市政厅三人场景
-    public static List<EventItem> THREE__SZT__01 = List.of(
+    public static List<EventItem> LXD_QXH_CZ__01 = List.of(
             new EventItem("💕 市政厅会议室里，存子跪在门口放风 💕", "special"),
             new EventItem("💕 \"存子，有人来就敲门\" 秦小淮紧张地说 💕", "special"),
             new EventItem("💕 \"是的，小淮宝宝主人！\" 存子认真地跪着守门 💕", "special"),
@@ -311,7 +311,7 @@ public final class CityHallScenes {
             new EventItem("💕 存子听到奖励，兴奋得下面湿润了 💕", "special")
     );
 
-    public static List<EventItem> THREE__SZT__02 = List.of(
+    public static List<EventItem> LXD_QXH_CZ__02 = List.of(
             new EventItem("💕 档案室里，存子跪着帮忙整理文件做掩护 💕", "special"),
             new EventItem("💕 \"存子，如果有人问就说在整理档案\" 秦小淮说 💕", "special"),
             new EventItem("💕 \"存子明白！\" 她紧张又兴奋地点头 💕", "special"),
@@ -325,7 +325,7 @@ public final class CityHallScenes {
             new EventItem("💕 档案室里的文件见证着三人的秘密时光 💕", "special")
     );
 
-    public static List<EventItem> THREE__SZT__03 = List.of(
+    public static List<EventItem> LXD_QXH_CZ__03 = List.of(
             new EventItem("💕 市长办公室里，存子跪在门边听动静 💕", "special"),
             new EventItem("💕 里面传来秦小淮压抑的娇喘声 💕", "special"),
             new EventItem("💕 存子紧握双拳，既羡慕又兴奋，下面湿润了 💕", "special"),
@@ -339,7 +339,7 @@ public final class CityHallScenes {
             new EventItem("💕 威严的办公室见证着三人最私密的时刻 💕", "special")
     );
 
-    public static List<EventItem> THREE__SZT__04 = List.of(
+    public static List<EventItem> LXD_QXH_CZ__04 = List.of(
             new EventItem("💕 楼梯间里，存子跪在下面一层把风 💕", "special"),
             new EventItem("💕 \"有人上楼了！\" 存子小声警告 💕", "special"),
             new EventItem("💕 上面立刻安静下来，存子松了一口气 💕", "special"),
@@ -353,7 +353,7 @@ public final class CityHallScenes {
             new EventItem("💕 楼梯间回荡着三人压抑的喘息声 💕", "special")
     );
 
-    public static List<EventItem> THREE__SZT__05 = List.of(
+    public static List<EventItem> LXD_QXH_CZ__05 = List.of(
             new EventItem("💕 接待大厅里，存子跪着假装打扫卫生 💕", "special"),
             new EventItem("💕 \"存子，守卫来了就咳嗽一声\" 秦小淮紧张地说 💕", "special"),
             new EventItem("💕 存子紧张地握着扫把，随时准备示警 💕", "special"),
@@ -367,7 +367,7 @@ public final class CityHallScenes {
             new EventItem("💕 大理石柱后，三人紧紧拥抱在一起 💕", "special")
     );
 
-    public static List<EventItem> THREE__SZT__06 = List.of(
+    public static List<EventItem> LXD_QXH_CZ__06 = List.of(
             new EventItem("💕 钟楼外，存子站在楼梯口守着 💕", "special"),
             new EventItem("💕 \"钟声太响了，会被发现吗？\" 存子紧张得手心全是汗 💕", "special"),
             new EventItem("💕 钟楼里传来秦小淮的娇喘声 💕", "special"),
@@ -377,7 +377,7 @@ public final class CityHallScenes {
             new EventItem("💕 存子哀哀地叫了一声，双腿立刻夹紧了 💕", "special")
     );
 
-    public static List<EventItem> THREE__SZT__07 = List.of(
+    public static List<EventItem> LXD_QXH_CZ__07 = List.of(
             new EventItem("💕 天台上，存子跪在楼梯口守着 💕", "special"),
             new EventItem("💕 夜风很大，但她不敢离开岗位 💕", "special"),
             new EventItem("💕 \"存子，过来\" 秦小淮温柔地叫她 💕", "special"),
@@ -391,7 +391,7 @@ public final class CityHallScenes {
             new EventItem("💕 城市的夜空见证着三人在高处的美妙时光 💕", "special")
     );
 
-    public static List<EventItem> THREE__SZT__08 = List.of(
+    public static List<EventItem> LXD_QXH_CZ__08 = List.of(
             new EventItem("💕 地下室里，存子跪在入口处放哨 💕", "special"),
             new EventItem("💕 \"存子，有人来就敲石墙\" 秦小淮紧张地说 💕", "special"),
             new EventItem("💕 她紧张地盯着入口，手放在石墙上准备示警 💕", "special"),
@@ -405,7 +405,7 @@ public final class CityHallScenes {
             new EventItem("💕 厚重的石墙隔绝了外界，三人享受最私密的时光 💕", "special")
     );
 
-    public static List<EventItem> THREE__SZT__09 = List.of(
+    public static List<EventItem> LXD_QXH_CZ__09 = List.of(
             new EventItem("💕 洗手间外，存子跪着假装在走廊拖地 💕", "special"),
             new EventItem("💕 \"有人来就敲敲拖把\" 秦小淮小声说 💕", "special"),
             new EventItem("💕 存子红着脸点头，紧握着拖把柄 💕", "special"),
@@ -419,7 +419,7 @@ public final class CityHallScenes {
             new EventItem("💕 镜子映出了三人最私密的时刻 💕", "special")
     );
 
-    public static List<EventItem> THREE__SZT__10 = List.of(
+    public static List<EventItem> LXD_QXH_CZ__10 = List.of(
             new EventItem("💕 会客厅里，存子跪在外面假装整理花瓶 💕", "special"),
             new EventItem("💕 \"小淮宝宝主人，存子把门守好了\" 💕", "special"),
             new EventItem("💕 里面传来压抑的声音，存子兴奋地听着 💕", "special"),
@@ -432,7 +432,7 @@ public final class CityHallScenes {
             new EventItem("💕 庄严的会客厅见证着三人的和谐时光 💕", "special")
     );
 
-    public static List<EventItem> THREE__SZT__11 = List.of(
+    public static List<EventItem> LXD_QXH_CZ__11 = List.of(
             new EventItem("💕 储藏室外，存子跪着紧张地看着走廊 💕", "special"),
             new EventItem("💕 里面空间狭小，她能想象到主人们的亲密 💕", "special"),
             new EventItem("💕 \"存子……你也进来吧……\" 秦小淮的声音传来 💕", "special"),
@@ -445,7 +445,7 @@ public final class CityHallScenes {
             new EventItem("💕 狭小的储藏室里回荡着三人的喘息声 💕", "special")
     );
 
-    public static List<EventItem> THREE__SZT__12 = List.of(
+    public static List<EventItem> LXD_QXH_CZ__12 = List.of(
             new EventItem("💕 市政厅大堂的墙角，听着背后秦小淮的娇喘，存子浑身紧绷 💕", "special"),
             new EventItem("💕 全身赤裸的秦小淮撅着雪白的屁股，正被李星斗狠狠地撞击着 💕", "special"),
             new EventItem("💕 \"主人，有守卫来了！\" 存子听到脚步声，不止一个人 💕", "special"),
@@ -466,7 +466,7 @@ public final class CityHallScenes {
             new EventItem("💕 \"存子做的很好，这是奖励你的。\" 💕", "special")
     );
 
-    public static List<EventItem> THREE__SZT__13 = List.of(
+    public static List<EventItem> LXD_QXH_CZ__13 = List.of(
             new EventItem("💕 图书馆里，存子跪着假装在整理书籍 💕", "special"),
             new EventItem("💕 \"存子，有人来就咳嗽\" 秦小淮小声说 💕", "special"),
             new EventItem("💕 存子紧张地抱着书本，随时准备示警 💕", "special"),
@@ -480,7 +480,7 @@ public final class CityHallScenes {
             new EventItem("💕 古老的书籍见证着三人在知识殿堂的秘密时光 💕", "special")
     );
 
-    public static List<EventItem> THREE__SZT__14 = List.of(
+    public static List<EventItem> LXD_QXH_CZ__14 = List.of(
             new EventItem("💕 展览厅里，存子跪着假装参观文物 💕", "special"),
             new EventItem("💕 \"这些古董真有意思\" 她大声说给路人听 💕", "special"),
             new EventItem("💕 实际上她在为主人们把风，心跳如鼓 💕", "special"),
@@ -494,7 +494,7 @@ public final class CityHallScenes {
             new EventItem("💕 古老的文物见证着她的忠诚和三人的和谐 💕", "special")
     );
 
-    public static List<EventItem> THREE__SZT__15 = List.of(
+    public static List<EventItem> LXD_QXH_CZ__15 = List.of(
             new EventItem("💕 密室里，存子跪在入口处守着 💕", "special"),
             new EventItem("💕 烛光闪烁让她更加紧张，也更加兴奋 💕", "special"),
             new EventItem("💕 \"存子，有人来就吹灭蜡烛\" 秦小淮小声说 💕", "special"),
@@ -509,7 +509,7 @@ public final class CityHallScenes {
             new EventItem("💕 烛光摇曳中，三人享受着最浪漫的时光 💕", "special")
     );
 
-    public static List<EventItem> THREE__SZT__16 = List.of(
+    public static List<EventItem> LXD_QXH_CZ__16 = List.of(
             new EventItem("💕 审判庭外，存子跪着假装在打扫 💕", "special"),
             new EventItem("💕 \"法庭重地，闲人免进\" 她对路人说 💕", "special"),
             new EventItem("💕 \"小姑娘，你在这里做什么？\" 有人问 💕", "special"),
@@ -523,7 +523,7 @@ public final class CityHallScenes {
             new EventItem("💕 正义女神的雕像静静见证着三人的和谐审判 💕", "special")
     );
 
-    public static List<EventItem> THREE__SZT__17 = List.of(
+    public static List<EventItem> LXD_QXH_CZ__17 = List.of(
             new EventItem("💕 演讲台外，存子跪着假装在整理文件 💕", "special"),
             new EventItem("💕 \"台上演讲中，请勿进入\" 她贴上告示 💕", "special"),
             new EventItem("💕 高台的威严让她想起台上的主人们 💕", "special"),
@@ -537,7 +537,7 @@ public final class CityHallScenes {
             new EventItem("💕 高台见证着三人在权力顶峰的和谐时光 💕", "special")
     );
 
-    public static List<EventItem> THREE__SZT__18 = List.of(
+    public static List<EventItem> LXD_QXH_CZ__18 = List.of(
             new EventItem("💕 国旗台前，存子跪着整理花圈 💕", "special"),
             new EventItem("💕 \"今天是什么纪念日吗？\" 路人问她 💕", "special"),
             new EventItem("💕 \"是……是爱情纪念日\" 存子脸红地回答 💕", "special"),
@@ -553,7 +553,7 @@ public final class CityHallScenes {
     );
 
     // 市政厅三人日常场景 (19-25)
-    public static List<EventItem> THREE__SZT__19 = List.of(
+    public static List<EventItem> LXD_QXH_CZ__19 = List.of(
             new EventItem("📋 办事大厅里，存子帮主人们拿号排队", "normal"),
             new EventItem("✨ 秦小淮用魔法让排队系统运行更顺畅", "normal"),
             new EventItem("😊 \"小淮宝宝主人真贴心，大家都不用等太久了\" 存子说", "normal"),
@@ -562,7 +562,7 @@ public final class CityHallScenes {
             new EventItem("🏛️ 庄严的大厅里，三人的温馨互动格外动人", "normal")
     );
 
-    public static List<EventItem> THREE__SZT__20 = List.of(
+    public static List<EventItem> LXD_QXH_CZ__20 = List.of(
             new EventItem("📚 图书馆里，存子跪着帮主人们找资料", "normal"),
             new EventItem("✨ 秦小淮用魔法让相关的书籍发出微光", "normal"),
             new EventItem("📖 \"哇，这些书在发光！\" 存子惊奇地指着", "normal"),
@@ -571,7 +571,7 @@ public final class CityHallScenes {
             new EventItem("📚 三人在知识的海洋中其乐融融", "normal")
     );
 
-    public static List<EventItem> THREE__SZT__21 = List.of(
+    public static List<EventItem> LXD_QXH_CZ__21 = List.of(
             new EventItem("☕ 咖啡厅里，存子跪着观看主人们下棋", "normal"),
             new EventItem("♟️ \"存子想学下棋吗？\" 秦小淮温柔地问", "normal"),
             new EventItem("🙇‍♀️ \"存子不配学习这么高雅的游戏...\"", "normal"),
@@ -580,7 +580,7 @@ public final class CityHallScenes {
             new EventItem("😊 \"这样存子就不会觉得难学了\" 李星斗温和地说", "normal")
     );
 
-    public static List<EventItem> THREE__SZT__22 = List.of(
+    public static List<EventItem> LXD_QXH_CZ__22 = List.of(
             new EventItem("🌧️ 下雨天，存子担心主人们淋雨", "normal"),
             new EventItem("✨ 秦小淮用魔法制造一个移动的晴天圈", "normal"),
             new EventItem("☀️ \"哇，雨水都绕着我们走！\" 存子惊喜地发现", "normal"),
@@ -589,7 +589,7 @@ public final class CityHallScenes {
             new EventItem("💕 三人在雨中的小晴天里，温暖如春", "normal")
     );
 
-    public static List<EventItem> THREE__SZT__23 = List.of(
+    public static List<EventItem> LXD_QXH_CZ__23 = List.of(
             new EventItem("🎨 艺术展览中，存子跪着为主人们介绍展品", "normal"),
             new EventItem("✨ 秦小淮用魔法让画作更加生动", "normal"),
             new EventItem("🌸 \"这朵花好像真的在摇摆！\" 存子兴奋地说", "normal"),
@@ -598,22 +598,13 @@ public final class CityHallScenes {
             new EventItem("🎭 三人在艺术的殿堂里分享美好时光", "normal")
     );
 
-    public static List<EventItem> THREE__SZT__24 = List.of(
+    public static List<EventItem> LXD_QXH_CZ__24 = List.of(
             new EventItem("🍽️ 员工餐厅里，存子跪着为主人们端菜", "normal"),
             new EventItem("✨ 秦小淮用魔法保持食物的最佳温度", "normal"),
             new EventItem("🍲 \"好香啊，而且一直都这么热！\" 存子赞叹", "normal"),
             new EventItem("😊 \"存子也坐下一起吃吧\" 秦小淮邀请", "normal"),
             new EventItem("🙇‍♀️ \"存子站着就好...\"", "normal"),
             new EventItem("💕 \"我们是一家人，一起吃饭才有意思\" 李星斗温和地说", "normal")
-    );
-
-    public static List<EventItem> THREE__SZT__25 = List.of(
-            new EventItem("🌅 天台上看日出，存子跪在主人们身边", "normal"),
-            new EventItem("✨ 秦小淮用魔法让朝霞变得更加绚烂", "normal"),
-            new EventItem("🌈 \"好美的日出！\" 存子感叹", "normal"),
-            new EventItem("😊 \"存子也站起来一起看吧\" 秦小淮拉着她", "normal"),
-            new EventItem("🤗 李星斗将外套披在两个女孩身上", "normal"),
-            new EventItem("💕 \"这样的时光，希望永远不要结束\" 存子幸福地说", "normal")
     );
 
     public static final List<Scene> scenes = List.of(
@@ -623,8 +614,8 @@ public final class CityHallScenes {
                     List.of("秦小淮", "李星斗", "存子"),
                     ResidenceConstants.CITY_HALL,
                     List.of(
-                            new Event(true, THREE__SZT__06),
-                            new Event(true, THREE__SZT__12)
+                            new Event(true, LXD_QXH_CZ__06),
+                            new Event(true, LXD_QXH_CZ__12)
                     )
             ),
 
@@ -633,9 +624,9 @@ public final class CityHallScenes {
                     List.of("秦小淮", "李星斗"),
                     ResidenceConstants.CASTLE,
                     List.of(
-                            new Event(true, TWO__SZT__01),
-                            new Event(true, TWO__SZT__02),
-                            new Event(true, TWO__SZT__03)
+                            new Event(true, LXD_QXH__01),
+                            new Event(true, LXD_QXH__02),
+                            new Event(true, LXD_QXH__03)
                     )
             ),
 
@@ -644,7 +635,7 @@ public final class CityHallScenes {
                     List.of(),
                     ResidenceConstants.CASTLE,
                     List.of(
-                            new Event(false, SZT__NORMAL)
+                            new Event(false, NORMAL)
                     )
             )
     );

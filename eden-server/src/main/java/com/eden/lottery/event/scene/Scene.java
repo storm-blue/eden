@@ -13,9 +13,9 @@ public class Scene {
         this.events = events;
     }
 
-    private List<String> users = new ArrayList<>();
+    private List<String> users;
     private String residence;
-    private List<Event> events = new ArrayList<>();
+    private List<Event> events;
 
     public List<String> getUsers() {
         return users;

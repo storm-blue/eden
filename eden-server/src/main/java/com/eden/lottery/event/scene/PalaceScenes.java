@@ -9,7 +9,7 @@ import java.util.List;
 public final class PalaceScenes {
 
     // 秦小淮，李星斗
-    public static List<EventItem> TWO_XG__01 = List.of(
+    public static List<EventItem> LXD_QXH__01 = List.of(
             new EventItem("💕 行宫中 💕", "special"),
             new EventItem("💕 “这辈子都不想上班了” 秦小淮躺在李星斗的胸口，想起从前的事 💕", "special"),
             new EventItem("💕 “梦想成真了” 李星斗低下头，去找小淮的小嘴巴 💕", "special"),
@@ -17,7 +17,7 @@ public final class PalaceScenes {
     );
 
     // 秦小淮，李星斗
-    public static List<EventItem> TWO_XG__02 = List.of(
+    public static List<EventItem> LXD_QXH__02 = List.of(
             new EventItem("💕 睡梦中，秦小淮突然啜泣起来 💕", "special"),
             new EventItem("💕 “宝宝怎么了” 她一动，李星斗就感觉到了 💕", "special"),
             new EventItem("💕 “想家，想妈妈……” 秦小淮一抬头，准确无误叼住李星斗的乳头 💕", "special"),
@@ -27,8 +27,10 @@ public final class PalaceScenes {
             new EventItem("💕 李星斗傻了 💕", "special")
     );
 
+    public static List<EventItem> LXD_QXH__03 = CommonScenes.LXD_QXH__01;
+
     // 秦小淮，李星斗，存子
-    public static List<EventItem> THREE_XG__01 = List.of(
+    public static List<EventItem> LXD_QXH_CZ__01 = List.of(
             new EventItem("💕 行宫中，李星斗推开门 💕", "special"),
             new EventItem("💕 秦小淮正趴在地上擦地，插着狐尾肛塞的屁股撅得高高的 💕", "special"),
             new EventItem("💕 李星斗无声靠近，悄悄地抵在她雪白的屁股上正要插入，却发现触感不对 💕", "special"),
@@ -39,7 +41,7 @@ public final class PalaceScenes {
     );
 
     // 通用场景
-    public static List<EventItem> XG__NORMAL = List.of(
+    public static List<EventItem> NORMAL = List.of(
             new EventItem("微风轻拂过行宫🏯", "normal"),
             new EventItem("行宫🏯 平静如常...", "normal")
     );
@@ -51,7 +53,8 @@ public final class PalaceScenes {
                     List.of("李星斗", "秦小淮", "存子"),
                     ResidenceConstants.PALACE,
                     List.of(
-                            new Event(true, THREE_XG__01)
+                            new Event(true, CommonScenes.LXD_QXH_CZ__01),
+                            new Event(true, LXD_QXH_CZ__01)
                     )
             ),
 
@@ -60,8 +63,18 @@ public final class PalaceScenes {
                     List.of("李星斗", "秦小淮"),
                     ResidenceConstants.PALACE,
                     List.of(
-                            new Event(true, TWO_XG__01),
-                            new Event(true, TWO_XG__02)
+                            new Event(true, CommonScenes.LXD_QXH__01),
+                            new Event(true, CommonScenes.LXD_QXH__03),
+                            new Event(true, CommonScenes.LXD_QXH__04),
+                            new Event(true, CommonScenes.LXD_QXH__05),
+                            new Event(true, CommonScenes.LXD_QXH__07),
+                            new Event(true, CommonScenes.LXD_QXH__08),
+                            new Event(true, CommonScenes.LXD_QXH__09),
+                            new Event(true, CommonScenes.LXD_QXH__10),
+                            new Event(true, CommonScenes.LXD_QXH__11),
+                            new Event(true, LXD_QXH__01),
+                            new Event(true, LXD_QXH__02),
+                            new Event(true, LXD_QXH__03)
                     )
             ),
 
@@ -70,7 +83,7 @@ public final class PalaceScenes {
                     List.of(),
                     ResidenceConstants.PALACE,
                     List.of(
-                            new Event(false, XG__NORMAL)
+                            new Event(false, NORMAL)
                     )
             )
     );
