@@ -37,13 +37,14 @@ public class UserRoamingLogicService {
         logger.debug("为用户 {} 确定新居所，当前居所: {}", username, currentResidence);
 
         return switch (username) {
-            case "小白鸽" -> performSimpleRandomMove(username, currentResidence, ResidenceUtils.getAllResidences());
-            case "存子" -> performCunziMove(username, currentResidence);
-            case "白婆婆" -> performSimpleRandomMove(username, currentResidence, 
+            case "小白鸽" ->
+                    performSimpleRandomMove(username, currentResidence, new String[]{ResidenceConstants.PARK, ResidenceConstants.WHITE_DOVE_HOUSE, ResidenceConstants.CASTLE});
+            case "存子" -> performCunZiMove(username, currentResidence);
+            case "白婆婆" -> performSimpleRandomMove(username, currentResidence,
                     new String[]{ResidenceConstants.PARK, ResidenceConstants.WHITE_DOVE_HOUSE});
-            case "大祭祀" -> performSimpleRandomMove(username, currentResidence, 
+            case "大祭祀" -> performSimpleRandomMove(username, currentResidence,
                     new String[]{ResidenceConstants.PALACE, ResidenceConstants.CASTLE, ResidenceConstants.PARK});
-            case "严伯升" -> performSimpleRandomMove(username, currentResidence, 
+            case "严伯升" -> performSimpleRandomMove(username, currentResidence,
                     new String[]{ResidenceConstants.CASTLE, ResidenceConstants.CITY_HALL});
             default -> {
                 logger.debug("用户 {} 保持在当前居所: {}", username, ResidenceUtils.getDisplayName(currentResidence));
@@ -88,7 +89,7 @@ public class UserRoamingLogicService {
      * 执行存子的移动逻辑
      * 基于秦小淮和李星斗的位置决定移动概率
      */
-    private String performCunziMove(String username, String currentResidence) {
+    private String performCunZiMove(String username, String currentResidence) {
         try {
             // 获取当前居所中的所有用户
             List<User> currentResidents = userMapper.selectByResidence(currentResidence);
