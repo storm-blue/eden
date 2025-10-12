@@ -267,18 +267,18 @@ const LotteryLuckyWheel = () => {
         }
 
         const lv3Positions = {
-            castle: {top: '25%', left: '50%'},
-            city_hall: {top: '15%', left: '70%'},
-            palace: {top: '10%', left: '25%'},
-            white_dove_house: {top: '35%', left: '63%'},
-            park: {top: '52%', left: '38%'}
+            castle: {top: '30%', left: '49%'},
+            city_hall: {top: '35%', left: '83%'},
+            palace: {top: '35%', left: '16%'},
+            white_dove_house: {top: '45%', left: '61%'},
+            park: {top: '58%', left: '26%'}
         }
 
         const lv4Positions = {
             castle: {top: '25%', left: '50%'},
-            city_hall: {top: '15%', left: '70%'},
-            palace: {top: '10%', left: '25%'},
-            white_dove_house: {top: '35%', left: '63%'},
+            city_hall: {top: '55%', left: '80%'},
+            palace: {top: '40%', left: '25%'},
+            white_dove_house: {top: '40%', left: '63%'},
             park: {top: '52%', left: '38%'}
         }
 
