@@ -1680,8 +1680,8 @@ const LotteryLuckyWheel = () => {
                         {/* 雨天特效 */}
                         {starCityData?.weather === 'rainy' && (
                             <>
-                                {/* 雨滴 */}
-                        {[...Array(isMobileDevice ? 50 : 80)].map((_, i) => {
+                                {/* 雨滴 - 🚀 移动端优化：减少数量 */}
+                        {[...Array(isMobileDevice ? 30 : 60)].map((_, i) => {
                             const delay = Math.random() * 3;
                             // 手机端速度降低20%：基础速度从0.8-1.2秒增加到0.96-1.44秒
                             const baseDuration = 0.8 + Math.random() * 0.4;
@@ -1729,8 +1729,8 @@ const LotteryLuckyWheel = () => {
                             pointerEvents: 'none'
                         }}/>
 
-                        {/* 地面水花效果 */}
-                        {[...Array(isMobileDevice ? 12 : 20)].map((_, i) => {
+                        {/* 地面水花效果 - 🚀 移动端优化 */}
+                        {[...Array(isMobileDevice ? 8 : 15)].map((_, i) => {
                             const delay = Math.random() * 2;
                             const left = Math.random() * 100;
 
@@ -1757,8 +1757,8 @@ const LotteryLuckyWheel = () => {
                         {/* 雪天特效 */}
                         {starCityData?.weather === 'snowy' && (
                             <>
-                                {/* 雪花 */}
-                                {[...Array(isMobileDevice ? 60 : 100)].map((_, i) => {
+                                {/* 雪花 - 🚀 移动端优化：减少数量 */}
+                        {[...Array(isMobileDevice ? 40 : 80)].map((_, i) => {
                                     const delay = Math.random() * 8;
                                     const duration = 4 + Math.random() * 3;
                                     const left = Math.random() * 110;
@@ -1808,8 +1808,8 @@ const LotteryLuckyWheel = () => {
                         {/* 多云特效 */}
                         {starCityData?.weather === 'cloudy' && (
                             <>
-                                {/* CSS绘制的云朵 - 多种形状 */}
-                                {[...Array(isMobileDevice ? 5 : 8)].map((_, i) => {
+                                {/* CSS绘制的云朵 - 🚀 移动端优化：减少数量 */}
+                                {[...Array(isMobileDevice ? 4 : 6)].map((_, i) => {
                                     const duration = 25 + Math.random() * 15; // 25-40秒
                                     const delay = i * 4;
                                     const top = 5 + Math.random() * 50; // 随机高度 5-55%
@@ -2050,9 +2050,9 @@ const LotteryLuckyWheel = () => {
                                     </div>
                                 </div>
                                 
-                                {/* 星星 - 分布在屏幕上半部边框10%区域 */}
-                                {[...Array(isMobileDevice ? 30 : 50)].map((_, i) => {
-                                    const starCount = isMobileDevice ? 30 : 50;
+                                {/* 星星 - 🚀 移动端优化：减少数量 */}
+                                {[...Array(isMobileDevice ? 20 : 40)].map((_, i) => {
+                                    const starCount = isMobileDevice ? 20 : 40;
                                     const quarterCount = Math.floor(starCount / 4);
                                     
                                     let top, left;
@@ -3380,22 +3380,49 @@ const LotteryLuckyWheel = () => {
                 </p>
       </div>
 
-            {/* 帮助按钮 - 右上角 */}
-            {userName && (
-                <button
-                    className="help-button"
-                    onClick={() => {
-                        fetchPrizeStats()
-                        setShowPrizeStats(true)
-                    }}
-                    title="查看我的奖品"
-                >
-                    ?
-                </button>
+            {/* 右上角按钮组 */}
+            {userName && userInfo && userInfo.message !== "用户不存在" && (
+                <div className="top-right-buttons">
+                    {/* 许愿按钮 */}
+                    <button
+                        className="top-button wish-button-top"
+                        onClick={() => setShowWishPage(true)}
+                        title={`进入许愿页面 ${userInfo && userInfo.wishCount > 0 ? `(${userInfo.wishCount}次许愿机会)` : '(暂无许愿机会)'}`}
+                    >
+                        ✨
+                        {userInfo && userInfo.wishCount > 0 && (
+                            <span className="top-button-badge">{userInfo.wishCount}</span>
+                        )}
+                    </button>
+                    
+                    {/* 星星城按钮 */}
+                    <button
+                        className="top-button star-city-button-top"
+                        onClick={() => setShowStarCity(true)}
+                        title="进入星星城"
+                    >
+                        🏰
+                    </button>
+                    
+                    {/* 我的奖品按钮 */}
+                    <button
+                        className="top-button help-button-top"
+                        onClick={() => {
+                            fetchPrizeStats()
+                            setShowPrizeStats(true)
+                        }}
+                        title="查看我的奖品"
+                    >
+                        🎁
+                    </button>
+                </div>
             )}
 
-      {/* 转盘区域 */}
-      <div className="wheel-container">
+            {/* 🚀 性能优化：只在非星星城和非许愿页面时渲染轮盘 */}
+            {!showStarCity && !showWishPage && (
+                <>
+                    {/* 转盘区域 */}
+                    <div className="wheel-container">
         <LuckyWheel
           ref={myLucky}
           width="380px"
@@ -3442,20 +3469,6 @@ const LotteryLuckyWheel = () => {
                         >
                             👤 {userName}
                         </div>
-
-                        {/* 许愿入口按钮 - 用户姓名右侧，只对存在的用户显示 */}
-                        {userInfo && userInfo.message !== "用户不存在" && (
-        <button 
-                                className="wish-entrance-button-inline"
-                                onClick={() => setShowWishPage(true)}
-                                title={`进入许愿页面 ${userInfo && userInfo.wishCount > 0 ? `(${userInfo.wishCount}次许愿机会)` : '(暂无许愿机会)'}`}
-                            >
-                                <span className="wish-entrance-text">许愿</span>
-                                {userInfo && userInfo.wishCount > 0 && (
-                                    <span className="wish-count-badge">{userInfo.wishCount}</span>
-                                )}
-        </button>
-                        )}
                     </div>
                 )}
         
@@ -3655,8 +3668,18 @@ const LotteryLuckyWheel = () => {
                 </div>
             )}
 
-            {/* 许愿页面 */}
-            {showWishPage && (
+            {/* 装饰元素 */}
+            <div className="decorations">
+                <div className="star star-1">⭐</div>
+                <div className="star star-2">🌟</div>
+                <div className="star star-3">✨</div>
+                <div className="star star-4">💫</div>
+            </div>
+                </>
+            )}
+
+      {/* 许愿页面 */}
+      {showWishPage && (
                 <div className="wish-page-overlay">
                     <div className="wish-page-container">
                         {/* 夜空背景 */}
@@ -3715,20 +3738,6 @@ const LotteryLuckyWheel = () => {
                             onClick={() => setShowWishPage(false)}
                         >
                             ✕
-                        </button>
-
-                        {/* 进入星星城按钮 */}
-                        <button
-                            className="star-city-entrance-button"
-                            onClick={(e) => {
-                                e.stopPropagation()
-                                console.log('星星城按钮被点击了！')
-                                console.log('当前 showStarCity 状态:', showStarCity)
-                                setShowStarCity(true)
-                                console.log('设置 showStarCity 为 true')
-                            }}
-                            title="进入星星城"
-                        >
                         </button>
 
                         {/* 开始许愿按钮 */}
@@ -3845,14 +3854,6 @@ const LotteryLuckyWheel = () => {
           </div>
         </div>
       )}
-
-      {/* 装饰元素 */}
-      <div className="decorations">
-        <div className="star star-1">⭐</div>
-        <div className="star star-2">🌟</div>
-        <div className="star star-3">✨</div>
-        <div className="star star-4">💫</div>
-      </div>
 
             {/* 头像裁剪弹窗 */}
             <AvatarCrop

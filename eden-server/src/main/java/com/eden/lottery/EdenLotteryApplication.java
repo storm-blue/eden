@@ -18,6 +18,7 @@ public class EdenLotteryApplication {
     public static void main(String[] args) {
         System.out.println("🎪 启动Eden抽奖系统...");
         SpringApplication.run(EdenLotteryApplication.class, args);
+
         System.out.println("🎯 Eden抽奖系统启动成功! 访问地址: http://localhost:5000");
     }
 }
