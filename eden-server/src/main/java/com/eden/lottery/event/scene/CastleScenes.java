@@ -400,6 +400,7 @@ public final class CastleScenes {
                     ResidenceConstants.CASTLE,
                     List.of(
                             new Event(true, CommonScenes.LXD_QXH__01),
+                            new Event(true, CommonScenes.LXD_QXH__02),
                             new Event(true, CommonScenes.LXD_QXH__03),
                             new Event(true, CommonScenes.LXD_QXH__04),
                             new Event(true, CommonScenes.LXD_QXH__05),

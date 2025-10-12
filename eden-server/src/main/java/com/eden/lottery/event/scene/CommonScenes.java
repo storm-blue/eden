@@ -21,6 +21,23 @@ public final class CommonScenes {
             new EventItem("💕 “啊，星斗爸爸的大肉棒插得乖女儿好舒服……” 💕", "special")
     );
 
+    public static List<EventItem> LXD_QXH__02 = List.of(
+            new EventItem("💕 夜里，秦小淮醒来了，李星斗把他抱的紧紧的 💕", "special"),
+            new EventItem("💕 “嗯嗯……”秦小淮舒服得哼哼两声，迷迷糊糊就去嘬李星斗的乳头 💕", "special"),
+            new EventItem("💕 甘甜温暖的乳汁流进了嘴巴，秦小淮满足地睡了过去 💕", "special"),
+            new EventItem("💕 第二天一起床，秦小淮刚觉似乎有哪里不对劲，却想不起来 💕", "special"),
+            new EventItem("💕 她狐疑地看着李星斗，李星斗却一切如常 💕", "special"),
+            new EventItem("💕 “不对！李星斗！你的奈只里为什么有乳汁？” 💕", "special"),
+            new EventItem("💕 “小乖宝睡迷糊了吧？”李星斗关切地说 💕", "special"),
+            new EventItem("💕 “难道真是我睡迷糊了在做梦？”秦小淮也不自信起来 💕", "special"),
+            new EventItem("💕 又到了晚上，秦小淮想装睡，看看李星斗到底在搞什么鬼，但…… 💕", "special"),
+            new EventItem("💕 “可恶的星斗哥哥，怀抱太舒服了……”她不争气地睡着了 💕", "special"),
+            new EventItem("💕 夜里，她又习惯性的去嘬李星斗，又喝到了乳汁，她一激灵，醒了！ 💕", "special"),
+            new EventItem("💕 只见李星斗裸着上身，胸前系着一对浑圆白腻的义乳，显得可爱又滑稽 💕", "special"),
+            new EventItem("💕 秦小淮又想笑又想哭，她乖乖躺好，缩在李星斗的臂弯下，只露出两只圆圆的眼睛 💕", "special"),
+            new EventItem("💕 “星斗哥哥好爱我啊，以后就算被星斗哥哥日死我都愿意……” 💕", "special")
+    );
+
     public static List<EventItem> LXD_QXH__03 = List.of(
             new EventItem("💕 最近几天，秦小淮特别淫荡 💕", "special"),
             new EventItem("💕 “求求主人，来插小骚猫的小穴穴好不好……” 💕", "special"),
