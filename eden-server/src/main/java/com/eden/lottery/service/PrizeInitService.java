@@ -75,6 +75,9 @@ public class PrizeInitService implements ApplicationRunner {
             // 检查并迁移星星城表
             checkAndMigrateStarCityTable(connection);
 
+            // 检查并创建命令表
+            checkAndCreateDecreeTable(connection);
+
             logger.info("数据库迁移检查完成");
         } catch (Exception e) {
             logger.error("数据库迁移失败", e);
@@ -558,6 +561,61 @@ public class PrizeInitService implements ApplicationRunner {
             // 为现有数据设置默认天气为sunny
             statement.execute("UPDATE star_city SET weather = 'sunny' WHERE weather IS NULL");
             logger.info("已为现有数据设置默认天气");
+        }
+    }
+
+    /**
+     * 检查并创建命令表
+     */
+    private void checkAndCreateDecreeTable(Connection connection) throws Exception {
+        DatabaseMetaData metaData = connection.getMetaData();
+        ResultSet tables = metaData.getTables(null, null, "decree", null);
+
+        if (!tables.next()) {
+            logger.info("decree表不存在，创建表...");
+            createDecreeTable(connection);
+        } else {
+            logger.info("decree表已存在");
+        }
+
+        tables.close();
+    }
+
+    /**
+     * 创建命令表并初始化数据
+     */
+    private void createDecreeTable(Connection connection) throws Exception {
+        String createTableSql = """
+                CREATE TABLE decree (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    code VARCHAR(50) NOT NULL UNIQUE,
+                    name VARCHAR(100) NOT NULL,
+                    description TEXT,
+                    active INTEGER NOT NULL DEFAULT 0,
+                    issued_at TIMESTAMP,
+                    cancelled_at TIMESTAMP,
+                    issued_by VARCHAR(50)
+                )
+                """;
+
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(createTableSql);
+            logger.info("decree表创建成功");
+
+            // 创建索引
+            statement.execute("CREATE INDEX IF NOT EXISTS idx_decree_code ON decree(code)");
+            statement.execute("CREATE INDEX IF NOT EXISTS idx_decree_active ON decree(active)");
+            logger.info("decree表索引创建成功");
+
+            // 初始化命令数据
+            String insertDecree = """
+                    INSERT INTO decree (code, name, description, active)
+                    VALUES ('NO_CASTLE_ACCESS', '不得靠近城堡', 
+                            '城堡禁止入内！立即驱逐城堡中除了李星斗之外的所有人。存子回到行宫，小白鸽回到小白鸽家，白婆婆回到小白鸽家，大祭司回到行宫，严伯升回到市政厅。在命令生效期间，所有人的漫游目标都不能包含城堡。', 
+                            0)
+                    """;
+            statement.execute(insertDecree);
+            logger.info("命令数据初始化成功");
         }
     }
 }

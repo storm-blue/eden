@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eden.lottery.mapper.DecreeMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="DecreeResultMap" type="com.eden.lottery.entity.Decree">
+        <id property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="active" column="active"/>
+        <result property="issuedAt" column="issued_at"/>
+        <result property="cancelledAt" column="cancelled_at"/>
+        <result property="issuedBy" column="issued_by"/>
+    </resultMap>
+
+    <!-- 插入命令 -->
+    <insert id="insert" parameterType="com.eden.lottery.entity.Decree">
+        INSERT INTO decree (code, name, description, active, issued_at, cancelled_at, issued_by)
+        VALUES (#{code}, #{name}, #{description}, #{active}, #{issuedAt}, #{cancelledAt}, #{issuedBy})
+    </insert>
+
+    <!-- 根据代码查询命令 -->
+    <select id="selectByCode" parameterType="string" resultMap="DecreeResultMap">
+        SELECT id, code, name, description, active, issued_at, cancelled_at, issued_by
+        FROM decree
+        WHERE code = #{code}
+    </select>
+
+    <!-- 更新命令 -->
+    <update id="update" parameterType="com.eden.lottery.entity.Decree">
+        UPDATE decree
+        SET active = #{active},
+            issued_at = #{issuedAt},
+            cancelled_at = #{cancelledAt},
+            issued_by = #{issuedBy}
+        WHERE code = #{code}
+    </update>
+
+    <!-- 查询所有命令 -->
+    <select id="selectAll" resultMap="DecreeResultMap">
+        SELECT id, code, name, description, active, issued_at, cancelled_at, issued_by
+        FROM decree
+        ORDER BY id
+    </select>
+
+    <!-- 查询所有已激活的命令 -->
+    <select id="selectActive" resultMap="DecreeResultMap">
+        SELECT id, code, name, description, active, issued_at, cancelled_at, issued_by
+        FROM decree
+        WHERE active = 1
+    </select>
+
+    <!-- 检查命令是否激活 -->
+    <select id="isActive" parameterType="string" resultType="boolean">
+        SELECT CASE WHEN active = 1 THEN 1 ELSE 0 END
+        FROM decree
+        WHERE code = #{code}
+    </select>
+
+</mapper>
+

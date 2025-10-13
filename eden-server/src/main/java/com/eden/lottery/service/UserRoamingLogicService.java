@@ -5,6 +5,7 @@ import com.eden.lottery.entity.User;
 import com.eden.lottery.mapper.UserMapper;
 import com.eden.lottery.utils.ResidenceUtils;
 import jakarta.annotation.Resource;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -25,6 +26,9 @@ public class UserRoamingLogicService {
 
     @Resource
     private UserMapper userMapper;
+
+    @Autowired
+    private DecreeService decreeService;
 
     /**
      * 确定用户的新居所
@@ -68,6 +72,14 @@ public class UserRoamingLogicService {
         // 过滤掉当前居所，避免"移动"到相同位置
         List<String> targetResidences = new ArrayList<>(Arrays.asList(availableResidences));
         targetResidences.remove(currentResidence);
+
+        // 如果"不得靠近城堡"命令生效，从可选居所中移除城堡
+        if (decreeService.isDecreeActive(DecreeService.DECREE_NO_CASTLE_ACCESS)) {
+            boolean removed = targetResidences.remove(ResidenceConstants.CASTLE);
+            if (removed) {
+                logger.info("命令生效：不得靠近城堡 - 已从{}的可选居所中移除城堡", username);
+            }
+        }
 
         // 如果有可选的居所，随机选择一个
         if (!targetResidences.isEmpty()) {

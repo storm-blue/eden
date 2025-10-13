@@ -2,6 +2,7 @@ import React, {useEffect, useMemo, useRef, useState} from 'react'
 import {LuckyWheel} from '@lucky-canvas/react'
 import './LuckyWheel.css'
 import AvatarCrop from './AvatarCrop'
+import DecreeModal from './DecreeModal'
 
 const LotteryLuckyWheel = () => {
   const [prizes, setPrizes] = useState([
@@ -322,6 +323,12 @@ const LotteryLuckyWheel = () => {
     // 居所事件状态
     const [residenceEvents, setResidenceEvents] = useState({})
 
+    // 命令管理状态
+    const [showDecreeModal, setShowDecreeModal] = useState(false) // 显示命令管理弹窗
+    const [decrees, setDecrees] = useState([]) // 命令列表
+    const [loadingDecrees, setLoadingDecrees] = useState(false) // 加载命令状态
+    const [operatingDecree, setOperatingDecree] = useState(null) // 正在操作的命令code
+
     // 奖品名称映射（与后端保持一致）
   const prizeNames = [
         '🍰 吃的～',
@@ -401,6 +408,81 @@ const LotteryLuckyWheel = () => {
             }
         } catch (error) {
             console.error('获取许愿列表失败:', error)
+        }
+    }
+
+    // 获取命令列表
+    const fetchDecrees = async () => {
+        if (userName !== '秦小淮') return
+        
+        setLoadingDecrees(true)
+        try {
+            const response = await fetch(`/api/decree/list?userId=${userName}`)
+            const data = await response.json()
+            if (data.success) {
+                setDecrees(data.decrees)
+            } else {
+                console.error('获取命令列表失败:', data.message)
+            }
+        } catch (error) {
+            console.error('获取命令列表失败:', error)
+        } finally {
+            setLoadingDecrees(false)
+        }
+    }
+
+    // 颁布命令
+    const issueDecree = async (code) => {
+        setOperatingDecree(code)
+        try {
+            const response = await fetch('/api/decree/issue', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `code=${code}&userId=${userName}`
+            })
+
+            const data = await response.json()
+            if (data.success) {
+                alert('命令已颁布！')
+                await fetchDecrees() // 刷新命令列表
+                await fetchStarCityData() // 刷新星星城数据（重新加载居民信息）
+            } else {
+                alert('颁布命令失败：' + data.message)
+            }
+        } catch (error) {
+            console.error('颁布命令失败:', error)
+            alert('颁布命令失败')
+        } finally {
+            setOperatingDecree(null)
+        }
+    }
+
+    // 取消命令
+    const cancelDecree = async (code) => {
+        setOperatingDecree(code)
+        try {
+            const response = await fetch('/api/decree/cancel', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: `code=${code}&userId=${userName}`
+            })
+
+            const data = await response.json()
+            if (data.success) {
+                alert('命令已取消！')
+                await fetchDecrees() // 刷新命令列表
+            } else {
+                alert('取消命令失败：' + data.message)
+            }
+        } catch (error) {
+            console.error('取消命令失败:', error)
+            alert('取消命令失败')
+        } finally {
+            setOperatingDecree(null)
         }
     }
 
@@ -2247,6 +2329,46 @@ const LotteryLuckyWheel = () => {
                         ✨星星城 LV{starCityData?.level || 1}✨
                     </h2>
 
+                    {/* 命令按钮（仅秦小淮可见） */}
+                    {userName === '秦小淮' && (
+                        <button
+                            onClick={() => {
+                                fetchDecrees()
+                                setShowDecreeModal(true)
+                            }}
+                            style={{
+                                position: 'fixed',
+                                top: '20px',
+                                left: '20px',
+                                padding: '12px 20px',
+                                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                border: '2px solid rgba(255, 255, 255, 0.3)',
+                                borderRadius: '12px',
+                                color: 'white',
+                                fontSize: '16px',
+                                fontWeight: 'bold',
+                                cursor: 'pointer',
+                                zIndex: 999,
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
+                                transition: 'all 0.3s ease',
+                                backdropFilter: 'blur(10px)'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.transform = 'translateY(-2px)'
+                                e.target.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.6)'
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.transform = 'translateY(0)'
+                                e.target.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.4)'
+                            }}
+                        >
+                            📜 颁布命令
+                        </button>
+                    )}
+
                     {/* 城堡 - 中心白点 */}
                     <div
                         onClick={() => handleBuildingClick('castle')}
@@ -3421,8 +3543,8 @@ const LotteryLuckyWheel = () => {
             {/* 🚀 性能优化：只在非星星城和非许愿页面时渲染轮盘 */}
             {!showStarCity && !showWishPage && (
                 <>
-                    {/* 转盘区域 */}
-                    <div className="wheel-container">
+      {/* 转盘区域 */}
+      <div className="wheel-container">
         <LuckyWheel
           ref={myLucky}
           width="380px"
@@ -3664,17 +3786,17 @@ const LotteryLuckyWheel = () => {
                                 </div>
                             )}
                         </div>
-                    </div>
-                </div>
-            )}
+          </div>
+        </div>
+      )}
 
-            {/* 装饰元素 */}
-            <div className="decorations">
-                <div className="star star-1">⭐</div>
-                <div className="star star-2">🌟</div>
-                <div className="star star-3">✨</div>
-                <div className="star star-4">💫</div>
-            </div>
+      {/* 装饰元素 */}
+      <div className="decorations">
+        <div className="star star-1">⭐</div>
+        <div className="star star-2">🌟</div>
+        <div className="star star-3">✨</div>
+        <div className="star star-4">💫</div>
+      </div>
                 </>
             )}
 
@@ -4526,6 +4648,17 @@ const LotteryLuckyWheel = () => {
                     </div>
                 </div>
             )}
+
+            {/* 命令管理弹窗（仅秦小淮可见） */}
+            <DecreeModal
+                show={showDecreeModal}
+                onClose={() => setShowDecreeModal(false)}
+                decrees={decrees}
+                loading={loadingDecrees}
+                operatingCode={operatingDecree}
+                onIssue={issueDecree}
+                onCancel={cancelDecree}
+            />
     </div>
   )
 }
