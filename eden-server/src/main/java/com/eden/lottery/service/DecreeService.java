@@ -109,6 +109,24 @@ public class DecreeService {
     }
     
     /**
+     * 更新命令信息（仅名称和描述）
+     * 管理员使用，不影响命令的激活状态
+     */
+    public void updateDecreeInfo(String code, String name, String description) {
+        Decree decree = decreeMapper.selectByCode(code);
+        if (decree == null) {
+            throw new IllegalArgumentException("命令不存在");
+        }
+        
+        decree.setName(name);
+        decree.setDescription(description);
+        // 只更新名称和描述，保持其他字段不变
+        decreeMapper.updateInfo(decree);
+        
+        logger.info("更新命令信息: code={}, name={}, description={}", code, name, description);
+    }
+    
+    /**
      * 执行命令效果
      */
     private void executeDecreeEffect(String code) {

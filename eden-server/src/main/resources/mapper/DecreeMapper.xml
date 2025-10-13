@@ -37,6 +37,14 @@
         WHERE code = #{code}
     </update>
 
+    <!-- 更新命令信息（仅名称和描述） -->
+    <update id="updateInfo" parameterType="com.eden.lottery.entity.Decree">
+        UPDATE decree
+        SET name = #{name},
+            description = #{description}
+        WHERE code = #{code}
+    </update>
+
     <!-- 查询所有命令 -->
     <select id="selectAll" resultMap="DecreeResultMap">
         SELECT id, code, name, description, active, issued_at, cancelled_at, issued_by

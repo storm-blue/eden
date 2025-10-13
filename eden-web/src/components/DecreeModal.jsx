@@ -17,7 +17,7 @@ const DecreeModal = ({
     if (!show) return null
 
     return (
-        <div className="decree-modal-overlay" onClick={onClose}>
+        <div className="decree-modal-overlay force-landscape" onClick={onClose}>
             <div 
                 className="decree-modal-content" 
                 onClick={(e) => e.stopPropagation()}

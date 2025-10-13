@@ -7,12 +7,14 @@ import com.eden.lottery.entity.LotteryRecord;
 import com.eden.lottery.entity.User;
 import com.eden.lottery.entity.Wish;
 import com.eden.lottery.entity.ResidenceHistory;
+import com.eden.lottery.entity.Decree;
 import com.eden.lottery.service.AdminService;
 import com.eden.lottery.service.LotteryService;
 import com.eden.lottery.service.UserAttemptService;
 import com.eden.lottery.service.WishService;
 import com.eden.lottery.service.ResidenceHistoryService;
 import com.eden.lottery.service.ResidenceEventService;
+import com.eden.lottery.service.DecreeService;
 import com.eden.lottery.task.UserStatusRefreshTask;
 import com.eden.lottery.entity.UserAttempt;
 import com.eden.lottery.utils.ResidenceUtils;
@@ -42,8 +44,9 @@ public class AdminController {
     private final ResidenceHistoryService residenceHistoryService;
     private final ResidenceEventService residenceEventService;
     private final UserStatusRefreshTask userStatusRefreshTask;
+    private final DecreeService decreeService;
 
-    public AdminController(AdminService adminService, LotteryService lotteryService, UserAttemptService userAttemptService, WishService wishService, ResidenceHistoryService residenceHistoryService, ResidenceEventService residenceEventService, UserStatusRefreshTask userStatusRefreshTask) {
+    public AdminController(AdminService adminService, LotteryService lotteryService, UserAttemptService userAttemptService, WishService wishService, ResidenceHistoryService residenceHistoryService, ResidenceEventService residenceEventService, UserStatusRefreshTask userStatusRefreshTask, DecreeService decreeService) {
         this.adminService = adminService;
         this.lotteryService = lotteryService;
         this.userAttemptService = userAttemptService;
@@ -51,6 +54,7 @@ public class AdminController {
         this.residenceHistoryService = residenceHistoryService;
         this.residenceEventService = residenceEventService;
         this.userStatusRefreshTask = userStatusRefreshTask;
+        this.decreeService = decreeService;
     }
 
     /**
@@ -951,6 +955,53 @@ public class AdminController {
         } catch (Exception e) {
             logger.error("手动触发用户状态刷新失败", e);
             return ApiResponse.error("任务执行失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 获取所有命令列表（管理员）
+     */
+    @GetMapping("/decrees")
+    public ApiResponse<List<Decree>> getDecrees(HttpServletRequest request) {
+        try {
+            if (isInvalidAdmin(request)) {
+                return ApiResponse.error("未授权访问");
+            }
+            
+            List<Decree> decrees = decreeService.getAllDecrees();
+            return ApiResponse.success("获取命令列表成功", decrees);
+        } catch (Exception e) {
+            logger.error("获取命令列表失败", e);
+            return ApiResponse.error("获取命令列表失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 更新命令信息（管理员）
+     */
+    @PostMapping("/decree/update")
+    public ApiResponse<String> updateDecree(HttpServletRequest request, @RequestBody Decree decree) {
+        try {
+            if (isInvalidAdmin(request)) {
+                return ApiResponse.error("未授权访问");
+            }
+            
+            if (decree.getCode() == null || decree.getCode().trim().isEmpty()) {
+                return ApiResponse.error("命令代码不能为空");
+            }
+            
+            if (decree.getName() == null || decree.getName().trim().isEmpty()) {
+                return ApiResponse.error("命令名称不能为空");
+            }
+            
+            // 只更新名称和描述，不影响激活状态
+            decreeService.updateDecreeInfo(decree.getCode(), decree.getName(), decree.getDescription());
+            
+            logger.info("管理员更新命令信息: code={}, name={}", decree.getCode(), decree.getName());
+            return ApiResponse.success("命令信息更新成功");
+        } catch (Exception e) {
+            logger.error("更新命令信息失败", e);
+            return ApiResponse.error("更新命令信息失败: " + e.getMessage());
         }
     }
 

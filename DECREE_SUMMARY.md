@@ -17,6 +17,7 @@
 - ✅ 颁布/取消命令功能
 - ✅ 美观的UI设计和动画效果
 - ✅ 移动端适配
+- ✅ 强制横屏显示（与星星城保持一致）
 
 ### 3. 命令功能
 - ✅ **不得靠近城堡**命令
@@ -30,6 +31,9 @@
 - ✅ 完整文档 `DECREE_SYSTEM.md`
 - ✅ 快速指南 `DECREE_QUICK_START.md`
 - ✅ 总结文档 `DECREE_SUMMARY.md`（本文件）
+- ✅ 代码风格统一说明 `DECREE_CODE_STYLE_UPDATE.md`
+- ✅ 重构总结 `DECREE_REFACTOR_SUMMARY.md`
+- ✅ 横屏修复说明 `DECREE_LANDSCAPE_FIX.md`
 
 ## 📁 文件清单
 

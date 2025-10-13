@@ -28,6 +28,11 @@ public interface DecreeMapper {
     void update(Decree decree);
     
     /**
+     * 更新命令信息（仅名称和描述）
+     */
+    void updateInfo(Decree decree);
+    
+    /**
      * 查询所有命令
      */
     List<Decree> selectAll();

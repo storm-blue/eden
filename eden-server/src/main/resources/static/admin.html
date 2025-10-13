@@ -554,6 +554,7 @@
                 <button class="tab" data-tab="attempts">用户尝试记录</button>
                 <button class="tab" data-tab="actions">用户操作</button>
                 <button class="tab" data-tab="residence-events">居所事件</button>
+                <button class="tab" data-tab="decrees">命令管理</button>
             </div>
 
             <!-- 用户管理标签页 -->
@@ -951,6 +952,21 @@
                     </div>
                 </div>
             </div>
+
+            <!-- 命令管理标签页 -->
+            <div id="decrees" class="tab-content">
+                <div class="action-form">
+                    <h4>📜 命令管理</h4>
+                    <p style="margin-bottom: 15px; color: #666; font-size: 14px;">
+                        管理系统命令的名称和描述信息
+                    </p>
+                    <div id="decreesTable" style="margin-top: 15px;">
+                        <div style="text-align: center; padding: 20px; color: #666;">
+                            加载中...
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1096,6 +1112,190 @@
                 loadResidenceStats();
             } else if (tabName === 'residence-events') {
                 loadResidenceEventOverview();
+            } else if (tabName === 'decrees') {
+                loadDecrees();
+            }
+        }
+
+        // 加载命令列表
+        async function loadDecrees() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/decrees`, {
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+
+                const data = await response.json();
+                
+                if (data.success && data.data) {
+                    displayDecrees(data.data);
+                } else {
+                    document.getElementById('decreesTable').innerHTML = `
+                        <div style="text-align: center; padding: 20px; color: #e53e3e;">
+                            ${data.message || '加载命令失败'}
+                        </div>`;
+                }
+            } catch (error) {
+                console.error('加载命令失败:', error);
+                document.getElementById('decreesTable').innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: #e53e3e;">
+                        加载命令失败，请稍后重试
+                    </div>`;
+            }
+        }
+
+        // 显示命令列表
+        function displayDecrees(decrees) {
+            if (!decrees || decrees.length === 0) {
+                document.getElementById('decreesTable').innerHTML = `
+                    <div style="text-align: center; padding: 20px; color: #666;">
+                        暂无命令
+                    </div>`;
+                return;
+            }
+
+            let html = '<div style="display: flex; flex-direction: column; gap: 20px;">';
+            
+            decrees.forEach(decree => {
+                const statusBadge = decree.active ? 
+                    '<span style="background: #48bb78; color: white; padding: 3px 10px; border-radius: 12px; font-size: 12px; margin-left: 10px;">已激活</span>' :
+                    '<span style="background: #cbd5e0; color: #4a5568; padding: 3px 10px; border-radius: 12px; font-size: 12px; margin-left: 10px;">未激活</span>';
+
+                html += `
+                    <div style="border: 2px solid #e2e8f0; border-radius: 10px; padding: 20px; background: white;">
+                        <div style="display: flex; justify-content: space-between; align-items: start; margin-bottom: 15px;">
+                            <div style="flex: 1;">
+                                <h5 style="margin: 0 0 5px 0; font-size: 18px; color: #2d3748;">
+                                    ${decree.name || '未命名'}
+                                    ${statusBadge}
+                                </h5>
+                                <p style="margin: 0; font-size: 12px; color: #a0aec0;">
+                                    代码: ${decree.code}
+                                </p>
+                            </div>
+                            <button class="action-btn" onclick="editDecree('${decree.code}')" style="padding: 8px 16px; font-size: 14px;">
+                                ✏️ 编辑
+                            </button>
+                        </div>
+                        <div style="background: #f7fafc; padding: 12px; border-radius: 6px; border-left: 3px solid #667eea;">
+                            <p style="margin: 0; font-size: 14px; color: #4a5568; line-height: 1.6;">
+                                ${decree.description || '无描述'}
+                            </p>
+                        </div>
+                    </div>
+                `;
+            });
+
+            html += '</div>';
+            document.getElementById('decreesTable').innerHTML = html;
+        }
+
+        // 编辑命令
+        function editDecree(code) {
+            fetch(`${API_BASE}/admin/decrees`, {
+                headers: {
+                    'Authorization': `Bearer ${adminToken}`
+                }
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success && data.data) {
+                    const decree = data.data.find(d => d.code === code);
+                    if (decree) {
+                        showDecreeEditDialog(decree);
+                    }
+                }
+            });
+        }
+
+        // 显示命令编辑对话框
+        function showDecreeEditDialog(decree) {
+            const modal = document.createElement('div');
+            modal.style.cssText = `
+                position: fixed;
+                top: 0;
+                left: 0;
+                right: 0;
+                bottom: 0;
+                background: rgba(0, 0, 0, 0.5);
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                z-index: 10000;
+            `;
+
+            modal.innerHTML = `
+                <div style="background: white; border-radius: 15px; padding: 30px; max-width: 600px; width: 90%; box-shadow: 0 10px 50px rgba(0, 0, 0, 0.3);">
+                    <h3 style="margin: 0 0 20px 0; color: #2d3748;">编辑命令信息</h3>
+                    
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; color: #4a5568; font-weight: bold;">命令代码（不可修改）</label>
+                        <input type="text" value="${decree.code}" disabled style="width: 100%; padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 14px; background: #f7fafc; color: #a0aec0;">
+                    </div>
+
+                    <div style="margin-bottom: 15px;">
+                        <label style="display: block; margin-bottom: 5px; color: #4a5568; font-weight: bold;">命令名称 *</label>
+                        <input type="text" id="decreeName" value="${decree.name || ''}" placeholder="输入命令名称" style="width: 100%; padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 14px;">
+                    </div>
+
+                    <div style="margin-bottom: 20px;">
+                        <label style="display: block; margin-bottom: 5px; color: #4a5568; font-weight: bold;">命令描述</label>
+                        <textarea id="decreeDescription" placeholder="输入命令描述" style="width: 100%; min-height: 120px; padding: 10px; border: 2px solid #e2e8f0; border-radius: 8px; font-size: 14px; resize: vertical;">${decree.description || ''}</textarea>
+                    </div>
+
+                    <div style="display: flex; gap: 10px; justify-content: flex-end;">
+                        <button onclick="this.closest('div[style*=\\'position: fixed\\']').remove()" style="padding: 10px 20px; border: 2px solid #e2e8f0; border-radius: 8px; background: white; color: #4a5568; cursor: pointer; font-size: 14px;">
+                            取消
+                        </button>
+                        <button onclick="saveDecree('${decree.code}')" style="padding: 10px 20px; border: none; border-radius: 8px; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); color: white; cursor: pointer; font-size: 14px; font-weight: bold;">
+                            保存
+                        </button>
+                    </div>
+                </div>
+            `;
+
+            document.body.appendChild(modal);
+        }
+
+        // 保存命令
+        async function saveDecree(code) {
+            const name = document.getElementById('decreeName').value.trim();
+            const description = document.getElementById('decreeDescription').value.trim();
+
+            if (!name) {
+                alert('命令名称不能为空');
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/admin/decree/update`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${adminToken}`
+                    },
+                    body: JSON.stringify({
+                        code: code,
+                        name: name,
+                        description: description
+                    })
+                });
+
+                const data = await response.json();
+                
+                if (data.success) {
+                    alert('命令信息更新成功！');
+                    // 关闭对话框
+                    document.querySelector('div[style*="position: fixed"]').remove();
+                    // 重新加载命令列表
+                    loadDecrees();
+                } else {
+                    alert('更新失败：' + (data.message || '未知错误'));
+                }
+            } catch (error) {
+                console.error('保存命令失败:', error);
+                alert('保存失败，请稍后重试');
             }
         }
 

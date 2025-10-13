@@ -27,15 +27,15 @@ import java.util.List;
 @Service
 @Order(1) // 确保最先执行
 public class PrizeInitService implements ApplicationRunner {
-
+    
     private static final Logger logger = LoggerFactory.getLogger(PrizeInitService.class);
-
+    
     @Resource
     private PrizeMapper prizeMapper;
 
     @Resource
     private DataSource dataSource;
-
+    
     @Override
     public void run(ApplicationArguments args) {
         try {
@@ -298,7 +298,7 @@ public class PrizeInitService implements ApplicationRunner {
             logger.info("residence_history表索引创建成功");
         }
     }
-
+    
     /**
      * 初始化奖品数据
      */
@@ -319,7 +319,7 @@ public class PrizeInitService implements ApplicationRunner {
 
         // 创建默认奖品配置（带固定ID）
         // 注意：顺序必须与前端LuckyWheel.jsx中的prizes数组顺序一致！
-        Prize[] defaultPrizes = {
+            Prize[] defaultPrizes = {
                 createPrizeWithId(1L, "🍰 吃的～", 0.07, "common"),      // 索引0: 8%
                 createPrizeWithId(2L, "🥤 喝的～", 0.07, "common"),      // 索引1: 8%
                 createPrizeWithId(3L, "❤️ 爱", 0.001, "epic"),           // 索引2: 0.2%
@@ -333,7 +333,7 @@ public class PrizeInitService implements ApplicationRunner {
 
         // 验证概率总和
         double totalProbability = 0.0;
-        for (Prize prize : defaultPrizes) {
+            for (Prize prize : defaultPrizes) {
             totalProbability += prize.getProbability();
         }
 
