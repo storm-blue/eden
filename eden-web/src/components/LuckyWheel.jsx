@@ -329,8 +329,10 @@ const LotteryLuckyWheel = () => {
     const [loadingDecrees, setLoadingDecrees] = useState(false) // 加载命令状态
     const [operatingDecree, setOperatingDecree] = useState(null) // 正在操作的命令code
     
-    // 检查彩虹命令是否激活
+    // 彩虹显示控制
     const isRainbowActive = decrees.find(d => d.code === 'CREATE_RAINBOW')?.active || false
+    const [showRainbow, setShowRainbow] = useState(false) // 控制彩虹是否显示
+    const [rainbowFading, setRainbowFading] = useState(false) // 控制彩虹是否正在消失
 
     // 奖品名称映射（与后端保持一致）
   const prizeNames = [
@@ -462,16 +464,19 @@ const LotteryLuckyWheel = () => {
 
             const data = await response.json()
             if (data.success) {
-                alert('命令已颁布！')
+                // 静默成功，不弹窗提示
                 await fetchDecrees() // 刷新命令列表
                 await fetchAllDecrees() // 刷新所有用户可见的命令状态
                 await fetchStarCityData() // 刷新星星城数据（重新加载居民信息）
+                
+                // 自动关闭命令弹框
+                setShowDecreeModal(false)
             } else {
-                alert('颁布命令失败：' + data.message)
+                // 只在失败时提示
+                console.error('颁布命令失败:', data.message)
             }
         } catch (error) {
             console.error('颁布命令失败:', error)
-            alert('颁布命令失败')
         } finally {
             setOperatingDecree(null)
         }
@@ -491,15 +496,18 @@ const LotteryLuckyWheel = () => {
 
             const data = await response.json()
             if (data.success) {
-                alert('命令已取消！')
+                // 静默成功，不弹窗提示
                 await fetchDecrees() // 刷新命令列表
                 await fetchAllDecrees() // 刷新所有用户可见的命令状态
+                
+                // 自动关闭命令弹框
+                setShowDecreeModal(false)
             } else {
-                alert('取消命令失败：' + data.message)
+                // 只在失败时提示
+                console.error('取消命令失败:', data.message)
             }
         } catch (error) {
             console.error('取消命令失败:', error)
-            alert('取消命令失败')
         } finally {
             setOperatingDecree(null)
         }
@@ -1162,6 +1170,24 @@ const LotteryLuckyWheel = () => {
         }
     }
 
+    // 监听彩虹命令状态变化，控制显示和消失动画
+    useEffect(() => {
+        if (isRainbowActive) {
+            // 命令激活：显示彩虹
+            setShowRainbow(true)
+            setRainbowFading(false)
+        } else if (showRainbow) {
+            // 命令取消：开始淡出动画
+            setRainbowFading(true)
+            // 2秒后完全移除彩虹
+            const timer = setTimeout(() => {
+                setShowRainbow(false)
+                setRainbowFading(false)
+            }, 2000)
+            return () => clearTimeout(timer)
+        }
+    }, [isRainbowActive])
+    
     // 监听星星城页面状态，获取数据
     useEffect(() => {
         if (showStarCity) {
@@ -2334,7 +2360,7 @@ const LotteryLuckyWheel = () => {
                         )}
                         
                         {/* 彩虹特效（命令激活时显示） */}
-                        {isRainbowActive && (
+                        {showRainbow && (
                             <div style={{
                                 position: 'absolute',
                                 top: '-3%',
@@ -2343,7 +2369,7 @@ const LotteryLuckyWheel = () => {
                                 height: '100%',
                                 pointerEvents: 'none',
                                 zIndex: 20,
-                                animation: 'rainbowAppear 2s ease-out forwards',
+                                animation: rainbowFading ? 'rainbowDisappear 2s ease-out forwards' : 'rainbowAppear 2s ease-out forwards',
                                 transform: 'rotate(-35deg)',
                                 transformOrigin: 'center center'
                             }}>
