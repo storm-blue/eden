@@ -575,10 +575,48 @@ public class PrizeInitService implements ApplicationRunner {
             logger.info("decree表不存在，创建表...");
             createDecreeTable(connection);
         } else {
-            logger.info("decree表已存在");
+            logger.info("decree表已存在，检查并添加缺失的命令...");
+            ensureDecreeRecords(connection);
         }
 
         tables.close();
+    }
+    
+    /**
+     * 确保所有必需的命令记录都存在
+     */
+    private void ensureDecreeRecords(Connection connection) throws Exception {
+        try (Statement statement = connection.createStatement()) {
+            // 检查并添加"不得靠近城堡"命令
+            String checkDecree1 = "SELECT COUNT(*) as cnt FROM decree WHERE code = 'NO_CASTLE_ACCESS'";
+            ResultSet rs1 = statement.executeQuery(checkDecree1);
+            if (rs1.next() && rs1.getInt("cnt") == 0) {
+                String insertDecree1 = """
+                        INSERT INTO decree (code, name, description, active)
+                        VALUES ('NO_CASTLE_ACCESS', '不得靠近城堡', 
+                                '城堡禁止入内！立即驱逐城堡中除了李星斗之外的所有人。存子回到行宫，小白鸽回到小白鸽家，白婆婆回到小白鸽家，大祭司回到行宫，严伯升回到市政厅。在命令生效期间，所有人的漫游目标都不能包含城堡。', 
+                                0)
+                        """;
+                statement.execute(insertDecree1);
+                logger.info("添加命令: NO_CASTLE_ACCESS");
+            }
+            rs1.close();
+            
+            // 检查并添加"创造彩虹"命令
+            String checkDecree2 = "SELECT COUNT(*) as cnt FROM decree WHERE code = 'CREATE_RAINBOW'";
+            ResultSet rs2 = statement.executeQuery(checkDecree2);
+            if (rs2.next() && rs2.getInt("cnt") == 0) {
+                String insertDecree2 = """
+                        INSERT INTO decree (code, name, description, active)
+                        VALUES ('CREATE_RAINBOW', '创造彩虹', 
+                                '让星星城上空出现美丽的彩虹！彩虹将横跨整个星星城，为所有居民带来美好的祝福。', 
+                                0)
+                        """;
+                statement.execute(insertDecree2);
+                logger.info("添加命令: CREATE_RAINBOW");
+            }
+            rs2.close();
+        }
     }
 
     /**
@@ -608,13 +646,22 @@ public class PrizeInitService implements ApplicationRunner {
             logger.info("decree表索引创建成功");
 
             // 初始化命令数据
-            String insertDecree = """
+            String insertDecree1 = """
                     INSERT INTO decree (code, name, description, active)
                     VALUES ('NO_CASTLE_ACCESS', '不得靠近城堡', 
                             '城堡禁止入内！立即驱逐城堡中除了李星斗之外的所有人。存子回到行宫，小白鸽回到小白鸽家，白婆婆回到小白鸽家，大祭司回到行宫，严伯升回到市政厅。在命令生效期间，所有人的漫游目标都不能包含城堡。', 
                             0)
                     """;
-            statement.execute(insertDecree);
+            statement.execute(insertDecree1);
+            
+            String insertDecree2 = """
+                    INSERT INTO decree (code, name, description, active)
+                    VALUES ('CREATE_RAINBOW', '创造彩虹', 
+                            '让星星城上空出现美丽的彩虹！彩虹将横跨整个星星城，为所有居民带来美好的祝福。', 
+                            0)
+                    """;
+            statement.execute(insertDecree2);
+            
             logger.info("命令数据初始化成功");
         }
     }

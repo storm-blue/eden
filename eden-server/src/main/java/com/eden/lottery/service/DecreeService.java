@@ -32,6 +32,7 @@ public class DecreeService {
     
     // 命令代码常量
     public static final String DECREE_NO_CASTLE_ACCESS = "NO_CASTLE_ACCESS";
+    public static final String DECREE_CREATE_RAINBOW = "CREATE_RAINBOW";
     
     /**
      * 获取所有命令
@@ -132,7 +133,17 @@ public class DecreeService {
     private void executeDecreeEffect(String code) {
         if (DECREE_NO_CASTLE_ACCESS.equals(code)) {
             executeNoCastleAccessDecree();
+        } else if (DECREE_CREATE_RAINBOW.equals(code)) {
+            executeCreateRainbowDecree();
         }
+    }
+    
+    /**
+     * 执行"创造彩虹"命令效果
+     * 纯前端视觉效果，后端仅记录日志
+     */
+    private void executeCreateRainbowDecree() {
+        logger.info("执行命令效果：创造彩虹 - 星星城将显示彩虹特效");
     }
     
     /**

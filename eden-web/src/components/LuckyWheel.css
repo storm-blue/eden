@@ -4067,6 +4067,18 @@
     }
 }
 
+/* 彩虹出现动画 */
+@keyframes rainbowAppear {
+    0% {
+        opacity: 0;
+        transform: translateX(-50%) scale(0.8) translateY(20px);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(-50%) scale(1) translateY(0);
+    }
+}
+
 /* 晴天太阳呼吸动画 */
 @keyframes sunPulse {
     0%, 100% {

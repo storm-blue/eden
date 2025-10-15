@@ -330,19 +330,25 @@ Eden支持命令系统，允许秦小淮颁布特权命令来影响其他用户�
 ### 当前支持的命令
 
 - **不得靠近城堡**: 立即驱逐城堡中除李星斗外的所有人，并在命令生效期间禁止所有人漫游到城堡
+- **创造彩虹** 🌈: 在星星城上空显示一道美丽的横跨整个城市的彩虹，所有用户可见
 
 ### 详细文档
 
 - 📖 [完整技术文档](./DECREE_SYSTEM.md)
 - 🚀 [快速使用指南](./DECREE_QUICK_START.md)
 - 📊 [功能总结](./DECREE_SUMMARY.md)
+- 🌈 [彩虹命令说明](./RAINBOW_DECREE.md)
 
 ### 测试命令系统
 
 ```bash
-# 运行测试脚本
+# 测试城堡禁入命令
 chmod +x test-decree.sh
 ./test-decree.sh
+
+# 测试彩虹命令
+chmod +x test-rainbow-decree.sh
+./test-rainbow-decree.sh
 ```
 
 ## 📄 许可证

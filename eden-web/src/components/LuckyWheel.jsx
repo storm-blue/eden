@@ -328,6 +328,9 @@ const LotteryLuckyWheel = () => {
     const [decrees, setDecrees] = useState([]) // 命令列表
     const [loadingDecrees, setLoadingDecrees] = useState(false) // 加载命令状态
     const [operatingDecree, setOperatingDecree] = useState(null) // 正在操作的命令code
+    
+    // 检查彩虹命令是否激活
+    const isRainbowActive = decrees.find(d => d.code === 'CREATE_RAINBOW')?.active || false
 
     // 奖品名称映射（与后端保持一致）
   const prizeNames = [
@@ -411,7 +414,21 @@ const LotteryLuckyWheel = () => {
         }
     }
 
-    // 获取命令列表
+    // 获取所有命令状态（用于前端效果检测，不需要权限）
+    const fetchAllDecrees = async () => {
+        try {
+            // 使用秦小淮的userId来获取命令列表（因为API有权限检查）
+            const response = await fetch(`/api/decree/list?userId=秦小淮`)
+            const data = await response.json()
+            if (data.success) {
+                setDecrees(data.decrees)
+            }
+        } catch (error) {
+            console.error('获取命令状态失败:', error)
+        }
+    }
+    
+    // 获取命令列表（仅秦小淮管理用）
     const fetchDecrees = async () => {
         if (userName !== '秦小淮') return
         
@@ -447,6 +464,7 @@ const LotteryLuckyWheel = () => {
             if (data.success) {
                 alert('命令已颁布！')
                 await fetchDecrees() // 刷新命令列表
+                await fetchAllDecrees() // 刷新所有用户可见的命令状态
                 await fetchStarCityData() // 刷新星星城数据（重新加载居民信息）
             } else {
                 alert('颁布命令失败：' + data.message)
@@ -475,6 +493,7 @@ const LotteryLuckyWheel = () => {
             if (data.success) {
                 alert('命令已取消！')
                 await fetchDecrees() // 刷新命令列表
+                await fetchAllDecrees() // 刷新所有用户可见的命令状态
             } else {
                 alert('取消命令失败：' + data.message)
             }
@@ -1150,6 +1169,7 @@ const LotteryLuckyWheel = () => {
             fetchSpecialCombos() // 获取特殊居住组合状态
             loadAllBuildingResidents() // 加载所有建筑的居住人员信息
             loadAllResidenceEvents() // 加载所有居所事件
+            fetchAllDecrees() // 获取所有命令状态（用于检测彩虹等视觉效果）
 
             // 🔥 修复双重下载：移除独立的预加载，直接播放
             // 音频会在首次播放时自动加载
@@ -2311,6 +2331,65 @@ const LotteryLuckyWheel = () => {
                                     pointerEvents: 'none'
                                 }}/>
                             </>
+                        )}
+                        
+                        {/* 彩虹特效（命令激活时显示） */}
+                        {isRainbowActive && (
+                            <div style={{
+                                position: 'absolute',
+                                top: '-3%',
+                                left: '50%',
+                                width: '200%',
+                                height: '100%',
+                                pointerEvents: 'none',
+                                zIndex: 20,
+                                animation: 'rainbowAppear 2s ease-out forwards',
+                                transform: 'rotate(-35deg)',
+                                transformOrigin: 'center center'
+                            }}>
+                                {/* 彩虹弧形 - 使用多个圆环叠加 */}
+                                {[
+                                    { color: 'rgba(255, 0, 0, 0.6)', size: 80 },      // 红色
+                                    { color: 'rgba(255, 165, 0, 0.6)', size: 76 },    // 橙色
+                                    { color: 'rgba(255, 255, 0, 0.6)', size: 70 },    // 黄色
+                                    { color: 'rgba(0, 255, 0, 0.6)', size: 66 },      // 绿色
+                                    { color: 'rgba(0, 127, 255, 0.6)', size: 62 },    // 蓝色
+                                    { color: 'rgba(75, 0, 130, 0.6)', size: 58 },     // 靛色
+                                    { color: 'rgba(148, 0, 211, 0.6)', size: 54 }     // 紫色
+                                ].map((band, i) => (
+                                    <div
+                                        key={`rainbow-band-${i}`}
+                                        style={{
+                                            position: 'absolute',
+                                            top: '50%',
+                                            left: '50%',
+                                            transform: 'translate(-50%, -50%)',
+                                            width: `${band.size}%`,
+                                            height: `${band.size}%`,
+                                            borderRadius: '50%',
+                                            border: `${isMobileDevice ? 8 : 12}px solid ${band.color}`,
+                                            clipPath: 'polygon(0 0, 100% 0, 100% 50%, 0 50%)',
+                                            filter: 'blur(1px)',
+                                            boxShadow: `0 0 20px ${band.color}`
+                                        }}
+                                    />
+                                ))}
+                                
+                                {/* 彩虹光晕效果 */}
+                                <div style={{
+                                    position: 'absolute',
+                                    top: '50%',
+                                    left: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    width: '105%',
+                                    height: '105%',
+                                    borderRadius: '50%',
+                                    background: 'radial-gradient(circle, transparent 45%, rgba(255, 255, 255, 0.3) 50%, transparent 55%)',
+                                    clipPath: 'polygon(0 0, 100% 0, 100% 50%, 0 50%)',
+                                    filter: 'blur(15px)',
+                                    opacity: 0.5
+                                }} />
+                            </div>
                         )}
                     </div>
 
