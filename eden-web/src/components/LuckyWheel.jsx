@@ -3,6 +3,7 @@ import {LuckyWheel} from '@lucky-canvas/react'
 import './LuckyWheel.css'
 import AvatarCrop from './AvatarCrop'
 import DecreeModal from './DecreeModal'
+import MagicModal from './MagicModal'
 
 const LotteryLuckyWheel = () => {
   const [prizes, setPrizes] = useState([
@@ -334,6 +335,13 @@ const LotteryLuckyWheel = () => {
     const [showRainbow, setShowRainbow] = useState(false) // 控制彩虹是否显示
     const [rainbowFading, setRainbowFading] = useState(false) // 控制彩虹是否正在消失
 
+    // 魔法管理状态
+    const [showMagicModal, setShowMagicModal] = useState(false) // 显示魔法管理弹窗
+    const [magics, setMagics] = useState([]) // 魔法列表
+    const [loadingMagics, setLoadingMagics] = useState(false) // 加载魔法状态
+    const [castingMagic, setCastingMagic] = useState(null) // 正在施展的魔法code
+    const [showFoodRain, setShowFoodRain] = useState(false) // 显示天降食物特效
+
     // 奖品名称映射（与后端保持一致）
   const prizeNames = [
         '🍰 吃的～',
@@ -428,6 +436,75 @@ const LotteryLuckyWheel = () => {
         } catch (error) {
             console.error('获取命令状态失败:', error)
         }
+    }
+    
+    // 获取魔法列表
+    const fetchMagics = async () => {
+        if (userName !== '秦小淮') return
+        
+        setLoadingMagics(true)
+        try {
+            const response = await fetch(`/api/magic/list?userId=${userName}`)
+            const data = await response.json()
+            if (data.success) {
+                setMagics(data.magics)
+            } else {
+                console.error('获取魔法列表失败:', data.message)
+            }
+        } catch (error) {
+            console.error('获取魔法列表失败:', error)
+        } finally {
+            setLoadingMagics(false)
+        }
+    }
+    
+    // 施展魔法
+    const castMagic = async (code) => {
+        if (userName !== '秦小淮') {
+            alert('只有秦小淮可以施展魔法')
+            return
+        }
+        
+        setCastingMagic(code)
+        try {
+            const response = await fetch('/api/magic/cast', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: new URLSearchParams({
+                    code: code,
+                    userId: userName
+                })
+            })
+            const data = await response.json()
+            if (data.success) {
+                // 刷新魔法列表
+                await fetchMagics()
+                
+                // 触发特效
+                if (code === 'FOOD_RAIN') {
+                    triggerFoodRainEffect()
+                }
+                
+                // 刷新星星城数据（食物已增加）
+                await fetchStarCityData()
+            } else {
+                alert(data.message)
+            }
+        } catch (error) {
+            console.error('施展魔法失败:', error)
+            alert('施展魔法失败')
+        } finally {
+            setCastingMagic(null)
+        }
+    }
+    
+    // 触发天降食物特效
+    const triggerFoodRainEffect = () => {
+        setShowFoodRain(true)
+        // 3秒后自动隐藏特效
+        setTimeout(() => {
+            setShowFoodRain(false)
+        }, 3000)
     }
     
     // 获取命令列表（仅秦小淮管理用）
@@ -2417,6 +2494,45 @@ const LotteryLuckyWheel = () => {
                                 }} />
                             </div>
                         )}
+                        
+                        {/* 天降食物特效（施展魔法时显示） */}
+                        {showFoodRain && (
+                            <div style={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                width: '100%',
+                                height: '100%',
+                                pointerEvents: 'none',
+                                zIndex: 30,
+                                overflow: 'hidden'
+                            }}>
+                                {/* 生成多个食物emoji */}
+                                {[...Array(30)].map((_, i) => {
+                                    const foodEmojis = ['🍰', '🥤', '🍕', '🍔', '🍟', '🌭', '🥗', '🍜', '🍱', '🍙']
+                                    const emoji = foodEmojis[i % foodEmojis.length]
+                                    const left = Math.random() * 100
+                                    const delay = Math.random() * 0.5
+                                    const duration = 2 + Math.random() * 1
+                                    
+                                    return (
+                                        <div
+                                            key={`food-${i}`}
+                                            style={{
+                                                position: 'absolute',
+                                                top: '-50px',
+                                                left: `${left}%`,
+                                                fontSize: isMobileDevice ? '30px' : '40px',
+                                                animation: `foodFall ${duration}s ease-in ${delay}s forwards`,
+                                                opacity: 0
+                                            }}
+                                        >
+                                            {emoji}
+                                        </div>
+                                    )
+                                })}
+                            </div>
+                        )}
                     </div>
 
                     {/* 标题 */}
@@ -2434,44 +2550,84 @@ const LotteryLuckyWheel = () => {
                         ✨星星城 LV{starCityData?.level || 1}✨
                     </h2>
 
-                    {/* 命令按钮（仅秦小淮可见） */}
+                    {/* 秦小淮专属按钮组 */}
                     {userName === '秦小淮' && (
-                        <button
-                            onClick={() => {
-                                fetchDecrees()
-                                setShowDecreeModal(true)
-                            }}
-                            style={{
-                                position: 'fixed',
-                                top: '20px',
-                                left: '20px',
-                                padding: '12px 20px',
-                                background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                border: '2px solid rgba(255, 255, 255, 0.3)',
-                                borderRadius: '12px',
-                                color: 'white',
-                                fontSize: '16px',
-                                fontWeight: 'bold',
-                                cursor: 'pointer',
-                                zIndex: 999,
-                                display: 'flex',
-                                alignItems: 'center',
-                                gap: '8px',
-                                boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
-                                transition: 'all 0.3s ease',
-                                backdropFilter: 'blur(10px)'
-                            }}
-                            onMouseEnter={(e) => {
-                                e.target.style.transform = 'translateY(-2px)'
-                                e.target.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.6)'
-                            }}
-                            onMouseLeave={(e) => {
-                                e.target.style.transform = 'translateY(0)'
-                                e.target.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.4)'
-                            }}
-                        >
-                            📜 颁布命令
-                        </button>
+                        <div style={{
+                            position: 'fixed',
+                            top: '20px',
+                            left: '20px',
+                            display: 'flex',
+                            gap: '12px',
+                            zIndex: 999
+                        }}>
+                            {/* 命令按钮 */}
+                            <button
+                                onClick={() => {
+                                    fetchDecrees()
+                                    setShowDecreeModal(true)
+                                }}
+                                style={{
+                                    padding: '12px 20px',
+                                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                    border: '2px solid rgba(255, 255, 255, 0.3)',
+                                    borderRadius: '12px',
+                                    color: 'white',
+                                    fontSize: '16px',
+                                    fontWeight: 'bold',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
+                                    transition: 'all 0.3s ease',
+                                    backdropFilter: 'blur(10px)'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.target.style.transform = 'translateY(-2px)'
+                                    e.target.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.6)'
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.target.style.transform = 'translateY(0)'
+                                    e.target.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.4)'
+                                }}
+                            >
+                                📜 颁布命令
+                            </button>
+                            
+                            {/* 魔法按钮 */}
+                            <button
+                                onClick={() => {
+                                    setShowMagicModal(true)
+                                    fetchMagics()
+                                }}
+                                style={{
+                                    padding: '12px 20px',
+                                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                    border: '2px solid rgba(255, 255, 255, 0.3)',
+                                    borderRadius: '12px',
+                                    color: 'white',
+                                    fontSize: '16px',
+                                    fontWeight: 'bold',
+                                    cursor: 'pointer',
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    gap: '8px',
+                                    boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
+                                    transition: 'all 0.3s ease',
+                                    backdropFilter: 'blur(10px)'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.target.style.transform = 'translateY(-2px)'
+                                    e.target.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.6)'
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.target.style.transform = 'translateY(0)'
+                                    e.target.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.4)'
+                                }}
+                            >
+                                ✨ 施展魔法
+                            </button>
+                        </div>
                     )}
 
                     {/* 城堡 - 中心白点 */}
@@ -4763,6 +4919,16 @@ const LotteryLuckyWheel = () => {
                 operatingCode={operatingDecree}
                 onIssue={issueDecree}
                 onCancel={cancelDecree}
+            />
+            
+            {/* 魔法管理弹窗（仅秦小淮可见） */}
+            <MagicModal
+                show={showMagicModal}
+                onClose={() => setShowMagicModal(false)}
+                magics={magics}
+                loading={loadingMagics}
+                castingCode={castingMagic}
+                onCast={castMagic}
             />
     </div>
   )

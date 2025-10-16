@@ -1,0 +1,410 @@
+/* 魔法管理弹窗样式 */
+.magic-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 100000;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.magic-modal-content {
+    background: linear-gradient(135deg, #2e1a47 0%, #3e164e 100%);
+    border-radius: 20px;
+    padding: 30px;
+    max-width: 600px;
+    width: 90%;
+    max-height: 80vh;
+    box-shadow: 0 10px 50px rgba(0, 0, 0, 0.5);
+    border: 2px solid rgba(186, 85, 211, 0.4);
+    animation: slideUp 0.3s ease-out;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+}
+
+.magic-modal-title {
+    text-align: center;
+    color: #da70d6;
+    font-size: 28px;
+    margin-bottom: 25px;
+    text-shadow: 0 0 15px rgba(218, 112, 214, 0.5);
+}
+
+.magic-loading {
+    text-align: center;
+    padding: 40px;
+    color: #fff;
+    font-size: 18px;
+}
+
+.magic-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-bottom: 20px;
+    overflow-y: auto;
+    flex: 1;
+    padding-right: 5px;
+}
+
+/* 自定义滚动条 */
+.magic-list::-webkit-scrollbar {
+    width: 6px;
+}
+
+.magic-list::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 3px;
+}
+
+.magic-list::-webkit-scrollbar-thumb {
+    background: rgba(186, 85, 211, 0.3);
+    border-radius: 3px;
+}
+
+.magic-list::-webkit-scrollbar-thumb:hover {
+    background: rgba(186, 85, 211, 0.5);
+}
+
+.magic-item {
+    background: rgba(255, 255, 255, 0.05);
+    border: 2px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 15px;
+    transition: all 0.3s ease;
+}
+
+.magic-item.exhausted {
+    background: rgba(100, 100, 100, 0.1);
+    border-color: rgba(100, 100, 100, 0.2);
+    opacity: 0.7;
+}
+
+/* 魔法头部：名称+次数和按钮在同一行 */
+.magic-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 15px;
+}
+
+/* 可点击的魔法名称区域 */
+.magic-name-clickable {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    cursor: pointer;
+    flex: 1;
+    padding: 5px 0;
+    user-select: none;
+}
+
+.magic-name-clickable:hover .magic-name {
+    color: #ee82ee;
+}
+
+/* 展开图标 */
+.magic-expand-icon {
+    font-size: 12px;
+    color: #da70d6;
+    transition: transform 0.3s ease;
+    width: 16px;
+    display: inline-block;
+}
+
+/* 魔法名称 */
+.magic-name {
+    font-size: 18px;
+    font-weight: bold;
+    color: #da70d6;
+    transition: color 0.2s ease;
+}
+
+/* 魔法次数 */
+.magic-uses {
+    font-size: 14px;
+    color: #bbb;
+    font-weight: normal;
+    margin-left: 5px;
+}
+
+/* 展开的详情区域 */
+.magic-details {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    animation: slideDown 0.3s ease-out;
+}
+
+.magic-description {
+    font-size: 14px;
+    color: #ccc;
+    line-height: 1.6;
+    margin-bottom: 12px;
+}
+
+.magic-info {
+    font-size: 12px;
+    color: #999;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+}
+
+.magic-actions {
+    display: flex;
+    align-items: center;
+    flex-shrink: 0;
+}
+
+/* 展开动画 */
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        transform: translateY(-10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.magic-btn {
+    padding: 8px 18px;
+    border: none;
+    border-radius: 8px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    white-space: nowrap;
+}
+
+.magic-btn:disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+}
+
+.cast-btn {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.cast-btn:hover:not(:disabled) {
+    background: linear-gradient(135deg, #764ba2 0%, #667eea 100%);
+    box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+    transform: translateY(-2px);
+}
+
+.magic-empty {
+    text-align: center;
+    padding: 40px;
+    color: #999;
+    font-size: 16px;
+}
+
+.magic-close-btn {
+    width: 100%;
+    padding: 15px;
+    background: rgba(255, 255, 255, 0.1);
+    border: 2px solid rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+    color: white;
+    font-size: 16px;
+    font-weight: bold;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.magic-close-btn:hover {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.3);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(255, 255, 255, 0.1);
+}
+
+/* 移动端适配 */
+@media (max-width: 768px) {
+    .magic-modal-content {
+        padding: 20px;
+        max-height: 70vh;
+    }
+
+    .magic-modal-title {
+        font-size: 24px;
+    }
+
+    .magic-item {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 15px;
+    }
+
+    .magic-name {
+        font-size: 18px;
+    }
+
+    .magic-description {
+        font-size: 13px;
+    }
+
+    .magic-btn {
+        width: 100%;
+        padding: 10px 20px;
+        font-size: 15px;
+    }
+
+    .magic-actions {
+        width: 100%;
+    }
+}
+
+/* 移动端强制横屏样式 */
+@media screen and (max-width: 768px) {
+    .magic-modal-overlay.force-landscape {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) rotate(90deg) !important;
+        transform-origin: center center !important;
+        width: 100vh !important;
+        height: 100vw !important;
+        max-width: 100vh !important;
+        max-height: 100vw !important;
+        z-index: 100001 !important;
+    }
+
+    .magic-modal-overlay.force-landscape .magic-modal-content {
+        position: relative !important;
+        max-width: 650px !important;
+        width: 95% !important;
+        max-height: 80vh !important;
+        padding: 20px !important;
+        margin: 0 auto !important;
+        transform: none !important;
+    }
+
+    .magic-modal-overlay.force-landscape .magic-modal-title {
+        font-size: 22px !important;
+        margin-bottom: 16px !important;
+    }
+
+    .magic-modal-overlay.force-landscape .magic-list {
+        gap: 10px !important;
+        margin-bottom: 16px !important;
+    }
+
+    .magic-modal-overlay.force-landscape .magic-item {
+        padding: 12px !important;
+        flex-direction: row !important;
+        align-items: center !important;
+    }
+
+    .magic-modal-overlay.force-landscape .magic-header {
+        display: flex !important;
+        justify-content: space-between !important;
+        align-items: center !important;
+        gap: 10px !important;
+        flex-wrap: nowrap !important;
+    }
+
+    .magic-modal-overlay.force-landscape .magic-name-clickable {
+        flex: 1 !important;
+        min-width: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        gap: 6px !important;
+    }
+
+    .magic-modal-overlay.force-landscape .magic-actions {
+        flex-shrink: 0 !important;
+        display: flex !important;
+        align-items: center !important;
+        width: auto !important;
+    }
+
+    .magic-modal-overlay.force-landscape .magic-name {
+        font-size: 16px !important;
+        white-space: nowrap !important;
+    }
+
+    .magic-modal-overlay.force-landscape .magic-uses {
+        font-size: 13px !important;
+    }
+
+    .magic-modal-overlay.force-landscape .magic-expand-icon {
+        font-size: 10px !important;
+        width: 14px !important;
+        flex-shrink: 0 !important;
+    }
+
+    .magic-modal-overlay.force-landscape .magic-details {
+        margin-top: 10px !important;
+        padding-top: 10px !important;
+    }
+
+    .magic-modal-overlay.force-landscape .magic-description {
+        font-size: 13px !important;
+        line-height: 1.5 !important;
+    }
+
+    .magic-modal-overlay.force-landscape .magic-info {
+        font-size: 11px !important;
+    }
+
+    .magic-modal-overlay.force-landscape .magic-btn {
+        padding: 8px 16px !important;
+        font-size: 13px !important;
+        width: auto !important;
+        flex-shrink: 0 !important;
+        white-space: nowrap !important;
+    }
+
+    .magic-modal-overlay.force-landscape .magic-close-btn {
+        padding: 10px !important;
+        font-size: 14px !important;
+    }
+
+    .magic-modal-overlay.force-landscape .magic-loading {
+        padding: 25px !important;
+        font-size: 15px !important;
+    }
+
+    .magic-modal-overlay.force-landscape .magic-empty {
+        padding: 25px !important;
+        font-size: 14px !important;
+    }
+
+    /* 确保弹窗内的所有元素不会被max-height限制（max-width保留以支持文本布局） */
+    .magic-modal-overlay.force-landscape * {
+        max-height: none !important;
+    }
+}
+
+/* 动画 */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+

@@ -4091,6 +4091,24 @@
     }
 }
 
+/* 食物下落动画 */
+@keyframes foodFall {
+    0% {
+        opacity: 0;
+        transform: translateY(0) rotate(0deg);
+    }
+    10% {
+        opacity: 1;
+    }
+    90% {
+        opacity: 1;
+    }
+    100% {
+        opacity: 0;
+        transform: translateY(calc(100vh + 100px)) rotate(360deg);
+    }
+}
+
 /* 晴天太阳呼吸动画 */
 @keyframes sunPulse {
     0%, 100% {

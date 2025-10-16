@@ -78,6 +78,9 @@ public class PrizeInitService implements ApplicationRunner {
             // 检查并创建命令表
             checkAndCreateDecreeTable(connection);
 
+            // 检查并创建魔法表
+            checkAndCreateMagicTable(connection);
+
             logger.info("数据库迁移检查完成");
         } catch (Exception e) {
             logger.error("数据库迁移失败", e);
@@ -663,6 +666,84 @@ public class PrizeInitService implements ApplicationRunner {
             statement.execute(insertDecree2);
             
             logger.info("命令数据初始化成功");
+        }
+    }
+    
+    /**
+     * 检查并创建魔法表
+     */
+    private void checkAndCreateMagicTable(Connection connection) throws Exception {
+        DatabaseMetaData metaData = connection.getMetaData();
+        ResultSet tables = metaData.getTables(null, null, "magic", null);
+
+        if (!tables.next()) {
+            logger.info("magic表不存在，创建表...");
+            createMagicTable(connection);
+        } else {
+            logger.info("magic表已存在，检查并添加缺失的魔法...");
+            ensureMagicRecords(connection);
+        }
+
+        tables.close();
+    }
+    
+    /**
+     * 确保所有必需的魔法记录都存在
+     */
+    private void ensureMagicRecords(Connection connection) throws Exception {
+        try (Statement statement = connection.createStatement()) {
+            // 检查并添加"天降食物"魔法
+            String checkMagic1 = "SELECT COUNT(*) as cnt FROM magic WHERE code = 'FOOD_RAIN'";
+            ResultSet rs1 = statement.executeQuery(checkMagic1);
+            if (rs1.next() && rs1.getInt("cnt") == 0) {
+                String insertMagic1 = """
+                        INSERT INTO magic (code, name, description, daily_limit, remaining_uses, last_refresh_at, created_at)
+                        VALUES ('FOOD_RAIN', '天降食物', 
+                                '施展魔法后，将会有10000份食物从天而降，储存到星星城的食物仓库中。', 
+                                3, 3, datetime('now', 'localtime'), datetime('now', 'localtime'))
+                        """;
+                statement.execute(insertMagic1);
+                logger.info("添加魔法: FOOD_RAIN");
+            }
+            rs1.close();
+        }
+    }
+    
+    /**
+     * 创建魔法表
+     */
+    private void createMagicTable(Connection connection) throws Exception {
+        String createTableSql = """
+                CREATE TABLE magic (
+                    id INTEGER PRIMARY KEY AUTOINCREMENT,
+                    code VARCHAR(50) NOT NULL UNIQUE,
+                    name VARCHAR(100) NOT NULL,
+                    description TEXT,
+                    daily_limit INTEGER NOT NULL DEFAULT 3,
+                    remaining_uses INTEGER NOT NULL DEFAULT 3,
+                    last_refresh_at TIMESTAMP NOT NULL,
+                    created_at TIMESTAMP NOT NULL
+                )
+                """;
+
+        try (Statement statement = connection.createStatement()) {
+            statement.execute(createTableSql);
+            logger.info("magic表创建成功");
+
+            // 创建索引
+            statement.execute("CREATE INDEX IF NOT EXISTS idx_magic_code ON magic(code)");
+            logger.info("magic表索引创建成功");
+
+            // 初始化魔法数据
+            String insertMagic = """
+                    INSERT INTO magic (code, name, description, daily_limit, remaining_uses, last_refresh_at, created_at)
+                    VALUES ('FOOD_RAIN', '天降食物', 
+                            '施展魔法后，将会有10000份食物从天而降，储存到星星城的食物仓库中。', 
+                            3, 3, datetime('now', 'localtime'), datetime('now', 'localtime'))
+                    """;
+            statement.execute(insertMagic);
+            
+            logger.info("魔法数据初始化成功");
         }
     }
 }

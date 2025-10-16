@@ -1,5 +1,6 @@
 package com.eden.lottery.task;
 
+import com.eden.lottery.service.MagicService;
 import com.eden.lottery.service.StarCityService;
 import com.eden.lottery.service.UserService;
 import jakarta.annotation.Resource;
@@ -22,10 +23,14 @@ public class DailyRefreshTask {
     @Resource
     private StarCityService starCityService;
     
+    @Resource
+    private MagicService magicService;
+    
     /**
      * 每天凌晨0点执行每日任务
      * 1. 刷新所有用户的抽奖次数
      * 2. 更新星星城数据
+     * 3. 刷新魔法施展次数
      * cron表达式: 秒 分 时 日 月 周
      * "0 0 0 * * ?" 表示每天0点0分0秒执行
      */
@@ -41,6 +46,10 @@ public class DailyRefreshTask {
             // 2. 更新星星城数据 (人口增长为当前食物的1/8，食物+5000，幸福-1)
             starCityService.dailyUpdate();
             logger.info("星星城数据更新完成");
+            
+            // 3. 刷新魔法施展次数
+            magicService.refreshAllMagicDailyUses();
+            logger.info("魔法施展次数刷新完成");
             
             logger.info("每日任务执行完成");
         } catch (Exception e) {
@@ -59,6 +68,7 @@ public class DailyRefreshTask {
         try {
             userService.batchRefreshDailyDraws();
             starCityService.dailyUpdate();
+            magicService.refreshAllMagicDailyUses();
             logger.info("[测试] 每日任务测试完成");
         } catch (Exception e) {
             logger.error("[测试] 每日任务测试失败: {}", e.getMessage(), e);

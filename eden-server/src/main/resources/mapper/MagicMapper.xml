@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eden.lottery.mapper.MagicMapper">
+
+    <!-- 结果映射 -->
+    <resultMap id="MagicResultMap" type="com.eden.lottery.entity.Magic">
+        <id property="id" column="id"/>
+        <result property="code" column="code"/>
+        <result property="name" column="name"/>
+        <result property="description" column="description"/>
+        <result property="dailyLimit" column="daily_limit"/>
+        <result property="remainingUses" column="remaining_uses"/>
+        <result property="lastRefreshAt" column="last_refresh_at"/>
+        <result property="createdAt" column="created_at"/>
+    </resultMap>
+
+    <!-- 插入魔法 -->
+    <insert id="insert" parameterType="com.eden.lottery.entity.Magic">
+        INSERT INTO magic (code, name, description, daily_limit, remaining_uses, last_refresh_at, created_at)
+        VALUES (#{code}, #{name}, #{description}, #{dailyLimit}, #{remainingUses}, #{lastRefreshAt}, #{createdAt})
+    </insert>
+
+    <!-- 根据代码查询魔法 -->
+    <select id="selectByCode" parameterType="string" resultMap="MagicResultMap">
+        SELECT id, code, name, description, daily_limit, remaining_uses, last_refresh_at, created_at
+        FROM magic
+        WHERE code = #{code}
+    </select>
+
+    <!-- 更新魔法 -->
+    <update id="update" parameterType="com.eden.lottery.entity.Magic">
+        UPDATE magic
+        SET remaining_uses = #{remainingUses},
+            last_refresh_at = #{lastRefreshAt}
+        WHERE code = #{code}
+    </update>
+
+    <!-- 查询所有魔法 -->
+    <select id="selectAll" resultMap="MagicResultMap">
+        SELECT id, code, name, description, daily_limit, remaining_uses, last_refresh_at, created_at
+        FROM magic
+        ORDER BY id
+    </select>
+
+    <!-- 减少魔法剩余次数 -->
+    <update id="decreaseRemainingUses" parameterType="string">
+        UPDATE magic
+        SET remaining_uses = remaining_uses - 1
+        WHERE code = #{code}
+        AND remaining_uses > 0
+    </update>
+
+    <!-- 刷新魔法次数 -->
+    <update id="refreshDailyUses" parameterType="string">
+        UPDATE magic
+        SET remaining_uses = daily_limit,
+            last_refresh_at = datetime('now', 'localtime')
+        WHERE code = #{code}
+    </update>
+
+</mapper>
+
