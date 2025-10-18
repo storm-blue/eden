@@ -341,6 +341,7 @@ const LotteryLuckyWheel = () => {
     const [loadingMagics, setLoadingMagics] = useState(false) // 加载魔法状态
     const [castingMagic, setCastingMagic] = useState(null) // 正在施展的魔法code
     const [showFoodRain, setShowFoodRain] = useState(false) // 显示天降食物特效
+    const [showWeatherChange, setShowWeatherChange] = useState(false) // 显示改变天气特效
 
     // 奖品名称映射（与后端保持一致）
   const prizeNames = [
@@ -483,10 +484,15 @@ const LotteryLuckyWheel = () => {
                 // 触发特效
                 if (code === 'FOOD_RAIN') {
                     triggerFoodRainEffect()
+                } else if (code === 'CHANGE_WEATHER') {
+                    triggerWeatherChangeEffect()
                 }
                 
-                // 刷新星星城数据（食物已增加）
+                // 刷新星星城数据（食物已增加或天气已改变）
                 await fetchStarCityData()
+                
+                // 自动关闭魔法弹框
+                setShowMagicModal(false)
             } else {
                 alert(data.message)
             }
@@ -505,6 +511,15 @@ const LotteryLuckyWheel = () => {
         setTimeout(() => {
             setShowFoodRain(false)
         }, 3000)
+    }
+    
+    // 触发改变天气特效
+    const triggerWeatherChangeEffect = () => {
+        setShowWeatherChange(true)
+        // 2秒后自动隐藏特效
+        setTimeout(() => {
+            setShowWeatherChange(false)
+        }, 2000)
     }
     
     // 获取命令列表（仅秦小淮管理用）
@@ -2531,6 +2546,70 @@ const LotteryLuckyWheel = () => {
                                         </div>
                                     )
                                 })}
+                            </div>
+                        )}
+                        
+                        {/* 改变天气特效（施展魔法时显示） */}
+                        {showWeatherChange && (
+                            <div style={{
+                                position: 'absolute',
+                                top: 0,
+                                left: 0,
+                                width: '100%',
+                                height: '100%',
+                                pointerEvents: 'none',
+                                zIndex: 30,
+                                overflow: 'hidden'
+                            }}>
+                                {/* 天气变化光效 */}
+                                <div style={{
+                                    position: 'absolute',
+                                    top: '50%',
+                                    left: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    width: '200px',
+                                    height: '200px',
+                                    borderRadius: '50%',
+                                    background: 'radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(135, 206, 235, 0.6) 30%, rgba(70, 130, 180, 0.4) 60%, transparent 100%)',
+                                    animation: 'weatherChangePulse 2s ease-out forwards',
+                                    filter: 'blur(2px)'
+                                }} />
+                                
+                                {/* 天气图标变化 */}
+                                {['☀️', '🌧️', '❄️', '☁️', '🌙'].map((icon, i) => (
+                                    <div
+                                        key={`weather-icon-${i}`}
+                                        style={{
+                                            position: 'absolute',
+                                            top: `${20 + i * 15}%`,
+                                            left: `${10 + i * 20}%`,
+                                            fontSize: isMobileDevice ? '40px' : '60px',
+                                            animation: `weatherIconAppear 2s ease-out ${i * 0.2}s forwards`,
+                                            opacity: 0,
+                                            transform: 'scale(0)'
+                                        }}
+                                    >
+                                        {icon}
+                                    </div>
+                                ))}
+                                
+                                {/* 魔法粒子 */}
+                                {[...Array(20)].map((_, i) => (
+                                    <div
+                                        key={`weather-particle-${i}`}
+                                        style={{
+                                            position: 'absolute',
+                                            top: `${Math.random() * 100}%`,
+                                            left: `${Math.random() * 100}%`,
+                                            width: '4px',
+                                            height: '4px',
+                                            background: 'rgba(255, 255, 255, 0.8)',
+                                            borderRadius: '50%',
+                                            animation: `weatherParticleFloat 2s ease-out ${Math.random() * 0.5}s forwards`,
+                                            opacity: 0
+                                        }}
+                                    />
+                                ))}
                             </div>
                         )}
                     </div>

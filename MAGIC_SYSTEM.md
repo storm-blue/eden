@@ -23,6 +23,15 @@
   - 播放天降食物动画特效（30个食物emoji从天而降）
 - **特效时长**: 3秒
 
+### 2. 改变天气 (CHANGE_WEATHER)
+
+- **描述**: 施展魔法后，星星城的天气将立即改变为随机的新天气，包括晴天、雨天、雪天等
+- **每日次数**: 3次
+- **效果**: 
+  - 立即刷新天气为随机新天气
+  - 播放天气变化动画特效（光效、天气图标、魔法粒子）
+- **特效时长**: 2秒
+
 ## 🏗️ 系统架构
 
 ### 后端架构
@@ -50,6 +59,8 @@ CREATE TABLE magic (
   - `castMagic()`: 施展魔法
   - `refreshAllMagicDailyUses()`: 刷新所有魔法次数（定时任务调用）
   - `executeMagicEffect()`: 执行魔法效果
+  - `executeFoodRainMagic()`: 执行天降食物魔法效果
+  - `executeChangeWeatherMagic()`: 执行改变天气魔法效果
 - **Controller**: `MagicController.java` - API接口层
 - **Task**: `DailyRefreshTask.java` - 定时任务（每日凌晨0点刷新）
 
@@ -135,6 +146,7 @@ const [showFoodRain, setShowFoodRain] = useState(false)      // 天降食物特�
 - `fetchMagics()`: 获取魔法列表
 - `castMagic(code)`: 施展魔法
 - `triggerFoodRainEffect()`: 触发天降食物特效
+- `triggerWeatherChangeEffect()`: 触发改变天气特效
 
 #### 4. UI组件
 
@@ -156,6 +168,12 @@ const [showFoodRain, setShowFoodRain] = useState(false)      // 天降食物特�
 - 边下落边旋转（0-360度）
 - 特效持续3秒后自动消失
 
+##### 改变天气特效
+- 中心光效脉冲动画（蓝白色渐变）
+- 5个天气图标依次出现（☀️🌧️❄️☁️🌙）
+- 20个魔法粒子随机飘浮
+- 特效持续2秒后自动消失
+
 ## 🧪 测试
 
 ### 运行测试脚本
@@ -167,12 +185,15 @@ const [showFoodRain, setShowFoodRain] = useState(false)      // 天降食物特�
 ### 测试内容
 
 1. 获取魔法列表
-2. 获取施展前的食物数量
-3. 施展魔法
+2. 获取施展前的食物数量和天气
+3. 施展天降食物魔法
 4. 验证食物数量增加10000
-5. 验证魔法次数减少
-6. 连续施展直到用完次数
-7. 验证次数用完后无法施展
+5. 验证天降食物魔法次数减少
+6. 施展改变天气魔法
+7. 验证天气是否改变
+8. 验证改变天气魔法次数减少
+9. 连续施展直到用完次数
+10. 验证次数用完后无法施展
 
 ### 预期结果
 
@@ -187,7 +208,7 @@ const [showFoodRain, setShowFoodRain] = useState(false)      // 天降食物特�
 3. 在弹窗中查看可用魔法和剩余次数
 4. 点击"施展魔法"按钮
 5. 观看精美的特效动画
-6. 食物数量立即增加10000
+6. 食物数量立即增加10000（天降食物）或天气立即改变（改变天气）
 7. 魔法剩余次数-1
 
 ### 次数刷新

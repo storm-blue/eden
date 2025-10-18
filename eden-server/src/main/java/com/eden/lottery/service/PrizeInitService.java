@@ -706,6 +706,21 @@ public class PrizeInitService implements ApplicationRunner {
                 logger.info("添加魔法: FOOD_RAIN");
             }
             rs1.close();
+            
+            // 检查并添加"改变天气"魔法
+            String checkMagic2 = "SELECT COUNT(*) as cnt FROM magic WHERE code = 'CHANGE_WEATHER'";
+            ResultSet rs2 = statement.executeQuery(checkMagic2);
+            if (rs2.next() && rs2.getInt("cnt") == 0) {
+                String insertMagic2 = """
+                        INSERT INTO magic (code, name, description, daily_limit, remaining_uses, last_refresh_at, created_at)
+                        VALUES ('CHANGE_WEATHER', '改变天气', 
+                                '施展魔法后，星星城的天气将立即改变为随机的新天气，包括晴天、雨天、雪天等。', 
+                                3, 3, datetime('now', 'localtime'), datetime('now', 'localtime'))
+                        """;
+                statement.execute(insertMagic2);
+                logger.info("添加魔法: CHANGE_WEATHER");
+            }
+            rs2.close();
         }
     }
     
@@ -735,13 +750,21 @@ public class PrizeInitService implements ApplicationRunner {
             logger.info("magic表索引创建成功");
 
             // 初始化魔法数据
-            String insertMagic = """
+            String insertMagic1 = """
                     INSERT INTO magic (code, name, description, daily_limit, remaining_uses, last_refresh_at, created_at)
                     VALUES ('FOOD_RAIN', '天降食物', 
                             '施展魔法后，将会有10000份食物从天而降，储存到星星城的食物仓库中。', 
                             3, 3, datetime('now', 'localtime'), datetime('now', 'localtime'))
                     """;
-            statement.execute(insertMagic);
+            statement.execute(insertMagic1);
+            
+            String insertMagic2 = """
+                    INSERT INTO magic (code, name, description, daily_limit, remaining_uses, last_refresh_at, created_at)
+                    VALUES ('CHANGE_WEATHER', '改变天气', 
+                            '施展魔法后，星星城的天气将立即改变为随机的新天气，包括晴天、雨天、雪天等。', 
+                            3, 3, datetime('now', 'localtime'), datetime('now', 'localtime'))
+                    """;
+            statement.execute(insertMagic2);
             
             logger.info("魔法数据初始化成功");
         }

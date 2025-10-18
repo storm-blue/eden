@@ -4,6 +4,7 @@ import com.eden.lottery.entity.Magic;
 import com.eden.lottery.entity.StarCity;
 import com.eden.lottery.mapper.MagicMapper;
 import com.eden.lottery.mapper.StarCityMapper;
+import com.eden.lottery.task.WeatherRefreshTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -27,9 +28,13 @@ public class MagicService {
 
     @Autowired
     private StarCityMapper starCityMapper;
+    
+    @Autowired
+    private WeatherRefreshTask weatherRefreshTask;
 
     // 魔法代码常量
     public static final String MAGIC_FOOD_RAIN = "FOOD_RAIN";
+    public static final String MAGIC_CHANGE_WEATHER = "CHANGE_WEATHER";
 
     /**
      * 获取所有魔法
@@ -104,6 +109,9 @@ public class MagicService {
             case MAGIC_FOOD_RAIN:
                 executeFoodRainMagic();
                 break;
+            case MAGIC_CHANGE_WEATHER:
+                executeChangeWeatherMagic();
+                break;
             default:
                 logger.warn("未知的魔法代码: {}", code);
         }
@@ -126,6 +134,15 @@ public class MagicService {
         starCityMapper.updateStarCity(starCity);
 
         logger.info("天降食物魔法生效: 食物从 {} 增加到 {}", oldFood, newFood);
+    }
+    
+    /**
+     * 执行改变天气魔法效果
+     */
+    private void executeChangeWeatherMagic() {
+        // 调用天气刷新任务立即改变天气
+        weatherRefreshTask.refreshWeather();
+        logger.info("改变天气魔法生效: 天气已立即刷新");
     }
 
     /**
