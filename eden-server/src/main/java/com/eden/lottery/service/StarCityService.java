@@ -82,6 +82,32 @@ public class StarCityService {
     }
 
     /**
+     * 检查并处理人口饥饿（每小时调用）
+     * 当食物少于人口时，人口每小时减少2000
+     */
+    @Transactional
+    public void checkAndHandleStarvation() {
+        StarCity starCity = getStarCity();
+        if (starCity == null) {
+            return;
+        }
+
+        Long food = starCity.getFood();
+        Long population = starCity.getPopulation();
+
+        // 如果食物少于人口，则人口减少2000
+        if (food < population) {
+            Long newPopulation = Math.max(0, population - 2000);
+            starCity.setPopulation(newPopulation);
+            starCity.setUpdateTime(LocalDateTime.now());
+            starCityMapper.updateStarCity(starCity);
+            
+            logger.info("人口饥饿：食物({}) < 人口({})，人口减少2000，当前人口: {}", 
+                       food, population, newPopulation);
+        }
+    }
+
+    /**
      * 应用每小时人口增长加成（特殊居住组合）
      *
      * @param bonusPopulation 增长的人口数量

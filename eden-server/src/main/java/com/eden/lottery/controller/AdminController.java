@@ -16,6 +16,7 @@ import com.eden.lottery.service.ResidenceHistoryService;
 import com.eden.lottery.service.ResidenceEventService;
 import com.eden.lottery.service.DecreeService;
 import com.eden.lottery.task.UserStatusRefreshTask;
+import com.eden.lottery.task.HourlyRefreshTask;
 import com.eden.lottery.entity.UserAttempt;
 import com.eden.lottery.utils.ResidenceUtils;
 import jakarta.servlet.http.HttpServletRequest;
@@ -44,9 +45,10 @@ public class AdminController {
     private final ResidenceHistoryService residenceHistoryService;
     private final ResidenceEventService residenceEventService;
     private final UserStatusRefreshTask userStatusRefreshTask;
+    private final HourlyRefreshTask hourlyRefreshTask;
     private final DecreeService decreeService;
 
-    public AdminController(AdminService adminService, LotteryService lotteryService, UserAttemptService userAttemptService, WishService wishService, ResidenceHistoryService residenceHistoryService, ResidenceEventService residenceEventService, UserStatusRefreshTask userStatusRefreshTask, DecreeService decreeService) {
+    public AdminController(AdminService adminService, LotteryService lotteryService, UserAttemptService userAttemptService, WishService wishService, ResidenceHistoryService residenceHistoryService, ResidenceEventService residenceEventService, UserStatusRefreshTask userStatusRefreshTask, HourlyRefreshTask hourlyRefreshTask, DecreeService decreeService) {
         this.adminService = adminService;
         this.lotteryService = lotteryService;
         this.userAttemptService = userAttemptService;
@@ -54,6 +56,7 @@ public class AdminController {
         this.residenceHistoryService = residenceHistoryService;
         this.residenceEventService = residenceEventService;
         this.userStatusRefreshTask = userStatusRefreshTask;
+        this.hourlyRefreshTask = hourlyRefreshTask;
         this.decreeService = decreeService;
     }
 
@@ -1002,6 +1005,32 @@ public class AdminController {
         } catch (Exception e) {
             logger.error("更新命令信息失败", e);
             return ApiResponse.error("更新命令信息失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 手动触发每小时任务测试（管理员）
+     */
+    @PostMapping("/test-hourly-tasks")
+    public ApiResponse<Object> testHourlyTasks(HttpServletRequest request) {
+        try {
+            if (isInvalidAdmin(request)) {
+                return ApiResponse.error("未授权访问");
+            }
+            
+            logger.info("管理员手动触发每小时任务测试");
+            hourlyRefreshTask.testHourlyTasks();
+            
+            Object result = new Object() {
+                public final String message = "每小时任务测试已执行完成";
+                public final String description = "包括饥饿检查和特殊居住组合人口增长";
+                public final String nextScheduledTime = "下次自动执行：每小时的0分";
+            };
+            
+            return ApiResponse.success("任务执行成功", result);
+        } catch (Exception e) {
+            logger.error("手动触发每小时任务测试失败", e);
+            return ApiResponse.error("任务执行失败: " + e.getMessage());
         }
     }
 

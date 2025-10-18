@@ -24,16 +24,19 @@ public class HourlyRefreshTask {
     private StarCityService starCityService;
     
     /**
-     * 每小时执行特殊居住组合人口增长
+     * 每小时执行特殊居住组合人口增长和饥饿检查
      * cron表达式: 秒 分 时 日 月 周
      * "0 0 * * * ?" 表示每小时的0分0秒执行
      */
     @Scheduled(cron = "0 0 * * * ?")
     public void hourlyPopulationBonus() {
-        logger.info("开始执行每小时特殊居住组合人口增长...");
+        logger.info("开始执行每小时特殊居住组合人口增长和饥饿检查...");
         
         try {
-            // 计算当前特殊居住组合的人口增长加成
+            // 1. 检查并处理人口饥饿
+            starCityService.checkAndHandleStarvation();
+            
+            // 2. 计算当前特殊居住组合的人口增长加成
             int hourlyBonus = specialResidenceService.calculateHourlyPopulationBonus();
             
             if (hourlyBonus > 0) {
@@ -45,7 +48,7 @@ public class HourlyRefreshTask {
             }
             
         } catch (Exception e) {
-            logger.error("每小时特殊居住组合人口增长失败: {}", e.getMessage(), e);
+            logger.error("每小时特殊居住组合人口增长和饥饿检查失败: {}", e.getMessage(), e);
         }
     }
     
@@ -58,6 +61,10 @@ public class HourlyRefreshTask {
         logger.info("[测试] 执行每小时任务测试...");
         
         try {
+            // 1. 测试饥饿检查
+            starCityService.checkAndHandleStarvation();
+            
+            // 2. 测试人口增长
             int hourlyBonus = specialResidenceService.calculateHourlyPopulationBonus();
             if (hourlyBonus > 0) {
                 starCityService.applyHourlyPopulationBonus(hourlyBonus);

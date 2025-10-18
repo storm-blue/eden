@@ -6,101 +6,101 @@ import DecreeModal from './DecreeModal'
 import MagicModal from './MagicModal'
 
 const LotteryLuckyWheel = () => {
-  const [prizes, setPrizes] = useState([
-    { 
+    const [prizes, setPrizes] = useState([
+        {
             background: '#ffcdd2', // 浅粉红色 🌈
-      fonts: [{ 
-        text: '🍰', 
+            fonts: [{
+                text: '🍰',
                 top: '15%',
                 fontSize: '30px'
-      }, { 
+            }, {
                 text: '吃的～',
                 top: '55%',
-        fontSize: '16px',
+                fontSize: '16px',
                 fontColor: '#333',
-        fontWeight: 'bold'
-      }] 
-    },
-    { 
+                fontWeight: 'bold'
+            }]
+        },
+        {
             background: '#ffe0b2', // 浅橙色 🌈
-      fonts: [{ 
-        text: '🥤', 
+            fonts: [{
+                text: '🥤',
                 top: '15%',
-        fontSize: '35px'
-      }, { 
+                fontSize: '35px'
+            }, {
                 text: '喝的～',
                 top: '55%',
-        fontSize: '16px',
+                fontSize: '16px',
                 fontColor: '#333',
-        fontWeight: 'bold'
-      }] 
-    },
-    { 
+                fontWeight: 'bold'
+            }]
+        },
+        {
             background: '#fff9c4', // 浅黄色 🌈
-      fonts: [{ 
-        text: '❤️', 
+            fonts: [{
+                text: '❤️',
                 top: '15%',
-        fontSize: '35px'
-      }, { 
+                fontSize: '35px'
+            }, {
                 text: '爱',
                 top: '55%',
-        fontSize: '18px',
-        fontColor: '#333',
-        fontWeight: 'bold'
-      }] 
-    },
-    { 
+                fontSize: '18px',
+                fontColor: '#333',
+                fontWeight: 'bold'
+            }]
+        },
+        {
             background: '#c8e6c9', // 浅绿色 🌈
-      fonts: [{ 
-        text: '💸', 
+            fonts: [{
+                text: '💸',
                 top: '15%',
-        fontSize: '35px'
-      }, { 
-        text: '空空如也', 
+                fontSize: '35px'
+            }, {
+                text: '空空如也',
                 top: '55%',
-        fontSize: '14px',
+                fontSize: '14px',
                 fontColor: '#333',
-        fontWeight: 'bold'
-      }] 
-    },
-    { 
+                fontWeight: 'bold'
+            }]
+        },
+        {
             background: '#b3e5fc', // 浅青色 🌈
-      fonts: [{ 
-        text: '🧧', 
+            fonts: [{
+                text: '🧧',
                 top: '15%',
-        fontSize: '35px'
-      }, { 
-        text: '红包', 
+                fontSize: '35px'
+            }, {
+                text: '红包',
                 top: '55%',
-        fontSize: '18px',
-        fontColor: '#333',
-        fontWeight: 'bold'
-      }] 
-    },
-    { 
-            background: '#bbdefb', // 浅蓝色 🌈
-      fonts: [{ 
-        text: '🔄', 
-                top: '15%',
-                fontSize: '30px'
-      }, { 
-        text: '再转一次', 
-                top: '55%',
-        fontSize: '14px',
+                fontSize: '18px',
                 fontColor: '#333',
-        fontWeight: 'bold'
-      }] 
-    },
-    { 
-            background: '#e1bee7', // 浅紫色 🌈
-      fonts: [{ 
-        text: '🎁', 
+                fontWeight: 'bold'
+            }]
+        },
+        {
+            background: '#bbdefb', // 浅蓝色 🌈
+            fonts: [{
+                text: '🔄',
                 top: '15%',
                 fontSize: '30px'
-      }, { 
-        text: '随机礼物', 
+            }, {
+                text: '再转一次',
                 top: '55%',
-        fontSize: '14px',
+                fontSize: '14px',
+                fontColor: '#333',
+                fontWeight: 'bold'
+            }]
+        },
+        {
+            background: '#e1bee7', // 浅紫色 🌈
+            fonts: [{
+                text: '🎁',
+                top: '15%',
+                fontSize: '30px'
+            }, {
+                text: '随机礼物',
+                top: '55%',
+                fontSize: '14px',
                 fontColor: '#333',
                 fontWeight: 'bold'
             }]
@@ -130,74 +130,74 @@ const LotteryLuckyWheel = () => {
                 top: '55%',
                 fontSize: '14px',
                 fontColor: '#333',
-        fontWeight: 'bold'
-      }] 
-    },
-  ])
+                fontWeight: 'bold'
+            }]
+        },
+    ])
 
-  const [blocks, setBlocks] = useState([
-    { 
+    const [blocks, setBlocks] = useState([
+        {
             padding: '10px',
-      background: '#ff6ec7', // 亮粉色外圈 🌈
-      paddingColor: '#ffea00'
-    },
-    { 
+            background: '#ff6ec7', // 亮粉色外圈 🌈
+            paddingColor: '#ffea00'
+        },
+        {
             padding: '10px',
-      background: '#ffffff', // 纯白色内圈
-      paddingColor: '#00e5ff'
-    }
-  ])
+            background: '#ffffff', // 纯白色内圈
+            paddingColor: '#00e5ff'
+        }
+    ])
 
-  const [buttons, setButtons] = useState([
-    { 
-      radius: '55px', 
+    const [buttons, setButtons] = useState([
+        {
+            radius: '55px',
             background: '#ff6ec7', // 明亮红色外圈 🌈
         },
         {
             radius: '50px',
             background: '#fff5ca' // 纯白中圈
-    },
-    { 
-      radius: '45px', 
+        },
+        {
+            radius: '45px',
             background: '#f0caff' // 纯白中圈
         },
         {
             radius: '40px',
             background: '#fdeeff' // 纯白中圈
-    },
-    { 
-      radius: '35px', 
+        },
+        {
+            radius: '35px',
             background: '#678cff', // 明亮蓝色内圈 🌈
-      pointer: true, // 官方指针配置
+            pointer: true, // 官方指针配置
             fonts: []
-    }
-  ])
+        }
+    ])
 
-  // 转盘配置
-  const [defaultConfig, setDefaultConfig] = useState({
-    gutter: 8,
-    offsetDegree: 0,
-    speed: 20,
-    accelerationTime: 3000,
-    decelerationTime: 3000
-  })
+    // 转盘配置
+    const [defaultConfig, setDefaultConfig] = useState({
+        gutter: 8,
+        offsetDegree: 0,
+        speed: 20,
+        accelerationTime: 3000,
+        decelerationTime: 3000
+    })
 
-  // 指针样式配置 - 让指针更细一些
-  const [defaultStyle, setDefaultStyle] = useState({
-    pointer: {
-      style: 'triangle',
-      background: '#ff1744',
-      borderColor: '#ffffff', 
-      borderWidth: 0.5, // 更细的边框
-      width: 10, // 指针宽度
-      height: 20 // 保持长度
-    }
-  })
+    // 指针样式配置 - 让指针更细一些
+    const [defaultStyle, setDefaultStyle] = useState({
+        pointer: {
+            style: 'triangle',
+            background: '#ff1744',
+            borderColor: '#ffffff',
+            borderWidth: 0.5, // 更细的边框
+            width: 10, // 指针宽度
+            height: 20 // 保持长度
+        }
+    })
 
-  const myLucky = useRef()
+    const myLucky = useRef()
     const starCityAudioRef = useRef() // 星星城背景音乐引用
-  const [isSpinning, setIsSpinning] = useState(false)
-  const [result, setResult] = useState('')
+    const [isSpinning, setIsSpinning] = useState(false)
+    const [result, setResult] = useState('')
     const [currentPrize, setCurrentPrize] = useState('') // 存储后端返回的奖品名称
     const [isMusicPlaying, setIsMusicPlaying] = useState(false) // 音乐播放状态
 
@@ -329,7 +329,7 @@ const LotteryLuckyWheel = () => {
     const [decrees, setDecrees] = useState([]) // 命令列表
     const [loadingDecrees, setLoadingDecrees] = useState(false) // 加载命令状态
     const [operatingDecree, setOperatingDecree] = useState(null) // 正在操作的命令code
-    
+
     // 彩虹显示控制
     const isRainbowActive = decrees.find(d => d.code === 'CREATE_RAINBOW')?.active || false
     const [showRainbow, setShowRainbow] = useState(false) // 控制彩虹是否显示
@@ -344,13 +344,13 @@ const LotteryLuckyWheel = () => {
     const [showWeatherChange, setShowWeatherChange] = useState(false) // 显示改变天气特效
 
     // 奖品名称映射（与后端保持一致）
-  const prizeNames = [
+    const prizeNames = [
         '🍰 吃的～',
         '🥤 喝的～',
         '❤️ 爱',
-    '💸 空空如也',
-    '🧧 红包',
-    '🔄 再转一次',
+        '💸 空空如也',
+        '🧧 红包',
+        '🔄 再转一次',
         '🎁 随机礼物',
         '💬 陪聊服务',
         '✨ 许愿一次'
@@ -438,11 +438,11 @@ const LotteryLuckyWheel = () => {
             console.error('获取命令状态失败:', error)
         }
     }
-    
+
     // 获取魔法列表
     const fetchMagics = async () => {
         if (userName !== '秦小淮') return
-        
+
         setLoadingMagics(true)
         try {
             const response = await fetch(`/api/magic/list?userId=${userName}`)
@@ -458,19 +458,19 @@ const LotteryLuckyWheel = () => {
             setLoadingMagics(false)
         }
     }
-    
+
     // 施展魔法
     const castMagic = async (code) => {
         if (userName !== '秦小淮') {
             alert('只有秦小淮可以施展魔法')
             return
         }
-        
+
         setCastingMagic(code)
         try {
             const response = await fetch('/api/magic/cast', {
                 method: 'POST',
-                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                headers: {'Content-Type': 'application/x-www-form-urlencoded'},
                 body: new URLSearchParams({
                     code: code,
                     userId: userName
@@ -480,17 +480,17 @@ const LotteryLuckyWheel = () => {
             if (data.success) {
                 // 刷新魔法列表
                 await fetchMagics()
-                
+
                 // 触发特效
                 if (code === 'FOOD_RAIN') {
                     triggerFoodRainEffect()
                 } else if (code === 'CHANGE_WEATHER') {
                     triggerWeatherChangeEffect()
                 }
-                
+
                 // 刷新星星城数据（食物已增加或天气已改变）
                 await fetchStarCityData()
-                
+
                 // 自动关闭魔法弹框
                 setShowMagicModal(false)
             } else {
@@ -503,7 +503,7 @@ const LotteryLuckyWheel = () => {
             setCastingMagic(null)
         }
     }
-    
+
     // 触发天降食物特效
     const triggerFoodRainEffect = () => {
         setShowFoodRain(true)
@@ -512,7 +512,7 @@ const LotteryLuckyWheel = () => {
             setShowFoodRain(false)
         }, 3000)
     }
-    
+
     // 触发改变天气特效
     const triggerWeatherChangeEffect = () => {
         setShowWeatherChange(true)
@@ -521,11 +521,11 @@ const LotteryLuckyWheel = () => {
             setShowWeatherChange(false)
         }, 2000)
     }
-    
+
     // 获取命令列表（仅秦小淮管理用）
     const fetchDecrees = async () => {
         if (userName !== '秦小淮') return
-        
+
         setLoadingDecrees(true)
         try {
             const response = await fetch(`/api/decree/list?userId=${userName}`)
@@ -560,7 +560,7 @@ const LotteryLuckyWheel = () => {
                 await fetchDecrees() // 刷新命令列表
                 await fetchAllDecrees() // 刷新所有用户可见的命令状态
                 await fetchStarCityData() // 刷新星星城数据（重新加载居民信息）
-                
+
                 // 自动关闭命令弹框
                 setShowDecreeModal(false)
             } else {
@@ -591,7 +591,7 @@ const LotteryLuckyWheel = () => {
                 // 静默成功，不弹窗提示
                 await fetchDecrees() // 刷新命令列表
                 await fetchAllDecrees() // 刷新所有用户可见的命令状态
-                
+
                 // 自动关闭命令弹框
                 setShowDecreeModal(false)
             } else {
@@ -910,7 +910,7 @@ const LotteryLuckyWheel = () => {
                 switch (prizeType) {
                     case '🍰 吃的～':
                         effectMessage = '食物 +1万'
-        break
+                        break
                     case '🥤 喝的～':
                         effectMessage = '食物 +0.5万，幸福 +1'
                         break
@@ -1279,7 +1279,7 @@ const LotteryLuckyWheel = () => {
             return () => clearTimeout(timer)
         }
     }, [isRainbowActive])
-    
+
     // 监听星星城页面状态，获取数据
     useEffect(() => {
         if (showStarCity) {
@@ -1734,11 +1734,11 @@ const LotteryLuckyWheel = () => {
                 }
 
                 // 后端抽奖成功，开始转盘动画
-    myLucky.current.play()
-    
+                myLucky.current.play()
+
                 // 延迟停止转盘，让动画更自然
-    setTimeout(() => {
-      myLucky.current.stop(selectedIndex)
+                setTimeout(() => {
+                    myLucky.current.stop(selectedIndex)
                 }, 1500)
 
                 // 刷新用户信息以显示最新的剩余次数
@@ -1756,7 +1756,7 @@ const LotteryLuckyWheel = () => {
     }
 
     const onEnd = async (prize) => {
-    setIsSpinning(false)
+        setIsSpinning(false)
 
         // 优先使用后端返回的奖品名称，如果没有则尝试解析转盘返回的索引
         if (currentPrize) {
@@ -1797,7 +1797,7 @@ const LotteryLuckyWheel = () => {
                 setShowLoveEffect(true)
                 // 不自动隐藏，等待用户点击
             } else {
-    setResult(prizeText)
+                setResult(prizeText)
             }
 
             // 检查是否抽到"再转一次"
@@ -1857,10 +1857,10 @@ const LotteryLuckyWheel = () => {
     const handleLoveContinue = () => {
         setShowLoveEffect(false)
         // 爱心特效结束后不需要额外操作
-  }
+    }
 
-  return (
-    <div className="lucky-lottery-container">
+    return (
+        <div className="lucky-lottery-container">
             {/* 星星城背景音乐（彻底修复双重下载） */}
             <audio
                 ref={starCityAudioRef}
@@ -1901,76 +1901,76 @@ const LotteryLuckyWheel = () => {
                         {starCityData?.weather === 'rainy' && (
                             <>
                                 {/* 雨滴 - 🚀 移动端优化：减少数量 */}
-                        {[...Array(isMobileDevice ? 30 : 60)].map((_, i) => {
-                            const delay = Math.random() * 3;
-                            // 手机端速度降低20%：基础速度从0.8-1.2秒增加到0.96-1.44秒
-                            const baseDuration = 0.8 + Math.random() * 0.4;
-                            const duration = isMobileDevice ? baseDuration * 1.2 : baseDuration;
-                            const left = Math.random() * 110;
-                            const startTop = -10 - Math.random() * 15;
-                            
-                            // 随机水平偏移 2-5vw，方向随机
-                            const horizontalDrift = (2 + Math.random() * 3) * (Math.random() > 0.5 ? 1 : -1);
-                            
-                            // 随机选择一个倾斜角度（对应偏移方向）
-                            const rotation = horizontalDrift > 0 ? '2deg' : '-2deg';
+                                {[...Array(isMobileDevice ? 30 : 60)].map((_, i) => {
+                                    const delay = Math.random() * 3;
+                                    // 手机端速度降低20%：基础速度从0.8-1.2秒增加到0.96-1.44秒
+                                    const baseDuration = 0.8 + Math.random() * 0.4;
+                                    const duration = isMobileDevice ? baseDuration * 1.2 : baseDuration;
+                                    const left = Math.random() * 110;
+                                    const startTop = -10 - Math.random() * 15;
 
-                            return (
-                                <div
-                                    key={`rain-${i}`}
-                                    style={{
-                                        position: 'absolute',
-                                        left: `${left}%`,
-                                        top: `${startTop}%`,
-                                        width: '2px',
-                                        height: '25px',
-                                        background: 'linear-gradient(180deg, transparent, rgba(174, 194, 224, 0.7), rgba(174, 194, 224, 0.9))',
-                                        animation: `rainDrop ${duration}s linear infinite`,
-                                        animationDelay: `${delay}s`,
-                                        opacity: 0.9,
-                                        willChange: 'transform',
-                                        transform: `rotate(${rotation}) translateZ(0)`,
-                                        transformOrigin: 'top center',
-                                        // 使用CSS变量传递水平偏移
-                                        '--rain-drift': `${horizontalDrift}vw`
-                                    }}
-                                />
-                            );
-                        })}
+                                    // 随机水平偏移 2-5vw，方向随机
+                                    const horizontalDrift = (2 + Math.random() * 3) * (Math.random() > 0.5 ? 1 : -1);
 
-                        {/* 雨雾效果 */}
-                        <div style={{
-                            position: 'absolute',
-                            top: 0,
-                            left: 0,
-                            right: 0,
-                            bottom: 0,
-                            background: 'linear-gradient(to bottom, rgba(100, 120, 150, 0.15), transparent 40%)',
-                            pointerEvents: 'none'
-                        }}/>
+                                    // 随机选择一个倾斜角度（对应偏移方向）
+                                    const rotation = horizontalDrift > 0 ? '2deg' : '-2deg';
 
-                        {/* 地面水花效果 - 🚀 移动端优化 */}
-                        {[...Array(isMobileDevice ? 8 : 15)].map((_, i) => {
-                            const delay = Math.random() * 2;
-                            const left = Math.random() * 100;
+                                    return (
+                                        <div
+                                            key={`rain-${i}`}
+                                            style={{
+                                                position: 'absolute',
+                                                left: `${left}%`,
+                                                top: `${startTop}%`,
+                                                width: '2px',
+                                                height: '25px',
+                                                background: 'linear-gradient(180deg, transparent, rgba(174, 194, 224, 0.7), rgba(174, 194, 224, 0.9))',
+                                                animation: `rainDrop ${duration}s linear infinite`,
+                                                animationDelay: `${delay}s`,
+                                                opacity: 0.9,
+                                                willChange: 'transform',
+                                                transform: `rotate(${rotation}) translateZ(0)`,
+                                                transformOrigin: 'top center',
+                                                // 使用CSS变量传递水平偏移
+                                                '--rain-drift': `${horizontalDrift}vw`
+                                            }}
+                                        />
+                                    );
+                                })}
 
-                            return (
-                                <div
-                                    key={`splash-${i}`}
-                                    style={{
-                                        position: 'absolute',
-                                        left: `${left}%`,
-                                        bottom: '5%',
-                                        width: '4px',
-                                        height: '4px',
-                                        borderRadius: '50%',
-                                        background: 'rgba(174, 194, 224, 0.6)',
-                                        animation: `rainSplash 1.2s ease-out infinite`,
-                                        animationDelay: `${delay}s`
-                                    }}
-                                />
-                            );
-                        })}
+                                {/* 雨雾效果 */}
+                                <div style={{
+                                    position: 'absolute',
+                                    top: 0,
+                                    left: 0,
+                                    right: 0,
+                                    bottom: 0,
+                                    background: 'linear-gradient(to bottom, rgba(100, 120, 150, 0.15), transparent 40%)',
+                                    pointerEvents: 'none'
+                                }}/>
+
+                                {/* 地面水花效果 - 🚀 移动端优化 */}
+                                {[...Array(isMobileDevice ? 8 : 15)].map((_, i) => {
+                                    const delay = Math.random() * 2;
+                                    const left = Math.random() * 100;
+
+                                    return (
+                                        <div
+                                            key={`splash-${i}`}
+                                            style={{
+                                                position: 'absolute',
+                                                left: `${left}%`,
+                                                bottom: '5%',
+                                                width: '4px',
+                                                height: '4px',
+                                                borderRadius: '50%',
+                                                background: 'rgba(174, 194, 224, 0.6)',
+                                                animation: `rainSplash 1.2s ease-out infinite`,
+                                                animationDelay: `${delay}s`
+                                            }}
+                                        />
+                                    );
+                                })}
                             </>
                         )}
 
@@ -1978,17 +1978,17 @@ const LotteryLuckyWheel = () => {
                         {starCityData?.weather === 'snowy' && (
                             <>
                                 {/* 雪花 - 🚀 移动端优化：减少数量 */}
-                        {[...Array(isMobileDevice ? 40 : 80)].map((_, i) => {
+                                {[...Array(isMobileDevice ? 40 : 80)].map((_, i) => {
                                     const delay = Math.random() * 8;
                                     const duration = 4 + Math.random() * 3;
                                     const left = Math.random() * 110;
                                     const startTop = -10 - Math.random() * 30;
                                     const size = 6 + Math.random() * 10;
-                                    
+
                                     // 为每片雪花生成独特的飘落轨迹
                                     const driftDistance = 30 + Math.random() * 50; // 水平飘移距离
                                     const swingCount = 2 + Math.random() * 3; // 摆动次数
-                                    
+
                                     return (
                                         <div
                                             key={`snow-${i}`}
@@ -2011,7 +2011,7 @@ const LotteryLuckyWheel = () => {
                                         </div>
                                     );
                                 })}
-                                
+
                                 {/* 雪雾效果 */}
                                 <div style={{
                                     position: 'absolute',
@@ -2036,7 +2036,7 @@ const LotteryLuckyWheel = () => {
                                     const scale = 0.6 + Math.random() * 0.6; // 随机大小 0.6-1.2
                                     const opacity = 0.4 + Math.random() * 0.3; // 随机透明度 0.4-0.7
                                     const cloudType = i % 3; // 3种云朵形状
-                                    
+
                                     return (
                                         <div
                                             key={`cloud-${i}`}
@@ -2065,7 +2065,7 @@ const LotteryLuckyWheel = () => {
                                                         borderRadius: '50%',
                                                         bottom: '0',
                                                         left: '35px'
-                                                    }} />
+                                                    }}/>
                                                     <div style={{
                                                         position: 'absolute',
                                                         width: '40px',
@@ -2074,7 +2074,7 @@ const LotteryLuckyWheel = () => {
                                                         borderRadius: '50%',
                                                         bottom: '5px',
                                                         left: '15px'
-                                                    }} />
+                                                    }}/>
                                                     <div style={{
                                                         position: 'absolute',
                                                         width: '45px',
@@ -2083,7 +2083,7 @@ const LotteryLuckyWheel = () => {
                                                         borderRadius: '50%',
                                                         top: '0',
                                                         left: '30px'
-                                                    }} />
+                                                    }}/>
                                                     <div style={{
                                                         position: 'absolute',
                                                         width: '35px',
@@ -2092,10 +2092,10 @@ const LotteryLuckyWheel = () => {
                                                         borderRadius: '50%',
                                                         bottom: '3px',
                                                         right: '10px'
-                                                    }} />
+                                                    }}/>
                                                 </>
                                             )}
-                                            
+
                                             {/* 云朵类型2：扁平型 */}
                                             {cloudType === 1 && (
                                                 <>
@@ -2107,7 +2107,7 @@ const LotteryLuckyWheel = () => {
                                                         borderRadius: '50%',
                                                         bottom: '0',
                                                         left: '30px'
-                                                    }} />
+                                                    }}/>
                                                     <div style={{
                                                         position: 'absolute',
                                                         width: '45px',
@@ -2116,7 +2116,7 @@ const LotteryLuckyWheel = () => {
                                                         borderRadius: '50%',
                                                         bottom: '8px',
                                                         left: '10px'
-                                                    }} />
+                                                    }}/>
                                                     <div style={{
                                                         position: 'absolute',
                                                         width: '38px',
@@ -2125,7 +2125,7 @@ const LotteryLuckyWheel = () => {
                                                         borderRadius: '50%',
                                                         bottom: '5px',
                                                         left: '45px'
-                                                    }} />
+                                                    }}/>
                                                     <div style={{
                                                         position: 'absolute',
                                                         width: '32px',
@@ -2134,10 +2134,10 @@ const LotteryLuckyWheel = () => {
                                                         borderRadius: '50%',
                                                         bottom: '2px',
                                                         right: '15px'
-                                                    }} />
+                                                    }}/>
                                                 </>
                                             )}
-                                            
+
                                             {/* 云朵类型3：蓬松型 */}
                                             {cloudType === 2 && (
                                                 <>
@@ -2149,7 +2149,7 @@ const LotteryLuckyWheel = () => {
                                                         borderRadius: '50%',
                                                         top: '5px',
                                                         left: '25px'
-                                                    }} />
+                                                    }}/>
                                                     <div style={{
                                                         position: 'absolute',
                                                         width: '38px',
@@ -2158,7 +2158,7 @@ const LotteryLuckyWheel = () => {
                                                         borderRadius: '50%',
                                                         top: '0',
                                                         left: '45px'
-                                                    }} />
+                                                    }}/>
                                                     <div style={{
                                                         position: 'absolute',
                                                         width: '35px',
@@ -2167,7 +2167,7 @@ const LotteryLuckyWheel = () => {
                                                         borderRadius: '50%',
                                                         top: '8px',
                                                         left: '5px'
-                                                    }} />
+                                                    }}/>
                                                     <div style={{
                                                         position: 'absolute',
                                                         width: '48px',
@@ -2176,7 +2176,7 @@ const LotteryLuckyWheel = () => {
                                                         borderRadius: '50%',
                                                         bottom: '0',
                                                         left: '20px'
-                                                    }} />
+                                                    }}/>
                                                     <div style={{
                                                         position: 'absolute',
                                                         width: '30px',
@@ -2185,13 +2185,13 @@ const LotteryLuckyWheel = () => {
                                                         borderRadius: '50%',
                                                         bottom: '5px',
                                                         right: '12px'
-                                                    }} />
+                                                    }}/>
                                                 </>
                                             )}
                                         </div>
                                     );
                                 })}
-                                
+
                                 {/* 灰色整体色调 */}
                                 <div style={{
                                     position: 'absolute',
@@ -2253,9 +2253,9 @@ const LotteryLuckyWheel = () => {
                                                     radial-gradient(circle at 40% 70%, rgba(190, 205, 225, 0.12) 0%, transparent 25%)
                                                 `,
                                                 opacity: 0.7
-                                            }} />
+                                            }}/>
                                         </div>
-                                        
+
                                         {/* 遮挡阴影 - 创建月牙效果（左侧遮挡）*/}
                                         <div style={{
                                             position: 'absolute',
@@ -2266,17 +2266,17 @@ const LotteryLuckyWheel = () => {
                                             borderRadius: '50%',
                                             background: 'radial-gradient(circle, rgba(10, 20, 45, 0.85) 0%, rgba(15, 25, 50, 0.75) 40%, rgba(20, 30, 55, 0.5) 65%, transparent 100%)',
                                             filter: 'blur(3px)'
-                                        }} />
+                                        }}/>
                                     </div>
                                 </div>
-                                
+
                                 {/* 星星 - 🚀 移动端优化：减少数量 */}
                                 {[...Array(isMobileDevice ? 20 : 40)].map((_, i) => {
                                     const starCount = isMobileDevice ? 20 : 40;
                                     const quarterCount = Math.floor(starCount / 4);
-                                    
+
                                     let top, left;
-                                    
+
                                     // 将星星分成4组，分布在上半部的四个边框区域
                                     if (i < quarterCount) {
                                         // 左上角：左边框 0-8%，上半部 0-50%
@@ -2295,12 +2295,12 @@ const LotteryLuckyWheel = () => {
                                         left = 92 + Math.random() * 8;
                                         top = Math.random() * 50;
                                     }
-                                    
+
                                     const delay = Math.random() * 3;
                                     const duration = 1.5 + Math.random() * 1.5;
                                     const size = 2 + Math.random() * 2; // 星星大小 2-4px
                                     const brightness = 0.6 + Math.random() * 0.4; // 亮度 0.6-1.0
-                                    
+
                                     return (
                                         <div
                                             key={`star-${i}`}
@@ -2329,8 +2329,8 @@ const LotteryLuckyWheel = () => {
                                                     0 0 ${size * 2}px rgba(255, 255, 255, ${brightness * 0.6}),
                                                     0 0 ${size * 4}px rgba(200, 220, 255, ${brightness * 0.3})
                                                 `
-                                            }} />
-                                            
+                                            }}/>
+
                                             {/* 星星十字光芒 */}
                                             <div style={{
                                                 position: 'absolute',
@@ -2340,7 +2340,7 @@ const LotteryLuckyWheel = () => {
                                                 height: '1px',
                                                 background: `linear-gradient(to right, transparent, rgba(255, 255, 255, ${brightness * 0.5}), transparent)`,
                                                 transform: 'translate(-50%, -50%)'
-                                            }} />
+                                            }}/>
                                             <div style={{
                                                 position: 'absolute',
                                                 top: '50%',
@@ -2349,11 +2349,11 @@ const LotteryLuckyWheel = () => {
                                                 height: `${size * 3}px`,
                                                 background: `linear-gradient(to bottom, transparent, rgba(255, 255, 255, ${brightness * 0.5}), transparent)`,
                                                 transform: 'translate(-50%, -50%)'
-                                            }} />
+                                            }}/>
                                         </div>
                                     );
                                 })}
-                                
+
                                 {/* 夜晚遮罩 */}
                                 <div style={{
                                     position: 'absolute',
@@ -2363,7 +2363,7 @@ const LotteryLuckyWheel = () => {
                                     bottom: 0,
                                     background: 'rgba(0, 10, 30, 0.4)',
                                     pointerEvents: 'none'
-                                }} />
+                                }}/>
                             </>
                         )}
 
@@ -2383,8 +2383,8 @@ const LotteryLuckyWheel = () => {
                                     pointerEvents: 'none',
                                     zIndex: 5,
                                     animation: 'sunPulse 4s ease-in-out infinite'
-                                }} />
-                                
+                                }}/>
+
                                 {/* 阳光光束 - 从太阳向左下角90度扇形区域发射 */}
                                 {[...Array(isMobileDevice ? 3 : 7)].map((_, i) => {
                                     const beamCount = isMobileDevice ? 5 : 7;
@@ -2394,10 +2394,10 @@ const LotteryLuckyWheel = () => {
                                     const delay = i * 1.8; // 错开出现时间
                                     const startWidth = 15 + Math.random() * 15; // 起始宽度 15-30px
                                     const endWidth = 60 + Math.random() * 30; // 结束宽度 60-90px（不超过太阳直径）
-                                    
+
                                     const sunSize = isMobileDevice ? 60 : 80;
                                     const sunCenter = sunSize / 2;
-                                    
+
                                     return (
                                         <div
                                             key={`sunbeam-${i}`}
@@ -2433,11 +2433,11 @@ const LotteryLuckyWheel = () => {
                                                 '--beam-end-width': `${endWidth}px`,
                                                 '--beam-half-start': `${startWidth / 2}px`,
                                                 '--beam-half-end': `${endWidth / 2}px`
-                                            }} />
+                                            }}/>
                                         </div>
                                     );
                                 })}
-                                
+
                                 {/* 温暖的整体色调 */}
                                 <div style={{
                                     position: 'absolute',
@@ -2450,7 +2450,7 @@ const LotteryLuckyWheel = () => {
                                 }}/>
                             </>
                         )}
-                        
+
                         {/* 彩虹特效（命令激活时显示） */}
                         {showRainbow && (
                             <div style={{
@@ -2467,13 +2467,13 @@ const LotteryLuckyWheel = () => {
                             }}>
                                 {/* 彩虹弧形 - 使用多个圆环叠加 */}
                                 {[
-                                    { color: 'rgba(255, 0, 0, 0.6)', size: 80 },      // 红色
-                                    { color: 'rgba(255, 165, 0, 0.6)', size: 76 },    // 橙色
-                                    { color: 'rgba(255, 255, 0, 0.6)', size: 70 },    // 黄色
-                                    { color: 'rgba(0, 255, 0, 0.6)', size: 66 },      // 绿色
-                                    { color: 'rgba(0, 127, 255, 0.6)', size: 62 },    // 蓝色
-                                    { color: 'rgba(75, 0, 130, 0.6)', size: 58 },     // 靛色
-                                    { color: 'rgba(148, 0, 211, 0.6)', size: 54 }     // 紫色
+                                    {color: 'rgba(255, 0, 0, 0.6)', size: 80},      // 红色
+                                    {color: 'rgba(255, 165, 0, 0.6)', size: 76},    // 橙色
+                                    {color: 'rgba(255, 255, 0, 0.6)', size: 70},    // 黄色
+                                    {color: 'rgba(0, 255, 0, 0.6)', size: 66},      // 绿色
+                                    {color: 'rgba(0, 127, 255, 0.6)', size: 62},    // 蓝色
+                                    {color: 'rgba(75, 0, 130, 0.6)', size: 58},     // 靛色
+                                    {color: 'rgba(148, 0, 211, 0.6)', size: 54}     // 紫色
                                 ].map((band, i) => (
                                     <div
                                         key={`rainbow-band-${i}`}
@@ -2492,7 +2492,7 @@ const LotteryLuckyWheel = () => {
                                         }}
                                     />
                                 ))}
-                                
+
                                 {/* 彩虹光晕效果 */}
                                 <div style={{
                                     position: 'absolute',
@@ -2506,10 +2506,10 @@ const LotteryLuckyWheel = () => {
                                     clipPath: 'polygon(0 0, 100% 0, 100% 50%, 0 50%)',
                                     filter: 'blur(15px)',
                                     opacity: 0.5
-                                }} />
+                                }}/>
                             </div>
                         )}
-                        
+
                         {/* 天降食物特效（施展魔法时显示） */}
                         {showFoodRain && (
                             <div style={{
@@ -2523,32 +2523,88 @@ const LotteryLuckyWheel = () => {
                                 overflow: 'hidden'
                             }}>
                                 {/* 生成多个食物emoji */}
-                                {[...Array(30)].map((_, i) => {
-                                    const foodEmojis = ['🍰', '🥤', '🍕', '🍔', '🍟', '🌭', '🥗', '🍜', '🍱', '🍙']
+                                {[...Array(50)].map((_, i) => {
+                                    const foodEmojis = ['🍰', '🥤', '🍕', '🍔', '🍟', '🌭', '🥗', '🍜', '🍱', '🍙', '🍎', '🍌', '🍇', '🥕', '🥔']
                                     const emoji = foodEmojis[i % foodEmojis.length]
                                     const left = Math.random() * 100
-                                    const delay = Math.random() * 0.5
-                                    const duration = 2 + Math.random() * 1
-                                    
+                                    const delay = Math.random() * 1.5
+                                    const duration = 2.5 + Math.random() * 1.5
+                                    const size = 20 + Math.random() * 20 // 20-40px随机大小
+                                    const rotation = Math.random() * 360 // 随机初始旋转角度
+                                    const sway = Math.random() * 20 - 10 // -10到10的左右摆动
+
                                     return (
                                         <div
                                             key={`food-${i}`}
                                             style={{
                                                 position: 'absolute',
-                                                top: '-50px',
+                                                top: '-80px',
                                                 left: `${left}%`,
-                                                fontSize: isMobileDevice ? '30px' : '40px',
-                                                animation: `foodFall ${duration}s ease-in ${delay}s forwards`,
-                                                opacity: 0
+                                                fontSize: `${size}px`,
+                                                animation: `foodFallRealistic ${duration}s ease-in ${delay}s forwards`,
+                                                opacity: 0,
+                                                transform: `rotate(${rotation}deg)`,
+                                                filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.3))',
+                                                zIndex: Math.floor(Math.random() * 10) + 1
                                             }}
                                         >
-                                            {emoji}
+                                            {/* 食物阴影 */}
+                                            <div style={{
+                                                position: 'absolute',
+                                                top: '2px',
+                                                left: '2px',
+                                                fontSize: `${size}px`,
+                                                color: 'rgba(0,0,0,0.2)',
+                                                zIndex: -1,
+                                                animation: `foodShadow ${duration}s ease-in ${delay}s forwards`
+                                            }}>
+                                                {emoji}
+                                            </div>
+
+                                            {/* 食物本体 */}
+                                            <div style={{
+                                                position: 'relative',
+                                                zIndex: 1,
+                                                animation: `foodSway ${duration}s ease-in-out ${delay}s infinite`
+                                            }}>
+                                                {emoji}
+                                            </div>
                                         </div>
                                     )
                                 })}
+
+                                {/* 地面收集效果 */}
+                                <div style={{
+                                    position: 'absolute',
+                                    bottom: '0',
+                                    left: '0',
+                                    width: '100%',
+                                    height: '60px',
+                                    background: 'linear-gradient(to top, rgba(139, 69, 19, 0.3), transparent)',
+                                    animation: 'foodCollection 3s ease-out 1s forwards',
+                                    opacity: 0
+                                }}>
+                                    {/* 收集粒子 */}
+                                    {[...Array(15)].map((_, i) => (
+                                        <div
+                                            key={`collection-${i}`}
+                                            style={{
+                                                position: 'absolute',
+                                                bottom: '10px',
+                                                left: `${Math.random() * 100}%`,
+                                                width: '8px',
+                                                height: '8px',
+                                                background: 'rgba(255, 215, 0, 0.8)',
+                                                borderRadius: '50%',
+                                                animation: `collectionSparkle 2s ease-out ${1.5 + Math.random() * 1}s forwards`,
+                                                opacity: 0
+                                            }}
+                                        />
+                                    ))}
+                                </div>
                             </div>
                         )}
-                        
+
                         {/* 改变天气特效（施展魔法时显示） */}
                         {showWeatherChange && (
                             <div style={{
@@ -2573,8 +2629,8 @@ const LotteryLuckyWheel = () => {
                                     background: 'radial-gradient(circle, rgba(255, 255, 255, 0.8) 0%, rgba(135, 206, 235, 0.6) 30%, rgba(70, 130, 180, 0.4) 60%, transparent 100%)',
                                     animation: 'weatherChangePulse 2s ease-out forwards',
                                     filter: 'blur(2px)'
-                                }} />
-                                
+                                }}/>
+
                                 {/* 天气图标变化 */}
                                 {['☀️', '🌧️', '❄️', '☁️', '🌙'].map((icon, i) => (
                                     <div
@@ -2592,7 +2648,7 @@ const LotteryLuckyWheel = () => {
                                         {icon}
                                     </div>
                                 ))}
-                                
+
                                 {/* 魔法粒子 */}
                                 {[...Array(20)].map((_, i) => (
                                     <div
@@ -2672,7 +2728,7 @@ const LotteryLuckyWheel = () => {
                             >
                                 📜 颁布命令
                             </button>
-                            
+
                             {/* 魔法按钮 */}
                             <button
                                 onClick={() => {
@@ -3126,6 +3182,74 @@ const LotteryLuckyWheel = () => {
                                     }}>
                                         每小时人口 +{specialCombos.totalHourlyBonus}
                                     </div>
+                                </div>
+                            )}
+
+                            {/* 饥饿警告特效 */}
+                            {starCityData && starCityData.food < starCityData.population && (
+                                <div className="starvation-warning" style={{
+                                    marginTop: '6px',
+                                    padding: '4px 6px',
+                                    background: 'rgba(255, 0, 0, 0.3)',
+                                    borderRadius: '4px',
+                                    border: '1px solid rgba(255, 0, 0, 0.5)',
+                                    animation: 'starvationPulse 1.5s ease-in-out infinite',
+                                    position: 'relative',
+                                    overflow: 'hidden'
+                                }}>
+                                    {/* 饥饿警告文字 */}
+                                    <div style={{
+                                        fontSize: '8px',
+                                        color: '#FF4444',
+                                        marginBottom: '1px',
+                                        fontWeight: 'bold'
+                                    }}>
+                                        ⚠️ 食物不足！人口正在下降
+                                    </div>
+                                    <div style={{fontSize: '7px', lineHeight: '1.1', color: '#FF6666'}}>
+                                        每小时人口-2000
+                                    </div>
+
+                                    {/* 饥饿粒子特效 */}
+                                    <div style={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        right: 0,
+                                        bottom: 0,
+                                        pointerEvents: 'none',
+                                        overflow: 'hidden'
+                                    }}>
+                                        {[...Array(8)].map((_, i) => (
+                                            <div
+                                                key={`starvation-particle-${i}`}
+                                                style={{
+                                                    position: 'absolute',
+                                                    top: `${Math.random() * 100}%`,
+                                                    left: `${Math.random() * 100}%`,
+                                                    width: '2px',
+                                                    height: '2px',
+                                                    background: 'rgba(255, 100, 100, 0.8)',
+                                                    borderRadius: '50%',
+                                                    animation: `starvationParticle ${1 + Math.random() * 0.5}s ease-in-out infinite`,
+                                                    animationDelay: `${Math.random() * 0.5}s`
+                                                }}
+                                            />
+                                        ))}
+                                    </div>
+
+                                    {/* 闪烁边框 */}
+                                    <div style={{
+                                        position: 'absolute',
+                                        top: 0,
+                                        left: 0,
+                                        right: 0,
+                                        bottom: 0,
+                                        border: '1px solid rgba(255, 0, 0, 0.8)',
+                                        borderRadius: '4px',
+                                        animation: 'starvationBorder 0.8s ease-in-out infinite',
+                                        pointerEvents: 'none'
+                                    }}/>
                                 </div>
                             )}
 
@@ -3834,13 +3958,13 @@ const LotteryLuckyWheel = () => {
                 </div>
             )}
 
-      {/* 标题 */}
-      <div className="header">
-        <h1 className="title">🎪 Eden欢乐抽奖 🎪</h1>
+            {/* 标题 */}
+            <div className="header">
+                <h1 className="title">🎪 Eden欢乐抽奖 🎪</h1>
                 <p className="subtitle">
                     {userName ? `${userName}，转动转盘，好运连连！` : '转动转盘，好运连连！'}
                 </p>
-      </div>
+            </div>
 
             {/* 右上角按钮组 */}
             {userName && userInfo && userInfo.message !== "用户不存在" && (
@@ -3856,7 +3980,7 @@ const LotteryLuckyWheel = () => {
                             <span className="top-button-badge">{userInfo.wishCount}</span>
                         )}
                     </button>
-                    
+
                     {/* 星星城按钮 */}
                     <button
                         className="top-button star-city-button-top"
@@ -3865,7 +3989,7 @@ const LotteryLuckyWheel = () => {
                     >
                         🏰
                     </button>
-                    
+
                     {/* 我的奖品按钮 */}
                     <button
                         className="top-button help-button-top"
@@ -3883,265 +4007,265 @@ const LotteryLuckyWheel = () => {
             {/* 🚀 性能优化：只在非星星城和非许愿页面时渲染轮盘 */}
             {!showStarCity && !showWishPage && (
                 <>
-      {/* 转盘区域 */}
-      <div className="wheel-container">
-        <LuckyWheel
-          ref={myLucky}
-          width="380px"
-          height="380px"
-          prizes={prizes}
-          blocks={blocks}
-          buttons={buttons}
-          defaultConfig={defaultConfig}
-          defaultStyle={defaultStyle}
-                    onStart={() => {
-                    }} // 点击抽奖按钮会触发
-          onEnd={onEnd}
-        />
-                {/* 转盘中心显示剩余次数 */}
-                {userName && (
-                    <div className="wheel-center-info">
-                        <div className="center-remaining-draws">
-                            剩余
-                        </div>
-                        <div className="center-remaining-number">
-                            {userInfo ? userInfo.remainingDraws : 0}
-                        </div>
-                        <div className="center-remaining-unit">
-                            次
-                        </div>
-                    </div>
-                )}
-      </div>
-
-      {/* 控制按钮 */}
-      <div className="controls">
-                {/* 用户信息行 */}
-                {userName && (
-                    <div className="user-info-row">
-                        <div
-                            className={`current-user ${isSpinning ? 'disabled' : 'clickable'}`}
-                            onClick={() => {
-                                if (!isSpinning) {
-                                    setShowNameInput(true)
-                                    setTempName(userName)
-                                }
-                            }}
-                            title="点击修改姓名"
-                        >
-                            👤 {userName}
-                        </div>
-                    </div>
-                )}
-        
-                {/* 开始抽奖按钮 */}
-        <button 
-                    className={`spin-button ${isSpinning || !userName || !userInfo || showWelcomeEffect || !welcomeEffectFinished || userInfo.remainingDraws <= 0 ? 'disabled' : ''}`}
-                    onClick={startSpin}
-                    disabled={isSpinning || !userName || !userInfo || showWelcomeEffect || !welcomeEffectFinished || userInfo.remainingDraws <= 0}
-                >
-                    {isSpinning ? '🎯 转动中...' :
-                        showWelcomeEffect ? '🎪 欢迎特效中...' :
-                            !welcomeEffectFinished ? '🎪 欢迎特效中...' :
-                                (!userInfo || userInfo.message === "用户不存在") ? '👤 用户不存在' :
-                                    (userInfo.remainingDraws <= 0) ? '🚫 次数已用完' :
-                                        '🎲 转动命运'}
-        </button>
-      </div>
-
-      {/* 结果显示 */}
-      {result && (
-        <div className="result-modal">
-          <div className="result-content">
-            <h2 className="result-title">🎉 恭喜你获得 🎉</h2>
-            <div className="result-prize">{result}</div>
-                        <div className="result-description">
-                            {getRandomPrizeDescription(result)}
-                        </div>
-                        {result === '✨ 许愿一次' ? (
-                            <div className="wish-buttons">
-                                <button
-                                    className="wish-button"
-                                    onClick={() => {
-                                        setResult('')
-                                        setCurrentPrize('')
-                                        setShowWishPage(true)
-                                    }}
-                                >
-                                    ✨ 许愿
-                                </button>
-                                <button
-                                    className="give-up-button"
-                                    onClick={() => {
-                                        setResult('')
-                                        setCurrentPrize('')
-                                    }}
-                                >
-                                    以后
-                                </button>
+                    {/* 转盘区域 */}
+                    <div className="wheel-container">
+                        <LuckyWheel
+                            ref={myLucky}
+                            width="380px"
+                            height="380px"
+                            prizes={prizes}
+                            blocks={blocks}
+                            buttons={buttons}
+                            defaultConfig={defaultConfig}
+                            defaultStyle={defaultStyle}
+                            onStart={() => {
+                            }} // 点击抽奖按钮会触发
+                            onEnd={onEnd}
+                        />
+                        {/* 转盘中心显示剩余次数 */}
+                        {userName && (
+                            <div className="wheel-center-info">
+                                <div className="center-remaining-draws">
+                                    剩余
+                                </div>
+                                <div className="center-remaining-number">
+                                    {userInfo ? userInfo.remainingDraws : 0}
+                                </div>
+                                <div className="center-remaining-unit">
+                                    次
+                                </div>
                             </div>
-                        ) : (
-            <button 
-              className="continue-button"
-                                onClick={() => {
-                                    setResult('')
-                                    setCurrentPrize('')
-                                }}
-            >
-              继续游戏
-            </button>
                         )}
                     </div>
-                </div>
-            )}
 
-            {/* 欢迎特效 */}
-            {showWelcomeEffect && (
-                <div className="welcome-effect-overlay" onClick={handleWelcomeContinue}>
-                    <div className="welcome-effect-container">
-                        {/* 礼花特效 */}
-                        <div className="fireworks">
-                            <div className="firework firework-1">
-                                <div className="explosion explosion-1"></div>
-                            </div>
-                            <div className="firework firework-2">
-                                <div className="explosion explosion-2"></div>
-                            </div>
-                            <div className="firework firework-3">
-                                <div className="explosion explosion-3"></div>
-                            </div>
-                            <div className="firework firework-4">
-                                <div className="explosion explosion-4"></div>
-                            </div>
-                            <div className="firework firework-5">
-                                <div className="explosion explosion-5"></div>
-                            </div>
-                        </div>
-
-                        {/* 闪烁星星 */}
-                        <div className="sparkles">
-                            <div className="sparkle sparkle-1">⭐</div>
-                            <div className="sparkle sparkle-2">🌟</div>
-                            <div className="sparkle sparkle-3">✨</div>
-                            <div className="sparkle sparkle-4">💫</div>
-                            <div className="sparkle sparkle-5">⭐</div>
-                            <div className="sparkle sparkle-6">🌟</div>
-                            <div className="sparkle sparkle-7">✨</div>
-                            <div className="sparkle sparkle-8">💫</div>
-                        </div>
-
-                        {/* 欢迎文字 */}
-                        <div className="welcome-text">
-                            <h1 className="welcome-title">欢迎宝宝大人</h1>
-                            <p className="welcome-subtitle">✨ {userName} ✨</p>
-                            <p className="welcome-message">准备好接受命运的眷顾了吗？</p>
-                            <p className="welcome-continue-hint">点击继续 🎯</p>
-                        </div>
-
-                        {/* 彩带效果 */}
-                        <div className="confetti">
-                            <div className="confetti-piece confetti-1"></div>
-                            <div className="confetti-piece confetti-2"></div>
-                            <div className="confetti-piece confetti-3"></div>
-                            <div className="confetti-piece confetti-4"></div>
-                            <div className="confetti-piece confetti-5"></div>
-                            <div className="confetti-piece confetti-6"></div>
-                            <div className="confetti-piece confetti-7"></div>
-                            <div className="confetti-piece confetti-8"></div>
-                        </div>
-                    </div>
-                </div>
-            )}
-
-            {/* 爱心特效 */}
-            {showLoveEffect && (
-                <div className="love-effect-overlay" onClick={handleLoveContinue}>
-                    <div className="love-effect-container">
-                        {/* 背景爱心雨 */}
-                        <div className="love-rain">
-                            <div className="love-drop love-drop-1">💕</div>
-                            <div className="love-drop love-drop-2">💖</div>
-                            <div className="love-drop love-drop-3">💗</div>
-                            <div className="love-drop love-drop-4">💝</div>
-                            <div className="love-drop love-drop-5">💞</div>
-                            <div className="love-drop love-drop-6">💕</div>
-                            <div className="love-drop love-drop-7">💖</div>
-                            <div className="love-drop love-drop-8">💗</div>
-                        </div>
-
-                        {/* 中心立体爱心 */}
-                        <div className="love-heart-container">
-                            <div className="love-heart-3d">
-                                <div className="css-heart">
-                                    <div className="heart-left"></div>
-                                    <div className="heart-right"></div>
+                    {/* 控制按钮 */}
+                    <div className="controls">
+                        {/* 用户信息行 */}
+                        {userName && (
+                            <div className="user-info-row">
+                                <div
+                                    className={`current-user ${isSpinning ? 'disabled' : 'clickable'}`}
+                                    onClick={() => {
+                                        if (!isSpinning) {
+                                            setShowNameInput(true)
+                                            setTempName(userName)
+                                        }
+                                    }}
+                                    title="点击修改姓名"
+                                >
+                                    👤 {userName}
                                 </div>
                             </div>
+                        )}
 
-                            {/* 爱心光环 */}
-                            <div className="love-halo love-halo-1"></div>
-                            <div className="love-halo love-halo-2"></div>
-                            <div className="love-halo love-halo-3"></div>
-                        </div>
-
-                        {/* 爱心文字 */}
-                        <div className="love-text">
-                            <h1 className="love-title">亲爱的小猫咪</h1>
-                            <p className="love-subtitle">✨ 你就是我的心脏 ✨</p>
-                            <p className="love-continue-hint">点击继续 💕</p>
-                        </div>
+                        {/* 开始抽奖按钮 */}
+                        <button
+                            className={`spin-button ${isSpinning || !userName || !userInfo || showWelcomeEffect || !welcomeEffectFinished || userInfo.remainingDraws <= 0 ? 'disabled' : ''}`}
+                            onClick={startSpin}
+                            disabled={isSpinning || !userName || !userInfo || showWelcomeEffect || !welcomeEffectFinished || userInfo.remainingDraws <= 0}
+                        >
+                            {isSpinning ? '🎯 转动中...' :
+                                showWelcomeEffect ? '🎪 欢迎特效中...' :
+                                    !welcomeEffectFinished ? '🎪 欢迎特效中...' :
+                                        (!userInfo || userInfo.message === "用户不存在") ? '👤 用户不存在' :
+                                            (userInfo.remainingDraws <= 0) ? '🚫 次数已用完' :
+                                                '🎲 转动命运'}
+                        </button>
                     </div>
-                </div>
-            )}
 
-            {/* 奖品统计弹窗 */}
-            {showPrizeStats && (
-                <div className="prize-stats-overlay">
-                    <div className="prize-stats-modal">
-                        <div className="prize-stats-header">
-                            <h3>🏆 我的奖品</h3>
-                            <button
-                                className="prize-stats-close"
-                                onClick={() => setShowPrizeStats(false)}
-                            >
-                                ✕
-                            </button>
+                    {/* 结果显示 */}
+                    {result && (
+                        <div className="result-modal">
+                            <div className="result-content">
+                                <h2 className="result-title">🎉 恭喜你获得 🎉</h2>
+                                <div className="result-prize">{result}</div>
+                                <div className="result-description">
+                                    {getRandomPrizeDescription(result)}
+                                </div>
+                                {result === '✨ 许愿一次' ? (
+                                    <div className="wish-buttons">
+                                        <button
+                                            className="wish-button"
+                                            onClick={() => {
+                                                setResult('')
+                                                setCurrentPrize('')
+                                                setShowWishPage(true)
+                                            }}
+                                        >
+                                            ✨ 许愿
+                                        </button>
+                                        <button
+                                            className="give-up-button"
+                                            onClick={() => {
+                                                setResult('')
+                                                setCurrentPrize('')
+                                            }}
+                                        >
+                                            以后
+                                        </button>
+                                    </div>
+                                ) : (
+                                    <button
+                                        className="continue-button"
+                                        onClick={() => {
+                                            setResult('')
+                                            setCurrentPrize('')
+                                        }}
+                                    >
+                                        继续游戏
+                                    </button>
+                                )}
+                            </div>
                         </div>
-                        <div className="prize-stats-content">
-                            {prizeStats.length > 0 ? (
-                                <div className="prize-stats-list">
-                                    {prizeStats.map((stat, index) => (
-                                        <div key={stat.name} className="prize-stat-item">
-                                            <div className="prize-stat-rank">#{index + 1}</div>
-                                            <div className="prize-stat-name">{stat.name}</div>
-                                            <div className="prize-stat-count">×{stat.count}</div>
+                    )}
+
+                    {/* 欢迎特效 */}
+                    {showWelcomeEffect && (
+                        <div className="welcome-effect-overlay" onClick={handleWelcomeContinue}>
+                            <div className="welcome-effect-container">
+                                {/* 礼花特效 */}
+                                <div className="fireworks">
+                                    <div className="firework firework-1">
+                                        <div className="explosion explosion-1"></div>
+                                    </div>
+                                    <div className="firework firework-2">
+                                        <div className="explosion explosion-2"></div>
+                                    </div>
+                                    <div className="firework firework-3">
+                                        <div className="explosion explosion-3"></div>
+                                    </div>
+                                    <div className="firework firework-4">
+                                        <div className="explosion explosion-4"></div>
+                                    </div>
+                                    <div className="firework firework-5">
+                                        <div className="explosion explosion-5"></div>
+                                    </div>
+                                </div>
+
+                                {/* 闪烁星星 */}
+                                <div className="sparkles">
+                                    <div className="sparkle sparkle-1">⭐</div>
+                                    <div className="sparkle sparkle-2">🌟</div>
+                                    <div className="sparkle sparkle-3">✨</div>
+                                    <div className="sparkle sparkle-4">💫</div>
+                                    <div className="sparkle sparkle-5">⭐</div>
+                                    <div className="sparkle sparkle-6">🌟</div>
+                                    <div className="sparkle sparkle-7">✨</div>
+                                    <div className="sparkle sparkle-8">💫</div>
+                                </div>
+
+                                {/* 欢迎文字 */}
+                                <div className="welcome-text">
+                                    <h1 className="welcome-title">欢迎宝宝大人</h1>
+                                    <p className="welcome-subtitle">✨ {userName} ✨</p>
+                                    <p className="welcome-message">准备好接受命运的眷顾了吗？</p>
+                                    <p className="welcome-continue-hint">点击继续 🎯</p>
+                                </div>
+
+                                {/* 彩带效果 */}
+                                <div className="confetti">
+                                    <div className="confetti-piece confetti-1"></div>
+                                    <div className="confetti-piece confetti-2"></div>
+                                    <div className="confetti-piece confetti-3"></div>
+                                    <div className="confetti-piece confetti-4"></div>
+                                    <div className="confetti-piece confetti-5"></div>
+                                    <div className="confetti-piece confetti-6"></div>
+                                    <div className="confetti-piece confetti-7"></div>
+                                    <div className="confetti-piece confetti-8"></div>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* 爱心特效 */}
+                    {showLoveEffect && (
+                        <div className="love-effect-overlay" onClick={handleLoveContinue}>
+                            <div className="love-effect-container">
+                                {/* 背景爱心雨 */}
+                                <div className="love-rain">
+                                    <div className="love-drop love-drop-1">💕</div>
+                                    <div className="love-drop love-drop-2">💖</div>
+                                    <div className="love-drop love-drop-3">💗</div>
+                                    <div className="love-drop love-drop-4">💝</div>
+                                    <div className="love-drop love-drop-5">💞</div>
+                                    <div className="love-drop love-drop-6">💕</div>
+                                    <div className="love-drop love-drop-7">💖</div>
+                                    <div className="love-drop love-drop-8">💗</div>
+                                </div>
+
+                                {/* 中心立体爱心 */}
+                                <div className="love-heart-container">
+                                    <div className="love-heart-3d">
+                                        <div className="css-heart">
+                                            <div className="heart-left"></div>
+                                            <div className="heart-right"></div>
                                         </div>
-                                    ))}
-                                </div>
-                            ) : (
-                                <div className="prize-stats-empty">
-                                    <div className="empty-icon">🎁</div>
-                                    <p>还没有获得任何奖品</p>
-                                    <p className="empty-hint">快去转动转盘试试运气吧！</p>
-                                </div>
-                            )}
-                        </div>
-          </div>
-        </div>
-      )}
+                                    </div>
 
-      {/* 装饰元素 */}
-      <div className="decorations">
-        <div className="star star-1">⭐</div>
-        <div className="star star-2">🌟</div>
-        <div className="star star-3">✨</div>
-        <div className="star star-4">💫</div>
-      </div>
+                                    {/* 爱心光环 */}
+                                    <div className="love-halo love-halo-1"></div>
+                                    <div className="love-halo love-halo-2"></div>
+                                    <div className="love-halo love-halo-3"></div>
+                                </div>
+
+                                {/* 爱心文字 */}
+                                <div className="love-text">
+                                    <h1 className="love-title">亲爱的小猫咪</h1>
+                                    <p className="love-subtitle">✨ 你就是我的心脏 ✨</p>
+                                    <p className="love-continue-hint">点击继续 💕</p>
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* 奖品统计弹窗 */}
+                    {showPrizeStats && (
+                        <div className="prize-stats-overlay">
+                            <div className="prize-stats-modal">
+                                <div className="prize-stats-header">
+                                    <h3>🏆 我的奖品</h3>
+                                    <button
+                                        className="prize-stats-close"
+                                        onClick={() => setShowPrizeStats(false)}
+                                    >
+                                        ✕
+                                    </button>
+                                </div>
+                                <div className="prize-stats-content">
+                                    {prizeStats.length > 0 ? (
+                                        <div className="prize-stats-list">
+                                            {prizeStats.map((stat, index) => (
+                                                <div key={stat.name} className="prize-stat-item">
+                                                    <div className="prize-stat-rank">#{index + 1}</div>
+                                                    <div className="prize-stat-name">{stat.name}</div>
+                                                    <div className="prize-stat-count">×{stat.count}</div>
+                                                </div>
+                                            ))}
+                                        </div>
+                                    ) : (
+                                        <div className="prize-stats-empty">
+                                            <div className="empty-icon">🎁</div>
+                                            <p>还没有获得任何奖品</p>
+                                            <p className="empty-hint">快去转动转盘试试运气吧！</p>
+                                        </div>
+                                    )}
+                                </div>
+                            </div>
+                        </div>
+                    )}
+
+                    {/* 装饰元素 */}
+                    <div className="decorations">
+                        <div className="star star-1">⭐</div>
+                        <div className="star star-2">🌟</div>
+                        <div className="star star-3">✨</div>
+                        <div className="star star-4">💫</div>
+                    </div>
                 </>
             )}
 
-      {/* 许愿页面 */}
-      {showWishPage && (
+            {/* 许愿页面 */}
+            {showWishPage && (
                 <div className="wish-page-overlay">
                     <div className="wish-page-container">
                         {/* 夜空背景 */}
@@ -4313,9 +4437,9 @@ const LotteryLuckyWheel = () => {
                                 <div className="wish-tooltip-arrow"></div>
                             </div>
                         )}
-          </div>
-        </div>
-      )}
+                    </div>
+                </div>
+            )}
 
             {/* 头像裁剪弹窗 */}
             <AvatarCrop
@@ -4999,7 +5123,7 @@ const LotteryLuckyWheel = () => {
                 onIssue={issueDecree}
                 onCancel={cancelDecree}
             />
-            
+
             {/* 魔法管理弹窗（仅秦小淮可见） */}
             <MagicModal
                 show={showMagicModal}
@@ -5009,8 +5133,8 @@ const LotteryLuckyWheel = () => {
                 castingCode={castingMagic}
                 onCast={castMagic}
             />
-    </div>
-  )
+        </div>
+    )
 }
 
 export default LotteryLuckyWheel
