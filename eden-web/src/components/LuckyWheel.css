@@ -3509,6 +3509,117 @@
     }
 }
 
+/* 等级城市名称动画 */
+@keyframes dawnGlow {
+    0% {
+        text-shadow: 0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 255, 255, 0.6);
+        transform: translateX(-50%) scale(1);
+    }
+    100% {
+        text-shadow: 0 0 30px rgba(255, 215, 0, 1), 0 0 60px rgba(255, 255, 255, 0.8);
+        transform: translateX(-50%) scale(1.05);
+    }
+}
+
+@keyframes flowerBloom {
+    0% {
+        text-shadow: 0 0 20px rgba(255, 105, 180, 0.8), 0 0 40px rgba(255, 192, 203, 0.6);
+        transform: translateX(-50%) scale(1);
+    }
+    100% {
+        text-shadow: 0 0 25px rgba(255, 105, 180, 1), 0 0 50px rgba(255, 192, 203, 0.8);
+        transform: translateX(-50%) scale(1.03);
+    }
+}
+
+@keyframes starTwinkle {
+    0% {
+        text-shadow: 0 0 20px rgba(135, 206, 235, 0.8), 0 0 40px rgba(255, 255, 255, 0.6);
+        opacity: 0.9;
+    }
+    100% {
+        text-shadow: 0 0 25px rgba(135, 206, 235, 1), 0 0 50px rgba(255, 255, 255, 0.8);
+        opacity: 1;
+    }
+}
+
+@keyframes cloudFloat {
+    0% {
+        text-shadow: 0 0 20px rgba(230, 230, 250, 0.8), 0 0 40px rgba(255, 255, 255, 0.6);
+        transform: translateX(-50%) translateY(0);
+    }
+    100% {
+        text-shadow: 0 0 25px rgba(230, 230, 250, 1), 0 0 50px rgba(255, 255, 255, 0.8);
+        transform: translateX(-50%) translateY(-2px);
+    }
+}
+
+@keyframes dreamPulse {
+    0% {
+        text-shadow: 0 0 25px rgba(255, 182, 193, 0.8), 0 0 50px rgba(255, 255, 255, 0.6);
+        transform: translateX(-50%) scale(1);
+    }
+    100% {
+        text-shadow: 0 0 35px rgba(255, 182, 193, 1), 0 0 70px rgba(255, 255, 255, 0.8);
+        transform: translateX(-50%) scale(1.08);
+    }
+}
+
+@keyframes moonShine {
+    0% {
+        text-shadow: 0 0 20px rgba(192, 192, 192, 0.8), 0 0 40px rgba(255, 255, 255, 0.6);
+        opacity: 0.8;
+    }
+    100% {
+        text-shadow: 0 0 30px rgba(192, 192, 192, 1), 0 0 60px rgba(255, 255, 255, 0.8);
+        opacity: 1;
+    }
+}
+
+@keyframes galaxySpin {
+    0% {
+        text-shadow: 0 0 25px rgba(147, 112, 219, 0.8), 0 0 50px rgba(255, 255, 255, 0.6);
+        transform: translateX(-50%) rotate(0deg);
+    }
+    100% {
+        text-shadow: 0 0 30px rgba(147, 112, 219, 1), 0 0 60px rgba(255, 255, 255, 0.8);
+        transform: translateX(-50%) rotate(360deg);
+    }
+}
+
+@keyframes eternalGlow {
+    0% {
+        text-shadow: 0 0 30px rgba(255, 215, 0, 0.9), 0 0 60px rgba(255, 255, 255, 0.8);
+        transform: translateX(-50%) scale(1);
+    }
+    100% {
+        text-shadow: 0 0 40px rgba(255, 215, 0, 1), 0 0 80px rgba(255, 255, 255, 1);
+        transform: translateX(-50%) scale(1.1);
+    }
+}
+
+@keyframes heavenlyPulse {
+    0% {
+        text-shadow: 0 0 30px rgba(255, 99, 71, 0.9), 0 0 60px rgba(255, 255, 255, 0.8);
+        transform: translateX(-50%) scale(1);
+    }
+    100% {
+        text-shadow: 0 0 40px rgba(255, 99, 71, 1), 0 0 80px rgba(255, 255, 255, 1);
+        transform: translateX(-50%) scale(1.12);
+    }
+}
+
+@keyframes divineAura {
+    0% {
+        text-shadow: 0 0 35px rgba(255, 20, 147, 0.9), 0 0 70px rgba(255, 255, 255, 0.9);
+        transform: translateX(-50%) scale(1);
+    }
+    100% {
+        text-shadow: 0 0 50px rgba(255, 20, 147, 1), 0 0 100px rgba(255, 255, 255, 1);
+        transform: translateX(-50%) scale(1.15);
+    }
+}
+
 @keyframes startWishPulse {
     0%, 100% {
         box-shadow: 0 8px 25px rgba(102, 126, 234, 0.4);

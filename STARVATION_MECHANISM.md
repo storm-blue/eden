@@ -9,13 +9,14 @@
 ### 饥饿条件
 - **触发条件**: 当星星城的食物数量 < 人口数量时
 - **执行频率**: 每小时检查一次（每小时的0分0秒）
-- **人口减少**: 每次检查时人口减少2000
+- **人口减少**: 每次检查时人口减少0.5%
 - **最低限制**: 人口不会低于0
 
 ### 计算公式
 ```
 if (食物 < 人口) {
-    新人口 = max(0, 当前人口 - 2000)
+    减少数量 = round(当前人口 * 0.005)
+    新人口 = max(0, 当前人口 - 减少数量)
 }
 ```
 
@@ -28,7 +29,7 @@ if (食物 < 人口) {
 #### 视觉效果
 - **警告框**: 红色半透明背景，红色边框
 - **警告文字**: "⚠️ 食物不足！人口正在下降"
-- **详细信息**: "每小时人口-2000 | 当前: X < Y"
+- **详细信息**: "每小时人口-0.5% | 当前: X < Y"
 - **脉冲动画**: 背景颜色和大小周期性变化
 - **粒子特效**: 8个红色粒子随机闪烁
 - **边框闪烁**: 边框颜色周期性变化
@@ -97,12 +98,13 @@ public void checkAndHandleStarvation() {
     Long population = starCity.getPopulation();
 
     if (food < population) {
-        Long newPopulation = Math.max(0, population - 2000);
+        Long decreaseAmount = Math.round(population * 0.005);
+        Long newPopulation = Math.max(0, population - decreaseAmount);
         starCity.setPopulation(newPopulation);
         starCityMapper.updateStarCity(starCity);
         
-        logger.info("人口饥饿：食物({}) < 人口({})，人口减少2000，当前人口: {}", 
-                   food, population, newPopulation);
+        logger.info("人口饥饿：食物({}) < 人口({})，人口减少{} (0.5%)，当前人口: {}", 
+                   food, population, decreaseAmount, newPopulation);
     }
 }
 ```
@@ -136,7 +138,7 @@ public void hourlyPopulationBonus() {
 5. **边界测试**: 验证人口为0时不再减少
 
 ### 测试场景
-- ✅ **饥饿场景**: 食物 < 人口，人口减少2000
+- ✅ **饥饿场景**: 食物 < 人口，人口减少0.5%
 - ✅ **充足场景**: 食物 >= 人口，人口不变
 - ✅ **边界场景**: 人口为0时不再减少
 
@@ -166,7 +168,7 @@ public void hourlyPopulationBonus() {
 
 ### 日志记录
 ```
-INFO: 人口饥饿：食物(5000) < 人口(8000)，人口减少2000，当前人口: 6000
+INFO: 人口饥饿：食物(5000) < 人口(8000)，人口减少40 (0.5%)，当前人口: 7960
 INFO: 每小时特殊居住组合人口增长和饥饿检查完成
 ```
 

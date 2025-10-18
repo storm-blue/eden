@@ -250,7 +250,7 @@ const LotteryLuckyWheel = () => {
     const [selectedResident, setSelectedResident] = useState(null)
     const [residentDetailInfo, setResidentDetailInfo] = useState(null)
 
-    // 根据星星城等级获取城市名称
+    // 根据星星城等级获取城市名称和样式
     const getCityName = (level) => {
         const cityNames = {
             1: "晨曦小镇",
@@ -265,6 +265,80 @@ const LotteryLuckyWheel = () => {
             10: "创世神域"
         }
         return cityNames[level] || "未知城市"
+    }
+
+    // 根据星星城等级获取标题样式
+    const getCityTitleStyle = (level) => {
+        const baseStyle = {
+            fontSize: isMobileDevice ? '28px' : '42px',
+            marginBottom: '10px',
+            position: 'absolute',
+            bottom: '10px',
+            left: '50%',
+            transform: 'translateX(-50%)',
+            zIndex: 10,
+            fontWeight: 'bold',
+            textAlign: 'center',
+            whiteSpace: 'nowrap'
+        }
+
+        const levelStyles = {
+            1: { // 晨曦小镇
+                color: '#FFD700',
+                textShadow: '0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 255, 255, 0.6)',
+                animation: 'dawnGlow 3s ease-in-out infinite alternate'
+            },
+            2: { // 繁花之城
+                color: '#FF69B4',
+                textShadow: '0 0 20px rgba(255, 105, 180, 0.8), 0 0 40px rgba(255, 192, 203, 0.6)',
+                animation: 'flowerBloom 2.5s ease-in-out infinite alternate'
+            },
+            3: { // 星辰都市
+                color: '#87CEEB',
+                textShadow: '0 0 20px rgba(135, 206, 235, 0.8), 0 0 40px rgba(255, 255, 255, 0.6)',
+                animation: 'starTwinkle 2s ease-in-out infinite alternate'
+            },
+            4: { // 云端之城
+                color: '#E6E6FA',
+                textShadow: '0 0 20px rgba(230, 230, 250, 0.8), 0 0 40px rgba(255, 255, 255, 0.6)',
+                animation: 'cloudFloat 4s ease-in-out infinite alternate'
+            },
+            5: { // 梦幻星城
+                color: '#FFB6C1',
+                textShadow: '0 0 25px rgba(255, 182, 193, 0.8), 0 0 50px rgba(255, 255, 255, 0.6)',
+                animation: 'dreamPulse 2s ease-in-out infinite alternate'
+            },
+            6: { // 月光之城
+                color: '#C0C0C0',
+                textShadow: '0 0 20px rgba(192, 192, 192, 0.8), 0 0 40px rgba(255, 255, 255, 0.6)',
+                animation: 'moonShine 3.5s ease-in-out infinite alternate'
+            },
+            7: { // 银河之都
+                color: '#9370DB',
+                textShadow: '0 0 25px rgba(147, 112, 219, 0.8), 0 0 50px rgba(255, 255, 255, 0.6)',
+                animation: 'galaxySpin 5s linear infinite'
+            },
+            8: { // 永恒圣域
+                color: '#FFD700',
+                textShadow: '0 0 30px rgba(255, 215, 0, 0.9), 0 0 60px rgba(255, 255, 255, 0.8)',
+                animation: 'eternalGlow 2s ease-in-out infinite alternate'
+            },
+            9: { // 天界之城
+                color: '#FF6347',
+                textShadow: '0 0 30px rgba(255, 99, 71, 0.9), 0 0 60px rgba(255, 255, 255, 0.8)',
+                animation: 'heavenlyPulse 1.5s ease-in-out infinite alternate'
+            },
+            10: { // 创世神域
+                color: '#FF1493',
+                textShadow: '0 0 35px rgba(255, 20, 147, 0.9), 0 0 70px rgba(255, 255, 255, 0.9)',
+                animation: 'divineAura 1s ease-in-out infinite alternate'
+            }
+        }
+
+        return {
+            ...baseStyle,
+            ...levelStyles[level] || levelStyles[1]
+        }
     }
 
     // 根据星星城等级获取建筑位置配置
@@ -2714,17 +2788,7 @@ const LotteryLuckyWheel = () => {
                     </div>
 
                     {/* 标题 */}
-                    <h2 style={{
-                        fontSize: isMobileDevice ? '28px' : '42px',
-                        marginBottom: '10px',
-                        textShadow: '0 0 25px rgba(0,0,0,0.8), 0 0 50px rgba(255,255,255,0.6)',
-                        position: 'absolute',
-                        bottom: '10px',
-                        left: '50%',
-                        transform: 'translateX(-50%)',
-                        zIndex: 10,
-                        color: 'white'
-                    }}>
+                    <h2 style={getCityTitleStyle(starCityData?.level || 1)}>
                         ✨{getCityName(starCityData?.level || 1)}✨
                     </h2>
 
@@ -3255,7 +3319,7 @@ const LotteryLuckyWheel = () => {
                                         ⚠️ 食物不足！人口正在下降
                                     </div>
                                     <div style={{fontSize: '7px', lineHeight: '1.1', color: '#FF6666'}}>
-                                        每小时人口-2000
+                                        每小时人口-0.5%
                                     </div>
 
                                     {/* 饥饿粒子特效 */}

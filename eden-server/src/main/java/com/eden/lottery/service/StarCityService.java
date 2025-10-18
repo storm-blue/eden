@@ -83,7 +83,7 @@ public class StarCityService {
 
     /**
      * 检查并处理人口饥饿（每小时调用）
-     * 当食物少于人口时，人口每小时减少2000
+     * 当食物少于人口时，人口每小时减少0.5%
      */
     @Transactional
     public void checkAndHandleStarvation() {
@@ -95,15 +95,17 @@ public class StarCityService {
         Long food = starCity.getFood();
         Long population = starCity.getPopulation();
 
-        // 如果食物少于人口，则人口减少2000
+        // 如果食物少于人口，则人口减少0.5%
         if (food < population) {
-            Long newPopulation = Math.max(0, population - 2000);
+            // 计算减少的人口数量（0.5%）
+            Long decreaseAmount = Math.round(population * 0.005);
+            Long newPopulation = Math.max(0, population - decreaseAmount);
             starCity.setPopulation(newPopulation);
             starCity.setUpdateTime(LocalDateTime.now());
             starCityMapper.updateStarCity(starCity);
             
-            logger.info("人口饥饿：食物({}) < 人口({})，人口减少2000，当前人口: {}", 
-                       food, population, newPopulation);
+            logger.info("人口饥饿：食物({}) < 人口({})，人口减少{} (0.5%)，当前人口: {}", 
+                       food, population, decreaseAmount, newPopulation);
         }
     }
 

@@ -1,7 +1,7 @@
 #!/bin/bash
 
 # 测试星星城人口饥饿机制
-# 当食物少于人口时，每小时人口减少2000
+# 当食物少于人口时，每小时人口减少0.5%
 
 # 颜色定义
 RED='\033[0;31m'
@@ -40,8 +40,10 @@ echo -e "${BLUE}   幸福度: ${HAPPINESS_BEFORE}${NC}"
 echo -e "${GREEN}3. 检查饥饿条件...${NC}"
 if [ "$FOOD_BEFORE" -lt "$POPULATION_BEFORE" ]; then
     echo -e "${YELLOW}   当前食物(${FOOD_BEFORE}) < 人口(${POPULATION_BEFORE})，满足饥饿条件${NC}"
-    EXPECTED_POPULATION=$((POPULATION_BEFORE - 2000))
-    echo -e "${YELLOW}   预期人口减少2000，新人口应为: ${EXPECTED_POPULATION}${NC}"
+    # 计算0.5%的减少量
+    DECREASE_AMOUNT=$(echo "scale=0; ${POPULATION_BEFORE} * 0.005" | bc)
+    EXPECTED_POPULATION=$((POPULATION_BEFORE - DECREASE_AMOUNT))
+    echo -e "${YELLOW}   预期人口减少${DECREASE_AMOUNT} (0.5%)，新人口应为: ${EXPECTED_POPULATION}${NC}"
 else
     echo -e "${GREEN}   当前食物(${FOOD_BEFORE}) >= 人口(${POPULATION_BEFORE})，不满足饥饿条件${NC}"
     echo -e "${GREEN}   预期人口不变: ${POPULATION_BEFORE}${NC}"
@@ -72,15 +74,25 @@ echo -e "${BLUE}   幸福度: ${HAPPINESS_AFTER}${NC}"
 echo -e "${GREEN}6. 验证人口变化...${NC}"
 POPULATION_CHANGE=$((POPULATION_AFTER - POPULATION_BEFORE))
 
-if [ "$POPULATION_CHANGE" -eq -2000 ] && [ "$FOOD_BEFORE" -lt "$POPULATION_BEFORE" ]; then
-    echo -e "${GREEN}   ✅ 验证成功: 人口减少了2000 (${POPULATION_CHANGE})${NC}"
-elif [ "$POPULATION_CHANGE" -eq 0 ] && [ "$FOOD_BEFORE" -ge "$POPULATION_BEFORE" ]; then
-    echo -e "${GREEN}   ✅ 验证成功: 人口未变化 (${POPULATION_CHANGE})，因为食物充足${NC}"
+if [ "$FOOD_BEFORE" -lt "$POPULATION_BEFORE" ]; then
+    # 计算预期的减少量（0.5%）
+    EXPECTED_DECREASE=$(echo "scale=0; ${POPULATION_BEFORE} * 0.005" | bc)
+    if [ "$POPULATION_CHANGE" -eq "-$EXPECTED_DECREASE" ]; then
+        echo -e "${GREEN}   ✅ 验证成功: 人口减少了${EXPECTED_DECREASE} (0.5%)${NC}"
+    else
+        echo -e "${RED}   ❌ 验证失败: 人口变化异常${NC}"
+        echo -e "${RED}   预期减少: ${EXPECTED_DECREASE} (0.5%)${NC}"
+        echo -e "${RED}   实际变化: ${POPULATION_CHANGE}${NC}"
+        exit 1
+    fi
 else
-    echo -e "${RED}   ❌ 验证失败: 人口变化异常${NC}"
-    echo -e "${RED}   预期变化: ${EXPECTED_POPULATION} - ${POPULATION_BEFORE} = $((EXPECTED_POPULATION - POPULATION_BEFORE))${NC}"
-    echo -e "${RED}   实际变化: ${POPULATION_CHANGE}${NC}"
-    exit 1
+    if [ "$POPULATION_CHANGE" -eq 0 ]; then
+        echo -e "${GREEN}   ✅ 验证成功: 人口未变化，因为食物充足${NC}"
+    else
+        echo -e "${RED}   ❌ 验证失败: 人口不应该变化${NC}"
+        echo -e "${RED}   实际变化: ${POPULATION_CHANGE}${NC}"
+        exit 1
+    fi
 fi
 
 # 7. 测试边界情况：人口为0时
@@ -107,6 +119,6 @@ fi
 echo -e "${YELLOW}=== 饥饿机制测试完成 ===${NC}"
 echo -e "${BLUE}饥饿机制规则:${NC}"
 echo -e "${BLUE}  - 每小时检查一次${NC}"
-echo -e "${BLUE}  - 当食物 < 人口时，人口减少2000${NC}"
+echo -e "${BLUE}  - 当食物 < 人口时，人口减少0.5%${NC}"
 echo -e "${BLUE}  - 人口不会低于0${NC}"
 echo -e "${BLUE}  - 由HourlyRefreshTask每小时自动执行${NC}"
