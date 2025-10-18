@@ -6,6 +6,11 @@ import DecreeModal from './DecreeModal'
 import MagicModal from './MagicModal'
 
 const LotteryLuckyWheel = () => {
+  // PWA 相关状态
+  const [isPWAInstalled, setIsPWAInstalled] = useState(false)
+  const [showPWAInstallPrompt, setShowPWAInstallPrompt] = useState(false)
+  const [deferredPrompt, setDeferredPrompt] = useState(null)
+
   const [prizes, setPrizes] = useState([
     { 
             background: '#ffcdd2', // 浅粉红色 🌈
@@ -552,6 +557,42 @@ const LotteryLuckyWheel = () => {
         return descriptions
     }
 
+    // PWA 安装相关函数
+    const installPWA = async () => {
+        if (!deferredPrompt) {
+            console.log('没有可用的安装提示')
+            return
+        }
+        
+        try {
+            // 显示安装提示
+            const result = await deferredPrompt.prompt()
+            console.log('安装提示结果:', result)
+            
+            // 等待用户选择
+            const choiceResult = await deferredPrompt.userChoice
+            console.log('用户选择:', choiceResult.outcome)
+            
+            if (choiceResult.outcome === 'accepted') {
+                console.log('用户接受了安装')
+                setIsPWAInstalled(true)
+            } else {
+                console.log('用户拒绝了安装')
+            }
+            
+            // 清除提示
+            setDeferredPrompt(null)
+            setShowPWAInstallPrompt(false)
+        } catch (error) {
+            console.error('安装PWA时出错:', error)
+        }
+    }
+    
+    const dismissPWAInstallPrompt = () => {
+        setShowPWAInstallPrompt(false)
+        setDeferredPrompt(null)
+    }
+
     // 获取所有许愿
     const fetchWishes = async () => {
         try {
@@ -907,6 +948,65 @@ const LotteryLuckyWheel = () => {
         }
         return stars
     }, [isMobileDevice]) // 添加依赖，设备类型变化时重新计算
+
+    // PWA 相关功能
+    useEffect(() => {
+        console.log('🔍 PWA 初始化检查开始...')
+        
+        // 检查是否已经是 PWA 模式
+        const checkPWAStatus = () => {
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches
+            const isFullscreen = window.matchMedia('(display-mode: fullscreen)').matches
+            console.log('📱 PWA 状态检查:', { isStandalone, isFullscreen })
+            setIsPWAInstalled(isStandalone || isFullscreen)
+        }
+        
+        checkPWAStatus()
+        
+        // 监听 PWA 安装提示事件
+        const handleBeforeInstallPrompt = (e) => {
+            console.log('🎉 收到 PWA 安装提示事件!', e)
+            e.preventDefault()
+            setDeferredPrompt(e)
+            setShowPWAInstallPrompt(true)
+        }
+        
+        // 监听应用安装完成事件
+        const handleAppInstalled = () => {
+            console.log('✅ PWA 安装完成!')
+            setIsPWAInstalled(true)
+            setShowPWAInstallPrompt(false)
+            setDeferredPrompt(null)
+        }
+        
+        // 检查 Service Worker 支持
+        if ('serviceWorker' in navigator) {
+            console.log('✅ Service Worker 支持检测通过')
+        } else {
+            console.log('❌ 浏览器不支持 Service Worker')
+        }
+        
+        // 检查 manifest 支持
+        if ('onbeforeinstallprompt' in window) {
+            console.log('✅ 浏览器支持 PWA 安装提示')
+        } else {
+            console.log('❌ 浏览器不支持 PWA 安装提示')
+        }
+        
+        window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+        window.addEventListener('appinstalled', handleAppInstalled)
+        
+        // 延迟检查，给浏览器时间加载 manifest
+        setTimeout(() => {
+            console.log('🔍 延迟检查 PWA 状态...')
+            checkPWAStatus()
+        }, 2000)
+        
+        return () => {
+            window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
+            window.removeEventListener('appinstalled', handleAppInstalled)
+        }
+    }, [])
 
     // 监听屏幕尺寸变化（仅在星星城页面时）
     useEffect(() => {
@@ -2077,6 +2177,94 @@ const LotteryLuckyWheel = () => {
 
   return (
     <div className="lucky-lottery-container">
+            {/* PWA 安装提示 */}
+            {(showPWAInstallPrompt || (!isPWAInstalled && deferredPrompt)) && (
+                <div style={{
+                    position: 'fixed',
+                    top: '20px',
+                    right: '20px',
+                    zIndex: 10000,
+                    background: 'linear-gradient(135deg, #4CAF50, #45a049)',
+                    color: 'white',
+                    padding: '15px 20px',
+                    borderRadius: '10px',
+                    boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
+                    maxWidth: '300px',
+                    fontFamily: 'PingFang SC, Helvetica Neue, Arial, sans-serif'
+                }}>
+                    <div style={{
+                        display: 'flex',
+                        alignItems: 'center',
+                        marginBottom: '10px'
+                    }}>
+                        <span style={{fontSize: '20px', marginRight: '8px'}}>📱</span>
+                        <span style={{fontWeight: 'bold', fontSize: '16px'}}>安装到桌面</span>
+                    </div>
+                    <div style={{
+                        fontSize: '14px',
+                        marginBottom: '12px',
+                        lineHeight: '1.4'
+                    }}>
+                        将 Eden Lottery 安装到桌面，享受全屏游戏体验！
+                    </div>
+                    <div style={{
+                        display: 'flex',
+                        gap: '10px'
+                    }}>
+                        <button
+                            onClick={installPWA}
+                            style={{
+                                background: 'rgba(255,255,255,0.2)',
+                                border: '1px solid rgba(255,255,255,0.3)',
+                                color: 'white',
+                                padding: '8px 16px',
+                                borderRadius: '5px',
+                                cursor: 'pointer',
+                                fontSize: '14px',
+                                fontWeight: 'bold',
+                                transition: 'all 0.3s ease'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.background = 'rgba(255,255,255,0.3)'
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.background = 'rgba(255,255,255,0.2)'
+                            }}
+                        >
+                            安装
+                        </button>
+                        <button
+                            onClick={dismissPWAInstallPrompt}
+                            style={{
+                                background: 'transparent',
+                                border: '1px solid rgba(255,255,255,0.3)',
+                                color: 'white',
+                                padding: '8px 16px',
+                                borderRadius: '5px',
+                                cursor: 'pointer',
+                                fontSize: '14px',
+                                transition: 'all 0.3s ease'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.background = 'rgba(255,255,255,0.1)'
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.background = 'transparent'
+                            }}
+                        >
+                            稍后
+                        </button>
+                    </div>
+                    <div style={{
+                        fontSize: '12px',
+                        marginTop: '8px',
+                        opacity: 0.8
+                    }}>
+                        💡 调试信息: {deferredPrompt ? '有安装提示' : '无安装提示'}
+                    </div>
+                </div>
+            )}
+
             {/* 星星城背景音乐（彻底修复双重下载） */}
             <audio
                 ref={starCityAudioRef}

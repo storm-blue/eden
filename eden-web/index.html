@@ -3,8 +3,26 @@
   <head>
     <meta charset="UTF-8" />
     <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-    <title>Eden抽奖 - 欢乐转盘</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- iOS Safari 支持 -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Eden Lottery">
+    
+    <!-- Android Chrome 支持 -->
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="theme-color" content="#16213e">
+    
+    <!-- 应用图标 -->
+    <link rel="apple-touch-icon" href="/icons/icon-152x152.png">
+    <link rel="icon" type="image/png" sizes="32x32" href="/icons/icon-32x32.png">
+    <link rel="icon" type="image/png" sizes="16x16" href="/icons/icon-16x16.png">
+    
+    <title>Eden Lottery - 星星城</title>
     <style>
       * {
         margin: 0;
@@ -23,5 +41,109 @@
   <body>
     <div id="root"></div>
     <script type="module" src="/src/main.jsx"></script>
+    
+    <script>
+      // 注册 Service Worker
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw-simple.js')
+            .then((registration) => {
+              console.log('SW registered: ', registration);
+            })
+            .catch((registrationError) => {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+      
+      // 处理安装提示
+      let deferredPrompt;
+      window.addEventListener('beforeinstallprompt', (e) => {
+        // 阻止默认的安装提示
+        e.preventDefault();
+        // 保存事件，稍后使用
+        deferredPrompt = e;
+        
+        // 显示自定义安装按钮
+        showInstallButton();
+      });
+      
+      function showInstallButton() {
+        // 检查是否已经安装
+        if (window.matchMedia('(display-mode: standalone)').matches) {
+          return; // 已经是PWA模式，不显示安装按钮
+        }
+        
+        // 创建安装按钮
+        const installBtn = document.createElement('button');
+        installBtn.textContent = '📱 安装应用';
+        installBtn.style.cssText = `
+          position: fixed;
+          top: 20px;
+          right: 20px;
+          z-index: 1000;
+          background: linear-gradient(135deg, #4CAF50, #45a049);
+          color: white;
+          border: none;
+          padding: 12px 20px;
+          border-radius: 25px;
+          cursor: pointer;
+          font-size: 14px;
+          font-weight: bold;
+          box-shadow: 0 4px 15px rgba(76, 175, 80, 0.3);
+          transition: all 0.3s ease;
+          font-family: 'PingFang SC', 'Helvetica Neue', Arial, sans-serif;
+        `;
+        
+        // 悬停效果
+        installBtn.addEventListener('mouseenter', () => {
+          installBtn.style.transform = 'translateY(-2px)';
+          installBtn.style.boxShadow = '0 6px 20px rgba(76, 175, 80, 0.4)';
+        });
+        
+        installBtn.addEventListener('mouseleave', () => {
+          installBtn.style.transform = 'translateY(0)';
+          installBtn.style.boxShadow = '0 4px 15px rgba(76, 175, 80, 0.3)';
+        });
+        
+        installBtn.addEventListener('click', () => {
+          // 显示安装提示
+          deferredPrompt.prompt();
+          
+          // 等待用户响应
+          deferredPrompt.userChoice.then((choiceResult) => {
+            if (choiceResult.outcome === 'accepted') {
+              console.log('用户接受了安装');
+              installBtn.textContent = '✅ 安装中...';
+              setTimeout(() => {
+                installBtn.remove();
+              }, 2000);
+            } else {
+              console.log('用户拒绝了安装');
+              installBtn.textContent = '❌ 安装被拒绝';
+              setTimeout(() => {
+                installBtn.remove();
+              }, 2000);
+            }
+            deferredPrompt = null;
+          });
+        });
+        
+        document.body.appendChild(installBtn);
+        
+        // 5秒后自动隐藏按钮
+        setTimeout(() => {
+          if (installBtn.parentNode) {
+            installBtn.style.opacity = '0.7';
+            installBtn.textContent = '💡 点击安装到桌面';
+          }
+        }, 5000);
+      }
+      
+      // 监听应用安装完成
+      window.addEventListener('appinstalled', (evt) => {
+        console.log('应用已安装');
+      });
+    </script>
   </body>
 </html>
