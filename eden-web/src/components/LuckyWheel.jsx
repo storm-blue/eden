@@ -6,101 +6,101 @@ import DecreeModal from './DecreeModal'
 import MagicModal from './MagicModal'
 
 const LotteryLuckyWheel = () => {
-    const [prizes, setPrizes] = useState([
-        {
+  const [prizes, setPrizes] = useState([
+    { 
             background: '#ffcdd2', // 浅粉红色 🌈
-            fonts: [{
-                text: '🍰',
+      fonts: [{ 
+        text: '🍰', 
                 top: '15%',
                 fontSize: '30px'
-            }, {
+      }, { 
                 text: '吃的～',
                 top: '55%',
-                fontSize: '16px',
+        fontSize: '16px',
                 fontColor: '#333',
-                fontWeight: 'bold'
-            }]
-        },
-        {
+        fontWeight: 'bold'
+      }] 
+    },
+    { 
             background: '#ffe0b2', // 浅橙色 🌈
-            fonts: [{
-                text: '🥤',
+      fonts: [{ 
+        text: '🥤', 
                 top: '15%',
-                fontSize: '35px'
-            }, {
+        fontSize: '35px'
+      }, { 
                 text: '喝的～',
                 top: '55%',
-                fontSize: '16px',
+        fontSize: '16px',
                 fontColor: '#333',
-                fontWeight: 'bold'
-            }]
-        },
-        {
+        fontWeight: 'bold'
+      }] 
+    },
+    { 
             background: '#fff9c4', // 浅黄色 🌈
-            fonts: [{
-                text: '❤️',
+      fonts: [{ 
+        text: '❤️', 
                 top: '15%',
-                fontSize: '35px'
-            }, {
+        fontSize: '35px'
+      }, { 
                 text: '爱',
                 top: '55%',
-                fontSize: '18px',
-                fontColor: '#333',
-                fontWeight: 'bold'
-            }]
-        },
-        {
+        fontSize: '18px',
+        fontColor: '#333',
+        fontWeight: 'bold'
+      }] 
+    },
+    { 
             background: '#c8e6c9', // 浅绿色 🌈
-            fonts: [{
-                text: '💸',
+      fonts: [{ 
+        text: '💸', 
                 top: '15%',
-                fontSize: '35px'
-            }, {
-                text: '空空如也',
+        fontSize: '35px'
+      }, { 
+        text: '空空如也', 
                 top: '55%',
-                fontSize: '14px',
+        fontSize: '14px',
                 fontColor: '#333',
-                fontWeight: 'bold'
-            }]
-        },
-        {
+        fontWeight: 'bold'
+      }] 
+    },
+    { 
             background: '#b3e5fc', // 浅青色 🌈
-            fonts: [{
-                text: '🧧',
+      fonts: [{ 
+        text: '🧧', 
                 top: '15%',
-                fontSize: '35px'
-            }, {
-                text: '红包',
+        fontSize: '35px'
+      }, { 
+        text: '红包', 
                 top: '55%',
-                fontSize: '18px',
-                fontColor: '#333',
-                fontWeight: 'bold'
-            }]
-        },
-        {
+        fontSize: '18px',
+        fontColor: '#333',
+        fontWeight: 'bold'
+      }] 
+    },
+    { 
             background: '#bbdefb', // 浅蓝色 🌈
-            fonts: [{
-                text: '🔄',
+      fonts: [{ 
+        text: '🔄', 
                 top: '15%',
                 fontSize: '30px'
-            }, {
-                text: '再转一次',
+      }, { 
+        text: '再转一次', 
                 top: '55%',
-                fontSize: '14px',
+        fontSize: '14px',
                 fontColor: '#333',
-                fontWeight: 'bold'
-            }]
-        },
-        {
+        fontWeight: 'bold'
+      }] 
+    },
+    { 
             background: '#e1bee7', // 浅紫色 🌈
-            fonts: [{
-                text: '🎁',
+      fonts: [{ 
+        text: '🎁', 
                 top: '15%',
                 fontSize: '30px'
-            }, {
-                text: '随机礼物',
+      }, { 
+        text: '随机礼物', 
                 top: '55%',
-                fontSize: '14px',
+        fontSize: '14px',
                 fontColor: '#333',
                 fontWeight: 'bold'
             }]
@@ -130,74 +130,74 @@ const LotteryLuckyWheel = () => {
                 top: '55%',
                 fontSize: '14px',
                 fontColor: '#333',
-                fontWeight: 'bold'
-            }]
-        },
-    ])
+        fontWeight: 'bold'
+      }] 
+    },
+  ])
 
-    const [blocks, setBlocks] = useState([
-        {
+  const [blocks, setBlocks] = useState([
+    { 
             padding: '10px',
-            background: '#ff6ec7', // 亮粉色外圈 🌈
-            paddingColor: '#ffea00'
-        },
-        {
+      background: '#ff6ec7', // 亮粉色外圈 🌈
+      paddingColor: '#ffea00'
+    },
+    { 
             padding: '10px',
-            background: '#ffffff', // 纯白色内圈
-            paddingColor: '#00e5ff'
-        }
-    ])
+      background: '#ffffff', // 纯白色内圈
+      paddingColor: '#00e5ff'
+    }
+  ])
 
-    const [buttons, setButtons] = useState([
-        {
-            radius: '55px',
+  const [buttons, setButtons] = useState([
+    { 
+      radius: '55px', 
             background: '#ff6ec7', // 明亮红色外圈 🌈
         },
         {
             radius: '50px',
             background: '#fff5ca' // 纯白中圈
-        },
-        {
-            radius: '45px',
+    },
+    { 
+      radius: '45px', 
             background: '#f0caff' // 纯白中圈
         },
         {
             radius: '40px',
             background: '#fdeeff' // 纯白中圈
-        },
-        {
-            radius: '35px',
+    },
+    { 
+      radius: '35px', 
             background: '#678cff', // 明亮蓝色内圈 🌈
-            pointer: true, // 官方指针配置
+      pointer: true, // 官方指针配置
             fonts: []
-        }
-    ])
+    }
+  ])
 
-    // 转盘配置
-    const [defaultConfig, setDefaultConfig] = useState({
-        gutter: 8,
-        offsetDegree: 0,
-        speed: 20,
-        accelerationTime: 3000,
-        decelerationTime: 3000
-    })
+  // 转盘配置
+  const [defaultConfig, setDefaultConfig] = useState({
+    gutter: 8,
+    offsetDegree: 0,
+    speed: 20,
+    accelerationTime: 3000,
+    decelerationTime: 3000
+  })
 
-    // 指针样式配置 - 让指针更细一些
-    const [defaultStyle, setDefaultStyle] = useState({
-        pointer: {
-            style: 'triangle',
-            background: '#ff1744',
-            borderColor: '#ffffff',
-            borderWidth: 0.5, // 更细的边框
-            width: 10, // 指针宽度
-            height: 20 // 保持长度
-        }
-    })
+  // 指针样式配置 - 让指针更细一些
+  const [defaultStyle, setDefaultStyle] = useState({
+    pointer: {
+      style: 'triangle',
+      background: '#ff1744',
+      borderColor: '#ffffff', 
+      borderWidth: 0.5, // 更细的边框
+      width: 10, // 指针宽度
+      height: 20 // 保持长度
+    }
+  })
 
-    const myLucky = useRef()
+  const myLucky = useRef()
     const starCityAudioRef = useRef() // 星星城背景音乐引用
-    const [isSpinning, setIsSpinning] = useState(false)
-    const [result, setResult] = useState('')
+  const [isSpinning, setIsSpinning] = useState(false)
+  const [result, setResult] = useState('')
     const [currentPrize, setCurrentPrize] = useState('') // 存储后端返回的奖品名称
     const [isMusicPlaying, setIsMusicPlaying] = useState(false) // 音乐播放状态
 
@@ -342,15 +342,17 @@ const LotteryLuckyWheel = () => {
     const [castingMagic, setCastingMagic] = useState(null) // 正在施展的魔法code
     const [showFoodRain, setShowFoodRain] = useState(false) // 显示天降食物特效
     const [showWeatherChange, setShowWeatherChange] = useState(false) // 显示改变天气特效
+    const [foodCountAnimation, setFoodCountAnimation] = useState(false) // 食物数字滚动动画
+    const [foodCountStart, setFoodCountStart] = useState(0) // 食物数字滚动起始值
 
     // 奖品名称映射（与后端保持一致）
-    const prizeNames = [
+  const prizeNames = [
         '🍰 吃的～',
         '🥤 喝的～',
         '❤️ 爱',
-        '💸 空空如也',
-        '🧧 红包',
-        '🔄 再转一次',
+    '💸 空空如也',
+    '🧧 红包',
+    '🔄 再转一次',
         '🎁 随机礼物',
         '💬 陪聊服务',
         '✨ 许愿一次'
@@ -507,9 +509,17 @@ const LotteryLuckyWheel = () => {
     // 触发天降食物特效
     const triggerFoodRainEffect = () => {
         setShowFoodRain(true)
+        
+        // 开始食物数字滚动动画
+        if (starCityData) {
+            setFoodCountStart(starCityData.food)
+            setFoodCountAnimation(true)
+        }
+        
         // 3秒后自动隐藏特效
         setTimeout(() => {
             setShowFoodRain(false)
+            setFoodCountAnimation(false)
         }, 3000)
     }
 
@@ -910,7 +920,7 @@ const LotteryLuckyWheel = () => {
                 switch (prizeType) {
                     case '🍰 吃的～':
                         effectMessage = '食物 +1万'
-                        break
+        break
                     case '🥤 喝的～':
                         effectMessage = '食物 +0.5万，幸福 +1'
                         break
@@ -1734,11 +1744,11 @@ const LotteryLuckyWheel = () => {
                 }
 
                 // 后端抽奖成功，开始转盘动画
-                myLucky.current.play()
-
+    myLucky.current.play()
+    
                 // 延迟停止转盘，让动画更自然
-                setTimeout(() => {
-                    myLucky.current.stop(selectedIndex)
+    setTimeout(() => {
+      myLucky.current.stop(selectedIndex)
                 }, 1500)
 
                 // 刷新用户信息以显示最新的剩余次数
@@ -1756,7 +1766,7 @@ const LotteryLuckyWheel = () => {
     }
 
     const onEnd = async (prize) => {
-        setIsSpinning(false)
+    setIsSpinning(false)
 
         // 优先使用后端返回的奖品名称，如果没有则尝试解析转盘返回的索引
         if (currentPrize) {
@@ -1797,7 +1807,7 @@ const LotteryLuckyWheel = () => {
                 setShowLoveEffect(true)
                 // 不自动隐藏，等待用户点击
             } else {
-                setResult(prizeText)
+    setResult(prizeText)
             }
 
             // 检查是否抽到"再转一次"
@@ -1857,10 +1867,10 @@ const LotteryLuckyWheel = () => {
     const handleLoveContinue = () => {
         setShowLoveEffect(false)
         // 爱心特效结束后不需要额外操作
-    }
+  }
 
-    return (
-        <div className="lucky-lottery-container">
+  return (
+    <div className="lucky-lottery-container">
             {/* 星星城背景音乐（彻底修复双重下载） */}
             <audio
                 ref={starCityAudioRef}
@@ -2522,86 +2532,67 @@ const LotteryLuckyWheel = () => {
                                 zIndex: 30,
                                 overflow: 'hidden'
                             }}>
-                                {/* 生成多个食物emoji */}
-                                {[...Array(50)].map((_, i) => {
-                                    const foodEmojis = ['🍰', '🥤', '🍕', '🍔', '🍟', '🌭', '🥗', '🍜', '🍱', '🍙', '🍎', '🍌', '🍇', '🥕', '🥔']
-                                    const emoji = foodEmojis[i % foodEmojis.length]
-                                    const left = Math.random() * 100
-                                    const delay = Math.random() * 1.5
-                                    const duration = 2.5 + Math.random() * 1.5
-                                    const size = 20 + Math.random() * 20 // 20-40px随机大小
-                                    const rotation = Math.random() * 360 // 随机初始旋转角度
-                                    const sway = Math.random() * 20 - 10 // -10到10的左右摆动
-
-                                    return (
-                                        <div
-                                            key={`food-${i}`}
-                                            style={{
-                                                position: 'absolute',
-                                                top: '-80px',
-                                                left: `${left}%`,
-                                                fontSize: `${size}px`,
-                                                animation: `foodFallRealistic ${duration}s ease-in ${delay}s forwards`,
-                                                opacity: 0,
-                                                transform: `rotate(${rotation}deg)`,
-                                                filter: 'drop-shadow(2px 2px 4px rgba(0,0,0,0.3))',
-                                                zIndex: Math.floor(Math.random() * 10) + 1
-                                            }}
-                                        >
-                                            {/* 食物阴影 */}
-                                            <div style={{
-                                                position: 'absolute',
-                                                top: '2px',
-                                                left: '2px',
-                                                fontSize: `${size}px`,
-                                                color: 'rgba(0,0,0,0.2)',
-                                                zIndex: -1,
-                                                animation: `foodShadow ${duration}s ease-in ${delay}s forwards`
-                                            }}>
-                                                {emoji}
-                                            </div>
-
-                                            {/* 食物本体 */}
-                                            <div style={{
-                                                position: 'relative',
-                                                zIndex: 1,
-                                                animation: `foodSway ${duration}s ease-in-out ${delay}s infinite`
-                                            }}>
-                                                {emoji}
-                                            </div>
-                                        </div>
-                                    )
-                                })}
-
-                                {/* 地面收集效果 */}
+                                {/* 圣光降下效果 */}
                                 <div style={{
                                     position: 'absolute',
-                                    bottom: '0',
-                                    left: '0',
-                                    width: '100%',
-                                    height: '60px',
-                                    background: 'linear-gradient(to top, rgba(139, 69, 19, 0.3), transparent)',
-                                    animation: 'foodCollection 3s ease-out 1s forwards',
+                                    top: '-20%',
+                                    left: '50%',
+                                    transform: 'translateX(-50%)',
+                                    width: '200px',
+                                    height: '120%',
+                                    background: 'linear-gradient(to bottom, transparent 0%, rgba(255, 255, 255, 0.1) 20%, rgba(255, 255, 255, 0.8) 40%, rgba(255, 255, 255, 0.9) 60%, rgba(255, 255, 255, 0.8) 80%, transparent 100%)',
+                                    animation: 'divineLight 3s ease-out forwards',
+                                    filter: 'blur(3px)',
                                     opacity: 0
-                                }}>
-                                    {/* 收集粒子 */}
-                                    {[...Array(15)].map((_, i) => (
-                                        <div
-                                            key={`collection-${i}`}
-                                            style={{
-                                                position: 'absolute',
-                                                bottom: '10px',
-                                                left: `${Math.random() * 100}%`,
-                                                width: '8px',
-                                                height: '8px',
-                                                background: 'rgba(255, 215, 0, 0.8)',
-                                                borderRadius: '50%',
-                                                animation: `collectionSparkle 2s ease-out ${1.5 + Math.random() * 1}s forwards`,
-                                                opacity: 0
-                                            }}
-                                        />
-                                    ))}
-                                </div>
+                                }} />
+                                
+                                {/* 圣光中心光束 */}
+                                <div style={{
+                                    position: 'absolute',
+                                    top: '-10%',
+                                    left: '50%',
+                                    transform: 'translateX(-50%)',
+                                    width: '80px',
+                                    height: '110%',
+                                    background: 'linear-gradient(to bottom, transparent 0%, rgba(255, 255, 255, 0.3) 30%, rgba(255, 255, 255, 1) 50%, rgba(255, 255, 255, 0.3) 70%, transparent 100%)',
+                                    animation: 'divineBeam 3s ease-out forwards',
+                                    filter: 'blur(1px)',
+                                    opacity: 0
+                                }} />
+                                
+                                {/* 圣光粒子 */}
+                                {[...Array(20)].map((_, i) => (
+                                    <div
+                                        key={`divine-particle-${i}`}
+                                        style={{
+                                            position: 'absolute',
+                                            top: `${Math.random() * 100}%`,
+                                            left: `${45 + Math.random() * 10}%`,
+                                            width: '3px',
+                                            height: '3px',
+                                            background: 'rgba(255, 255, 255, 0.9)',
+                                            borderRadius: '50%',
+                                            animation: `divineParticle ${2 + Math.random() * 1}s ease-out ${Math.random() * 0.5}s forwards`,
+                                            opacity: 0,
+                                            boxShadow: '0 0 6px rgba(255, 255, 255, 0.8)'
+                                        }}
+                                    />
+                                ))}
+                                
+                                {/* 圣光光环 */}
+                                <div style={{
+                                    position: 'absolute',
+                                    top: '50%',
+                                    left: '50%',
+                                    transform: 'translate(-50%, -50%)',
+                                    width: '300px',
+                                    height: '300px',
+                                    borderRadius: '50%',
+                                    background: 'radial-gradient(circle, transparent 0%, rgba(255, 255, 255, 0.1) 30%, rgba(255, 255, 255, 0.3) 60%, transparent 100%)',
+                                    animation: 'divineHalo 3s ease-out forwards',
+                                    opacity: 0,
+                                    filter: 'blur(8px)'
+                                }} />
                             </div>
                         )}
 
@@ -3105,15 +3096,6 @@ const LotteryLuckyWheel = () => {
                             }}
                             title="点击进行城市捐献"
                         >
-                            <div className="data-title" style={{
-                                fontSize: '12px',
-                                fontWeight: 'bold',
-                                marginBottom: '4px',
-                                color: '#FFD700',
-                                textShadow: '0 0 6px rgba(255, 215, 0, 0.5)'
-                            }}>
-                                城市数据
-                            </div>
 
                             <div style={{
                                 display: 'flex',
@@ -3138,9 +3120,23 @@ const LotteryLuckyWheel = () => {
                                     alignItems: 'center'
                                 }}>
                                     <span>🍎 食物:</span>
-                                    <span style={{color: '#90EE90', fontWeight: 'bold'}}>
-                    {starCityData.foodFormatted}
-                  </span>
+                                    <span style={{
+                                        color: '#90EE90', 
+                                        fontWeight: 'bold',
+                                        transition: 'all 0.3s ease',
+                                        transform: foodCountAnimation ? 'scale(1.2)' : 'scale(1)',
+                                        textShadow: foodCountAnimation ? '0 0 10px rgba(144, 238, 144, 0.8)' : 'none'
+                                    }}>
+                                        {foodCountAnimation ? (
+                                            <span style={{
+                                                animation: 'foodCountRoll 2s ease-out forwards'
+                                            }}>
+                                                {starCityData.foodFormatted}
+                                            </span>
+                                        ) : (
+                                            starCityData.foodFormatted
+                                        )}
+                                    </span>
                                 </div>
 
                                 <div className="data-item" style={{
@@ -3253,24 +3249,6 @@ const LotteryLuckyWheel = () => {
                                 </div>
                             )}
 
-                            {starCityData.canUpgrade && starCityData.nextLevelRequirements && (
-                                <div className="upgrade-info" style={{
-                                    marginTop: '6px',
-                                    padding: '4px',
-                                    background: 'rgba(255, 215, 0, 0.2)',
-                                    borderRadius: '4px',
-                                    border: '1px solid rgba(255, 215, 0, 0.3)'
-                                }}>
-                                    <div style={{fontSize: '8px', color: '#FFD700', marginBottom: '1px'}}>
-                                        🎯 升级条件 (LV{starCityData.level + 1}):
-                                    </div>
-                                    <div style={{fontSize: '7px', lineHeight: '1.1'}}>
-                                        人口{starCityData.nextLevelRequirements.populationFormatted} |
-                                        食物{starCityData.nextLevelRequirements.foodFormatted} |
-                                        幸福{starCityData.nextLevelRequirements.happiness}
-                                    </div>
-                                </div>
-                            )}
                         </div>
                     )}
 
@@ -3297,25 +3275,25 @@ const LotteryLuckyWheel = () => {
                     }}>
                     <div className="donation-modal-content" style={{
                         background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                        borderRadius: '20px',
-                        padding: isMobileDevice ? '20px' : '30px',
-                        maxWidth: isMobileDevice ? '450px' : '700px',
+                        borderRadius: '15px',
+                        padding: isMobileDevice ? '15px' : '20px',
+                        maxWidth: isMobileDevice ? '400px' : '600px',
                         width: '90%',
-                        maxHeight: '80vh',
+                        maxHeight: '75vh',
                         overflow: 'auto',
-                        boxShadow: '0 20px 60px rgba(0, 0, 0, 0.3)',
+                        boxShadow: '0 15px 40px rgba(0, 0, 0, 0.3)',
                         border: '2px solid rgba(255, 255, 255, 0.2)',
-                        fontSize: isMobileDevice ? '14px' : '16px'
+                        fontSize: isMobileDevice ? '13px' : '15px'
                     }}>
                         {/* 标题 */}
                         <div style={{
                             textAlign: 'center',
-                            marginBottom: '25px',
+                            marginBottom: '15px',
                             color: 'white',
                             position: 'relative'
                         }}>
                             <h3 style={{
-                                fontSize: isMobileDevice ? '20px' : '24px',
+                                fontSize: isMobileDevice ? '18px' : '22px',
                                 margin: '0',
                                 textShadow: '0 0 15px rgba(255, 255, 255, 0.5)',
                                 display: 'inline-block'
@@ -3343,38 +3321,47 @@ const LotteryLuckyWheel = () => {
                                     ✨ {donationEffect}
                                 </div>
                             )}
-                            <p style={{
-                                fontSize: isMobileDevice ? '12px' : '14px',
-                                margin: '10px 0 0 0',
-                                opacity: 0.9
-                            }}>
-                                为星星城的发展贡献您的奖品！
-                            </p>
                         </div>
 
                         {/* 主要内容区域 - 响应式布局 */}
                         <div style={{
                             display: 'flex',
                             flexDirection: isMobileDevice ? 'row' : 'column',
-                            gap: '20px',
-                            marginBottom: '20px'
+                            gap: '15px',
+                            marginBottom: '15px'
                         }}>
                             {/* 左侧/上方：捐献效果说明 */}
                             <div style={{
                                 flex: isMobileDevice ? '1' : 'none',
                                 background: 'rgba(255, 255, 255, 0.1)',
-                                borderRadius: '15px',
-                                padding: '15px',
+                                borderRadius: '12px',
+                                padding: '12px',
                                 color: 'white',
-                                fontSize: isMobileDevice ? '12px' : '13px',
-                                lineHeight: '1.5'
+                                fontSize: isMobileDevice ? '11px' : '12px',
+                                lineHeight: '1.4'
                             }}>
-                                <div style={{fontWeight: 'bold', marginBottom: '8px', color: '#FFD700'}}>
+                                <div style={{fontWeight: 'bold', marginBottom: '6px', color: '#FFD700'}}>
                                     🎁 捐献效果：
                                 </div>
                                 <div>🍰 吃的～ → +1万食物</div>
                                 <div>🥤 喝的～ → +0.5万食物 +1幸福</div>
                                 <div>🎁 随机礼物 → +2幸福</div>
+                                
+                                {/* 城市升级条件 */}
+                                {starCityData && starCityData.canUpgrade && starCityData.nextLevelRequirements && (
+                                    <div style={{
+                                        marginTop: '10px'
+                                    }}>
+                                        <div style={{fontWeight: 'bold', marginBottom: '4px', color: '#FFD700'}}>
+                                            🎯 升级条件 (LV{starCityData.level + 1}):
+                                        </div>
+                                        <div style={{fontSize: isMobileDevice ? '10px' : '11px', lineHeight: '1.2'}}>
+                                            人口: {starCityData.nextLevelRequirements.populationFormatted}<br/>
+                                            食物: {starCityData.nextLevelRequirements.foodFormatted}<br/>
+                                            幸福: {starCityData.nextLevelRequirements.happiness}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
 
                             {/* 右侧/下方：可捐献的奖品列表 */}
@@ -3386,7 +3373,7 @@ const LotteryLuckyWheel = () => {
                                     <div style={{
                                         display: 'flex',
                                         flexDirection: 'column',
-                                        gap: '6px'
+                                        gap: '4px'
                                     }}>
                                         {userDonationPrizes.map((prize, index) => (
                                             <div
@@ -3394,15 +3381,15 @@ const LotteryLuckyWheel = () => {
                                                 onClick={() => handleDonation(prize.name)}
                                                 style={{
                                                     background: 'rgba(255, 255, 255, 0.15)',
-                                                    borderRadius: '6px',
-                                                    padding: '8px 10px',
+                                                    borderRadius: '5px',
+                                                    padding: '6px 8px',
                                                     cursor: 'pointer',
                                                     transition: 'all 0.3s ease',
                                                     border: '1px solid rgba(255, 255, 255, 0.2)',
                                                     display: 'flex',
                                                     justifyContent: 'space-between',
                                                     alignItems: 'center',
-                                                    height: '32px'
+                                                    height: '28px'
                                                 }}
                                                 onMouseEnter={(e) => {
                                                     e.target.style.background = 'rgba(255, 255, 255, 0.25)'
@@ -3415,7 +3402,7 @@ const LotteryLuckyWheel = () => {
                                             >
                                                 <div style={{
                                                     color: 'white',
-                                                    fontSize: isMobileDevice ? '14px' : '16px',
+                                                    fontSize: isMobileDevice ? '12px' : '14px',
                                                     fontWeight: 'bold'
                                                 }}>
                                                     {prize.name === '🍰 吃的～' && '🍽️'}
@@ -3440,13 +3427,13 @@ const LotteryLuckyWheel = () => {
                                     <div style={{
                                         textAlign: 'center',
                                         color: 'rgba(255, 255, 255, 0.7)',
-                                        fontSize: isMobileDevice ? '14px' : '16px',
-                                        padding: '30px',
+                                        fontSize: isMobileDevice ? '12px' : '14px',
+                                        padding: '20px',
                                         background: 'rgba(255, 255, 255, 0.1)',
-                                        borderRadius: '15px'
+                                        borderRadius: '12px'
                                     }}>
                                         <div>您没有可捐献的奖品</div>
-                                        <div style={{fontSize: isMobileDevice ? '12px' : '14px', marginTop: '8px'}}>
+                                        <div style={{fontSize: isMobileDevice ? '10px' : '12px', marginTop: '6px'}}>
                                             快去转转盘吧！
                                         </div>
                                     </div>
@@ -3461,9 +3448,9 @@ const LotteryLuckyWheel = () => {
                                 style={{
                                     background: 'rgba(255, 255, 255, 0.2)',
                                     color: 'white',
-                                    borderRadius: '25px',
-                                    padding: isMobileDevice ? '10px 25px' : '12px 30px',
-                                    fontSize: isMobileDevice ? '14px' : '16px',
+                                    borderRadius: '20px',
+                                    padding: isMobileDevice ? '8px 20px' : '10px 25px',
+                                    fontSize: isMobileDevice ? '12px' : '14px',
                                     cursor: 'pointer',
                                     transition: 'all 0.3s ease',
                                     backdropFilter: 'blur(10px)',
@@ -3958,13 +3945,13 @@ const LotteryLuckyWheel = () => {
                 </div>
             )}
 
-            {/* 标题 */}
-            <div className="header">
-                <h1 className="title">🎪 Eden欢乐抽奖 🎪</h1>
+      {/* 标题 */}
+      <div className="header">
+        <h1 className="title">🎪 Eden欢乐抽奖 🎪</h1>
                 <p className="subtitle">
                     {userName ? `${userName}，转动转盘，好运连连！` : '转动转盘，好运连连！'}
                 </p>
-            </div>
+      </div>
 
             {/* 右上角按钮组 */}
             {userName && userInfo && userInfo.message !== "用户不存在" && (
@@ -4007,21 +3994,21 @@ const LotteryLuckyWheel = () => {
             {/* 🚀 性能优化：只在非星星城和非许愿页面时渲染轮盘 */}
             {!showStarCity && !showWishPage && (
                 <>
-                    {/* 转盘区域 */}
-                    <div className="wheel-container">
-                        <LuckyWheel
-                            ref={myLucky}
-                            width="380px"
-                            height="380px"
-                            prizes={prizes}
-                            blocks={blocks}
-                            buttons={buttons}
-                            defaultConfig={defaultConfig}
-                            defaultStyle={defaultStyle}
+      {/* 转盘区域 */}
+      <div className="wheel-container">
+        <LuckyWheel
+          ref={myLucky}
+          width="380px"
+          height="380px"
+          prizes={prizes}
+          blocks={blocks}
+          buttons={buttons}
+          defaultConfig={defaultConfig}
+          defaultStyle={defaultStyle}
                             onStart={() => {
                             }} // 点击抽奖按钮会触发
-                            onEnd={onEnd}
-                        />
+          onEnd={onEnd}
+        />
                         {/* 转盘中心显示剩余次数 */}
                         {userName && (
                             <div className="wheel-center-info">
@@ -4036,10 +4023,10 @@ const LotteryLuckyWheel = () => {
                                 </div>
                             </div>
                         )}
-                    </div>
+      </div>
 
-                    {/* 控制按钮 */}
-                    <div className="controls">
+      {/* 控制按钮 */}
+      <div className="controls">
                         {/* 用户信息行 */}
                         {userName && (
                             <div className="user-info-row">
@@ -4059,7 +4046,7 @@ const LotteryLuckyWheel = () => {
                         )}
 
                         {/* 开始抽奖按钮 */}
-                        <button
+        <button 
                             className={`spin-button ${isSpinning || !userName || !userInfo || showWelcomeEffect || !welcomeEffectFinished || userInfo.remainingDraws <= 0 ? 'disabled' : ''}`}
                             onClick={startSpin}
                             disabled={isSpinning || !userName || !userInfo || showWelcomeEffect || !welcomeEffectFinished || userInfo.remainingDraws <= 0}
@@ -4070,15 +4057,15 @@ const LotteryLuckyWheel = () => {
                                         (!userInfo || userInfo.message === "用户不存在") ? '👤 用户不存在' :
                                             (userInfo.remainingDraws <= 0) ? '🚫 次数已用完' :
                                                 '🎲 转动命运'}
-                        </button>
-                    </div>
+        </button>
+      </div>
 
-                    {/* 结果显示 */}
-                    {result && (
-                        <div className="result-modal">
-                            <div className="result-content">
-                                <h2 className="result-title">🎉 恭喜你获得 🎉</h2>
-                                <div className="result-prize">{result}</div>
+      {/* 结果显示 */}
+      {result && (
+        <div className="result-modal">
+          <div className="result-content">
+            <h2 className="result-title">🎉 恭喜你获得 🎉</h2>
+            <div className="result-prize">{result}</div>
                                 <div className="result-description">
                                     {getRandomPrizeDescription(result)}
                                 </div>
@@ -4105,15 +4092,15 @@ const LotteryLuckyWheel = () => {
                                         </button>
                                     </div>
                                 ) : (
-                                    <button
-                                        className="continue-button"
+            <button 
+              className="continue-button"
                                         onClick={() => {
                                             setResult('')
                                             setCurrentPrize('')
                                         }}
-                                    >
-                                        继续游戏
-                                    </button>
+            >
+              继续游戏
+            </button>
                                 )}
                             </div>
                         </div>
@@ -4250,17 +4237,17 @@ const LotteryLuckyWheel = () => {
                                         </div>
                                     )}
                                 </div>
-                            </div>
-                        </div>
-                    )}
+          </div>
+        </div>
+      )}
 
-                    {/* 装饰元素 */}
-                    <div className="decorations">
-                        <div className="star star-1">⭐</div>
-                        <div className="star star-2">🌟</div>
-                        <div className="star star-3">✨</div>
-                        <div className="star star-4">💫</div>
-                    </div>
+      {/* 装饰元素 */}
+      <div className="decorations">
+        <div className="star star-1">⭐</div>
+        <div className="star star-2">🌟</div>
+        <div className="star star-3">✨</div>
+        <div className="star star-4">💫</div>
+      </div>
                 </>
             )}
 
@@ -5133,8 +5120,8 @@ const LotteryLuckyWheel = () => {
                 castingCode={castingMagic}
                 onCast={castMagic}
             />
-        </div>
-    )
+    </div>
+  )
 }
 
 export default LotteryLuckyWheel
