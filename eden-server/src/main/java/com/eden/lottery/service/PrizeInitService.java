@@ -81,6 +81,9 @@ public class PrizeInitService implements ApplicationRunner {
             // 检查并创建魔法表
             checkAndCreateMagicTable(connection);
 
+            // 检查并创建巨人进攻表
+            checkAndCreateGiantAttackTable(connection);
+
             logger.info("数据库迁移检查完成");
         } catch (Exception e) {
             logger.error("数据库迁移失败", e);
@@ -721,6 +724,21 @@ public class PrizeInitService implements ApplicationRunner {
                 logger.info("添加魔法: CHANGE_WEATHER");
             }
             rs2.close();
+            
+            // 检查并添加"驱逐巨人"魔法
+            String checkMagic3 = "SELECT COUNT(*) as cnt FROM magic WHERE code = 'BANISH_GIANT'";
+            ResultSet rs3 = statement.executeQuery(checkMagic3);
+            if (rs3.next() && rs3.getInt("cnt") == 0) {
+                String insertMagic3 = """
+                        INSERT INTO magic (code, name, description, daily_limit, remaining_uses, last_refresh_at, created_at)
+                        VALUES ('BANISH_GIANT', '驱逐巨人', 
+                                '施展魔法后，正在进攻的巨人将被驱逐，巨人进攻立即停止，巨人逐渐暗淡消失。', 
+                                1, 1, datetime('now', 'localtime'), datetime('now', 'localtime'))
+                        """;
+                statement.execute(insertMagic3);
+                logger.info("添加魔法: BANISH_GIANT");
+            }
+            rs3.close();
         }
     }
     
@@ -767,6 +785,41 @@ public class PrizeInitService implements ApplicationRunner {
             statement.execute(insertMagic2);
             
             logger.info("魔法数据初始化成功");
+        }
+    }
+    
+    /**
+     * 检查并创建巨人进攻表
+     */
+    private void checkAndCreateGiantAttackTable(Connection connection) throws Exception {
+        DatabaseMetaData metaData = connection.getMetaData();
+        ResultSet tables = metaData.getTables(null, null, "giant_attack", null);
+
+        if (!tables.next()) {
+            logger.info("giant_attack表不存在，创建表...");
+            
+            try (Statement statement = connection.createStatement()) {
+                String createTable = """
+                        CREATE TABLE giant_attack (
+                            id INTEGER PRIMARY KEY AUTOINCREMENT,
+                            is_active BOOLEAN NOT NULL DEFAULT 0,
+                            start_time DATETIME,
+                            end_time DATETIME,
+                            last_damage_time DATETIME,
+                            create_time DATETIME NOT NULL DEFAULT (datetime('now', 'localtime')),
+                            update_time DATETIME NOT NULL DEFAULT (datetime('now', 'localtime'))
+                        )
+                        """;
+                statement.execute(createTable);
+                
+                // 创建索引
+                statement.execute("CREATE INDEX IF NOT EXISTS idx_giant_attack_active ON giant_attack(is_active)");
+                statement.execute("CREATE INDEX IF NOT EXISTS idx_giant_attack_create_time ON giant_attack(create_time)");
+                
+                logger.info("giant_attack表创建成功");
+            }
+        } else {
+            logger.info("giant_attack表已存在，跳过创建");
         }
     }
 }

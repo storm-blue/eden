@@ -555,6 +555,7 @@
                 <button class="tab" data-tab="actions">用户操作</button>
                 <button class="tab" data-tab="residence-events">居所事件</button>
                 <button class="tab" data-tab="decrees">命令管理</button>
+                <button class="tab" data-tab="giant-attack">巨人进攻管理</button>
             </div>
 
             <!-- 用户管理标签页 -->
@@ -967,6 +968,68 @@
                     </div>
                 </div>
             </div>
+
+            <!-- 巨人进攻管理标签页 -->
+            <div id="giant-attack" class="tab-content">
+                <!-- 巨人进攻状态 -->
+                <div class="stats-section">
+                    <h4>👹 巨人进攻状态</h4>
+                    <div class="stats-grid">
+                        <div class="stat-card">
+                            <h3 id="giantAttackStatus">-</h3>
+                            <p>当前状态</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="giantAttackTime">-</h3>
+                            <p>进攻时间</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 巨人进攻控制 -->
+                <div class="action-form">
+                    <h4>🎮 巨人进攻控制</h4>
+                    <p style="margin-bottom: 15px; color: #666; font-size: 14px;">
+                        手动控制巨人进攻的开始和结束
+                    </p>
+                    <div class="form-row">
+                        <button onclick="triggerGiantAttack()" class="action-btn" style="background: #e53e3e;">
+                            👹 触发巨人进攻
+                        </button>
+                        <button onclick="endGiantAttack()" class="action-btn" style="background: #48bb78;">
+                            🛡️ 结束巨人进攻
+                        </button>
+                        <button onclick="processGiantDamage()" class="action-btn" style="background: #ed8936;">
+                            ⚔️ 处理巨人伤害
+                        </button>
+                        <button onclick="loadGiantAttackStatus()" class="action-btn">
+                            🔄 刷新状态
+                        </button>
+                    </div>
+                </div>
+
+                <!-- 巨人进攻历史 -->
+                <div class="action-form">
+                    <h4>📊 巨人进攻历史</h4>
+                    <div class="table-container">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>ID</th>
+                                    <th>状态</th>
+                                    <th>开始时间</th>
+                                    <th>结束时间</th>
+                                    <th>最后伤害时间</th>
+                                    <th>创建时间</th>
+                                </tr>
+                            </thead>
+                            <tbody id="giantAttackHistoryTable">
+                                <tr><td colspan="6" style="text-align: center; padding: 20px;">点击刷新状态加载数据</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1114,6 +1177,8 @@
                 loadResidenceEventOverview();
             } else if (tabName === 'decrees') {
                 loadDecrees();
+            } else if (tabName === 'giant-attack') {
+                loadGiantAttackStatus();
             }
         }
 
@@ -2176,6 +2241,167 @@
                 }
             } catch (error) {
                 console.error('更新用户状态错误:', error);
+                showMessage('adminMessage', '网络错误，请稍后重试', 'error');
+            }
+        }
+
+        // ==================== 巨人进攻管理功能 ====================
+
+        // 加载巨人进攻状态
+        async function loadGiantAttackStatus() {
+            try {
+                const response = await fetch(`${API_BASE}/giant-attack/status`, {
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    const data = result.data;
+                    
+                    // 更新状态显示
+                    document.getElementById('giantAttackStatus').textContent = data.isAttacking ? '👹 正在进攻' : '🛡️ 未进攻';
+                    document.getElementById('giantAttackStatus').style.color = data.isAttacking ? '#e53e3e' : '#48bb78';
+                    
+                    if (data.isAttacking && data.startTime) {
+                        const startTime = new Date(data.startTime).toLocaleString();
+                        document.getElementById('giantAttackTime').textContent = startTime;
+                    } else {
+                        document.getElementById('giantAttackTime').textContent = '-';
+                    }
+                    
+                    // 加载历史记录
+                    loadGiantAttackHistory();
+                } else {
+                    showMessage('adminMessage', result.message || '加载巨人进攻状态失败', 'error');
+                }
+            } catch (error) {
+                console.error('加载巨人进攻状态错误:', error);
+                showMessage('adminMessage', '网络错误，请稍后重试', 'error');
+            }
+        }
+
+        // 触发巨人进攻
+        async function triggerGiantAttack() {
+            if (!confirm('确定要触发巨人进攻吗？\n\n⚠️ 警告：巨人进攻将开始对星星城造成持续伤害！')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/giant-attack/trigger`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showMessage('adminMessage', '👹 巨人进攻已触发！', 'success');
+                    loadGiantAttackStatus(); // 刷新状态
+                } else {
+                    showMessage('adminMessage', result.message || '触发巨人进攻失败', 'error');
+                }
+            } catch (error) {
+                console.error('触发巨人进攻错误:', error);
+                showMessage('adminMessage', '网络错误，请稍后重试', 'error');
+            }
+        }
+
+        // 结束巨人进攻
+        async function endGiantAttack() {
+            if (!confirm('确定要结束巨人进攻吗？\n\n巨人将停止对星星城的伤害。')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/giant-attack/end`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showMessage('adminMessage', '🛡️ 巨人进攻已结束！', 'success');
+                    loadGiantAttackStatus(); // 刷新状态
+                } else {
+                    showMessage('adminMessage', result.message || '结束巨人进攻失败', 'error');
+                }
+            } catch (error) {
+                console.error('结束巨人进攻错误:', error);
+                showMessage('adminMessage', '网络错误，请稍后重试', 'error');
+            }
+        }
+
+        // 处理巨人伤害
+        async function processGiantDamage() {
+            if (!confirm('确定要手动处理巨人伤害吗？\n\n这将立即对星星城造成一次伤害。')) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/giant-attack/damage`, {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showMessage('adminMessage', '⚔️ 巨人伤害已处理！', 'success');
+                    loadGiantAttackStatus(); // 刷新状态
+                } else {
+                    showMessage('adminMessage', result.message || '处理巨人伤害失败', 'error');
+                }
+            } catch (error) {
+                console.error('处理巨人伤害错误:', error);
+                showMessage('adminMessage', '网络错误，请稍后重试', 'error');
+            }
+        }
+
+        // 加载巨人进攻历史
+        async function loadGiantAttackHistory() {
+            try {
+                const response = await fetch(`${API_BASE}/giant-attack/admin/history`, {
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    const tbody = document.getElementById('giantAttackHistoryTable');
+                    tbody.innerHTML = '';
+
+                    if (result.data.length === 0) {
+                        tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 20px; color: #999;">暂无巨人进攻历史</td></tr>';
+                        return;
+                    }
+
+                    result.data.forEach(attack => {
+                        const row = tbody.insertRow();
+                        row.innerHTML = `
+                            <td>${attack.id}</td>
+                            <td>
+                                <span class="badge ${attack.isActive ? 'badge-danger' : 'badge-secondary'}">
+                                    ${attack.isActive ? '进行中' : '已结束'}
+                                </span>
+                            </td>
+                            <td>${attack.startTime ? new Date(attack.startTime).toLocaleString() : '-'}</td>
+                            <td>${attack.endTime ? new Date(attack.endTime).toLocaleString() : '-'}</td>
+                            <td>${attack.lastDamageTime ? new Date(attack.lastDamageTime).toLocaleString() : '-'}</td>
+                            <td>${new Date(attack.createTime).toLocaleString()}</td>
+                        `;
+                    });
+                } else {
+                    showMessage('adminMessage', result.message || '加载巨人进攻历史失败', 'error');
+                }
+            } catch (error) {
+                console.error('加载巨人进攻历史错误:', error);
                 showMessage('adminMessage', '网络错误，请稍后重试', 'error');
             }
         }

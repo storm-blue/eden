@@ -31,10 +31,14 @@ public class MagicService {
     
     @Autowired
     private WeatherRefreshTask weatherRefreshTask;
+    
+    @Autowired
+    private GiantAttackService giantAttackService;
 
     // 魔法代码常量
     public static final String MAGIC_FOOD_RAIN = "FOOD_RAIN";
     public static final String MAGIC_CHANGE_WEATHER = "CHANGE_WEATHER";
+    public static final String MAGIC_BANISH_GIANT = "BANISH_GIANT";
 
     /**
      * 获取所有魔法
@@ -112,6 +116,9 @@ public class MagicService {
             case MAGIC_CHANGE_WEATHER:
                 executeChangeWeatherMagic();
                 break;
+            case MAGIC_BANISH_GIANT:
+                executeBanishGiantMagic();
+                break;
             default:
                 logger.warn("未知的魔法代码: {}", code);
         }
@@ -143,6 +150,20 @@ public class MagicService {
         // 调用天气刷新任务立即改变天气
         weatherRefreshTask.refreshWeather();
         logger.info("改变天气魔法生效: 天气已立即刷新");
+    }
+    
+    /**
+     * 执行驱逐巨人魔法效果
+     */
+    private void executeBanishGiantMagic() {
+        // 检查是否有巨人正在进攻
+        if (giantAttackService.isGiantAttacking()) {
+            // 结束巨人进攻
+            giantAttackService.endGiantAttack();
+            logger.info("驱逐巨人魔法生效: 巨人进攻已停止，巨人逐渐暗淡消失");
+        } else {
+            logger.info("驱逐巨人魔法施展: 当前没有巨人进攻，魔法无效");
+        }
     }
 
     /**

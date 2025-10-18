@@ -348,7 +348,8 @@ const LotteryLuckyWheel = () => {
             city_hall: {top: '12%', left: '72%'},
             palace: {top: '8%', left: '23%'},
             white_dove_house: {top: '31%', left: '61%'},
-            park: {top: '50%', left: '40%'}
+            park: {top: '50%', left: '40%'},
+            giant: {top: '40%', left: '75%'}
         }
 
         const lv2Positions = {
@@ -356,7 +357,8 @@ const LotteryLuckyWheel = () => {
             city_hall: {top: '18%', left: '76%'},
             palace: {top: '20%', left: '18%'},
             white_dove_house: {top: '55%', left: '40%'},
-            park: {top: '38%', left: '63%'}
+            park: {top: '38%', left: '63%'},
+            giant: {top: '40%', left: '75%'}
         }
 
         const lv3Positions = {
@@ -364,7 +366,8 @@ const LotteryLuckyWheel = () => {
             city_hall: {top: '35%', left: '83%'},
             palace: {top: '35%', left: '16%'},
             white_dove_house: {top: '45%', left: '61%'},
-            park: {top: '58%', left: '26%'}
+            park: {top: '58%', left: '26%'},
+            giant: {top: '40%', left: '75%'}
         }
 
         const lv4Positions = {
@@ -372,7 +375,8 @@ const LotteryLuckyWheel = () => {
             city_hall: {top: '55%', left: '80%'},
             palace: {top: '40%', left: '25%'},
             white_dove_house: {top: '40%', left: '63%'},
-            park: {top: '52%', left: '38%'}
+            park: {top: '52%', left: '38%'},
+            giant: {top: '40%', left: '75%'}
         }
 
         // LV5+ 位置
@@ -381,7 +385,8 @@ const LotteryLuckyWheel = () => {
             city_hall: {top: '18%', left: '68%'},
             palace: {top: '12%', left: '28%'},
             white_dove_house: {top: '38%', left: '65%'},
-            park: {top: '55%', left: '35%'}
+            park: {top: '55%', left: '35%'},
+            giant: {top: '40%', left: '75%'}
         }
 
         // LV6 位置
@@ -390,7 +395,8 @@ const LotteryLuckyWheel = () => {
             city_hall: {top: '15%', left: '75%'},
             palace: {top: '20%', left: '20%'},
             white_dove_house: {top: '45%', left: '70%'},
-            park: {top: '60%', left: '30%'}
+            park: {top: '60%', left: '30%'},
+            giant: {top: '40%', left: '75%'}
         }
 
         // LV7 位置
@@ -399,7 +405,8 @@ const LotteryLuckyWheel = () => {
             city_hall: {top: '10%', left: '80%'},
             palace: {top: '15%', left: '15%'},
             white_dove_house: {top: '50%', left: '75%'},
-            park: {top: '65%', left: '25%'}
+            park: {top: '65%', left: '25%'},
+            giant: {top: '40%', left: '75%'}
         }
 
         // LV8 位置
@@ -408,7 +415,8 @@ const LotteryLuckyWheel = () => {
             city_hall: {top: '8%', left: '85%'},
             palace: {top: '12%', left: '10%'},
             white_dove_house: {top: '55%', left: '80%'},
-            park: {top: '70%', left: '20%'}
+            park: {top: '70%', left: '20%'},
+            giant: {top: '40%', left: '75%'}
         }
 
         // 根据等级返回对应位置
@@ -468,6 +476,12 @@ const LotteryLuckyWheel = () => {
     const [showWeatherChange, setShowWeatherChange] = useState(false) // 显示改变天气特效
     const [foodCountAnimation, setFoodCountAnimation] = useState(false) // 食物数字滚动动画
     const [foodCountStart, setFoodCountStart] = useState(0) // 食物数字滚动起始值
+
+    // 巨人进攻状态
+    const [giantAttackStatus, setGiantAttackStatus] = useState(null) // 巨人进攻状态
+    const [isGiantAttacking, setIsGiantAttacking] = useState(false) // 是否正在巨人进攻
+    const [giantPosition, setGiantPosition] = useState(null) // 巨人位置
+    const [isGiantBanishing, setIsGiantBanishing] = useState(false) // 巨人是否正在被驱逐
 
     // 奖品名称映射（与后端保持一致）
   const prizeNames = [
@@ -612,6 +626,8 @@ const LotteryLuckyWheel = () => {
                     triggerFoodRainEffect()
                 } else if (code === 'CHANGE_WEATHER') {
                     triggerWeatherChangeEffect()
+                } else if (code === 'BANISH_GIANT') {
+                    triggerBanishGiantEffect()
                 }
 
                 // 刷新星星城数据（食物已增加或天气已改变）
@@ -654,6 +670,22 @@ const LotteryLuckyWheel = () => {
         setTimeout(() => {
             setShowWeatherChange(false)
         }, 2000)
+    }
+
+    // 触发驱逐巨人特效
+    const triggerBanishGiantEffect = () => {
+        if (isGiantAttacking) {
+            setIsGiantBanishing(true)
+            
+            // 3秒后巨人完全消失
+            setTimeout(() => {
+                setIsGiantBanishing(false)
+                setIsGiantAttacking(false)
+                setGiantPosition(null)
+                // 刷新巨人进攻状态
+                fetchGiantAttackStatus()
+            }, 3000)
+        }
     }
 
     // 获取命令列表（仅秦小淮管理用）
@@ -924,6 +956,33 @@ const LotteryLuckyWheel = () => {
             }
         } catch (error) {
             console.error('获取星星城数据失败:', error)
+        }
+    }
+
+    // 获取巨人进攻状态
+    const fetchGiantAttackStatus = async () => {
+        try {
+            const response = await fetch('/api/giant-attack/status')
+            const data = await response.json()
+            if (data.isAttacking !== undefined) {
+                console.log('获取巨人进攻状态成功:', data)
+                setGiantAttackStatus(data)
+                setIsGiantAttacking(data.isAttacking)
+                
+                // 如果巨人正在进攻，设置巨人位置
+                if (data.isAttacking) {
+                    const level = starCityData?.level || 1
+                    const positions = getBuildingPositions(level)
+                    // 巨人位置使用独立的配置
+                    setGiantPosition(positions.giant)
+                } else {
+                    setGiantPosition(null)
+                }
+            } else {
+                console.error('获取巨人进攻状态失败:', data.error)
+            }
+        } catch (error) {
+            console.error('获取巨人进攻状态出错:', error)
         }
     }
 
@@ -1424,6 +1483,7 @@ const LotteryLuckyWheel = () => {
             loadAllBuildingResidents() // 加载所有建筑的居住人员信息
             loadAllResidenceEvents() // 加载所有居所事件
             fetchAllDecrees() // 获取所有命令状态（用于检测彩虹等视觉效果）
+            fetchGiantAttackStatus() // 获取巨人进攻状态
 
             // 🔥 修复双重下载：移除独立的预加载，直接播放
             // 音频会在首次播放时自动加载
@@ -2787,6 +2847,164 @@ const LotteryLuckyWheel = () => {
                         )}
                     </div>
 
+                    {/* 巨人进攻层 */}
+                    {isGiantAttacking && giantPosition && (
+                        <div style={{
+                            position: 'absolute',
+                            top: giantPosition.top,
+                            left: giantPosition.left,
+                            width: '120px',
+                            height: '120px',
+                            zIndex: 30,
+                            pointerEvents: 'none',
+                            transform: 'translate(-50%, -50%)'
+                        }}>
+                            {/* 巨人图片 */}
+                            <div style={{
+                                width: '100%',
+                                height: '100%',
+                                backgroundImage: 'url(/picture/giant.png)',
+                                backgroundSize: 'contain',
+                                backgroundRepeat: 'no-repeat',
+                                backgroundPosition: 'center',
+                                filter: isGiantBanishing 
+                                    ? 'drop-shadow(0 0 10px rgba(255, 0, 0, 0.8)) brightness(0.3) opacity(0.7)' 
+                                    : 'drop-shadow(0 0 10px rgba(255, 0, 0, 0.8))',
+                                transition: 'all 3s ease-out',
+                                opacity: isGiantBanishing ? 0 : 1,
+                                zIndex: 25
+                            }} />
+                            
+                            {/* 巨人攻击特效 */}
+                            <div style={{
+                                position: 'absolute',
+                                top: '50%',
+                                left: '50%',
+                                width: '150px',
+                                height: '150px',
+                                transform: 'translate(-50%, -50%)',
+                                borderRadius: '50%',
+                                background: 'radial-gradient(circle, rgba(255, 0, 0, 0.3) 0%, rgba(255, 0, 0, 0.1) 50%, transparent 100%)',
+                                animation: 'giantAttackPulse 3s ease-in-out infinite',
+                                zIndex: -1
+                            }} />
+                            
+                            {/* 巨人攻击粒子 */}
+                            {[...Array(8)].map((_, i) => (
+                                <div
+                                    key={`giant-particle-${i}`}
+                                    style={{
+                                        position: 'absolute',
+                                        top: '50%',
+                                        left: '50%',
+                                        width: '4px',
+                                        height: '4px',
+                                        background: '#FF4444',
+                                        borderRadius: '50%',
+                                        transform: 'translate(-50%, -50%)',
+                                        animation: `giantParticleExplode 2s ease-out ${i * 0.1}s infinite`,
+                                        opacity: 0
+                                    }}
+                                />
+                            ))}
+
+                        </div>
+                    )}
+
+                    {/* 巨人脚底火焰特效层 - 独立层 */}
+                    {isGiantAttacking && giantPosition && (
+                        <div style={{
+                            position: 'absolute',
+                            top: giantPosition.top,
+                            left: giantPosition.left,
+                            width: '120px',
+                            height: '120px',
+                            zIndex: 15,
+                            pointerEvents: 'none',
+                            transform: 'translate(-50%, -50%)',
+                            opacity: isGiantBanishing ? 0 : 1,
+                            transition: 'opacity 3s ease-out'
+                        }}>
+                            {/* 脚底火焰特效 - 多圈椭圆围绕巨人脚 */}
+                            {[...Array(3)].map((_, ringIndex) => {
+                                const rings = [
+                                    { count: 5, radiusX: 26, radiusY: 13 }, // 内圈
+                                    { count: 8, radiusX: 50, radiusY: 25 }, // 中圈
+                                    { count: 12, radiusX: 70, radiusY: 35 }  // 外圈
+                                ];
+                                const ring = rings[ringIndex];
+                                
+                                return [...Array(ring.count)].map((_, i) => {
+                                    // 计算椭圆位置
+                                    const angle = (i / ring.count) * 2 * Math.PI;
+                                    const centerX = 50; // 中心X位置
+                                    const centerY = 85; // 中心Y位置（巨人脚底）
+                                    
+                                    const x = centerX + ring.radiusX * Math.cos(angle);
+                                    const y = centerY + ring.radiusY * Math.sin(angle);
+                                    
+                                    return (
+                                        <div
+                                            key={`giant-fire-${ringIndex}-${i}`}
+                                            style={{
+                                                position: 'absolute',
+                                                bottom: `${100 - y}%`,
+                                                left: `${x}%`,
+                                                width: '16px',
+                                                height: '25px',
+                                                background: `linear-gradient(to top, #FF4500, #FF6347, #FFD700)`,
+                                                borderRadius: '50% 50% 50% 50% / 60% 60% 40% 40%',
+                                                animation: `giantFireFlicker 1.5s ease-in-out ${(ringIndex * 0.3) + (i * 0.1)}s infinite alternate`,
+                                                opacity: 0.8,
+                                                filter: 'blur(1px)',
+                                                transform: 'translate(-50%, -50%)'
+                                            }}
+                                        />
+                                    );
+                                });
+                            }).flat()}
+
+                            {/* 脚底烟雾特效 - 多圈椭圆范围内 */}
+                            {[...Array(3)].map((_, ringIndex) => {
+                                const smokeRings = [
+                                    { count: 15, radiusX: 30, radiusY: 20 }, // 内圈烟雾
+                                    { count: 20, radiusX: 40, radiusY: 25 }, // 中圈烟雾
+                                    { count: 25, radiusX: 50, radiusY: 30 }  // 外圈烟雾
+                                ];
+                                const smokeRing = smokeRings[ringIndex];
+                                
+                                return [...Array(smokeRing.count)].map((_, i) => {
+                                    // 计算椭圆位置
+                                    const angle = (i / smokeRing.count) * 2 * Math.PI;
+                                    const centerX = 50; // 中心X位置
+                                    const centerY = 85; // 中心Y位置（巨人脚底）
+                                    
+                                    const x = centerX + smokeRing.radiusX * Math.cos(angle);
+                                    const y = centerY + smokeRing.radiusY * Math.sin(angle);
+                                    
+                                    return (
+                                        <div
+                                            key={`giant-smoke-${ringIndex}-${i}`}
+                                            style={{
+                                                position: 'absolute',
+                                                bottom: `${100 - y}%`,
+                                                left: `${x}%`,
+                                                width: `${3 + Math.random() * 4}px`,
+                                                height: `${8 + Math.random() * 6}px`,
+                                                background: `rgba(128, 128, 128, ${0.3 + Math.random() * 0.4})`,
+                                                borderRadius: '50%',
+                                                animation: `giantSmokeRise 3s ease-out ${(ringIndex * 0.2) + (i * 0.1)}s infinite`,
+                                                opacity: 0,
+                                                filter: 'blur(2px)',
+                                                transform: 'translate(-50%, -50%)'
+                                            }}
+                                        />
+                                    );
+                                });
+                            }).flat()}
+                        </div>
+                    )}
+
                     {/* 标题 */}
                     <h2 style={getCityTitleStyle(starCityData?.level || 1)}>
                         ✨{getCityName(starCityData?.level || 1)}✨
@@ -3192,7 +3410,6 @@ const LotteryLuckyWheel = () => {
                                 backdropFilter: 'blur(10px)',
                                 border: '1px solid rgba(255, 255, 255, 0.2)',
                                 minWidth: '140px',
-                                textAlign: 'center',
                                 boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
                                 cursor: 'pointer',
                                 transition: 'all 0.3s ease',
@@ -3267,39 +3484,11 @@ const LotteryLuckyWheel = () => {
                                 </div>
                             </div>
 
-                            {/* 特殊居住组合状态显示 */}
-                            {specialCombos && specialCombos.hasSpecialCombos && (
-                                <div className="special-combo-info" style={{
-                                    marginTop: '6px',
-                                    padding: '4px 6px',
-                                    background: 'rgba(255, 105, 180, 0.2)',
-                                    borderRadius: '4px',
-                                    border: '1px solid rgba(255, 105, 180, 0.4)',
-                                    animation: 'loveGlow 2s ease-in-out infinite alternate'
-                                }}>
-                                    <div style={{
-                                        fontSize: '8px',
-                                        color: '#FF69B4',
-                                        marginBottom: '1px',
-                                        fontWeight: 'bold',
-                                        textAlign: 'center'
-                                    }}>
-                                        💕 爱情加成 💕
-                                    </div>
-                                    <div style={{
-                                        fontSize: '8px',
-                                        lineHeight: '1.1',
-                                        textAlign: 'center',
-                                        color: '#FFB6C1'
-                                    }}>
-                                        每小时人口 +{specialCombos.totalHourlyBonus}
-                                    </div>
-                                </div>
-                            )}
-
-                            {/* 饥饿警告特效 */}
-                            {starCityData && starCityData.food < starCityData.population && (
-                                <div className="starvation-warning" style={{
+                            {/* 状态提示信息 */}
+                            {(specialCombos && specialCombos.hasSpecialCombos) || 
+                             (starCityData && starCityData.food < starCityData.population) || 
+                             isGiantAttacking ? (
+                                <div className="status-warnings" style={{
                                     marginTop: '6px',
                                     padding: '4px 6px',
                                     background: 'rgba(255, 0, 0, 0.3)',
@@ -3309,20 +3498,72 @@ const LotteryLuckyWheel = () => {
                                     position: 'relative',
                                     overflow: 'hidden'
                                 }}>
-                                    {/* 饥饿警告文字 */}
-                                    <div style={{
-                                        fontSize: '8px',
-                                        color: '#FF4444',
-                                        marginBottom: '1px',
-                                        fontWeight: 'bold'
-                                    }}>
-                                        ⚠️ 食物不足！人口正在下降
-                                    </div>
-                                    <div style={{fontSize: '7px', lineHeight: '1.1', color: '#FF6666'}}>
-                                        每小时人口-0.5%
-                                    </div>
+                                    {/* 特殊居住组合状态显示 */}
+                                    {specialCombos && specialCombos.hasSpecialCombos && (
+                                        <div style={{
+                                            fontSize: '8px',
+                                            color: '#FF69B4',
+                                            marginBottom: '1px',
+                                            fontWeight: 'bold'
+                                        }}>
+                                            💕 爱情加成 💕
+                                        </div>
+                                    )}
+                                    {specialCombos && specialCombos.hasSpecialCombos && (
+                                        <div style={{
+                                            fontSize: '8px',
+                                            lineHeight: '1.1',
+                                            color: '#FFB6C1',
+                                            marginBottom: '2px'
+                                        }}>
+                                            每小时人口 +{specialCombos.totalHourlyBonus}
+                                        </div>
+                                    )}
 
-                                    {/* 饥饿粒子特效 */}
+                                    {/* 饥饿警告特效 */}
+                                    {starCityData && starCityData.food < starCityData.population && (
+                                        <div style={{
+                                            fontSize: '8px',
+                                            color: '#FF4444',
+                                            marginBottom: '1px',
+                                            fontWeight: 'bold'
+                                        }}>
+                                            ⚠️ 食物不足！
+                                        </div>
+                                    )}
+                                    {starCityData && starCityData.food < starCityData.population && (
+                                        <div style={{
+                                            fontSize: '7px', 
+                                            lineHeight: '1.1', 
+                                            color: '#FF6666',
+                                            marginBottom: '2px'
+                                        }}>
+                                            每小时人口-0.5%
+                                        </div>
+                                    )}
+
+                                    {/* 巨人攻击状态显示 */}
+                                    {isGiantAttacking && (
+                                        <div style={{
+                                            fontSize: '8px',
+                                            color: '#FF4444',
+                                            marginBottom: '1px',
+                                            fontWeight: 'bold'
+                                        }}>
+                                            👹 巨人正在进攻！
+                                        </div>
+                                    )}
+                                    {isGiantAttacking && (
+                                        <div style={{
+                                            fontSize: '7px', 
+                                            lineHeight: '1.1', 
+                                            color: '#FF6666'
+                                        }}>
+                                            每10分钟人口-0.5%，幸福-1
+                                        </div>
+                                    )}
+
+                                    {/* 粒子特效 */}
                                     <div style={{
                                         position: 'absolute',
                                         top: 0,
@@ -3334,7 +3575,7 @@ const LotteryLuckyWheel = () => {
                                     }}>
                                         {[...Array(8)].map((_, i) => (
                                             <div
-                                                key={`starvation-particle-${i}`}
+                                                key={`warning-particle-${i}`}
                                                 style={{
                                                     position: 'absolute',
                                                     top: `${Math.random() * 100}%`,
@@ -3363,7 +3604,7 @@ const LotteryLuckyWheel = () => {
                                         pointerEvents: 'none'
                                     }}/>
                                 </div>
-                            )}
+                            ) : null}
 
                         </div>
                     )}
