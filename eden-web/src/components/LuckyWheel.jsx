@@ -349,7 +349,7 @@ const LotteryLuckyWheel = () => {
             palace: {top: '8%', left: '23%'},
             white_dove_house: {top: '31%', left: '61%'},
             park: {top: '50%', left: '40%'},
-            giant: {top: '40%', left: '75%'}
+            giant: {top: '30%', left: '75%'}
         }
 
         const lv2Positions = {
@@ -358,7 +358,7 @@ const LotteryLuckyWheel = () => {
             palace: {top: '20%', left: '18%'},
             white_dove_house: {top: '55%', left: '40%'},
             park: {top: '38%', left: '63%'},
-            giant: {top: '40%', left: '75%'}
+            giant: {top: '30%', left: '75%'}
         }
 
         const lv3Positions = {
@@ -367,7 +367,7 @@ const LotteryLuckyWheel = () => {
             palace: {top: '35%', left: '16%'},
             white_dove_house: {top: '45%', left: '61%'},
             park: {top: '58%', left: '26%'},
-            giant: {top: '40%', left: '75%'}
+            giant: {top: '30%', left: '75%'}
         }
 
         const lv4Positions = {
@@ -376,7 +376,7 @@ const LotteryLuckyWheel = () => {
             palace: {top: '40%', left: '25%'},
             white_dove_house: {top: '40%', left: '63%'},
             park: {top: '52%', left: '38%'},
-            giant: {top: '40%', left: '75%'}
+            giant: {top: '30%', left: '75%'}
         }
 
         // LV5+ 位置
@@ -386,7 +386,7 @@ const LotteryLuckyWheel = () => {
             palace: {top: '12%', left: '28%'},
             white_dove_house: {top: '38%', left: '65%'},
             park: {top: '55%', left: '35%'},
-            giant: {top: '40%', left: '75%'}
+            giant: {top: '30%', left: '75%'}
         }
 
         // LV6 位置
@@ -396,7 +396,7 @@ const LotteryLuckyWheel = () => {
             palace: {top: '20%', left: '20%'},
             white_dove_house: {top: '45%', left: '70%'},
             park: {top: '60%', left: '30%'},
-            giant: {top: '40%', left: '75%'}
+            giant: {top: '30%', left: '75%'}
         }
 
         // LV7 位置
@@ -406,7 +406,7 @@ const LotteryLuckyWheel = () => {
             palace: {top: '15%', left: '15%'},
             white_dove_house: {top: '50%', left: '75%'},
             park: {top: '65%', left: '25%'},
-            giant: {top: '40%', left: '75%'}
+            giant: {top: '30%', left: '75%'}
         }
 
         // LV8 位置
@@ -416,7 +416,7 @@ const LotteryLuckyWheel = () => {
             palace: {top: '12%', left: '10%'},
             white_dove_house: {top: '55%', left: '80%'},
             park: {top: '70%', left: '20%'},
-            giant: {top: '40%', left: '75%'}
+            giant: {top: '30%', left: '75%'}
         }
 
         // 根据等级返回对应位置
@@ -963,8 +963,10 @@ const LotteryLuckyWheel = () => {
     const fetchGiantAttackStatus = async () => {
         try {
             const response = await fetch('/api/giant-attack/status')
-            const data = await response.json()
-            if (data.isAttacking !== undefined) {
+            const result = await response.json()
+            
+            if (result.success && result.data) {
+                const data = result.data
                 console.log('获取巨人进攻状态成功:', data)
                 setGiantAttackStatus(data)
                 setIsGiantAttacking(data.isAttacking)
@@ -979,7 +981,7 @@ const LotteryLuckyWheel = () => {
                     setGiantPosition(null)
                 }
             } else {
-                console.error('获取巨人进攻状态失败:', data.error)
+                console.error('获取巨人进攻状态失败:', result.message || '未知错误')
             }
         } catch (error) {
             console.error('获取巨人进攻状态出错:', error)
@@ -1491,6 +1493,24 @@ const LotteryLuckyWheel = () => {
             setTimeout(() => {
                 playStarCityMusic()
             }, audioDelay)
+        }
+    }, [showStarCity])
+
+    // 定时刷新巨人进攻状态
+    useEffect(() => {
+        let giantAttackInterval = null
+        
+        if (showStarCity) {
+            // 每3分钟刷新一次巨人进攻状态
+            giantAttackInterval = setInterval(() => {
+                fetchGiantAttackStatus()
+            }, 180000)
+        }
+        
+        return () => {
+            if (giantAttackInterval) {
+                clearInterval(giantAttackInterval)
+            }
         }
     }, [showStarCity])
 
