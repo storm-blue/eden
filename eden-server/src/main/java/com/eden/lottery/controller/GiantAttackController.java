@@ -30,19 +30,24 @@ public class GiantAttackController {
             GiantAttack currentAttack = giantAttackService.getCurrentGiantAttack();
             boolean isAttacking = giantAttackService.isGiantAttacking();
             
-            Map<String, Object> result = new HashMap<>();
-            result.put("isAttacking", isAttacking);
+            Map<String, Object> data = new HashMap<>();
+            data.put("isAttacking", isAttacking);
             
             if (currentAttack != null) {
-                result.put("startTime", currentAttack.getStartTime());
-                result.put("endTime", currentAttack.getEndTime());
-                result.put("lastDamageTime", currentAttack.getLastDamageTime());
+                data.put("startTime", currentAttack.getStartTime());
+                data.put("endTime", currentAttack.getEndTime());
+                data.put("lastDamageTime", currentAttack.getLastDamageTime());
             }
+            
+            Map<String, Object> result = new HashMap<>();
+            result.put("success", true);
+            result.put("data", data);
             
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             Map<String, Object> error = new HashMap<>();
-            error.put("error", "获取巨人进攻状态失败: " + e.getMessage());
+            error.put("success", false);
+            error.put("message", "获取巨人进攻状态失败: " + e.getMessage());
             return ResponseEntity.status(500).body(error);
         }
     }
@@ -57,7 +62,8 @@ public class GiantAttackController {
             String token = request.getHeader("Authorization");
             if (token == null || !token.startsWith("Bearer ")) {
                 Map<String, Object> error = new HashMap<>();
-                error.put("error", "需要管理员权限");
+                error.put("success", false);
+                error.put("message", "需要管理员权限");
                 return ResponseEntity.status(401).body(error);
             }
 
@@ -70,7 +76,8 @@ public class GiantAttackController {
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             Map<String, Object> error = new HashMap<>();
-            error.put("error", "触发巨人进攻失败: " + e.getMessage());
+            error.put("success", false);
+            error.put("message", "触发巨人进攻失败: " + e.getMessage());
             return ResponseEntity.status(500).body(error);
         }
     }
@@ -85,7 +92,8 @@ public class GiantAttackController {
             String token = request.getHeader("Authorization");
             if (token == null || !token.startsWith("Bearer ")) {
                 Map<String, Object> error = new HashMap<>();
-                error.put("error", "需要管理员权限");
+                error.put("success", false);
+                error.put("message", "需要管理员权限");
                 return ResponseEntity.status(401).body(error);
             }
 
@@ -98,7 +106,8 @@ public class GiantAttackController {
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             Map<String, Object> error = new HashMap<>();
-            error.put("error", "结束巨人进攻失败: " + e.getMessage());
+            error.put("success", false);
+            error.put("message", "结束巨人进攻失败: " + e.getMessage());
             return ResponseEntity.status(500).body(error);
         }
     }
@@ -113,7 +122,8 @@ public class GiantAttackController {
             String token = request.getHeader("Authorization");
             if (token == null || !token.startsWith("Bearer ")) {
                 Map<String, Object> error = new HashMap<>();
-                error.put("error", "需要管理员权限");
+                error.put("success", false);
+                error.put("message", "需要管理员权限");
                 return ResponseEntity.status(401).body(error);
             }
 
@@ -126,7 +136,8 @@ public class GiantAttackController {
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             Map<String, Object> error = new HashMap<>();
-            error.put("error", "处理巨人伤害失败: " + e.getMessage());
+            error.put("success", false);
+            error.put("message", "处理巨人伤害失败: " + e.getMessage());
             return ResponseEntity.status(500).body(error);
         }
     }
@@ -141,7 +152,8 @@ public class GiantAttackController {
             String token = request.getHeader("Authorization");
             if (token == null || !token.startsWith("Bearer ")) {
                 Map<String, Object> error = new HashMap<>();
-                error.put("error", "需要管理员权限");
+                error.put("success", false);
+                error.put("message", "需要管理员权限");
                 return ResponseEntity.status(401).body(error);
             }
 
@@ -154,7 +166,8 @@ public class GiantAttackController {
             return ResponseEntity.ok(result);
         } catch (Exception e) {
             Map<String, Object> error = new HashMap<>();
-            error.put("error", "获取巨人进攻历史失败: " + e.getMessage());
+            error.put("success", false);
+            error.put("message", "获取巨人进攻历史失败: " + e.getMessage());
             return ResponseEntity.status(500).body(error);
         }
     }

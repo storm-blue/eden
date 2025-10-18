@@ -50,7 +50,9 @@ public class StarCityController {
             // 下一等级所需条件
             if (starCity.getLevel() < 10) {
                 Map<String, Object> nextLevel = getNextLevelRequirements(starCity.getLevel() + 1);
-                result.put("nextLevelRequirements", nextLevel);
+                if (nextLevel != null) {
+                    result.put("nextLevelRequirements", nextLevel);
+                }
             }
             
             return ApiResponse.success("获取星星城信息成功", result);
@@ -194,7 +196,9 @@ public class StarCityController {
             // 下一等级所需条件
             if (starCity.getLevel() < 10) {
                 Map<String, Object> nextLevel = getNextLevelRequirements(starCity.getLevel() + 1);
-                result.put("nextLevelRequirements", nextLevel);
+                if (nextLevel != null) {
+                    result.put("nextLevelRequirements", nextLevel);
+                }
             }
             
             return ApiResponse.success("测试捐献格式成功", result);

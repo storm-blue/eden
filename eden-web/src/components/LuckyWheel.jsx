@@ -3705,7 +3705,7 @@ const LotteryLuckyWheel = () => {
                                 <div>🎁 随机礼物 → +2幸福</div>
                                 
                                 {/* 城市升级条件 */}
-                                {starCityData && starCityData.canUpgrade && starCityData.nextLevelRequirements && (
+                                {starCityData && starCityData.nextLevelRequirements && (
                                     <div style={{
                                         marginTop: '10px'
                                     }}>
