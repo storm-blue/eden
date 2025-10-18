@@ -31,7 +31,17 @@ public class StarCity {
 
     // 计算等级的方法
     public Integer calculateLevel() {
-        if (population >= 1000000 && food >= 1000000 && happiness >= 100) {
+        if (population >= 20000000 && food >= 20000000 && happiness >= 2000) {
+            return 10;
+        } else if (population >= 10000000 && food >= 10000000 && happiness >= 1000) {
+            return 9;
+        } else if (population >= 5000000 && food >= 5000000 && happiness >= 500) {
+            return 8;
+        } else if (population >= 3000000 && food >= 3000000 && happiness >= 300) {
+            return 7;
+        } else if (population >= 1500000 && food >= 1500000 && happiness >= 150) {
+            return 6;
+        } else if (population >= 1000000 && food >= 1000000 && happiness >= 100) {
             return 5;
         } else if (population >= 700000 && food >= 700000 && happiness >= 80) {
             return 4;

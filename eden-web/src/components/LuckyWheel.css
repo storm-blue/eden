@@ -522,7 +522,7 @@
 }
 
 .star-city-title h2 {
-    font-size: 36px;
+    font-size: 42px;
     margin-bottom: 10px;
     text-shadow: 0 0 25px rgba(255, 255, 255, 0.6);
     animation: titleGlow 2s ease-in-out infinite alternate;
@@ -2652,7 +2652,7 @@
 
     /* 标题在强制横屏时的调整 */
     .star-city-container.force-landscape h2 {
-        font-size: 32px !important;
+        font-size: 28px !important;
         bottom: 10px !important;
         left: 50% !important;
         transform: translateX(-50%) !important;

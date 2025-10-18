@@ -48,7 +48,7 @@ public class StarCityController {
             result.put("canUpgrade", starCityService.canUpgrade(starCity));
             
             // 下一等级所需条件
-            if (starCity.getLevel() < 5) {
+            if (starCity.getLevel() < 10) {
                 Map<String, Object> nextLevel = getNextLevelRequirements(starCity.getLevel() + 1);
                 result.put("nextLevelRequirements", nextLevel);
             }
@@ -117,7 +117,7 @@ public class StarCityController {
                 result.put("canUpgrade", starCityService.canUpgrade(starCity));
                 
                 // 下一等级所需条件
-                if (starCity.getLevel() < 5) {
+                if (starCity.getLevel() < 10) {
                     Map<String, Object> nextLevel = getNextLevelRequirements(starCity.getLevel() + 1);
                     result.put("nextLevelRequirements", nextLevel);
                 }
@@ -192,7 +192,7 @@ public class StarCityController {
             result.put("canUpgrade", starCityService.canUpgrade(starCity));
             
             // 下一等级所需条件
-            if (starCity.getLevel() < 5) {
+            if (starCity.getLevel() < 10) {
                 Map<String, Object> nextLevel = getNextLevelRequirements(starCity.getLevel() + 1);
                 result.put("nextLevelRequirements", nextLevel);
             }
@@ -228,6 +228,31 @@ public class StarCityController {
                 requirements.put("population", 1000000L);
                 requirements.put("food", 1000000L);
                 requirements.put("happiness", 100);
+                break;
+            case 6:
+                requirements.put("population", 1500000L);
+                requirements.put("food", 1500000L);
+                requirements.put("happiness", 150);
+                break;
+            case 7:
+                requirements.put("population", 3000000L);
+                requirements.put("food", 3000000L);
+                requirements.put("happiness", 300);
+                break;
+            case 8:
+                requirements.put("population", 5000000L);
+                requirements.put("food", 5000000L);
+                requirements.put("happiness", 500);
+                break;
+            case 9:
+                requirements.put("population", 10000000L);
+                requirements.put("food", 10000000L);
+                requirements.put("happiness", 1000);
+                break;
+            case 10:
+                requirements.put("population", 20000000L);
+                requirements.put("food", 20000000L);
+                requirements.put("happiness", 2000);
                 break;
             default:
                 return null;

@@ -250,6 +250,23 @@ const LotteryLuckyWheel = () => {
     const [selectedResident, setSelectedResident] = useState(null)
     const [residentDetailInfo, setResidentDetailInfo] = useState(null)
 
+    // 根据星星城等级获取城市名称
+    const getCityName = (level) => {
+        const cityNames = {
+            1: "晨曦小镇",
+            2: "繁花之城", 
+            3: "星辰都市",
+            4: "云端之城",
+            5: "梦幻星城",
+            6: "月光之城",
+            7: "银河之都",
+            8: "永恒圣域",
+            9: "天界之城",
+            10: "创世神域"
+        }
+        return cityNames[level] || "未知城市"
+    }
+
     // 根据星星城等级获取建筑位置配置
     const getBuildingPositions = (level) => {
         const lv1Positions = {
@@ -293,8 +310,41 @@ const LotteryLuckyWheel = () => {
             park: {top: '55%', left: '35%'}
         }
 
+        // LV6 位置
+        const lv6Positions = {
+            castle: {top: '30%', left: '50%'},
+            city_hall: {top: '15%', left: '75%'},
+            palace: {top: '20%', left: '20%'},
+            white_dove_house: {top: '45%', left: '70%'},
+            park: {top: '60%', left: '30%'}
+        }
+
+        // LV7 位置
+        const lv7Positions = {
+            castle: {top: '25%', left: '48%'},
+            city_hall: {top: '10%', left: '80%'},
+            palace: {top: '15%', left: '15%'},
+            white_dove_house: {top: '50%', left: '75%'},
+            park: {top: '65%', left: '25%'}
+        }
+
+        // LV8 位置
+        const lv8Positions = {
+            castle: {top: '22%', left: '45%'},
+            city_hall: {top: '8%', left: '85%'},
+            palace: {top: '12%', left: '10%'},
+            white_dove_house: {top: '55%', left: '80%'},
+            park: {top: '70%', left: '20%'}
+        }
+
         // 根据等级返回对应位置
-        if (level == 5) {
+        if (level == 8) {
+            return lv8Positions
+        } else if (level == 7) {
+            return lv7Positions
+        } else if (level == 6) {
+            return lv6Positions
+        } else if (level == 5) {
             return lv5Positions
         } else if (level == 4) {
             return lv4Positions
@@ -761,8 +811,10 @@ const LotteryLuckyWheel = () => {
         const checkScreenSize = () => {
             clearTimeout(resizeTimer)
             resizeTimer = setTimeout(() => {
-                // 移动端设备始终强制横屏显示
-                const isMobile = window.innerWidth <= 768 || window.screen.width <= 768
+                // 改进的移动端设备检测
+                const isMobile = window.innerWidth <= 768 || 
+                                window.screen.width <= 768 || 
+                                /Android|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent)
                 setIsMobileDevice(isMobile)
             }, 150) // 150ms防抖
         }
@@ -2663,7 +2715,7 @@ const LotteryLuckyWheel = () => {
 
                     {/* 标题 */}
                     <h2 style={{
-                        fontSize: '42px',
+                        fontSize: isMobileDevice ? '28px' : '42px',
                         marginBottom: '10px',
                         textShadow: '0 0 25px rgba(0,0,0,0.8), 0 0 50px rgba(255,255,255,0.6)',
                         position: 'absolute',
@@ -2673,7 +2725,7 @@ const LotteryLuckyWheel = () => {
                         zIndex: 10,
                         color: 'white'
                     }}>
-                        ✨星星城 LV{starCityData?.level || 1}✨
+                        ✨{getCityName(starCityData?.level || 1)}✨
                     </h2>
 
                     {/* 秦小淮专属按钮组 */}
