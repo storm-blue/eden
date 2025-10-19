@@ -109,6 +109,21 @@ public interface UserMapper {
     void batchRefreshStamina();
     
     /**
+     * 获取用户精力信息
+     */
+    Integer getUserEnergy(@Param("userId") String userId);
+    
+    /**
+     * 更新用户精力
+     */
+    void updateUserEnergy(@Param("userId") String userId, @Param("energy") Integer energy, @Param("energyRefreshTime") LocalDateTime energyRefreshTime);
+    
+    /**
+     * 批量刷新所有用户的精力到满值
+     */
+    void batchRefreshEnergy();
+    
+    /**
      * 删除用户
      */
     void deleteByUserId(@Param("userId") String userId);

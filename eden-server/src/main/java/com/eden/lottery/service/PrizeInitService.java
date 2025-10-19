@@ -133,6 +133,24 @@ public class PrizeInitService implements ApplicationRunner {
             addStaminaColumn(connection);
         }
 
+        // 检查energy列是否存在
+        if (!columns.contains("energy")) {
+            logger.info("users表缺少energy列，添加列...");
+            addEnergyColumn(connection);
+        }
+
+        // 检查max_energy列是否存在
+        if (!columns.contains("max_energy")) {
+            logger.info("users表缺少max_energy列，添加列...");
+            addMaxEnergyColumn(connection);
+        }
+
+        // 检查energy_refresh_time列是否存在
+        if (!columns.contains("energy_refresh_time")) {
+            logger.info("users表缺少energy_refresh_time列，添加列...");
+            addEnergyRefreshTimeColumn(connection);
+        }
+
         logger.info("users表结构检查完成");
     }
 
@@ -236,6 +254,59 @@ public class PrizeInitService implements ApplicationRunner {
             String updateSql = "UPDATE users SET stamina = 5 WHERE stamina IS NULL OR stamina = 0";
             stmt.execute(updateSql);
             logger.info("为现有用户设置默认耐力值");
+        }
+    }
+
+    /**
+     * 添加energy列
+     */
+    private void addEnergyColumn(Connection connection) throws Exception {
+        String sql = "ALTER TABLE users ADD COLUMN energy INTEGER NOT NULL DEFAULT 15";
+
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(sql);
+            logger.info("energy列添加成功");
+
+            // 为现有用户设置默认精力值
+            String updateSql = "UPDATE users SET energy = 15 WHERE energy IS NULL OR energy = 0";
+            stmt.execute(updateSql);
+            logger.info("为现有用户设置默认精力值");
+        }
+    }
+
+    /**
+     * 添加max_energy列
+     */
+    private void addMaxEnergyColumn(Connection connection) throws Exception {
+        String sql = "ALTER TABLE users ADD COLUMN max_energy INTEGER NOT NULL DEFAULT 15";
+
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(sql);
+            logger.info("max_energy列添加成功");
+
+            // 为现有用户设置默认最大精力值
+            String updateSql = "UPDATE users SET max_energy = 15 WHERE max_energy IS NULL OR max_energy = 0";
+            stmt.execute(updateSql);
+            logger.info("为现有用户设置默认最大精力值");
+        }
+    }
+
+    /**
+     * 添加energy_refresh_time列
+     */
+    private void addEnergyRefreshTimeColumn(Connection connection) throws Exception {
+        // SQLite不支持ALTER TABLE ADD COLUMN时使用非常量默认值
+        // 所以先添加列（允许NULL），然后用UPDATE设置默认值
+        String sql = "ALTER TABLE users ADD COLUMN energy_refresh_time DATETIME";
+
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(sql);
+            logger.info("energy_refresh_time列添加成功");
+
+            // 为所有用户设置默认精力刷新时间为当前时间
+            String updateSql = "UPDATE users SET energy_refresh_time = datetime('now', 'localtime') WHERE energy_refresh_time IS NULL";
+            stmt.execute(updateSql);
+            logger.info("为现有用户设置默认精力刷新时间");
         }
     }
 
@@ -684,10 +755,37 @@ public class PrizeInitService implements ApplicationRunner {
             createMagicTable(connection);
         } else {
             logger.info("magic表已存在，检查并添加缺失的魔法...");
+            // 检查并添加energy_cost列
+            List<String> columns = getTableColumns(connection, "magic");
+            if (!columns.contains("energy_cost")) {
+                logger.info("magic表缺少energy_cost列，添加列...");
+                addMagicEnergyCostColumn(connection);
+            }
             ensureMagicRecords(connection);
         }
 
         tables.close();
+    }
+
+    /**
+     * 添加magic表的energy_cost列
+     */
+    private void addMagicEnergyCostColumn(Connection connection) throws Exception {
+        String sql = "ALTER TABLE magic ADD COLUMN energy_cost INTEGER NOT NULL DEFAULT 5";
+
+        try (Statement stmt = connection.createStatement()) {
+            stmt.execute(sql);
+            logger.info("energy_cost列添加成功");
+
+            // 为现有魔法设置精力消耗
+            // 天降食物：5点精力
+            stmt.execute("UPDATE magic SET energy_cost = 5 WHERE code = 'FOOD_RAIN'");
+            // 改变天气：3点精力
+            stmt.execute("UPDATE magic SET energy_cost = 3 WHERE code = 'CHANGE_WEATHER'");
+            // 驱逐巨人：8点精力
+            stmt.execute("UPDATE magic SET energy_cost = 8 WHERE code = 'BANISH_GIANT'");
+            logger.info("为现有魔法设置精力消耗");
+        }
     }
     
     /**
@@ -700,10 +798,10 @@ public class PrizeInitService implements ApplicationRunner {
             ResultSet rs1 = statement.executeQuery(checkMagic1);
             if (rs1.next() && rs1.getInt("cnt") == 0) {
                 String insertMagic1 = """
-                        INSERT INTO magic (code, name, description, daily_limit, remaining_uses, last_refresh_at, created_at)
+                        INSERT INTO magic (code, name, description, daily_limit, remaining_uses, energy_cost, last_refresh_at, created_at)
                         VALUES ('FOOD_RAIN', '天降食物', 
-                                '施展魔法后，将会有10000份食物从天而降，储存到星星城的食物仓库中。', 
-                                3, 3, datetime('now', 'localtime'), datetime('now', 'localtime'))
+                                '施展魔法后，将会有10000份食物从天而降，储存到星星城的食物仓库中。消耗5点精力。', 
+                                3, 3, 5, datetime('now', 'localtime'), datetime('now', 'localtime'))
                         """;
                 statement.execute(insertMagic1);
                 logger.info("添加魔法: FOOD_RAIN");
@@ -715,10 +813,10 @@ public class PrizeInitService implements ApplicationRunner {
             ResultSet rs2 = statement.executeQuery(checkMagic2);
             if (rs2.next() && rs2.getInt("cnt") == 0) {
                 String insertMagic2 = """
-                        INSERT INTO magic (code, name, description, daily_limit, remaining_uses, last_refresh_at, created_at)
+                        INSERT INTO magic (code, name, description, daily_limit, remaining_uses, energy_cost, last_refresh_at, created_at)
                         VALUES ('CHANGE_WEATHER', '改变天气', 
-                                '施展魔法后，星星城的天气将立即改变为随机的新天气，包括晴天、雨天、雪天等。', 
-                                3, 3, datetime('now', 'localtime'), datetime('now', 'localtime'))
+                                '施展魔法后，星星城的天气将立即改变为随机的新天气，包括晴天、雨天、雪天等。消耗3点精力。', 
+                                3, 3, 3, datetime('now', 'localtime'), datetime('now', 'localtime'))
                         """;
                 statement.execute(insertMagic2);
                 logger.info("添加魔法: CHANGE_WEATHER");
@@ -730,10 +828,10 @@ public class PrizeInitService implements ApplicationRunner {
             ResultSet rs3 = statement.executeQuery(checkMagic3);
             if (rs3.next() && rs3.getInt("cnt") == 0) {
                 String insertMagic3 = """
-                        INSERT INTO magic (code, name, description, daily_limit, remaining_uses, last_refresh_at, created_at)
+                        INSERT INTO magic (code, name, description, daily_limit, remaining_uses, energy_cost, last_refresh_at, created_at)
                         VALUES ('BANISH_GIANT', '驱逐巨人', 
-                                '施展魔法后，正在进攻的巨人将被驱逐，巨人进攻立即停止，巨人逐渐暗淡消失。', 
-                                1, 1, datetime('now', 'localtime'), datetime('now', 'localtime'))
+                                '施展魔法后，正在进攻的巨人将被驱逐，巨人进攻立即停止，巨人逐渐暗淡消失。消耗8点精力。', 
+                                1, 1, 8, datetime('now', 'localtime'), datetime('now', 'localtime'))
                         """;
                 statement.execute(insertMagic3);
                 logger.info("添加魔法: BANISH_GIANT");
@@ -754,6 +852,7 @@ public class PrizeInitService implements ApplicationRunner {
                     description TEXT,
                     daily_limit INTEGER NOT NULL DEFAULT 3,
                     remaining_uses INTEGER NOT NULL DEFAULT 3,
+                    energy_cost INTEGER NOT NULL DEFAULT 5,
                     last_refresh_at TIMESTAMP NOT NULL,
                     created_at TIMESTAMP NOT NULL
                 )
@@ -769,20 +868,28 @@ public class PrizeInitService implements ApplicationRunner {
 
             // 初始化魔法数据
             String insertMagic1 = """
-                    INSERT INTO magic (code, name, description, daily_limit, remaining_uses, last_refresh_at, created_at)
+                    INSERT INTO magic (code, name, description, daily_limit, remaining_uses, energy_cost, last_refresh_at, created_at)
                     VALUES ('FOOD_RAIN', '天降食物', 
-                            '施展魔法后，将会有10000份食物从天而降，储存到星星城的食物仓库中。', 
-                            3, 3, datetime('now', 'localtime'), datetime('now', 'localtime'))
+                            '施展魔法后，将会有10000份食物从天而降，储存到星星城的食物仓库中。消耗5点精力。', 
+                            3, 3, 5, datetime('now', 'localtime'), datetime('now', 'localtime'))
                     """;
             statement.execute(insertMagic1);
             
             String insertMagic2 = """
-                    INSERT INTO magic (code, name, description, daily_limit, remaining_uses, last_refresh_at, created_at)
+                    INSERT INTO magic (code, name, description, daily_limit, remaining_uses, energy_cost, last_refresh_at, created_at)
                     VALUES ('CHANGE_WEATHER', '改变天气', 
-                            '施展魔法后，星星城的天气将立即改变为随机的新天气，包括晴天、雨天、雪天等。', 
-                            3, 3, datetime('now', 'localtime'), datetime('now', 'localtime'))
+                            '施展魔法后，星星城的天气将立即改变为随机的新天气，包括晴天、雨天、雪天等。消耗3点精力。', 
+                            3, 3, 3, datetime('now', 'localtime'), datetime('now', 'localtime'))
                     """;
             statement.execute(insertMagic2);
+            
+            String insertMagic3 = """
+                    INSERT INTO magic (code, name, description, daily_limit, remaining_uses, energy_cost, last_refresh_at, created_at)
+                    VALUES ('BANISH_GIANT', '驱逐巨人', 
+                            '施展魔法后，正在进攻的巨人将被驱逐，巨人进攻立即停止，巨人逐渐暗淡消失。消耗8点精力。', 
+                            1, 1, 8, datetime('now', 'localtime'), datetime('now', 'localtime'))
+                    """;
+            statement.execute(insertMagic3);
             
             logger.info("魔法数据初始化成功");
         }

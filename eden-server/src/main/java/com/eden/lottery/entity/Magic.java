@@ -38,6 +38,11 @@ public class Magic {
     private Integer remainingUses;
     
     /**
+     * 精力消耗
+     */
+    private Integer energyCost;
+    
+    /**
      * 上次刷新时间
      */
     private LocalDateTime lastRefreshAt;
@@ -106,6 +111,14 @@ public class Magic {
     
     public void setRemainingUses(Integer remainingUses) {
         this.remainingUses = remainingUses;
+    }
+    
+    public Integer getEnergyCost() {
+        return energyCost;
+    }
+    
+    public void setEnergyCost(Integer energyCost) {
+        this.energyCost = energyCost;
     }
     
     public LocalDateTime getLastRefreshAt() {

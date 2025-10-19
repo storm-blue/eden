@@ -13,6 +13,9 @@
         <result property="profile" column="profile"/>
         <result property="status" column="status"/>
         <result property="stamina" column="stamina"/>
+        <result property="energy" column="energy"/>
+        <result property="maxEnergy" column="max_energy"/>
+        <result property="energyRefreshTime" column="energy_refresh_time"/>
         <result property="createTime" column="create_time"/>
         <result property="updateTime" column="update_time"/>
         <result property="lastRefreshDate" column="last_refresh_date"/>
@@ -175,6 +178,30 @@
     <update id="batchRefreshStamina">
         UPDATE users
         SET stamina = 5,
+            update_time = datetime('now', 'localtime')
+    </update>
+
+    <!-- 获取用户精力信息 -->
+    <select id="getUserEnergy" parameterType="string" resultType="int">
+        SELECT energy
+        FROM users
+        WHERE user_id = #{userId}
+    </select>
+
+    <!-- 更新用户精力 -->
+    <update id="updateUserEnergy">
+        UPDATE users
+        SET energy = #{energy},
+            energy_refresh_time = #{energyRefreshTime},
+            update_time = datetime('now', 'localtime')
+        WHERE user_id = #{userId}
+    </update>
+
+    <!-- 批量刷新所有用户的精力到满值 -->
+    <update id="batchRefreshEnergy">
+        UPDATE users
+        SET energy = max_energy,
+            energy_refresh_time = datetime('now', 'localtime'),
             update_time = datetime('now', 'localtime')
     </update>
 

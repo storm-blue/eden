@@ -4,6 +4,7 @@ import com.eden.lottery.entity.Magic;
 import com.eden.lottery.entity.StarCity;
 import com.eden.lottery.mapper.MagicMapper;
 import com.eden.lottery.mapper.StarCityMapper;
+import com.eden.lottery.mapper.UserMapper;
 import com.eden.lottery.task.WeatherRefreshTask;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -28,6 +29,9 @@ public class MagicService {
 
     @Autowired
     private StarCityMapper starCityMapper;
+    
+    @Autowired
+    private UserMapper userMapper;
     
     @Autowired
     private WeatherRefreshTask weatherRefreshTask;
@@ -69,41 +73,47 @@ public class MagicService {
             throw new IllegalArgumentException("魔法不存在");
         }
 
-        // 检查是否需要刷新次数（跨天了）
-        checkAndRefreshDailyUses(magic);
+        // 检查并消耗精力
+        checkAndConsumeEnergy(userId, magic);
 
-        // 检查剩余次数
-        if (magic.getRemainingUses() <= 0) {
-            throw new IllegalArgumentException("今日魔法次数已用完，请明日再来");
-        }
-
-        // 减少剩余次数
-        magicMapper.decreaseRemainingUses(code);
-
-        logger.info("魔法已施展: {} by {}, 剩余次数: {}", code, userId, magic.getRemainingUses() - 1);
+        logger.info("魔法已施展: {} by {}，消耗精力: {}", code, userId, magic.getEnergyCost());
 
         // 执行魔法效果
         executeMagicEffect(code);
     }
 
     /**
-     * 检查并刷新每日次数
+     * 检查并消耗精力
      */
-    private void checkAndRefreshDailyUses(Magic magic) {
-        LocalDateTime lastRefresh = magic.getLastRefreshAt();
-        LocalDate today = LocalDate.now();
-
-        if (lastRefresh == null || lastRefresh.toLocalDate().isBefore(today)) {
-            // 需要刷新次数
-            magicMapper.refreshDailyUses(magic.getCode());
-            logger.info("魔法次数已刷新: {}, 刷新为: {}", magic.getCode(), magic.getDailyLimit());
-
-            // 重新查询以更新内存中的对象
-            Magic refreshedMagic = magicMapper.selectByCode(magic.getCode());
-            magic.setRemainingUses(refreshedMagic.getRemainingUses());
-            magic.setLastRefreshAt(refreshedMagic.getLastRefreshAt());
+    private void checkAndConsumeEnergy(String userId, Magic magic) {
+        // 获取魔法的精力消耗
+        Integer energyCost = magic.getEnergyCost();
+        if (energyCost == null || energyCost == 0) {
+            // 该魔法不需要消耗精力
+            return;
         }
+
+        // 获取用户当前精力
+        Integer currentEnergy = userMapper.getUserEnergy(userId);
+        if (currentEnergy == null) {
+            throw new IllegalArgumentException("获取用户精力信息失败");
+        }
+
+        // 检查精力是否足够
+        if (currentEnergy < energyCost) {
+            throw new IllegalArgumentException(
+                String.format("精力不足！需要 %d 点精力，当前只有 %d 点", energyCost, currentEnergy)
+            );
+        }
+
+        // 消耗精力
+        Integer newEnergy = currentEnergy - energyCost;
+        userMapper.updateUserEnergy(userId, newEnergy, LocalDateTime.now());
+
+        logger.info("用户 {} 施展魔法 {}，消耗精力 {}，剩余精力 {}", 
+                    userId, magic.getCode(), energyCost, newEnergy);
     }
+
 
     /**
      * 执行魔法效果
@@ -167,15 +177,18 @@ public class MagicService {
     }
 
     /**
-     * 刷新所有魔法的每日次数（定时任务调用）
+     * 更新魔法精力消耗（管理员功能）
      */
     @Transactional
-    public void refreshAllMagicDailyUses() {
-        List<Magic> magics = magicMapper.selectAll();
-        for (Magic magic : magics) {
-            magicMapper.refreshDailyUses(magic.getCode());
-            logger.info("定时刷新魔法次数: {}, 刷新为: {}", magic.getCode(), magic.getDailyLimit());
+    public void updateMagicEnergyCost(String code, Integer energyCost) {
+        Magic magic = magicMapper.selectByCode(code);
+        if (magic == null) {
+            throw new IllegalArgumentException("魔法不存在: " + code);
         }
+        
+        magicMapper.updateEnergyCost(code, energyCost);
+        logger.info("魔法精力消耗已更新: code={}, energyCost={}", code, energyCost);
     }
+
 }
 

@@ -53,6 +53,21 @@ public class User {
     private Integer stamina;
     
     /**
+     * 精力值（用于施展魔法，每天15点）
+     */
+    private Integer energy;
+    
+    /**
+     * 最大精力值
+     */
+    private Integer maxEnergy;
+    
+    /**
+     * 精力上次刷新时间
+     */
+    private LocalDateTime energyRefreshTime;
+    
+    /**
      * 创建时间
      */
     private LocalDateTime createTime;
@@ -75,6 +90,9 @@ public class User {
         this.remainingDraws = dailyDraws; // 初始剩余次数等于每日次数
         this.wishCount = 0; // 初始许愿次数为0
         this.stamina = 5; // 初始耐力值为5
+        this.energy = 15; // 初始精力值为15
+        this.maxEnergy = 15; // 最大精力值为15
+        this.energyRefreshTime = LocalDateTime.now(); // 初始化精力刷新时间
         this.createTime = LocalDateTime.now();
         this.updateTime = LocalDateTime.now();
         this.lastRefreshDate = LocalDateTime.now();
@@ -153,6 +171,30 @@ public class User {
         this.stamina = stamina;
     }
 
+    public Integer getEnergy() {
+        return energy;
+    }
+
+    public void setEnergy(Integer energy) {
+        this.energy = energy;
+    }
+
+    public Integer getMaxEnergy() {
+        return maxEnergy;
+    }
+
+    public void setMaxEnergy(Integer maxEnergy) {
+        this.maxEnergy = maxEnergy;
+    }
+
+    public LocalDateTime getEnergyRefreshTime() {
+        return energyRefreshTime;
+    }
+
+    public void setEnergyRefreshTime(LocalDateTime energyRefreshTime) {
+        this.energyRefreshTime = energyRefreshTime;
+    }
+
     public LocalDateTime getCreateTime() {
         return createTime;
     }
@@ -189,6 +231,9 @@ public class User {
                 ", profile='" + profile + '\'' +
                 ", status='" + status + '\'' +
                 ", stamina=" + stamina +
+                ", energy=" + energy +
+                ", maxEnergy=" + maxEnergy +
+                ", energyRefreshTime=" + energyRefreshTime +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +
                 ", lastRefreshDate=" + lastRefreshDate +

@@ -1,6 +1,7 @@
 package com.eden.lottery.controller;
 
 import com.eden.lottery.entity.User;
+import com.eden.lottery.mapper.UserMapper;
 import com.eden.lottery.service.UserService;
 import com.eden.lottery.utils.ResidenceUtils;
 import jakarta.annotation.Resource;
@@ -24,6 +25,9 @@ public class UserInfoController {
 
     @Resource
     private UserService userService;
+    
+    @Resource
+    private UserMapper userMapper;
 
     /**
      * 获取用户详细信息
@@ -192,6 +196,43 @@ public class UserInfoController {
             logger.error("批量更新用户信息失败: {}", userId, e);
             response.put("success", false);
             response.put("message", "更新信息失败: " + e.getMessage());
+            return ResponseEntity.ok(response);
+        }
+    }
+    
+    /**
+     * 获取用户精力信息
+     */
+    @GetMapping("/{userId}/energy")
+    public ResponseEntity<Map<String, Object>> getUserEnergy(@PathVariable String userId) {
+        Map<String, Object> response = new HashMap<>();
+        
+        try {
+            User user = userService.getUserByUserId(userId);
+            if (user == null) {
+                response.put("success", false);
+                response.put("message", "用户不存在");
+                return ResponseEntity.ok(response);
+            }
+
+            // 获取用户精力信息
+            Integer energy = userMapper.getUserEnergy(userId);
+            
+            Map<String, Object> energyInfo = new HashMap<>();
+            energyInfo.put("energy", energy != null ? energy : 15);
+            energyInfo.put("maxEnergy", user.getMaxEnergy() != null ? user.getMaxEnergy() : 15);
+            energyInfo.put("energyRefreshTime", user.getEnergyRefreshTime());
+            
+            response.put("success", true);
+            response.put("data", energyInfo);
+            
+            logger.info("获取用户精力信息成功: {}, 当前精力: {}", userId, energy);
+            return ResponseEntity.ok(response);
+            
+        } catch (Exception e) {
+            logger.error("获取用户精力信息失败: {}", userId, e);
+            response.put("success", false);
+            response.put("message", "获取精力信息失败: " + e.getMessage());
             return ResponseEntity.ok(response);
         }
     }

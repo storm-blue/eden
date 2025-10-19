@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PWA 测试页面</title>
+    <link rel="manifest" href="/manifest.json">
+    <meta name="theme-color" content="#16213e">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            min-height: 100vh;
+            margin: 0;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+            background: rgba(255,255,255,0.1);
+            padding: 30px;
+            border-radius: 15px;
+            backdrop-filter: blur(10px);
+        }
+        .status {
+            background: rgba(0,0,0,0.3);
+            padding: 15px;
+            border-radius: 8px;
+            margin: 10px 0;
+        }
+        button {
+            background: #4CAF50;
+            color: white;
+            border: none;
+            padding: 12px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+        }
+        button:hover {
+            background: #45a049;
+        }
+        .install-btn {
+            background: #FF6B6B;
+        }
+        .install-btn:hover {
+            background: #FF5252;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📱 PWA 功能测试</h1>
+        
+        <div class="status">
+            <h3>🔍 检测结果</h3>
+            <p id="sw-status">Service Worker: 检测中...</p>
+            <p id="manifest-status">Manifest: 检测中...</p>
+            <p id="install-status">安装提示: 检测中...</p>
+            <p id="pwa-status">PWA 模式: 检测中...</p>
+        </div>
+        
+        <div class="status">
+            <h3>🎮 操作</h3>
+            <button onclick="checkStatus()">刷新检测</button>
+            <button class="install-btn" onclick="installPWA()" id="installBtn" style="display:none;">安装 PWA</button>
+            <button onclick="openMainApp()">打开主应用</button>
+        </div>
+        
+        <div class="status">
+            <h3>📋 调试信息</h3>
+            <div id="debug-info"></div>
+        </div>
+    </div>
+
+    <script>
+        let deferredPrompt;
+        
+        // 检测各种状态
+        function checkStatus() {
+            const debugInfo = document.getElementById('debug-info');
+            debugInfo.innerHTML = '';
+            
+            // Service Worker 检测
+            const swStatus = document.getElementById('sw-status');
+            if ('serviceWorker' in navigator) {
+                swStatus.textContent = 'Service Worker: ✅ 支持';
+                swStatus.style.color = '#4CAF50';
+            } else {
+                swStatus.textContent = 'Service Worker: ❌ 不支持';
+                swStatus.style.color = '#FF6B6B';
+            }
+            
+            // Manifest 检测
+            const manifestStatus = document.getElementById('manifest-status');
+            const manifestLink = document.querySelector('link[rel="manifest"]');
+            if (manifestLink) {
+                manifestStatus.textContent = 'Manifest: ✅ 已加载';
+                manifestStatus.style.color = '#4CAF50';
+            } else {
+                manifestStatus.textContent = 'Manifest: ❌ 未找到';
+                manifestStatus.style.color = '#FF6B6B';
+            }
+            
+            // PWA 模式检测
+            const pwaStatus = document.getElementById('pwa-status');
+            const isStandalone = window.matchMedia('(display-mode: standalone)').matches;
+            const isFullscreen = window.matchMedia('(display-mode: fullscreen)').matches;
+            if (isStandalone || isFullscreen) {
+                pwaStatus.textContent = 'PWA 模式: ✅ 已安装';
+                pwaStatus.style.color = '#4CAF50';
+            } else {
+                pwaStatus.textContent = 'PWA 模式: ❌ 未安装';
+                pwaStatus.style.color = '#FF6B6B';
+            }
+            
+            // 安装提示检测
+            const installStatus = document.getElementById('install-status');
+            if (deferredPrompt) {
+                installStatus.textContent = '安装提示: ✅ 可用';
+                installStatus.style.color = '#4CAF50';
+                document.getElementById('installBtn').style.display = 'inline-block';
+            } else {
+                installStatus.textContent = '安装提示: ❌ 不可用';
+                installStatus.style.color = '#FF6B6B';
+                document.getElementById('installBtn').style.display = 'none';
+            }
+            
+            // 调试信息
+            debugInfo.innerHTML = `
+                <p><strong>User Agent:</strong> ${navigator.userAgent}</p>
+                <p><strong>Display Mode:</strong> ${window.matchMedia('(display-mode: standalone)').matches ? 'standalone' : 'browser'}</p>
+                <p><strong>Screen Size:</strong> ${window.screen.width}x${window.screen.height}</p>
+                <p><strong>Window Size:</strong> ${window.innerWidth}x${window.innerHeight}</p>
+                <p><strong>Platform:</strong> ${navigator.platform}</p>
+            `;
+        }
+        
+        // 安装 PWA
+        async function installPWA() {
+            if (!deferredPrompt) {
+                alert('没有可用的安装提示');
+                return;
+            }
+            
+            try {
+                const result = await deferredPrompt.prompt();
+                console.log('安装提示结果:', result);
+                
+                const choiceResult = await deferredPrompt.userChoice;
+                console.log('用户选择:', choiceResult.outcome);
+                
+                if (choiceResult.outcome === 'accepted') {
+                    alert('✅ PWA 安装成功！');
+                } else {
+                    alert('❌ 用户拒绝了安装');
+                }
+                
+                deferredPrompt = null;
+                checkStatus();
+            } catch (error) {
+                console.error('安装 PWA 时出错:', error);
+                alert('安装失败: ' + error.message);
+            }
+        }
+        
+        // 打开主应用
+        function openMainApp() {
+            window.location.href = '/';
+        }
+        
+        // 监听安装提示事件
+        window.addEventListener('beforeinstallprompt', (e) => {
+            console.log('🎉 收到 PWA 安装提示事件!', e);
+            e.preventDefault();
+            deferredPrompt = e;
+            checkStatus();
+        });
+        
+        // 监听应用安装完成事件
+        window.addEventListener('appinstalled', () => {
+            console.log('✅ PWA 安装完成!');
+            alert('🎉 PWA 安装完成！');
+            checkStatus();
+        });
+        
+        // 注册 Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((registration) => {
+                        console.log('SW registered: ', registration);
+                        checkStatus();
+                    })
+                    .catch((registrationError) => {
+                        console.log('SW registration failed: ', registrationError);
+                        checkStatus();
+                    });
+            });
+        }
+        
+        // 页面加载时检测
+        window.addEventListener('load', () => {
+            setTimeout(checkStatus, 1000);
+        });
+    </script>
+</body>
+</html>

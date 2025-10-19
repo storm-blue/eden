@@ -11,7 +11,8 @@ const MagicModal = ({
     magics, 
     loading, 
     castingCode, 
-    onCast 
+    onCast,
+    userEnergy
 }) => {
     const [expandedCode, setExpandedCode] = useState(null)
 
@@ -29,16 +30,42 @@ const MagicModal = ({
             >
                 <h2 className="magic-modal-title">✨ 魔法管理</h2>
                 
+                {/* 精力信息 */}
+                {userEnergy && (
+                    <div style={{
+                        marginBottom: '15px',
+                        padding: '12px',
+                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                        borderRadius: '8px',
+                        textAlign: 'center',
+                        color: 'white'
+                    }}>
+                        <div style={{fontSize: '14px', marginBottom: '5px', opacity: 0.9}}>
+                            ⚡ 当前精力
+                        </div>
+                        <div style={{fontSize: '28px', fontWeight: 'bold', letterSpacing: '2px'}}>
+                            {userEnergy.energy} / {userEnergy.maxEnergy}
+                        </div>
+                        <div style={{fontSize: '11px', marginTop: '5px', opacity: 0.8}}>
+                            每天凌晨12点恢复到满值
+                        </div>
+                    </div>
+                )}
+                
                 {loading ? (
                     <div className="magic-loading">加载中...</div>
                 ) : (
                     <div className="magic-list">
-                        {magics.map((magic) => (
+                        {magics.map((magic) => {
+                            // 检查精力是否足够
+                            const hasEnoughEnergy = !userEnergy || !magic.energyCost || userEnergy.energy >= magic.energyCost
+                            
+                            return (
                             <div 
                                 key={magic.code} 
-                                className={`magic-item ${magic.remainingUses === 0 ? 'exhausted' : ''}`}
+                                className={`magic-item ${!hasEnoughEnergy ? 'exhausted' : ''}`}
                             >
-                                {/* 标题行：魔法名称 + 次数 + 按钮 */}
+                                {/* 标题行：魔法名称 + 按钮 */}
                                 <div className="magic-header">
                                     <div 
                                         className="magic-name-clickable"
@@ -48,17 +75,21 @@ const MagicModal = ({
                                             {expandedCode === magic.code ? '▼' : '▶'}
                                         </span>
                                         <span className="magic-name">{magic.name}</span>
-                                        <span className="magic-uses">
-                                            ({magic.remainingUses}/{magic.dailyLimit})
-                                        </span>
+                                        {magic.energyCost && (
+                                            <span className="magic-uses" style={{
+                                                color: hasEnoughEnergy ? '#FFD700' : '#FF6B6B'
+                                            }}>
+                                                ⚡{magic.energyCost}
+                                            </span>
+                                        )}
                                     </div>
                                     <div className="magic-actions">
                                         <button
                                             className="magic-btn cast-btn"
                                             onClick={() => onCast(magic.code)}
-                                            disabled={castingCode === magic.code || magic.remainingUses === 0}
+                                            disabled={castingCode === magic.code || !hasEnoughEnergy}
                                         >
-                                            {castingCode === magic.code ? '施展中...' : magic.remainingUses === 0 ? '已用完' : '施展魔法'}
+                                            {castingCode === magic.code ? '施展中...' : !hasEnoughEnergy ? '精力不足' : '施展魔法'}
                                         </button>
                                     </div>
                                 </div>
@@ -68,18 +99,21 @@ const MagicModal = ({
                                     <div className="magic-details">
                                         <div className="magic-description">{magic.description}</div>
                                         <div className="magic-info">
-                                            <div>每日次数: {magic.dailyLimit}</div>
-                                            <div>剩余次数: {magic.remainingUses}</div>
-                                            {magic.lastRefreshAt && (
-                                                <div>
-                                                    上次刷新: {new Date(magic.lastRefreshAt).toLocaleString('zh-CN')}
+                                            {magic.energyCost && (
+                                                <div style={{
+                                                    color: hasEnoughEnergy ? '#FFD700' : '#FF6B6B',
+                                                    fontWeight: 'bold',
+                                                    fontSize: '16px'
+                                                }}>
+                                                    ⚡ 精力消耗: {magic.energyCost}
                                                 </div>
                                             )}
                                         </div>
                                     </div>
                                 )}
                             </div>
-                        ))}
+                            )
+                        })}
                         {magics.length === 0 && (
                             <div className="magic-empty">暂无魔法</div>
                         )}

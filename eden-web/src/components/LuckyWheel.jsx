@@ -488,6 +488,11 @@ const LotteryLuckyWheel = () => {
     const [giantPosition, setGiantPosition] = useState(null) // 巨人位置
     const [isGiantBanishing, setIsGiantBanishing] = useState(false) // 巨人是否正在被驱逐
 
+    // 用户头像和精力状态
+    const [userAvatar, setUserAvatar] = useState(null) // 用户头像路径
+    const [userEnergy, setUserEnergy] = useState(null) // 用户精力信息
+    const [showUserDropdown, setShowUserDropdown] = useState(false) // 显示用户下拉菜单
+
     // 奖品名称映射（与后端保持一致）
   const prizeNames = [
         '🍰 吃的～',
@@ -633,10 +638,47 @@ const LotteryLuckyWheel = () => {
             } else {
                 console.error('获取魔法列表失败:', data.message)
             }
+            
+            // 同时获取精力信息
+            await fetchUserEnergy()
         } catch (error) {
             console.error('获取魔法列表失败:', error)
         } finally {
             setLoadingMagics(false)
+        }
+    }
+
+    // 获取用户头像
+    const fetchUserAvatar = async () => {
+        if (!userName) return
+
+        try {
+            const response = await fetch(`/api/avatar/${userName}`)
+            const data = await response.json()
+            if (data.success) {
+                setUserAvatar(data.data.avatarPath)
+            } else {
+                console.error('获取用户头像失败:', data.message)
+            }
+        } catch (error) {
+            console.error('获取用户头像失败:', error)
+        }
+    }
+
+    // 获取用户精力信息
+    const fetchUserEnergy = async () => {
+        if (!userName) return
+
+        try {
+            const response = await fetch(`/api/user-info/${userName}/energy`)
+            const data = await response.json()
+            if (data.success) {
+                setUserEnergy(data.data)
+            } else {
+                console.error('获取用户精力失败:', data.message)
+            }
+        } catch (error) {
+            console.error('获取用户精力失败:', error)
         }
     }
 
@@ -1577,6 +1619,23 @@ const LotteryLuckyWheel = () => {
         }
     }, [isRainbowActive])
 
+    // 点击外部关闭用户下拉菜单
+    useEffect(() => {
+        const handleClickOutside = (event) => {
+            if (showUserDropdown && !event.target.closest('[data-user-dropdown]')) {
+                setShowUserDropdown(false)
+            }
+        }
+
+        if (showUserDropdown) {
+            document.addEventListener('mousedown', handleClickOutside)
+        }
+
+        return () => {
+            document.removeEventListener('mousedown', handleClickOutside)
+        }
+    }, [showUserDropdown])
+
     // 监听星星城页面状态，获取数据
     useEffect(() => {
         if (showStarCity) {
@@ -1586,6 +1645,8 @@ const LotteryLuckyWheel = () => {
             loadAllResidenceEvents() // 加载所有居所事件
             fetchAllDecrees() // 获取所有命令状态（用于检测彩虹等视觉效果）
             fetchGiantAttackStatus() // 获取巨人进攻状态
+            fetchUserAvatar() // 获取用户头像
+            fetchUserEnergy() // 获取用户精力信息
 
             // 🔥 修复双重下载：移除独立的预加载，直接播放
             // 音频会在首次播放时自动加载
@@ -3218,83 +3279,181 @@ const LotteryLuckyWheel = () => {
                         ✨{getCityName(starCityData?.level || 1)}✨
                     </h2>
 
-                    {/* 秦小淮专属按钮组 */}
-                    {userName === '秦小淮' && (
+                    {/* 用户头像和精力显示 */}
+                    {userName && (
                         <div style={{
                             position: 'fixed',
                             top: '20px',
                             left: '20px',
+                            zIndex: 999,
                             display: 'flex',
-                            gap: '12px',
-                            zIndex: 999
+                            alignItems: 'center',
+                            gap: '12px'
                         }}>
-                            {/* 命令按钮 */}
-                            <button
-                                onClick={() => {
-                                    fetchDecrees()
-                                    setShowDecreeModal(true)
-                                }}
-                                style={{
-                                    padding: '12px 20px',
-                                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                    border: '2px solid rgba(255, 255, 255, 0.3)',
-                                    borderRadius: '12px',
-                                    color: 'white',
-                                    fontSize: '16px',
-                                    fontWeight: 'bold',
-                                    cursor: 'pointer',
-                                    display: 'flex',
-                                    alignItems: 'center',
-                                    gap: '8px',
-                                    boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
-                                    transition: 'all 0.3s ease',
-                                    backdropFilter: 'blur(10px)'
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.target.style.transform = 'translateY(-2px)'
-                                    e.target.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.6)'
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.target.style.transform = 'translateY(0)'
-                                    e.target.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.4)'
-                                }}
-                            >
-                                📜 颁布命令
-                            </button>
+                            {/* 用户头像 */}
+                            <div style={{ position: 'relative' }} data-user-dropdown>
+                                <div
+                                    onClick={() => setShowUserDropdown(!showUserDropdown)}
+                                    style={{
+                                        width: '50px',
+                                        height: '50px',
+                                        borderRadius: '50%',
+                                        background: userAvatar ? `url(${userAvatar})` : 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                        backgroundSize: 'cover',
+                                        backgroundPosition: 'center',
+                                        cursor: 'pointer',
+                                        display: 'flex',
+                                        alignItems: 'center',
+                                        justifyContent: 'center',
+                                        fontSize: '20px',
+                                        color: 'white',
+                                        fontWeight: 'bold',
+                                        boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
+                                        transition: 'all 0.3s ease',
+                                        border: '2px solid rgba(255, 255, 255, 0.3)',
+                                        backdropFilter: 'blur(10px)'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.target.style.transform = 'scale(1.1)'
+                                        e.target.style.boxShadow = '0 6px 20px rgba(0, 0, 0, 0.4)'
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.target.style.transform = 'scale(1)'
+                                        e.target.style.boxShadow = '0 4px 15px rgba(0, 0, 0, 0.3)'
+                                    }}
+                                >
+                                    {!userAvatar && userName.charAt(0)}
+                                </div>
 
-                            {/* 魔法按钮 */}
-                            <button
-                                onClick={() => {
-                                    setShowMagicModal(true)
-                                    fetchMagics()
-                                }}
-                                style={{
-                                    padding: '12px 20px',
-                                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
-                                    border: '2px solid rgba(255, 255, 255, 0.3)',
-                                    borderRadius: '12px',
-                                    color: 'white',
-                                    fontSize: '16px',
-                                    fontWeight: 'bold',
-                                    cursor: 'pointer',
+                                {/* 下拉菜单 */}
+                                {showUserDropdown && (
+                                    <div style={{
+                                        position: 'absolute',
+                                        top: '60px',
+                                        left: '0',
+                                        background: 'rgba(255, 255, 255, 0.95)',
+                                        backdropFilter: 'blur(20px)',
+                                        borderRadius: '12px',
+                                        padding: '8px 0',
+                                        minWidth: '180px',
+                                        boxShadow: '0 8px 32px rgba(0, 0, 0, 0.3)',
+                                        border: '1px solid rgba(255, 255, 255, 0.2)',
+                                        zIndex: 1000
+                                    }}>
+                                        {/* 用户信息 */}
+                                        <div style={{
+                                            padding: '12px 16px',
+                                            borderBottom: '1px solid rgba(0, 0, 0, 0.1)',
+                                            marginBottom: '8px'
+                                        }}>
+                                            <div style={{
+                                                fontSize: '16px',
+                                                fontWeight: 'bold',
+                                                color: '#333',
+                                                marginBottom: '4px'
+                                            }}>
+                                                {userName}
+                                            </div>
+                                            <div style={{
+                                                fontSize: '14px',
+                                                color: '#666',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                gap: '6px'
+                                            }}>
+                                                ⚡ 精力: {userEnergy ? `${userEnergy.energy}/${userEnergy.maxEnergy}` : '--'}
+                                            </div>
+                                        </div>
+
+                                        {/* 秦小淮专属功能 */}
+                                        {userName === '秦小淮' && (
+                                            <>
+                                                <button
+                                                    onClick={() => {
+                                                        fetchDecrees()
+                                                        setShowDecreeModal(true)
+                                                        setShowUserDropdown(false)
+                                                    }}
+                                                    style={{
+                                                        width: '100%',
+                                                        padding: '12px 16px',
+                                                        background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                                        border: 'none',
+                                                        borderRadius: '0',
+                                                        color: 'white',
+                                                        fontSize: '14px',
+                                                        fontWeight: 'bold',
+                                                        cursor: 'pointer',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '8px',
+                                                        transition: 'all 0.3s ease'
+                                                    }}
+                                                    onMouseEnter={(e) => {
+                                                        e.target.style.background = 'linear-gradient(135deg, #764ba2 0%, #667eea 100%)'
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                        e.target.style.background = 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)'
+                                                    }}
+                                                >
+                                                    📜 颁布命令
+                                                </button>
+                                                <button
+                                                    onClick={() => {
+                                                        setShowMagicModal(true)
+                                                        fetchMagics()
+                                                        setShowUserDropdown(false)
+                                                    }}
+                                                    style={{
+                                                        width: '100%',
+                                                        padding: '12px 16px',
+                                                        background: 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+                                                        border: 'none',
+                                                        borderRadius: '0',
+                                                        color: 'white',
+                                                        fontSize: '14px',
+                                                        fontWeight: 'bold',
+                                                        cursor: 'pointer',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '8px',
+                                                        transition: 'all 0.3s ease'
+                                                    }}
+                                                    onMouseEnter={(e) => {
+                                                        e.target.style.background = 'linear-gradient(135deg, #f5576c 0%, #f093fb 100%)'
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                        e.target.style.background = 'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)'
+                                                    }}
+                                                >
+                                                    ✨ 施展魔法
+                                                </button>
+                                            </>
+                                        )}
+                                    </div>
+                                )}
+                            </div>
+
+                            {/* 精力显示 */}
+                            {userEnergy && (
+                                <div style={{
+                                    background: 'rgba(255, 255, 255, 0.9)',
+                                    backdropFilter: 'blur(10px)',
+                                    borderRadius: '20px',
+                                    padding: '8px 16px',
                                     display: 'flex',
                                     alignItems: 'center',
                                     gap: '8px',
-                                    boxShadow: '0 4px 15px rgba(102, 126, 234, 0.4)',
-                                    transition: 'all 0.3s ease',
-                                    backdropFilter: 'blur(10px)'
-                                }}
-                                onMouseEnter={(e) => {
-                                    e.target.style.transform = 'translateY(-2px)'
-                                    e.target.style.boxShadow = '0 6px 20px rgba(102, 126, 234, 0.6)'
-                                }}
-                                onMouseLeave={(e) => {
-                                    e.target.style.transform = 'translateY(0)'
-                                    e.target.style.boxShadow = '0 4px 15px rgba(102, 126, 234, 0.4)'
-                                }}
-                            >
-                                ✨ 施展魔法
-                            </button>
+                                    fontSize: '14px',
+                                    fontWeight: 'bold',
+                                    color: '#333',
+                                    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
+                                    border: '1px solid rgba(255, 255, 255, 0.3)'
+                                }}>
+                                    <span style={{ fontSize: '16px' }}>⚡</span>
+                                    <span>{userEnergy.energy}/{userEnergy.maxEnergy}</span>
+                                </div>
+                            )}
                         </div>
                     )}
 

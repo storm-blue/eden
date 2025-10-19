@@ -10,6 +10,7 @@
         <result property="description" column="description"/>
         <result property="dailyLimit" column="daily_limit"/>
         <result property="remainingUses" column="remaining_uses"/>
+        <result property="energyCost" column="energy_cost"/>
         <result property="lastRefreshAt" column="last_refresh_at"/>
         <result property="createdAt" column="created_at"/>
     </resultMap>
@@ -22,7 +23,7 @@
 
     <!-- 根据代码查询魔法 -->
     <select id="selectByCode" parameterType="string" resultMap="MagicResultMap">
-        SELECT id, code, name, description, daily_limit, remaining_uses, last_refresh_at, created_at
+        SELECT id, code, name, description, daily_limit, remaining_uses, energy_cost, last_refresh_at, created_at
         FROM magic
         WHERE code = #{code}
     </select>
@@ -37,7 +38,7 @@
 
     <!-- 查询所有魔法 -->
     <select id="selectAll" resultMap="MagicResultMap">
-        SELECT id, code, name, description, daily_limit, remaining_uses, last_refresh_at, created_at
+        SELECT id, code, name, description, daily_limit, remaining_uses, energy_cost, last_refresh_at, created_at
         FROM magic
         ORDER BY id
     </select>
@@ -55,6 +56,13 @@
         UPDATE magic
         SET remaining_uses = daily_limit,
             last_refresh_at = datetime('now', 'localtime')
+        WHERE code = #{code}
+    </update>
+
+    <!-- 更新魔法精力消耗 -->
+    <update id="updateEnergyCost">
+        UPDATE magic
+        SET energy_cost = #{energyCost}
         WHERE code = #{code}
     </update>
 
