@@ -41,5 +41,10 @@ public interface MagicMapper {
      * 刷新魔法次数
      */
     void refreshDailyUses(@Param("code") String code);
+    
+    /**
+     * 更新魔法精力消耗
+     */
+    void updateEnergyCost(@Param("code") String code, @Param("energyCost") Integer energyCost);
 }
 

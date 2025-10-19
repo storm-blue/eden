@@ -488,8 +488,7 @@ const LotteryLuckyWheel = () => {
     const [giantPosition, setGiantPosition] = useState(null) // 巨人位置
     const [isGiantBanishing, setIsGiantBanishing] = useState(false) // 巨人是否正在被驱逐
 
-    // 用户头像和精力状态
-    const [userAvatar, setUserAvatar] = useState(null) // 用户头像路径
+    // 用户精力状态
     const [userEnergy, setUserEnergy] = useState(null) // 用户精力信息
     const [showUserDropdown, setShowUserDropdown] = useState(false) // 显示用户下拉菜单
 
@@ -645,23 +644,6 @@ const LotteryLuckyWheel = () => {
             console.error('获取魔法列表失败:', error)
         } finally {
             setLoadingMagics(false)
-        }
-    }
-
-    // 获取用户头像
-    const fetchUserAvatar = async () => {
-        if (!userName) return
-
-        try {
-            const response = await fetch(`/api/avatar/${userName}`)
-            const data = await response.json()
-            if (data.success) {
-                setUserAvatar(data.data.avatarPath)
-            } else {
-                console.error('获取用户头像失败:', data.message)
-            }
-        } catch (error) {
-            console.error('获取用户头像失败:', error)
         }
     }
 
@@ -1754,9 +1736,11 @@ const LotteryLuckyWheel = () => {
     }
 
     // 获取用户头像信息
-    const fetchUserAvatar = async (userId) => {
+    const fetchUserAvatar = async () => {
+        if (!userName) return
+
         try {
-            const response = await fetch(`/api/avatar/${userId}`)
+            const response = await fetch(`/api/avatar/${userName}`)
             const result = await response.json()
 
             if (result.success && result.data.avatarPath) {

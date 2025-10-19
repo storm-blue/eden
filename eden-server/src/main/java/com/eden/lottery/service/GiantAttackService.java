@@ -30,7 +30,7 @@ public class GiantAttackService {
 
     /**
      * 检查是否应该触发巨人进攻
-     * 每6小时有1/5的概率触发
+     * 每6小时有1/8的概率触发
      */
     @Transactional
     public void checkGiantAttack() {
@@ -44,12 +44,12 @@ public class GiantAttackService {
                 return;
             }
 
-            // 1/5的概率触发巨人进攻
+            // 1/8的概率触发巨人进攻
             Random random = new Random();
-            if (random.nextInt(5) == 0) {
+            if (random.nextInt(8) == 0) {
                 startGiantAttack();
             } else {
-                logger.info("巨人进攻检查：未触发进攻 (1/5概率)");
+                logger.info("巨人进攻检查：未触发进攻 (1/8概率)");
             }
         } catch (Exception e) {
             logger.error("检查巨人进攻失败: {}", e.getMessage(), e);
