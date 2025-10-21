@@ -84,6 +84,9 @@ public class PrizeInitService implements ApplicationRunner {
             // 检查并创建巨人进攻表
             checkAndCreateGiantAttackTable(connection);
 
+            // 检查并创建纪念堂媒体表
+            checkAndCreateMemorialMediaTable(connection);
+
             logger.info("数据库迁移检查完成");
         } catch (Exception e) {
             logger.error("数据库迁移失败", e);
@@ -949,5 +952,44 @@ public class PrizeInitService implements ApplicationRunner {
         } else {
             logger.info("giant_attack表已存在，跳过创建");
         }
+    }
+
+    /**
+     * 检查并创建纪念堂媒体表
+     */
+    private void checkAndCreateMemorialMediaTable(Connection connection) throws Exception {
+        DatabaseMetaData metaData = connection.getMetaData();
+        ResultSet tables = metaData.getTables(null, null, "memorial_media", null);
+        
+        if (!tables.next()) {
+            logger.info("memorial_media表不存在，创建表...");
+            try (Statement statement = connection.createStatement()) {
+                String createTableSql = """
+                    CREATE TABLE memorial_media (
+                        id INTEGER PRIMARY KEY AUTOINCREMENT,
+                        file_name VARCHAR(255) NOT NULL,
+                        original_name VARCHAR(255) NOT NULL,
+                        file_path VARCHAR(500) NOT NULL,
+                        file_type VARCHAR(20) NOT NULL,
+                        mime_type VARCHAR(100) NOT NULL,
+                        file_size BIGINT NOT NULL,
+                        url VARCHAR(500) NOT NULL,
+                        upload_time DATETIME NOT NULL,
+                        create_time DATETIME NOT NULL,
+                        update_time DATETIME NOT NULL
+                    )
+                    """;
+                statement.execute(createTableSql);
+                
+                // 创建索引
+                statement.execute("CREATE INDEX IF NOT EXISTS idx_memorial_media_type ON memorial_media(file_type)");
+                statement.execute("CREATE INDEX IF NOT EXISTS idx_memorial_media_upload_time ON memorial_media(upload_time)");
+                
+                logger.info("memorial_media表创建成功");
+            }
+        } else {
+            logger.info("memorial_media表已存在，跳过创建");
+        }
+        tables.close();
     }
 }

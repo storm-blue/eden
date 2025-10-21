@@ -163,6 +163,46 @@
 5. **巨人进攻**: 废墟状态下巨人进攻会自动停止，恢复正常状态后可以重新开始
 6. **背景音乐**: 废墟状态下背景音乐会自动停止，恢复正常状态后重新播放
 
+## 8. 纪念堂功能
+
+### 功能描述
+废墟状态下，星星城增加一个特殊的白圈：纪念堂。点击纪念堂会打开一个新的纪念堂页面，可以上传照片和视频，已经上传的可以点击查看和播放。
+
+### 技术实现
+- **前端**: 纪念堂白圈、弹窗页面、文件上传、媒体展示
+- **后端**: 文件上传API、数据库存储、静态资源访问
+- **数据库**: memorial_media表存储媒体文件信息
+
+### 功能特性
+- 支持图片和视频格式
+- 文件大小限制10MB
+- 平铺网格布局展示
+- 每个文件可单独删除
+- 移动端横屏适配
+
+### API接口
+- `POST /api/memorial/upload` - 上传文件
+- `GET /api/memorial/list` - 获取文件列表
+- `DELETE /api/memorial/delete/{id}` - 删除文件
+- `GET /api/memorial/stats` - 获取统计信息
+
+### 数据库表结构
+```sql
+CREATE TABLE memorial_media (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    file_name VARCHAR(255) NOT NULL,
+    original_name VARCHAR(255) NOT NULL,
+    file_path VARCHAR(500) NOT NULL,
+    file_type VARCHAR(20) NOT NULL,
+    mime_type VARCHAR(100) NOT NULL,
+    file_size BIGINT NOT NULL,
+    url VARCHAR(500) NOT NULL,
+    upload_time DATETIME NOT NULL,
+    create_time DATETIME NOT NULL,
+    update_time DATETIME NOT NULL
+);
+```
+
 ## 🔮 未来扩展
 
 可以考虑的功能扩展：

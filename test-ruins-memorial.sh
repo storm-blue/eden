@@ -1,0 +1,53 @@
+#!/bin/bash
+
+# 测试废墟状态下的纪念碑功能
+echo "🗿 测试废墟状态下的纪念碑功能"
+echo "================================"
+
+API_BASE="http://localhost:5000/api"
+
+echo "1. 设置废墟状态为true..."
+curl -s -X POST "${API_BASE}/star-city/admin/set-ruins" \
+  -H "Content-Type: application/json" \
+  -d '{"isRuins": true}' | jq '.' || echo "设置废墟状态失败"
+
+echo -e "\n2. 获取星星城信息（确认废墟状态）..."
+curl -s "${API_BASE}/star-city/info" | jq '.data | {level, isRuins, weather}' || echo "获取星星城信息失败"
+
+echo -e "\n🗿 纪念碑功能测试完成！"
+echo ""
+echo "前端测试步骤："
+echo "1. 打开星星城页面"
+echo "2. 确认当前处于废墟状态（等级0，废墟背景，废墟标题）"
+echo "3. 查看星星城中心是否显示纪念碑白圈（灰色，脉冲动画）"
+echo "4. 点击纪念碑白圈"
+echo "5. 应该弹出纪念碑弹窗，显示吊唁文字"
+echo "6. 查看弹窗标题是否为'纪念碑 🗿'"
+echo "7. 查看吊唁文字内容是否完整"
+echo "8. 点击'离开'按钮或点击弹窗外部，关闭弹窗"
+echo ""
+echo "纪念碑特点："
+echo "- 位置：星星城中心（与原城堡位置相同）"
+echo "- 颜色：灰色半透明（rgba(200, 200, 200, 0.6)）"
+echo "- 大小：15px圆形白圈"
+echo "- 动画：4秒灰色脉冲动画"
+echo "- 悬停：放大1.2倍，颜色变亮"
+echo "- 弹窗：深灰色背景，灰色文字，庄重主题"
+echo ""
+echo "吊唁文字内容："
+echo "欢迎前来吊唁，我的朋友："
+echo ""
+echo "星星城的建立，来自于两个人相识的偶然，彼时星火绽放，光华灿烂！"
+echo "随后黑暗袭来，为了星星城，我们拼命抵挡——"
+echo "可惜，我们没能坚持到黎明的到来……"
+echo "我们一起努力过，但最终功亏一溃。"
+echo ""
+echo "但没关系，我的朋友！时间的长河无穷无尽，滚滚向前："
+echo ""
+echo "一切色彩都会暗淡。"
+echo "一切美好终将消逝。"
+echo "一切故事终将结束。"
+echo "一切过往都成历史。"
+echo ""
+echo "测试完成后，可以运行以下命令恢复正常状态："
+echo "curl -X POST ${API_BASE}/star-city/admin/set-ruins -H 'Content-Type: application/json' -d '{\"isRuins\": false}'"

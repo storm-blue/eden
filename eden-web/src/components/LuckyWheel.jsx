@@ -201,6 +201,8 @@ const LotteryLuckyWheel = () => {
 
   const myLucky = useRef()
     const starCityAudioRef = useRef() // 星星城背景音乐引用
+  const memorialScrollRef = useRef(null)
+  const memorialTouchStartRef = useRef({ x: 0, y: 0 })
   const [isSpinning, setIsSpinning] = useState(false)
   const [result, setResult] = useState('')
     const [currentPrize, setCurrentPrize] = useState('') // 存储后端返回的奖品名称
@@ -235,6 +237,10 @@ const LotteryLuckyWheel = () => {
     const [buildingResidents, setBuildingResidents] = useState([]) // 建筑的居住人员
     const [loadingResidents, setLoadingResidents] = useState(false) // 加载居住人员状态
     const [showMemorialModal, setShowMemorialModal] = useState(false) // 显示纪念碑弹窗
+    const [showMemorialHall, setShowMemorialHall] = useState(false) // 显示纪念堂页面
+    const [memorialMedia, setMemorialMedia] = useState([]) // 纪念堂媒体文件列表
+    const [showMemorialFullscreen, setShowMemorialFullscreen] = useState(false) // 显示纪念堂媒体全屏
+    const [currentMemorialMedia, setCurrentMemorialMedia] = useState(null) // 当前全屏显示的媒体
     const [allBuildingResidents, setAllBuildingResidents] = useState({}) // 所有建筑的居住人员
     const [specialCombos, setSpecialCombos] = useState(null) // 特殊居住组合状态 // 星星城关闭动画状态 // 星星城页面状态
     const [showEventHistory, setShowEventHistory] = useState(false) // 显示事件历史弹窗
@@ -1096,18 +1102,119 @@ const LotteryLuckyWheel = () => {
     // 检查废墟状态（独立函数，用于页面加载时立即检查）
     const checkRuinsStatus = async () => {
         try {
+            console.log('🔍 开始检查废墟状态...')
             const response = await fetch('/api/star-city/admin/ruins-status')
             const data = await response.json()
+            console.log('🔍 废墟状态API响应:', data)
             if (data.success) {
                 setIsRuinsMode(data.data.isRuins || false)
-                console.log('废墟状态检查成功:', data.data.isRuins)
+                console.log('✅ 废墟状态检查成功:', data.data.isRuins, 'isRuinsMode设置为:', data.data.isRuins || false)
             } else {
-                console.error('废墟状态检查失败:', data.message)
+                console.error('❌ 废墟状态检查失败:', data.message)
                 setIsRuinsMode(false)
             }
         } catch (error) {
-            console.error('废墟状态检查失败:', error)
+            console.error('❌ 废墟状态检查失败:', error)
             setIsRuinsMode(false)
+        }
+    }
+
+    // 纪念堂文件上传处理
+    const handleMemorialUpload = async (files) => {
+        const uploadPromises = Array.from(files).map(async (file, index) => {
+            try {
+                // 验证文件类型
+                if (!file.type.startsWith('image/') && !file.type.startsWith('video/')) {
+                    throw new Error('只支持图片和视频文件')
+                }
+
+                // 验证文件大小（限制为10MB）
+                if (file.size > 10 * 1024 * 1024) {
+                    throw new Error('文件大小不能超过10MB')
+                }
+
+                // 创建FormData
+                const formData = new FormData()
+                formData.append('file', file)
+                formData.append('type', file.type.startsWith('image/') ? 'image' : 'video')
+
+                // 上传到后端
+                const response = await fetch('/api/memorial/upload', {
+                    method: 'POST',
+                    body: formData
+                })
+
+                const result = await response.json()
+                if (result.success) {
+                    return {
+                        id: result.data.id,
+                        fileName: result.data.fileName,
+                        originalName: result.data.originalName,
+                        fileType: result.data.type, // 使用后端返回的type字段作为fileType
+                        url: result.data.url,
+                        uploadTime: result.data.uploadTime,
+                        filePath: result.data.filePath,
+                        mimeType: file.type,
+                        fileSize: result.data.fileSize
+                    }
+                } else {
+                    throw new Error(result.message || '上传失败')
+                }
+            } catch (error) {
+                console.error('文件上传失败:', file.name, error.message)
+                alert(`文件 ${file.name} 上传失败: ${error.message}`)
+                return null
+            }
+        })
+
+        // 等待所有上传完成
+        const results = await Promise.all(uploadPromises)
+        const successfulUploads = results.filter(result => result !== null)
+        
+        if (successfulUploads.length > 0) {
+            setMemorialMedia(prev => [...prev, ...successfulUploads])
+            console.log('📁 纪念堂文件上传成功:', successfulUploads)
+        }
+    }
+
+    // 纪念堂文件删除处理
+    const handleMemorialDelete = async (id) => {
+        try {
+            // 调用后端删除API
+            const response = await fetch(`/api/memorial/delete/${id}`, {
+                method: 'DELETE'
+            })
+
+            const result = await response.json()
+            if (result.success) {
+                // 从状态中移除
+                setMemorialMedia(prev => {
+                    const updated = prev.filter(item => item.id !== id)
+                    console.log('🗑️ 纪念堂文件删除成功:', id)
+                    return updated
+                })
+            } else {
+                alert(result.message || '删除失败')
+            }
+        } catch (error) {
+            console.error('删除文件失败:', error)
+            alert('删除失败: ' + error.message)
+        }
+    }
+
+    // 加载纪念堂媒体文件
+    const loadMemorialMedia = async () => {
+        try {
+            const response = await fetch('/api/memorial/list')
+            const result = await response.json()
+            if (result.success) {
+                setMemorialMedia(result.data || [])
+                console.log('📁 纪念堂媒体文件加载成功:', result.data)
+            } else {
+                console.error('加载纪念堂媒体文件失败:', result.message)
+            }
+        } catch (error) {
+            console.error('加载纪念堂媒体文件失败:', error)
         }
     }
 
@@ -1693,6 +1800,13 @@ const LotteryLuckyWheel = () => {
             setIsRuinsMode(starCityData.isRuins || false)
         }
     }, [starCityData?.isRuins])
+
+    // 当进入星星城页面时，重新检查废墟状态
+    useEffect(() => {
+        if (showStarCity) {
+            checkRuinsStatus()
+        }
+    }, [showStarCity])
 
     // 定时刷新巨人进攻状态
     useEffect(() => {
@@ -3841,40 +3955,87 @@ const LotteryLuckyWheel = () => {
                     )}
 
                     {/* 纪念碑 - 废墟状态下显示 */}
-                    {starCityData?.isRuins && (
+                    {isRuinsMode && (
                         <div
-                            onClick={() => setShowMemorialModal(true)}
+                            onClick={() => {
+                                console.log('🗿 纪念碑被点击，设置showMemorialModal为true')
+                                setShowMemorialModal(true)
+                                console.log('🗿 showMemorialModal状态已设置')
+                            }}
                             style={{
                                 position: 'absolute',
-                                top: '23%',
-                                left: '48%',
+                                top: '27%',
+                                left: '51.5%',
                                 transform: 'translate(-50%, -50%)',
-                                width: '15px',
-                                height: '15px',
+                                width: '12px',
+                                height: '12px',
                                 borderRadius: '50%',
-                                background: 'rgba(200, 200, 200, 0.6)',
+                                background: 'rgba(255, 255, 255, 0.9)',
                                 cursor: 'pointer',
                                 display: 'flex',
                                 alignItems: 'center',
                                 justifyContent: 'center',
                                 transition: 'all 0.3s ease',
                                 backdropFilter: 'blur(5px)',
-                                animation: 'memorialPulse 4s ease-in-out infinite',
-                                boxShadow: '0 4px 15px rgba(180, 180, 180, 0.3)',
-                                zIndex: 12
+                                animation: 'castlePulse 3s ease-in-out infinite',
+                                boxShadow: '0 4px 15px rgba(255, 255, 255, 0.3)',
+                                zIndex: 100000
                             }}
                             onMouseEnter={(e) => {
                                 e.target.style.transform = 'translate(-50%, -50%) scale(1.2)'
-                                e.target.style.background = 'rgba(220, 220, 220, 0.8)'
+                                e.target.style.background = 'rgba(255, 255, 255, 1)'
                             }}
                             onMouseLeave={(e) => {
                                 e.target.style.transform = 'translate(-50%, -50%) scale(1)'
-                                e.target.style.background = 'rgba(200, 200, 200, 0.6)'
+                                e.target.style.background = 'rgba(255, 255, 255, 0.9)'
                             }}
                             title="纪念碑 🗿 - 点击查看"
                         >
                         </div>
                     )}
+
+                    {/* 纪念堂 - 废墟状态下显示 */}
+                    {isRuinsMode && (
+                        <div
+                                onClick={() => {
+                                    console.log('🏛️ 纪念堂被点击，打开纪念堂页面')
+                                    setShowMemorialHall(true)
+                                    loadMemorialMedia() // 加载媒体文件
+                                }}
+                            style={{
+                                position: 'absolute',
+                                top: '33%',
+                                left: '37%',
+                                transform: 'translate(-50%, -50%)',
+                                width: '12px',
+                                height: '12px',
+                                borderRadius: '50%',
+                                background: 'rgba(255, 255, 255, 0.9)',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                transition: 'all 0.3s ease',
+                                backdropFilter: 'blur(5px)',
+                                animation: 'castlePulse 3.5s ease-in-out infinite',
+                                boxShadow: '0 4px 15px rgba(255, 255, 255, 0.3)',
+                                zIndex: 100000
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.transform = 'translate(-50%, -50%) scale(1.2)'
+                                e.target.style.background = 'rgba(255, 255, 255, 1)'
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.transform = 'translate(-50%, -50%) scale(1)'
+                                e.target.style.background = 'rgba(255, 255, 255, 0.9)'
+                            }}
+                            title="纪念堂 🏛️ - 点击进入"
+                        >
+                        </div>
+                    )}
+
+                    {/* 调试信息：显示当前isRuinsMode状态 */}
+                    {console.log('🔍 纪念碑渲染检查 - isRuinsMode:', isRuinsMode, 'starCityData?.isRuins:', starCityData?.isRuins)}
 
                     {/* 星星城数据显示 - 右下角 */}
                     {starCityData && !starCityData.isRuins && (
@@ -4698,6 +4859,7 @@ const LotteryLuckyWheel = () => {
             )}
 
             {/* 纪念碑弹窗 */}
+            {console.log('🔍 纪念碑弹窗渲染检查 - showMemorialModal:', showMemorialModal)}
             {showMemorialModal && (
                 <div
                     className={`residence-modal-overlay ${isMobileDevice ? 'force-landscape' : ''}`}
@@ -4708,28 +4870,31 @@ const LotteryLuckyWheel = () => {
                         width: isMobileDevice ? 'auto' : '100%',
                         height: isMobileDevice ? 'auto' : '100%',
                         transform: isMobileDevice ? 'translate(-50%, -50%)' : 'none',
-                        zIndex: 2000,
+                        zIndex: 100001,
                         display: 'flex',
                         justifyContent: 'center',
                         alignItems: 'center',
                         background: 'rgba(0, 0, 0, 0.85)',
                         backdropFilter: 'blur(10px)'
                     }}
-                    onClick={() => setShowMemorialModal(false)}
+                    onClick={() => {
+                        console.log('🗿 纪念碑弹窗外部被点击，关闭弹窗')
+                        setShowMemorialModal(false)
+                    }}
                 >
                     <div
                         className="residence-modal-content"
                         style={{
                             background: 'linear-gradient(135deg, rgba(50, 50, 50, 0.95) 0%, rgba(30, 30, 30, 0.98) 100%)',
-                            borderRadius: '25px',
-                            padding: isMobileDevice ? '25px' : '35px',
-                            minWidth: isMobileDevice ? '85vw' : '500px',
-                            maxWidth: isMobileDevice ? '90vw' : '600px',
+                            borderRadius: '20px',
+                            padding: isMobileDevice ? '20px' : '25px',
+                            minWidth: isMobileDevice ? '85vw' : '450px',
+                            maxWidth: isMobileDevice ? '90vw' : '550px',
                             minHeight: 'auto',
                             maxHeight: isMobileDevice ? '80vh' : '85vh',
                             display: 'flex',
                             flexDirection: 'column',
-                            gap: '20px',
+                            gap: '12px',
                             boxShadow: '0 20px 60px rgba(0, 0, 0, 0.8)',
                             border: '1px solid rgba(100, 100, 100, 0.3)',
                             position: 'relative',
@@ -4742,17 +4907,17 @@ const LotteryLuckyWheel = () => {
                             display: 'flex',
                             alignItems: 'center',
                             justifyContent: 'center',
-                            gap: '12px',
-                            marginBottom: '10px'
+                            gap: '6px',
+                            marginBottom: '4px'
                         }}>
                             <span style={{
-                                fontSize: isMobileDevice ? '28px' : '32px',
+                                fontSize: isMobileDevice ? '20px' : '24px',
                                 filter: 'grayscale(100%)'
                             }}>
                                 🗿
                             </span>
                             <h2 style={{
-                                fontSize: isMobileDevice ? '22px' : '26px',
+                                fontSize: isMobileDevice ? '18px' : '20px',
                                 fontWeight: 'bold',
                                 color: '#cccccc',
                                 margin: 0,
@@ -4765,35 +4930,37 @@ const LotteryLuckyWheel = () => {
                         {/* 吊唁文字 */}
                         <div style={{
                             color: '#b0b0b0',
-                            fontSize: isMobileDevice ? '15px' : '17px',
-                            lineHeight: '1.8',
+                            fontSize: isMobileDevice ? '14px' : '16px',
+                            lineHeight: '1.4',
                             textAlign: 'left',
-                            padding: '20px',
+                            padding: '15px',
                             background: 'rgba(0, 0, 0, 0.3)',
-                            borderRadius: '15px',
+                            borderRadius: '12px',
                             border: '1px solid rgba(100, 100, 100, 0.2)',
-                            whiteSpace: 'pre-line'
+                            width: '100%',
+                            maxWidth: '100%',
+                            boxSizing: 'border-box'
                         }}>
-                            欢迎前来吊唁，我的朋友：
-
-星星城的建立，来自于两个人相识的偶然，彼时星火绽放，光华灿烂！
-但随后黑暗袭来，为了星星城，我们拼命抵挡——
-可惜，我们没能坚持到黎明的到来……
-我们一起努力过，但最终功亏一溃。
-
-但没关系，我的朋友！时间的长河无穷无尽，滚滚向前：
-
-一切色彩都会暗淡。
-一切美好终将消逝。
-一切故事终将结束。
-一切过往都成历史。
+                            <p style={{ margin: '0 0 4px 0' }}>欢迎前来吊唁，我的朋友：</p>
+                            
+                            <p style={{ margin: '0 0 4px 0' }}>星星城的建立，来自于相识的偶然，彼时星火绽放，光华灿烂！</p>
+                            <p style={{ margin: '0 0 4px 0' }}>随后黑暗袭来，为了星星城，我们拼命抵挡——</p>
+                            <p style={{ margin: '0 0 4px 0' }}>可惜，没能坚持到黎明的到来……</p>
+                            <p style={{ margin: '0 0 6px 0' }}>我们一起努力过，但最终功亏一溃。</p>
+                            
+                            <p style={{ margin: '0 0 4px 0' }}>但没关系，我的朋友！时间的长河无穷无尽，滚滚向前：</p>
+                            
+                            <p style={{ margin: '0 0 2px 0' }}>一切色彩都会暗淡。</p>
+                            <p style={{ margin: '0 0 2px 0' }}>一切美好终将消逝。</p>
+                            <p style={{ margin: '0 0 2px 0' }}>一切故事终将结束。</p>
+                            <p style={{ margin: '0' }}>一切过往都成历史。</p>
                         </div>
 
                         {/* 关闭按钮 */}
                         <div style={{
                             display: 'flex',
                             justifyContent: 'center',
-                            marginTop: '10px'
+                            marginTop: '2px'
                         }}>
                             <button
                                 onClick={() => setShowMemorialModal(false)}
@@ -6087,6 +6254,413 @@ const LotteryLuckyWheel = () => {
                 castingCode={castingMagic}
                 onCast={castMagic}
             />
+
+            {/* 纪念堂页面 */}
+            {showMemorialHall && (
+                <div
+                    className={`memorial-hall-container ${isMobileDevice ? 'force-landscape' : ''}`}
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100%',
+                        height: '100%',
+                        background: 'rgba(0, 0, 0, 0.9)',
+                        zIndex: 100002,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        backdropFilter: 'blur(10px)'
+                    }}
+                    onClick={() => setShowMemorialHall(false)}
+                >
+                    <div
+                        style={{
+                            background: 'linear-gradient(135deg, rgba(30, 30, 30, 0.95) 0%, rgba(20, 20, 20, 0.98) 100%)',
+                            borderRadius: '20px',
+                            padding: isMobileDevice ? '20px' : '25px',
+                            width: '90%',
+                            maxWidth: '800px',
+                            height: isMobileDevice ? '90vw' : '70vh',
+                            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.8)',
+                            border: '1px solid rgba(100, 100, 100, 0.3)',
+                            position: 'relative',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '0',
+                            minHeight: 0
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* 关闭按钮 */}
+                        <button
+                            onClick={() => setShowMemorialHall(false)}
+                            style={{
+                                position: 'absolute',
+                                top: '15px',
+                                right: '15px',
+                                background: 'rgba(100, 100, 100, 0.3)',
+                                color: 'rgba(200, 200, 200, 0.8)',
+                                border: 'none',
+                                borderRadius: '50%',
+                                width: '35px',
+                                height: '35px',
+                                cursor: 'pointer',
+                                fontSize: '18px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                transition: 'all 0.3s ease'
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.background = 'rgba(120, 120, 120, 0.5)'
+                                e.target.style.color = 'white'
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.background = 'rgba(100, 100, 100, 0.3)'
+                                e.target.style.color = 'rgba(200, 200, 200, 0.8)'
+                            }}
+                        >
+                            ✕
+                        </button>
+
+                        {/* 标题 */}
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '6px'
+                        }}>
+                            <h1 style={{
+                                fontSize: isMobileDevice ? '18px' : '20px',
+                                fontWeight: 'bold',
+                                color: '#cccccc',
+                                margin: 0,
+                                lineHeight: '1',
+                                textShadow: '0 2px 10px rgba(0, 0, 0, 0.5)'
+                            }}>
+                                🏛️ 纪念堂
+                            </h1>
+                            <p style={{
+                                fontSize: isMobileDevice ? '12px' : '14px',
+                                color: 'rgba(255, 255, 255, 0.8)',
+                                margin: '4px 0 0 0',
+                                textAlign: 'center',
+                                fontStyle: 'italic',
+                                textShadow: '0 1px 5px rgba(0, 0, 0, 0.5)'
+                            }}>
+                                我们的爱，埋藏于此
+                            </p>
+                        </div>
+
+                        {/* 媒体展示区域 - 平铺布局 */}
+                        <div 
+                            className="memorial-media-container residence-event-scroll"
+                            ref={memorialScrollRef}
+                            onClick={(e) => e.stopPropagation()}
+                            onWheel={(e) => e.stopPropagation()}
+                            onTouchStart={(e) => {
+                                if (e.touches && e.touches[0]) {
+                                    memorialTouchStartRef.current = {
+                                        x: e.touches[0].clientX,
+                                        y: e.touches[0].clientY
+                                    }
+                                }
+                            }}
+                            onTouchMove={(e) => {
+                                if (!memorialScrollRef.current || !(e.touches && e.touches[0])) return
+                                const touch = e.touches[0]
+                                const deltaX = touch.clientX - memorialTouchStartRef.current.x
+                                const deltaY = touch.clientY - memorialTouchStartRef.current.y
+                                // 在横屏强制旋转下，用户左右滑动（deltaX）应当驱动纵向滚动（方向修正）
+                                memorialScrollRef.current.scrollTop += deltaX
+                                // 更新起点，支持连续拖动
+                                memorialTouchStartRef.current = { x: touch.clientX, y: touch.clientY }
+                                e.preventDefault()
+                                e.stopPropagation()
+                            }}
+                            style={{
+                                background: 'rgba(0, 0, 0, 0.2)',
+                                borderRadius: '15px',
+                                padding: '10px',
+                                flex: 1,
+                                overflowY: 'auto',
+                                overflowX: 'hidden',
+                                minHeight: 0,
+                                maxHeight: '100%',
+                                position: 'relative',
+                                WebkitOverflowScrolling: 'touch',
+                                touchAction: 'none',
+                                overscrollBehavior: 'contain'
+                            }}>
+                            <div style={{
+                                display: 'grid',
+                                gridTemplateColumns: 'repeat(auto-fill, minmax(160px, 1fr))',
+                                gap: '15px'
+                            }}>
+                                {/* 已上传的媒体文件 */}
+                                {memorialMedia.map((media) => (
+                                    <div key={media.id} style={{
+                                        position: 'relative',
+                                        background: 'rgba(50, 50, 50, 0.5)',
+                                        borderRadius: '10px',
+                                        padding: '8px',
+                                        textAlign: 'center',
+                                        cursor: 'pointer',
+                                        transition: 'all 0.3s ease',
+                                        border: '1px solid rgba(100, 100, 100, 0.2)',
+                                        aspectRatio: '4/3',
+                                        display: 'flex',
+                                        flexDirection: 'column',
+                                        alignItems: 'center',
+                                        justifyContent: 'center'
+                                    }}
+                                    onMouseEnter={(e) => {
+                                        e.target.style.background = 'rgba(70, 70, 70, 0.7)'
+                                        e.target.style.transform = 'scale(1.02)'
+                                    }}
+                                    onMouseLeave={(e) => {
+                                        e.target.style.background = 'rgba(50, 50, 50, 0.5)'
+                                        e.target.style.transform = 'scale(1)'
+                                    }}
+                                    >
+                                        {/* 删除按钮 */}
+                                        <button
+                                            className="memorial-delete-btn"
+                                            onClick={(e) => {
+                                                e.stopPropagation()
+                                                handleMemorialDelete(media.id)
+                                            }}
+                                            style={{
+                                                position: 'absolute',
+                                                top: '5px',
+                                                right: '5px',
+                                                background: 'rgba(255, 0, 0, 0.8)',
+                                                color: 'white',
+                                                border: 'none',
+                                                borderRadius: '50%',
+                                                width: '20px',
+                                                height: '20px',
+                                                cursor: 'pointer',
+                                                fontSize: '12px',
+                                                display: 'flex',
+                                                alignItems: 'center',
+                                                justifyContent: 'center',
+                                                zIndex: 10,
+                                                padding: '0 !important',
+                                                margin: '0 !important',
+                                                minWidth: '20px !important',
+                                                minHeight: '20px !important'
+                                            }}
+                                            onMouseEnter={(e) => {
+                                                e.target.style.background = 'rgba(255, 0, 0, 1)'
+                                            }}
+                                            onMouseLeave={(e) => {
+                                                e.target.style.background = 'rgba(255, 0, 0, 0.8)'
+                                            }}
+                                        >
+                                            ✕
+                                        </button>
+
+                                        {/* 媒体内容 */}
+                                        <div style={{
+                                            width: '100%',
+                                            height: '100px',
+                                            borderRadius: '8px',
+                                            overflow: 'hidden',
+                                            marginBottom: '8px',
+                                            display: 'flex',
+                                            alignItems: 'center',
+                                            justifyContent: 'center',
+                                            background: 'rgba(100, 100, 100, 0.3)',
+                                            flex: 1,
+                                            cursor: 'pointer'
+                                        }}
+                                        onClick={() => {
+                                            setCurrentMemorialMedia(media)
+                                            setShowMemorialFullscreen(true)
+                                        }}>
+                                            {media.fileType === 'image' ? (
+                                                <img
+                                                    src={media.url.startsWith('http') ? media.url : window.location.origin + media.url}
+                                                    alt={media.name}
+                                                    style={{
+                                                        width: '100%',
+                                                        height: '100%',
+                                                        objectFit: 'cover'
+                                                    }}
+                                                />
+                                            ) : (
+                                                <video
+                                                    src={media.url.startsWith('http') ? media.url : window.location.origin + media.url}
+                                                    style={{
+                                                        width: '100%',
+                                                        height: '100%',
+                                                        objectFit: 'cover'
+                                                    }}
+                                                    controls
+                                                />
+                                            )}
+                                        </div>
+                                        <p style={{
+                                            color: '#aaa',
+                                            fontSize: '10px',
+                                            margin: 0,
+                                            overflow: 'hidden',
+                                            textOverflow: 'ellipsis',
+                                            whiteSpace: 'nowrap'
+                                        }}>
+                                            {media.originalName || media.fileName}
+                                        </p>
+                                    </div>
+                                ))}
+
+                                {/* 上传按钮 - 空素材 */}
+                                <div style={{
+                                    background: 'rgba(50, 50, 50, 0.3)',
+                                    borderRadius: '10px',
+                                    padding: '8px',
+                                    textAlign: 'center',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.3s ease',
+                                    border: '2px dashed rgba(100, 100, 100, 0.5)',
+                                    aspectRatio: '4/3',
+                                    display: 'flex',
+                                    flexDirection: 'column',
+                                    alignItems: 'center',
+                                    justifyContent: 'center'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.target.style.background = 'rgba(70, 70, 70, 0.5)'
+                                    e.target.style.borderColor = 'rgba(150, 150, 150, 0.7)'
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.target.style.background = 'rgba(50, 50, 50, 0.3)'
+                                    e.target.style.borderColor = 'rgba(100, 100, 100, 0.5)'
+                                }}
+                                onClick={() => {
+                                    document.getElementById('memorial-upload').click()
+                                }}
+                                >
+                                    <div style={{
+                                        fontSize: '24px',
+                                        color: '#888',
+                                        marginBottom: '8px'
+                                    }}>
+                                        +
+                                    </div>
+                                    <p style={{
+                                        color: '#888',
+                                        fontSize: '10px',
+                                        margin: 0
+                                    }}>
+                                        上传
+                                    </p>
+                                </div>
+                            </div>
+                        </div>
+
+                        {/* 隐藏的文件输入 */}
+                        <input
+                            type="file"
+                            accept="image/*,video/*"
+                            multiple
+                            style={{ display: 'none' }}
+                            id="memorial-upload"
+                            onChange={(e) => {
+                                const files = Array.from(e.target.files)
+                                if (files.length > 0) {
+                                    handleMemorialUpload(files)
+                                }
+                                // 清空input，允许重复选择相同文件
+                                e.target.value = ''
+                            }}
+                        />
+                    </div>
+                </div>
+            )}
+
+            {/* 纪念堂媒体全屏显示 */}
+            {showMemorialFullscreen && currentMemorialMedia && (
+                <div
+                    className={`memorial-fullscreen-container ${isMobileDevice ? 'force-landscape' : ''}`}
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100vw',
+                        height: '100vh',
+                        background: 'rgba(0, 0, 0, 0.95)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 100003,
+                        cursor: 'pointer'
+                    }}
+                    onClick={() => setShowMemorialFullscreen(false)}
+                >
+                    <div
+                        style={{
+                            position: 'relative',
+                            maxWidth: '90vw',
+                            maxHeight: '90vh',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center'
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* 关闭按钮 - 固定在屏幕右上角 */}
+                        <button
+                            onClick={() => setShowMemorialFullscreen(false)}
+                            style={{
+                                position: 'fixed',
+                                top: '20px',
+                                right: '20px',
+                                background: 'rgba(255, 255, 255, 0.2)',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '50%',
+                                width: '40px',
+                                height: '40px',
+                                cursor: 'pointer',
+                                fontSize: '20px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                zIndex: 100004
+                            }}
+                        >
+                            ✕
+                        </button>
+
+                        {/* 媒体内容 */}
+                        {currentMemorialMedia.fileType === 'image' ? (
+                            <img
+                                src={currentMemorialMedia.url.startsWith('http') ? currentMemorialMedia.url : window.location.origin + currentMemorialMedia.url}
+                                alt={currentMemorialMedia.originalName}
+                                style={{
+                                    maxWidth: '100%',
+                                    maxHeight: '100%',
+                                    objectFit: 'contain',
+                                    borderRadius: '10px'
+                                }}
+                            />
+                        ) : (
+                            <video
+                                src={currentMemorialMedia.url.startsWith('http') ? currentMemorialMedia.url : window.location.origin + currentMemorialMedia.url}
+                                controls={true}
+                                autoPlay={true}
+                                style={{
+                                    maxWidth: '100%',
+                                    maxHeight: '100%',
+                                    borderRadius: '10px'
+                                }}
+                            />
+                        )}
+                    </div>
+                </div>
+            )}
     </div>
   )
 }

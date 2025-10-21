@@ -1027,6 +1027,107 @@
     }
 }
 
+/* 纪念堂媒体全屏强制横屏样式 */
+.memorial-fullscreen-container.force-landscape {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) rotate(90deg) !important;
+    transform-origin: center center !important;
+    width: 100vh !important;
+    height: 100vw !important;
+    max-width: 100vh !important;
+    max-height: 100vw !important;
+    z-index: 100003 !important;
+}
+
+/* 确保纪念堂全屏内的所有元素都不会被额外旋转 */
+.memorial-fullscreen-container.force-landscape * {
+    max-width: none !important;
+    max-height: none !important;
+}
+
+/* 重置纪念堂全屏内容的定位，保持与父级一致的横屏方向 */
+.memorial-fullscreen-container.force-landscape > div {
+    position: relative !important;
+    max-width: 90vh !important;
+    max-height: 90vw !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    /* 不反向旋转，继承外层横屏 */
+    transform: none !important;
+}
+
+/* 纪念堂全屏关闭按钮调整 - 固定在屏幕右上角 */
+.memorial-fullscreen-container.force-landscape button {
+    position: fixed !important;
+    top: 20px !important;
+    right: 20px !important;
+    background: rgba(255, 255, 255, 0.2) !important;
+    color: white !important;
+    border: none !important;
+    border-radius: 50% !important;
+    width: 40px !important;
+    height: 40px !important;
+    cursor: pointer !important;
+    font-size: 20px !important;
+    display: flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    z-index: 100004 !important;
+}
+
+/* 纪念堂全屏媒体内容调整 */
+.memorial-fullscreen-container.force-landscape img,
+.memorial-fullscreen-container.force-landscape video {
+    max-width: 100% !important;
+    max-height: 100% !important;
+    border-radius: 10px !important;
+}
+
+/* 全局强制横屏：纪念堂弹窗（不受屏幕宽度限制） */
+.memorial-hall-container.force-landscape {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) rotate(90deg) !important;
+    transform-origin: center center !important;
+    width: 100vh !important;
+    height: 100vw !important;
+    max-width: 100vh !important;
+    max-height: 100vw !important;
+    z-index: 100002 !important;
+}
+
+/* 内层内容保持与父级一致的横屏方向，同时允许内部滚动区域生效 */
+.memorial-hall-container.force-landscape > div {
+    position: relative !important;
+    max-width: 600px !important;
+    width: 90% !important;
+    max-height: 80vh !important;
+    padding: 25px !important;
+    font-size: 14px !important;
+    margin: 0 auto !important;
+    transform: none !important; /* 不反向旋转 */
+    min-height: 0 !important;
+    display: flex !important;
+    flex-direction: column !important;
+    overflow: hidden !important; /* 只允许内部媒体区域滚动 */
+}
+
+/* 媒体容器：开启竖向滚动（视觉为横向），启用触摸拖动与 iOS 平滑滚动 */
+.memorial-hall-container.force-landscape .memorial-media-container {
+    max-height: 100% !important;
+    overflow-y: auto !important;
+    overflow-x: hidden !important;
+    position: relative !important;
+    pointer-events: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    touch-action: none !important; /* 交由JS将左右拖动映射到纵向滚动 */
+    overscroll-behavior: contain !important;
+}
+
 /* 🔥 CPU优化：为动画元素启用GPU加速 */
 .building,
 .city-star,
@@ -3034,6 +3135,102 @@
     .avatar-preview-overlay.force-landscape * {
         max-width: none !important;
         max-height: none !important;
+    }
+
+    /* 纪念堂弹窗强制横屏样式 */
+    .memorial-hall-container.force-landscape {
+        position: fixed !important;
+        top: 50% !important;
+        left: 50% !important;
+        transform: translate(-50%, -50%) rotate(90deg) !important;
+        transform-origin: center center !important;
+        width: 100vh !important;
+        height: 100vw !important;
+        max-width: 100vh !important;
+        max-height: 100vw !important;
+        /* 确保弹窗在最顶层 */
+        z-index: 100002 !important;
+    }
+
+    /* 重置纪念堂弹窗内容的定位，保持与父级一致的横屏方向 */
+    .memorial-hall-container.force-landscape > div {
+        position: relative !important;
+        max-width: 600px !important;
+        width: 90% !important;
+        max-height: 80vh !important;
+        padding: 25px !important;
+        font-size: 14px !important;
+        /* 确保内容居中 */
+        margin: 0 auto !important;
+        /* 不反向旋转，继承外层横屏 */
+        transform: none !important;
+        transform-origin: center center !important;
+        /* 关键：允许子元素滚动 */
+        min-height: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+    }
+
+    /* 纪念堂弹窗标题调整 */
+    .memorial-hall-container.force-landscape h1 {
+        font-size: 20px !important;
+        margin-bottom: 20px !important;
+    }
+
+    /* 纪念堂弹窗按钮调整 */
+    .memorial-hall-container.force-landscape button {
+        padding: 10px 20px !important;
+        font-size: 14px !important;
+    }
+
+    /* 纪念堂删除按钮特殊样式 - 确保圆形 */
+    .memorial-hall-container.force-landscape .memorial-delete-btn {
+        padding: 0 !important;
+        margin: 0 !important;
+        min-width: 20px !important;
+        min-height: 20px !important;
+        width: 20px !important;
+        height: 20px !important;
+        border-radius: 50% !important;
+    }
+
+    /* 纪念堂弹窗上传区域调整 */
+    .memorial-hall-container.force-landscape label {
+        padding: 10px 20px !important;
+        font-size: 14px !important;
+    }
+
+    /* 纪念堂弹窗网格调整 */
+    .memorial-hall-container.force-landscape .grid-container {
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr)) !important;
+        gap: 12px !important;
+    }
+
+    /* 确保纪念堂弹窗内的所有元素都不会被额外旋转 */
+    .memorial-hall-container.force-landscape * {
+        max-width: none !important;
+        max-height: none !important;
+    }
+
+    /* 重新声明父内容容器尺寸限制，避免被上面的通配符覆盖导致不溢出不滚动 */
+    .memorial-hall-container.force-landscape > div {
+        max-height: 80vh !important;
+        min-height: 0 !important;
+        display: flex !important;
+        flex-direction: column !important;
+        overflow: hidden !important; /* 只允许内部媒体区域滚动 */
+    }
+
+    /* 确保纪念堂媒体区域可以滚动 - 使用与居所事件相同的滚动设置 */
+    .memorial-hall-container.force-landscape .memorial-media-container {
+        max-height: 100% !important;
+        overflow-y: auto !important;
+        overflow-x: hidden !important;
+        position: relative !important;
+        pointer-events: auto !important;
+        -webkit-overflow-scrolling: touch !important;
+        touch-action: auto !important;
+        overscroll-behavior: contain !important;
     }
 }
 

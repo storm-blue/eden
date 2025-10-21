@@ -34,8 +34,8 @@ spring:
   # 文件上传配置
   servlet:
     multipart:
-      max-file-size: 5MB
-      max-request-size: 5MB
+      max-file-size: 10MB
+      max-request-size: 10MB
 
 # MyBatis配置
 mybatis:
@@ -98,3 +98,10 @@ avatar:
     path: ./uploads/avatars/
   url:
     prefix: /uploads/avatars/
+
+# 纪念堂上传配置
+memorial:
+  upload:
+    path: ./uploads/memorial/
+  url:
+    prefix: /uploads/memorial/
