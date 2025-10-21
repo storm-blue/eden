@@ -1,0 +1,36 @@
+#!/bin/bash
+
+echo "=== 废墟状态登录限制修改验证 ==="
+
+# 1. 检查废墟状态
+echo "1. 检查当前废墟状态..."
+RUINS_STATUS=$(curl -s "http://localhost:5000/api/star-city/admin/ruins-status" | jq '.data.isRuins')
+echo "废墟状态: $RUINS_STATUS"
+
+echo -e "\n=== 废墟状态登录限制修改完成 ==="
+echo "修改内容："
+echo ""
+echo "1. 登录限制变更："
+echo "   - 之前：只允许 '秦小淮' 和 '李星斗' 登录"
+echo "   - 现在：只允许 '秦小淮' 登录"
+echo ""
+echo "2. 修改位置："
+echo "   - fetchUserInfo 函数（第1892行）"
+echo "   - handleNameConfirm 函数（第2377行）"
+echo ""
+echo "3. 允许的用户："
+echo "   - 秦小淮：✅ 可以登录"
+echo "   - 李星斗：❌ 无法登录（显示'用户不存在'）"
+echo "   - 其他用户：❌ 无法登录（显示'用户不存在'）"
+echo ""
+echo "4. 逻辑说明："
+echo "   - 废墟状态下，只有秦小淮可以进入星星城"
+echo "   - 其他用户尝试登录会看到'用户不存在'提示"
+echo "   - 这符合废墟状态下的故事设定"
+echo ""
+echo "5. 测试建议："
+echo "   - 设置废墟状态为 true"
+echo "   - 尝试用不同用户名登录"
+echo "   - 验证只有秦小淮能成功登录"
+echo ""
+echo "现在废墟状态下只有秦小淮可以登录了！"

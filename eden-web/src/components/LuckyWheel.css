@@ -1086,6 +1086,55 @@
     border-radius: 10px !important;
 }
 
+/* 纪念堂删除确认框强制横屏样式 */
+.memorial-delete-confirm-container.force-landscape {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    transform: translate(-50%, -50%) rotate(90deg) !important;
+    transform-origin: center center !important;
+    width: 100vh !important;
+    height: 100vw !important;
+    max-width: 100vh !important;
+    max-height: 100vw !important;
+    z-index: 100005 !important;
+}
+
+/* 确保纪念堂删除确认框内的所有元素都不会被额外旋转 */
+.memorial-delete-confirm-container.force-landscape * {
+    max-width: none !important;
+    max-height: none !important;
+}
+
+/* 重置纪念堂删除确认框内容的定位，保持与父级一致的横屏方向 */
+.memorial-delete-confirm-container.force-landscape > div {
+    position: relative !important;
+    max-width: 90vh !important;
+    max-height: 90vw !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: center !important;
+    justify-content: center !important;
+    /* 不反向旋转，继承外层横屏 */
+    transform: none !important;
+}
+
+/* 纪念堂删除确认框按钮调整 */
+.memorial-delete-confirm-container.force-landscape button {
+    font-size: 14px !important;
+    padding: 10px 20px !important;
+}
+
+/* 纪念堂删除确认框关闭按钮调整 */
+.memorial-delete-confirm-container.force-landscape > div > button:first-child {
+    position: absolute !important;
+    top: 10px !important;
+    right: 10px !important;
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 16px !important;
+}
+
 /* 全局强制横屏：纪念堂弹窗（不受屏幕宽度限制） */
 .memorial-hall-container.force-landscape {
     position: fixed !important;

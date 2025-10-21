@@ -241,6 +241,8 @@ const LotteryLuckyWheel = () => {
     const [memorialMedia, setMemorialMedia] = useState([]) // 纪念堂媒体文件列表
     const [showMemorialFullscreen, setShowMemorialFullscreen] = useState(false) // 显示纪念堂媒体全屏
     const [currentMemorialMedia, setCurrentMemorialMedia] = useState(null) // 当前全屏显示的媒体
+    const [showDeleteConfirm, setShowDeleteConfirm] = useState(false) // 显示删除确认框
+    const [deleteTargetMedia, setDeleteTargetMedia] = useState(null) // 要删除的媒体对象
     const [allBuildingResidents, setAllBuildingResidents] = useState({}) // 所有建筑的居住人员
     const [specialCombos, setSpecialCombos] = useState(null) // 特殊居住组合状态 // 星星城关闭动画状态 // 星星城页面状态
     const [showEventHistory, setShowEventHistory] = useState(false) // 显示事件历史弹窗
@@ -6429,7 +6431,8 @@ const LotteryLuckyWheel = () => {
                                             className="memorial-delete-btn"
                                             onClick={(e) => {
                                                 e.stopPropagation()
-                                                handleMemorialDelete(media.id)
+                                                setDeleteTargetMedia(media)
+                                                setShowDeleteConfirm(true)
                                             }}
                                             style={{
                                                 position: 'absolute',
@@ -6658,6 +6661,157 @@ const LotteryLuckyWheel = () => {
                                 }}
                             />
                         )}
+                    </div>
+                </div>
+            )}
+
+            {/* 纪念堂删除确认框 */}
+            {showDeleteConfirm && deleteTargetMedia && (
+                <div
+                    className={`memorial-delete-confirm-container ${isMobileDevice ? 'force-landscape' : ''}`}
+                    style={{
+                        position: 'fixed',
+                        top: 0,
+                        left: 0,
+                        width: '100vw',
+                        height: '100vh',
+                        background: 'rgba(0, 0, 0, 0.7)',
+                        display: 'flex',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        zIndex: 100005,
+                        cursor: 'pointer'
+                    }}
+                    onClick={() => setShowDeleteConfirm(false)}
+                >
+                    <div
+                        style={{
+                            background: 'linear-gradient(135deg, rgba(30, 30, 30, 0.95) 0%, rgba(20, 20, 20, 0.98) 100%)',
+                            borderRadius: '15px',
+                            padding: '25px',
+                            minWidth: '300px',
+                            maxWidth: '400px',
+                            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.8)',
+                            border: '1px solid rgba(100, 100, 100, 0.3)',
+                            position: 'relative',
+                            textAlign: 'center'
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* 关闭按钮 */}
+                        <button
+                            onClick={() => setShowDeleteConfirm(false)}
+                            style={{
+                                position: 'absolute',
+                                top: '10px',
+                                right: '10px',
+                                background: 'rgba(255, 255, 255, 0.1)',
+                                color: 'white',
+                                border: 'none',
+                                borderRadius: '50%',
+                                width: '30px',
+                                height: '30px',
+                                cursor: 'pointer',
+                                fontSize: '16px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center'
+                            }}
+                        >
+                            ✕
+                        </button>
+
+                        {/* 确认内容 */}
+                        <div style={{ marginBottom: '20px' }}>
+                            <h3 style={{
+                                color: '#ff6b6b',
+                                fontSize: '18px',
+                                margin: '0 0 15px 0',
+                                fontWeight: 'bold'
+                            }}>
+                                ⚠️ 确认删除
+                            </h3>
+                            <p style={{
+                                color: 'rgba(255, 255, 255, 0.9)',
+                                fontSize: '14px',
+                                margin: '0 0 10px 0',
+                                lineHeight: '1.5'
+                            }}>
+                                确定要删除文件：
+                            </p>
+                            <p style={{
+                                color: '#ffd93d',
+                                fontSize: '16px',
+                                margin: '0 0 15px 0',
+                                fontWeight: 'bold',
+                                wordBreak: 'break-all'
+                            }}>
+                                "{deleteTargetMedia.originalName}"
+                            </p>
+                            <p style={{
+                                color: 'rgba(255, 255, 255, 0.7)',
+                                fontSize: '12px',
+                                margin: '0',
+                                fontStyle: 'italic'
+                            }}>
+                                删除后将无法恢复
+                            </p>
+                        </div>
+
+                        {/* 按钮区域 */}
+                        <div style={{
+                            display: 'flex',
+                            gap: '15px',
+                            justifyContent: 'center'
+                        }}>
+                            <button
+                                onClick={() => setShowDeleteConfirm(false)}
+                                style={{
+                                    background: 'rgba(100, 100, 100, 0.3)',
+                                    color: 'white',
+                                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                                    borderRadius: '8px',
+                                    padding: '10px 20px',
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    transition: 'all 0.3s ease'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.target.style.background = 'rgba(100, 100, 100, 0.5)'
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.target.style.background = 'rgba(100, 100, 100, 0.3)'
+                                }}
+                            >
+                                取消
+                            </button>
+                            <button
+                                onClick={() => {
+                                    handleMemorialDelete(deleteTargetMedia.id)
+                                    setShowDeleteConfirm(false)
+                                    setDeleteTargetMedia(null)
+                                }}
+                                style={{
+                                    background: 'rgba(255, 107, 107, 0.8)',
+                                    color: 'white',
+                                    border: '1px solid rgba(255, 107, 107, 0.5)',
+                                    borderRadius: '8px',
+                                    padding: '10px 20px',
+                                    cursor: 'pointer',
+                                    fontSize: '14px',
+                                    fontWeight: 'bold',
+                                    transition: 'all 0.3s ease'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.target.style.background = 'rgba(255, 107, 107, 1)'
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.target.style.background = 'rgba(255, 107, 107, 0.8)'
+                                }}
+                            >
+                                确认删除
+                            </button>
+                        </div>
                     </div>
                 </div>
             )}
