@@ -61,6 +61,16 @@ public class StarCityService {
     }
 
     /**
+     * 更新星星城数据
+     */
+    @Transactional
+    public void updateStarCity(StarCity starCity) {
+        starCity.setUpdateTime(LocalDateTime.now());
+        starCityMapper.updateStarCity(starCity);
+        logger.info("星星城数据已更新: {}", starCity);
+    }
+
+    /**
      * 每日更新星星城数据
      * 人口+10000，食物+5000，幸福指数-1
      */

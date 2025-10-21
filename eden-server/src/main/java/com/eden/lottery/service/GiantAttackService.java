@@ -31,10 +31,18 @@ public class GiantAttackService {
     /**
      * 检查是否应该触发巨人进攻
      * 每6小时有1/8的概率触发
+     * 废墟状态下不会触发巨人进攻
      */
     @Transactional
     public void checkGiantAttack() {
         try {
+            // 检查星星城是否处于废墟状态
+            StarCity starCity = starCityMapper.getStarCity();
+            if (starCity != null && starCity.getIsRuins() != null && starCity.getIsRuins()) {
+                logger.info("星星城处于废墟状态，跳过巨人进攻检查");
+                return;
+            }
+
             // 获取当前巨人进攻状态
             GiantAttack currentAttack = giantAttackMapper.getCurrentGiantAttack();
 
@@ -81,10 +89,24 @@ public class GiantAttackService {
     /**
      * 处理巨人进攻伤害
      * 每10分钟造成0.5%的人口损失
+     * 废墟状态下停止处理伤害
      */
     @Transactional
     public void processGiantDamage() {
         try {
+            // 检查星星城是否处于废墟状态
+            StarCity starCity = starCityMapper.getStarCity();
+            if (starCity != null && starCity.getIsRuins() != null && starCity.getIsRuins()) {
+                logger.info("星星城处于废墟状态，停止巨人伤害处理");
+                // 如果废墟状态下有活跃的巨人进攻，自动结束
+                GiantAttack currentAttack = giantAttackMapper.getCurrentGiantAttack();
+                if (currentAttack != null && currentAttack.getIsActive()) {
+                    logger.info("废墟状态下自动结束巨人进攻");
+                    endGiantAttack();
+                }
+                return;
+            }
+
             GiantAttack currentAttack = giantAttackMapper.getCurrentGiantAttack();
 
             if (currentAttack == null || !currentAttack.getIsActive()) {
@@ -100,7 +122,6 @@ public class GiantAttackService {
             }
 
             // 获取星星城数据
-            StarCity starCity = starCityMapper.getStarCity();
             if (starCity == null) {
                 return;
             }

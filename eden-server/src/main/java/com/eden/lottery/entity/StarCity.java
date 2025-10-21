@@ -12,6 +12,7 @@ public class StarCity {
     private Integer happiness;   // 幸福指数
     private Integer level;       // 当前等级
     private String weather;      // 天气状态: sunny, rainy, snowy, cloudy, night
+    private Boolean isRuins;     // 废墟状态: true=废墟状态, false=正常状态
     private LocalDateTime lastUpdateTime; // 最后更新时间
     private LocalDateTime createTime;
     private LocalDateTime updateTime;
@@ -23,6 +24,7 @@ public class StarCity {
         this.population = population;
         this.food = food;
         this.happiness = happiness;
+        this.isRuins = false; // 默认非废墟状态
         this.level = calculateLevel();
         this.lastUpdateTime = LocalDateTime.now();
         this.createTime = LocalDateTime.now();
@@ -31,6 +33,11 @@ public class StarCity {
 
     // 计算等级的方法
     public Integer calculateLevel() {
+        // 废墟状态下强制等级为0
+        if (isRuins != null && isRuins) {
+            return 0;
+        }
+        
         if (population >= 20000000 && food >= 20000000 && happiness >= 2000) {
             return 10;
         } else if (population >= 10000000 && food >= 10000000 && happiness >= 1000) {
@@ -127,6 +134,18 @@ public class StarCity {
         this.weather = weather;
     }
 
+    public Boolean getIsRuins() {
+        return isRuins;
+    }
+
+    public void setIsRuins(Boolean isRuins) {
+        this.isRuins = isRuins;
+        // 当设置废墟状态时，重新计算等级
+        if (isRuins != null) {
+            this.level = calculateLevel();
+        }
+    }
+
     @Override
     public String toString() {
         return "StarCity{" +
@@ -136,6 +155,7 @@ public class StarCity {
                 ", happiness=" + happiness +
                 ", level=" + level +
                 ", weather='" + weather + '\'' +
+                ", isRuins=" + isRuins +
                 ", lastUpdateTime=" + lastUpdateTime +
                 ", createTime=" + createTime +
                 ", updateTime=" + updateTime +

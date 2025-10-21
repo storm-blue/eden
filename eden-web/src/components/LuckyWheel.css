@@ -710,6 +710,12 @@
     filter: drop-shadow(0 15px 40px rgba(255, 107, 157, 0.4));
 }
 
+/* 废墟模式下转盘容器样式 */
+.wheel-container.ruins-mode {
+    filter: drop-shadow(0 15px 40px rgba(128, 128, 128, 0.3));
+    opacity: 0.7;
+}
+
 /* 转盘中心信息显示 */
 .wheel-center-info {
     position: absolute;
@@ -769,6 +775,18 @@
     z-index: -1;
 }
 
+/* 废墟模式下转盘背景 */
+.wheel-container.ruins-mode::before {
+    background: conic-gradient(
+            from 0deg,
+            transparent,
+            rgba(128, 128, 128, 0.1),
+            transparent,
+            rgba(160, 160, 160, 0.1),
+            transparent
+    );
+}
+
 /* 控制按钮 */
 .controls {
     display: flex;
@@ -801,7 +819,7 @@
 .spin-button.disabled {
     background: #ccc;
     cursor: not-allowed;
-    animation: shake 0.5s infinite;
+    opacity: 0.6;
 }
 
 .reset-button {
@@ -2763,6 +2781,19 @@
     }
 }
 
+/* 纪念碑脉冲动画 - 灰色光圈 */
+@keyframes memorialPulse {
+    0% {
+        box-shadow: 0 0 0 0 rgba(180, 180, 180, 0.5);
+    }
+    70% {
+        box-shadow: 0 0 0 18px rgba(180, 180, 180, 0);
+    }
+    100% {
+        box-shadow: 0 0 0 0 rgba(180, 180, 180, 0);
+    }
+}
+
 /* 城市数据脉冲动画 - 金色光圈（较小） */
 @keyframes cityDataPulse {
     0% {
@@ -3617,6 +3648,19 @@
     100% {
         text-shadow: 0 0 50px rgba(255, 20, 147, 1), 0 0 100px rgba(255, 255, 255, 1);
         transform: translateX(-50%) scale(1.15);
+    }
+}
+
+@keyframes ruinsFade {
+    0% {
+        text-shadow: 0 0 15px rgba(245, 245, 245, 0.6), 0 0 30px rgba(200, 200, 200, 0.4);
+        transform: translateX(-50%) scale(1);
+        opacity: 0.8;
+    }
+    100% {
+        text-shadow: 0 0 25px rgba(245, 245, 245, 0.8), 0 0 50px rgba(200, 200, 200, 0.6);
+        transform: translateX(-50%) scale(1.05);
+        opacity: 0.6;
     }
 }
 

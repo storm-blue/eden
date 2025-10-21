@@ -4,6 +4,7 @@ import com.eden.lottery.dto.ApiResponse;
 import com.eden.lottery.entity.StarCity;
 import com.eden.lottery.service.StarCityService;
 import com.eden.lottery.service.SpecialResidenceService;
+import com.eden.lottery.service.GiantAttackService;
 import jakarta.annotation.Resource;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,6 +25,9 @@ public class StarCityController {
     @Resource
     private SpecialResidenceService specialResidenceService;
 
+    @Resource
+    private GiantAttackService giantAttackService;
+
     /**
      * 获取星星城数据
      */
@@ -39,6 +43,7 @@ public class StarCityController {
             result.put("happiness", starCity.getHappiness());
             result.put("level", starCity.getLevel());
             result.put("weather", starCity.getWeather());
+            result.put("isRuins", starCity.getIsRuins());
             result.put("lastUpdateTime", starCity.getLastUpdateTime());
             
             // 格式化显示
@@ -185,6 +190,7 @@ public class StarCityController {
             result.put("happiness", starCity.getHappiness());
             result.put("level", starCity.getLevel());
             result.put("weather", starCity.getWeather());
+            result.put("isRuins", starCity.getIsRuins());
             result.put("lastUpdateTime", starCity.getLastUpdateTime());
             
             // 格式化显示
@@ -285,6 +291,58 @@ public class StarCityController {
             return ApiResponse.success("获取特殊居住组合状态成功", result);
         } catch (Exception e) {
             return ApiResponse.error("获取特殊居住组合状态失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 管理员：设置废墟状态
+     */
+    @PostMapping("/admin/set-ruins")
+    public ApiResponse<Map<String, Object>> setRuinsStatus(@RequestBody Map<String, Object> request) {
+        try {
+            Boolean isRuins = (Boolean) request.get("isRuins");
+            if (isRuins == null) {
+                return ApiResponse.error("废墟状态参数不能为空");
+            }
+            
+            StarCity starCity = starCityService.getStarCity();
+            starCity.setIsRuins(isRuins);
+            starCityService.updateStarCity(starCity);
+            
+            // 如果设置为废墟状态，自动停止巨人进攻
+            if (isRuins && giantAttackService.isGiantAttacking()) {
+                giantAttackService.endGiantAttack();
+            }
+            
+            Map<String, Object> result = new HashMap<>();
+            result.put("isRuins", isRuins);
+            result.put("level", starCity.getLevel());
+            result.put("message", isRuins ? "星星城已进入废墟状态，巨人进攻已停止" : "星星城已恢复正常状态");
+            
+            return ApiResponse.success("废墟状态设置成功", result);
+        } catch (Exception e) {
+            return ApiResponse.error("废墟状态设置失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 管理员：获取废墟状态
+     */
+    @GetMapping("/admin/ruins-status")
+    public ApiResponse<Map<String, Object>> getRuinsStatus() {
+        try {
+            StarCity starCity = starCityService.getStarCity();
+            
+            Map<String, Object> result = new HashMap<>();
+            result.put("isRuins", starCity.getIsRuins());
+            result.put("level", starCity.getLevel());
+            result.put("population", starCity.getPopulation());
+            result.put("food", starCity.getFood());
+            result.put("happiness", starCity.getHappiness());
+            
+            return ApiResponse.success("获取废墟状态成功", result);
+        } catch (Exception e) {
+            return ApiResponse.error("获取废墟状态失败: " + e.getMessage());
         }
     }
 }

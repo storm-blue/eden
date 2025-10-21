@@ -624,6 +624,12 @@ public class PrizeInitService implements ApplicationRunner {
             logger.info("star_city表缺少weather列，添加列...");
             addWeatherColumn(connection);
         }
+
+        // 检查is_ruins列是否存在
+        if (!columns.contains("is_ruins")) {
+            logger.info("star_city表缺少is_ruins列，添加列...");
+            addIsRuinsColumn(connection);
+        }
     }
 
     /**
@@ -638,6 +644,21 @@ public class PrizeInitService implements ApplicationRunner {
             // 为现有数据设置默认天气为sunny
             statement.execute("UPDATE star_city SET weather = 'sunny' WHERE weather IS NULL");
             logger.info("已为现有数据设置默认天气");
+        }
+    }
+
+    /**
+     * 添加is_ruins列到star_city表
+     */
+    private void addIsRuinsColumn(Connection connection) throws Exception {
+        try (Statement statement = connection.createStatement()) {
+            // 添加is_ruins列，使用INTEGER类型，默认为0（非废墟状态）
+            statement.execute("ALTER TABLE star_city ADD COLUMN is_ruins INTEGER DEFAULT 0");
+            logger.info("is_ruins列添加成功");
+
+            // 为现有数据设置默认废墟状态为0
+            statement.execute("UPDATE star_city SET is_ruins = 0 WHERE is_ruins IS NULL");
+            logger.info("已为现有数据设置默认废墟状态");
         }
     }
 

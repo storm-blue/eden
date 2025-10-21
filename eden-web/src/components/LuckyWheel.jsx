@@ -226,6 +226,7 @@ const LotteryLuckyWheel = () => {
     const [starCityClosing, setStarCityClosing] = useState(false)
     const [isMobileDevice, setIsMobileDevice] = useState(false) // 是否为移动设备（需要强制横屏）
     const [starCityData, setStarCityData] = useState(null) // 星星城数据
+    const [isRuinsMode, setIsRuinsMode] = useState(false) // 废墟状态（独立状态）
     const [showDonationModal, setShowDonationModal] = useState(false) // 显示捐献弹窗
     const [userDonationPrizes, setUserDonationPrizes] = useState([]) // 用户可捐献的奖品
     const [donationEffect, setDonationEffect] = useState('') // 捐献效果提示
@@ -233,6 +234,7 @@ const LotteryLuckyWheel = () => {
     const [selectedBuilding, setSelectedBuilding] = useState(null) // 选中的建筑
     const [buildingResidents, setBuildingResidents] = useState([]) // 建筑的居住人员
     const [loadingResidents, setLoadingResidents] = useState(false) // 加载居住人员状态
+    const [showMemorialModal, setShowMemorialModal] = useState(false) // 显示纪念碑弹窗
     const [allBuildingResidents, setAllBuildingResidents] = useState({}) // 所有建筑的居住人员
     const [specialCombos, setSpecialCombos] = useState(null) // 特殊居住组合状态 // 星星城关闭动画状态 // 星星城页面状态
     const [showEventHistory, setShowEventHistory] = useState(false) // 显示事件历史弹窗
@@ -288,6 +290,11 @@ const LotteryLuckyWheel = () => {
         }
 
         const levelStyles = {
+            0: { // 废墟状态
+                color: '#F5F5F5', // 更偏白的灰色
+                textShadow: '0 0 15px rgba(245, 245, 245, 0.6), 0 0 30px rgba(200, 200, 200, 0.4)',
+                animation: 'ruinsFade 4s ease-in-out infinite alternate'
+            },
             1: { // 晨曦小镇
                 color: '#FFD700',
                 textShadow: '0 0 20px rgba(255, 215, 0, 0.8), 0 0 40px rgba(255, 255, 255, 0.6)',
@@ -1025,6 +1032,9 @@ const LotteryLuckyWheel = () => {
             console.log('🔍 延迟检查 PWA 状态...')
             checkPWAStatus()
         }, 2000)
+
+        // 页面加载时立即检查废墟状态
+        checkRuinsStatus()
         
         return () => {
             window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
@@ -1080,6 +1090,24 @@ const LotteryLuckyWheel = () => {
             }
         } catch (error) {
             console.error('获取星星城数据失败:', error)
+        }
+    }
+
+    // 检查废墟状态（独立函数，用于页面加载时立即检查）
+    const checkRuinsStatus = async () => {
+        try {
+            const response = await fetch('/api/star-city/admin/ruins-status')
+            const data = await response.json()
+            if (data.success) {
+                setIsRuinsMode(data.data.isRuins || false)
+                console.log('废墟状态检查成功:', data.data.isRuins)
+            } else {
+                console.error('废墟状态检查失败:', data.message)
+                setIsRuinsMode(false)
+            }
+        } catch (error) {
+            console.error('废墟状态检查失败:', error)
+            setIsRuinsMode(false)
         }
     }
 
@@ -1273,6 +1301,12 @@ const LotteryLuckyWheel = () => {
 
     // 播放星星城背景音乐（彻底修复双重下载）
     const playStarCityMusic = () => {
+        // 废墟状态下不播放背景音乐
+        if (starCityData?.isRuins) {
+            console.log('废墟状态下不播放背景音乐')
+            return
+        }
+
         if (starCityAudioRef.current && !isMusicPlaying) {
             // 🔥 彻底修复：只在首次播放时设置src，确保只下载一次
             if (!starCityAudioRef.current.src) {
@@ -1632,12 +1666,33 @@ const LotteryLuckyWheel = () => {
 
             // 🔥 修复双重下载：移除独立的预加载，直接播放
             // 音频会在首次播放时自动加载
-            const audioDelay = isMobileDevice ? 2000 : 1000 // 移动端延迟更久
-            setTimeout(() => {
-                playStarCityMusic()
-            }, audioDelay)
+            // 注意：音乐播放将在starCityData加载完成后处理
         }
     }, [showStarCity])
+
+    // 监听星星城数据变化，控制音乐播放
+    useEffect(() => {
+        if (showStarCity && starCityData) {
+            // 废墟状态下停止音乐，正常状态下播放音乐
+            if (starCityData.isRuins) {
+                stopStarCityMusic()
+                console.log('废墟状态：停止背景音乐')
+            } else {
+                // 延迟播放音乐，确保页面完全加载
+                const audioDelay = isMobileDevice ? 2000 : 1000
+                setTimeout(() => {
+                    playStarCityMusic()
+                }, audioDelay)
+            }
+        }
+    }, [showStarCity, starCityData])
+
+    // 同步废墟状态：当starCityData加载完成后，同步isRuinsMode
+    useEffect(() => {
+        if (starCityData) {
+            setIsRuinsMode(starCityData.isRuins || false)
+        }
+    }, [starCityData?.isRuins])
 
     // 定时刷新巨人进攻状态
     useEffect(() => {
@@ -1718,6 +1773,20 @@ const LotteryLuckyWheel = () => {
     }
     const fetchUserInfo = async (userId) => {
         try {
+            // 废墟状态下只允许秦小淮和李星斗登录
+            if (isRuinsMode) {
+                const allowedUsers = ['秦小淮', '李星斗']
+                if (!allowedUsers.includes(userId)) {
+                    console.log('废墟状态下用户被拒绝:', userId)
+                    setUserInfo({
+                        message: "用户不存在",
+                        remainingDraws: 0,
+                        wishCount: 0
+                    })
+                    return
+                }
+            }
+
             const response = await fetch(`/api/user/${userId}`)
             const result = await response.json()
 
@@ -2041,6 +2110,11 @@ const LotteryLuckyWheel = () => {
     const startSpin = async () => {
         if (isSpinning) return
 
+        // 废墟状态下不允许抽奖
+        if (isRuinsMode) {
+            return
+        }
+
         // 检查是否已填写用户姓名
         if (!userName) {
             alert('请先填写用户姓名！')
@@ -2184,6 +2258,21 @@ const LotteryLuckyWheel = () => {
         // 保存用户名到localStorage
         localStorage.setItem('eden_userName', newUserName)
 
+        // 废墟状态下只允许秦小淮和李星斗登录
+        if (isRuinsMode) {
+            const allowedUsers = ['秦小淮', '李星斗']
+            if (!allowedUsers.includes(newUserName)) {
+                console.log('废墟状态下用户被拒绝:', newUserName)
+                setWelcomeEffectFinished(true)
+                setUserInfo({
+                    message: "用户不存在",
+                    remainingDraws: 0,
+                    wishCount: 0
+                })
+                return
+            }
+        }
+
         // 先获取用户信息，判断用户是否存在
         const response = await fetch(`/api/user/${newUserName}`)
         const userData = await response.json()
@@ -2326,7 +2415,7 @@ const LotteryLuckyWheel = () => {
                 <div
                     className={`star-city-container ${isMobileDevice && !starCityClosing ? 'force-landscape' : ''} ${starCityClosing ? 'closing' : ''}`}
                     style={{
-                        backgroundImage: `url(/picture/lv${starCityData?.level || 1}.jpg)`,
+                        backgroundImage: `url(/picture/lv${starCityData?.isRuins ? 0 : (starCityData?.level || 1)}.jpg)`,
                         zIndex: 99999,
                         display: 'flex',
                         flexDirection: 'column',
@@ -3259,12 +3348,12 @@ const LotteryLuckyWheel = () => {
                     )}
 
                     {/* 标题 */}
-                    <h2 style={getCityTitleStyle(starCityData?.level || 1)}>
-                        ✨{getCityName(starCityData?.level || 1)}✨
+                    <h2 style={getCityTitleStyle(starCityData?.isRuins ? 0 : (starCityData?.level || 1))}>
+                        {starCityData?.isRuins ? '废墟' : `✨${getCityName(starCityData?.level || 1)}✨`}
                     </h2>
 
                     {/* 用户头像和精力显示 */}
-                    {userName && (
+                    {userName && !starCityData?.isRuins && (
                         <div style={{
                             position: 'fixed',
                             top: '20px',
@@ -3441,13 +3530,55 @@ const LotteryLuckyWheel = () => {
                         </div>
                     )}
 
-                    {/* 城堡 - 中心白点 */}
-                    <div
-                        onClick={() => handleBuildingClick('castle')}
+                    {/* 关闭按钮 - 始终显示 */}
+                    <button
+                        className="star-city-close-btn"
                         style={{
                             position: 'absolute',
-                            top: currentBuildingPositions.castle.top,
-                            left: currentBuildingPositions.castle.left,
+                            top: '30px',
+                            right: '30px',
+                            background: 'rgba(255, 255, 255, 0.3)',
+                            color: 'white',
+                            border: 'none',
+                            width: '40px',
+                            height: '40px',
+                            borderRadius: '50%',
+                            fontSize: '20px',
+                            cursor: 'pointer',
+                            backdropFilter: 'blur(10px)',
+                            transition: 'all 0.3s ease',
+                            boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            lineHeight: '1',
+                            fontFamily: 'Arial, sans-serif',
+                            fontWeight: 'normal'
+                        }}
+                        onClick={() => closeStarCity()}
+                        onMouseEnter={(e) => {
+                            e.target.style.background = 'rgba(255, 255, 255, 0.5)'
+                            e.target.style.transform = 'scale(1.1)'
+                        }}
+                        onMouseLeave={(e) => {
+                            e.target.style.background = 'rgba(255, 255, 255, 0.3)'
+                            e.target.style.transform = 'scale(1)'
+                        }}
+                        title="返回愿望星空"
+                    >
+                        ✕
+                    </button>
+
+                    {/* 建筑白圈 - 废墟状态下隐藏 */}
+                    {!starCityData?.isRuins && (
+                        <>
+                            {/* 城堡 - 中心白点 */}
+                            <div
+                                onClick={() => handleBuildingClick('castle')}
+                                style={{
+                                    position: 'absolute',
+                                    top: currentBuildingPositions.castle.top,
+                                    left: currentBuildingPositions.castle.left,
                             transform: 'translate(-50%, -50%)',
                             width: '12px', // 从15px缩小到12px
                             height: '12px', // 从15px缩小到12px
@@ -3706,47 +3837,47 @@ const LotteryLuckyWheel = () => {
                     {/* 公园居民头像列表 */}
                     {allBuildingResidents.park && renderResidentAvatars('park', allBuildingResidents.park)}
 
-                    {/* 关闭按钮 */}
-                    <button
-                        className="star-city-close-btn"
-                        style={{
-                            position: 'absolute',
-                            top: '30px',
-                            right: '30px',
-                            background: 'rgba(255, 255, 255, 0.3)',
-                            color: 'white',
-                            border: 'none',
-                            width: '40px',
-                            height: '40px',
-                            borderRadius: '50%',
-                            fontSize: '20px',
-                            cursor: 'pointer',
-                            backdropFilter: 'blur(10px)',
-                            transition: 'all 0.3s ease',
-                            boxShadow: '0 4px 15px rgba(0,0,0,0.2)',
-                            display: 'flex',
-                            alignItems: 'center',
-                            justifyContent: 'center',
-                            lineHeight: '1',
-                            fontFamily: 'Arial, sans-serif',
-                            fontWeight: 'normal'
-                        }}
-                        onClick={() => closeStarCity()}
-                        onMouseEnter={(e) => {
-                            e.target.style.background = 'rgba(255, 255, 255, 0.5)'
-                            e.target.style.transform = 'scale(1.1)'
-                        }}
-                        onMouseLeave={(e) => {
-                            e.target.style.background = 'rgba(255, 255, 255, 0.3)'
-                            e.target.style.transform = 'scale(1)'
-                        }}
-                        title="返回愿望星空"
-                    >
-                        ✕
-                    </button>
+                        </>
+                    )}
+
+                    {/* 纪念碑 - 废墟状态下显示 */}
+                    {starCityData?.isRuins && (
+                        <div
+                            onClick={() => setShowMemorialModal(true)}
+                            style={{
+                                position: 'absolute',
+                                top: '23%',
+                                left: '48%',
+                                transform: 'translate(-50%, -50%)',
+                                width: '15px',
+                                height: '15px',
+                                borderRadius: '50%',
+                                background: 'rgba(200, 200, 200, 0.6)',
+                                cursor: 'pointer',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                transition: 'all 0.3s ease',
+                                backdropFilter: 'blur(5px)',
+                                animation: 'memorialPulse 4s ease-in-out infinite',
+                                boxShadow: '0 4px 15px rgba(180, 180, 180, 0.3)',
+                                zIndex: 12
+                            }}
+                            onMouseEnter={(e) => {
+                                e.target.style.transform = 'translate(-50%, -50%) scale(1.2)'
+                                e.target.style.background = 'rgba(220, 220, 220, 0.8)'
+                            }}
+                            onMouseLeave={(e) => {
+                                e.target.style.transform = 'translate(-50%, -50%) scale(1)'
+                                e.target.style.background = 'rgba(200, 200, 200, 0.6)'
+                            }}
+                            title="纪念碑 🗿 - 点击查看"
+                        >
+                        </div>
+                    )}
 
                     {/* 星星城数据显示 - 右下角 */}
-                    {starCityData && (
+                    {starCityData && !starCityData.isRuins && (
                         <div
                             className="star-city-data"
                             onClick={openDonationModal}
@@ -4565,6 +4696,134 @@ const LotteryLuckyWheel = () => {
                     </div>
                 </div>
             )}
+
+            {/* 纪念碑弹窗 */}
+            {showMemorialModal && (
+                <div
+                    className={`residence-modal-overlay ${isMobileDevice ? 'force-landscape' : ''}`}
+                    style={{
+                        position: 'fixed',
+                        top: isMobileDevice ? '50%' : 0,
+                        left: isMobileDevice ? '50%' : 0,
+                        width: isMobileDevice ? 'auto' : '100%',
+                        height: isMobileDevice ? 'auto' : '100%',
+                        transform: isMobileDevice ? 'translate(-50%, -50%)' : 'none',
+                        zIndex: 2000,
+                        display: 'flex',
+                        justifyContent: 'center',
+                        alignItems: 'center',
+                        background: 'rgba(0, 0, 0, 0.85)',
+                        backdropFilter: 'blur(10px)'
+                    }}
+                    onClick={() => setShowMemorialModal(false)}
+                >
+                    <div
+                        className="residence-modal-content"
+                        style={{
+                            background: 'linear-gradient(135deg, rgba(50, 50, 50, 0.95) 0%, rgba(30, 30, 30, 0.98) 100%)',
+                            borderRadius: '25px',
+                            padding: isMobileDevice ? '25px' : '35px',
+                            minWidth: isMobileDevice ? '85vw' : '500px',
+                            maxWidth: isMobileDevice ? '90vw' : '600px',
+                            minHeight: 'auto',
+                            maxHeight: isMobileDevice ? '80vh' : '85vh',
+                            display: 'flex',
+                            flexDirection: 'column',
+                            gap: '20px',
+                            boxShadow: '0 20px 60px rgba(0, 0, 0, 0.8)',
+                            border: '1px solid rgba(100, 100, 100, 0.3)',
+                            position: 'relative',
+                            animation: 'modalFadeIn 0.3s ease-out'
+                        }}
+                        onClick={(e) => e.stopPropagation()}
+                    >
+                        {/* 纪念碑标题 */}
+                        <div style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            gap: '12px',
+                            marginBottom: '10px'
+                        }}>
+                            <span style={{
+                                fontSize: isMobileDevice ? '28px' : '32px',
+                                filter: 'grayscale(100%)'
+                            }}>
+                                🗿
+                            </span>
+                            <h2 style={{
+                                fontSize: isMobileDevice ? '22px' : '26px',
+                                fontWeight: 'bold',
+                                color: '#cccccc',
+                                margin: 0,
+                                textShadow: '0 2px 10px rgba(0, 0, 0, 0.5)'
+                            }}>
+                                纪念碑
+                            </h2>
+                        </div>
+
+                        {/* 吊唁文字 */}
+                        <div style={{
+                            color: '#b0b0b0',
+                            fontSize: isMobileDevice ? '15px' : '17px',
+                            lineHeight: '1.8',
+                            textAlign: 'left',
+                            padding: '20px',
+                            background: 'rgba(0, 0, 0, 0.3)',
+                            borderRadius: '15px',
+                            border: '1px solid rgba(100, 100, 100, 0.2)',
+                            whiteSpace: 'pre-line'
+                        }}>
+                            欢迎前来吊唁，我的朋友：
+
+星星城的建立，来自于两个人相识的偶然，彼时星火绽放，光华灿烂！
+但随后黑暗袭来，为了星星城，我们拼命抵挡——
+可惜，我们没能坚持到黎明的到来……
+我们一起努力过，但最终功亏一溃。
+
+但没关系，我的朋友！时间的长河无穷无尽，滚滚向前：
+
+一切色彩都会暗淡。
+一切美好终将消逝。
+一切故事终将结束。
+一切过往都成历史。
+                        </div>
+
+                        {/* 关闭按钮 */}
+                        <div style={{
+                            display: 'flex',
+                            justifyContent: 'center',
+                            marginTop: '10px'
+                        }}>
+                            <button
+                                onClick={() => setShowMemorialModal(false)}
+                                style={{
+                                    background: 'rgba(100, 100, 100, 0.3)',
+                                    color: 'rgba(200, 200, 200, 0.8)',
+                                    borderRadius: '25px',
+                                    padding: '12px 30px',
+                                    fontSize: '16px',
+                                    cursor: 'pointer',
+                                    transition: 'all 0.3s ease',
+                                    backdropFilter: 'blur(10px)',
+                                    border: '1px solid rgba(100, 100, 100, 0.3)'
+                                }}
+                                onMouseEnter={(e) => {
+                                    e.target.style.background = 'rgba(120, 120, 120, 0.4)'
+                                    e.target.style.color = 'rgba(220, 220, 220, 0.9)'
+                                }}
+                                onMouseLeave={(e) => {
+                                    e.target.style.background = 'rgba(100, 100, 100, 0.3)'
+                                    e.target.style.color = 'rgba(200, 200, 200, 0.8)'
+                                }}
+                            >
+                                离开
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            )}
+
             {/* 用户姓名输入模态框 */}
             {showNameInput && (
                 <div className="name-input-modal">
@@ -4703,7 +4962,7 @@ const LotteryLuckyWheel = () => {
             {!showStarCity && !showWishPage && (
                 <>
       {/* 转盘区域 */}
-      <div className="wheel-container">
+      <div className={`wheel-container ${isRuinsMode ? 'ruins-mode' : ''}`}>
         <LuckyWheel
           ref={myLucky}
           width="380px"
@@ -4755,9 +5014,9 @@ const LotteryLuckyWheel = () => {
 
                         {/* 开始抽奖按钮 */}
         <button 
-                            className={`spin-button ${isSpinning || !userName || !userInfo || showWelcomeEffect || !welcomeEffectFinished || userInfo.remainingDraws <= 0 ? 'disabled' : ''}`}
+                            className={`spin-button ${isSpinning || !userName || !userInfo || showWelcomeEffect || !welcomeEffectFinished || userInfo.remainingDraws <= 0 || isRuinsMode ? 'disabled' : ''}`}
                             onClick={startSpin}
-                            disabled={isSpinning || !userName || !userInfo || showWelcomeEffect || !welcomeEffectFinished || userInfo.remainingDraws <= 0}
+                            disabled={isSpinning || !userName || !userInfo || showWelcomeEffect || !welcomeEffectFinished || userInfo.remainingDraws <= 0 || isRuinsMode}
                         >
                             {isSpinning ? '🎯 转动中...' :
                                 showWelcomeEffect ? '🎪 欢迎特效中...' :

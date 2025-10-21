@@ -1024,6 +1024,35 @@
                     </div>
                 </div>
 
+                <!-- 废墟状态控制 -->
+                <div class="action-form">
+                    <h4>🏚️ 废墟状态控制</h4>
+                    <p style="margin-bottom: 15px; color: #666; font-size: 14px;">
+                        控制星星城的废墟状态，废墟状态下等级变为0，隐藏所有居所和城市信息
+                    </p>
+                    <div class="stats-grid" style="margin-bottom: 15px;">
+                        <div class="stat-card">
+                            <h3 id="ruinsStatus">-</h3>
+                            <p>废墟状态</p>
+                        </div>
+                        <div class="stat-card">
+                            <h3 id="ruinsLevel">-</h3>
+                            <p>当前等级</p>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <button onclick="setRuinsStatus(true)" class="action-btn" style="background: #8B4513;">
+                            🏚️ 进入废墟状态
+                        </button>
+                        <button onclick="setRuinsStatus(false)" class="action-btn" style="background: #48bb78;">
+                            🏰 恢复正常状态
+                        </button>
+                        <button onclick="loadRuinsStatus()" class="action-btn">
+                            🔄 刷新状态
+                        </button>
+                    </div>
+                </div>
+
                 <!-- 巨人进攻历史 -->
                 <div class="action-form">
                     <h4>📊 巨人进攻历史</h4>
@@ -1137,6 +1166,7 @@
             document.getElementById('adminPanel').style.display = 'block';
             loadStats();
             loadUsers();
+            loadRuinsStatus(); // 加载废墟状态
         }
 
         // 处理登出
@@ -2611,6 +2641,69 @@
                 }
             } catch (error) {
                 console.error('加载巨人进攻历史错误:', error);
+                showMessage('adminMessage', '网络错误，请稍后重试', 'error');
+            }
+        }
+
+        // ==================== 废墟状态管理功能 ====================
+
+        // 加载废墟状态
+        async function loadRuinsStatus() {
+            try {
+                const response = await fetch(`${API_BASE}/star-city/admin/ruins-status`, {
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    document.getElementById('ruinsStatus').textContent = result.data.isRuins ? '废墟状态' : '正常状态';
+                    document.getElementById('ruinsLevel').textContent = result.data.level;
+                    
+                    // 设置状态颜色
+                    const statusElement = document.getElementById('ruinsStatus');
+                    statusElement.style.color = result.data.isRuins ? '#8B4513' : '#48bb78';
+                } else {
+                    showMessage('adminMessage', result.message || '加载废墟状态失败', 'error');
+                }
+            } catch (error) {
+                console.error('加载废墟状态错误:', error);
+                showMessage('adminMessage', '网络错误，请稍后重试', 'error');
+            }
+        }
+
+        // 设置废墟状态
+        async function setRuinsStatus(isRuins) {
+            const action = isRuins ? '进入废墟状态' : '恢复正常状态';
+            const confirmMessage = isRuins 
+                ? '确定要让星星城进入废墟状态吗？\n\n⚠️ 警告：废墟状态下等级将变为0，所有居所和城市信息将被隐藏！'
+                : '确定要让星星城恢复正常状态吗？\n\n星星城将恢复正常显示，等级将重新计算。';
+
+            if (!confirm(confirmMessage)) {
+                return;
+            }
+
+            try {
+                const response = await fetch(`${API_BASE}/star-city/admin/set-ruins`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${adminToken}`
+                    },
+                    body: JSON.stringify({ isRuins: isRuins })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    const emoji = isRuins ? '🏚️' : '🏰';
+                    showMessage('adminMessage', `${emoji} ${action}成功！`, 'success');
+                    loadRuinsStatus(); // 刷新状态
+                } else {
+                    showMessage('adminMessage', result.message || `${action}失败`, 'error');
+                }
+            } catch (error) {
+                console.error(`${action}错误:`, error);
                 showMessage('adminMessage', '网络错误，请稍后重试', 'error');
             }
         }
