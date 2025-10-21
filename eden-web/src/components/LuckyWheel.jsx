@@ -1887,9 +1887,9 @@ const LotteryLuckyWheel = () => {
     }
     const fetchUserInfo = async (userId) => {
         try {
-            // 废墟状态下只允许秦小淮和李星斗登录
+            // 废墟状态下只允许秦小淮登录
             if (isRuinsMode) {
-                const allowedUsers = ['秦小淮', '李星斗']
+                const allowedUsers = ['秦小淮']
                 if (!allowedUsers.includes(userId)) {
                     console.log('废墟状态下用户被拒绝:', userId)
                     setUserInfo({
@@ -2372,9 +2372,9 @@ const LotteryLuckyWheel = () => {
         // 保存用户名到localStorage
         localStorage.setItem('eden_userName', newUserName)
 
-        // 废墟状态下只允许秦小淮和李星斗登录
+        // 废墟状态下只允许秦小淮登录
         if (isRuinsMode) {
-            const allowedUsers = ['秦小淮', '李星斗']
+            const allowedUsers = ['秦小淮']
             if (!allowedUsers.includes(newUserName)) {
                 console.log('废墟状态下用户被拒绝:', newUserName)
                 setWelcomeEffectFinished(true)
