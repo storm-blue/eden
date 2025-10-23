@@ -1891,7 +1891,7 @@ const LotteryLuckyWheel = () => {
         try {
             // 废墟状态下只允许秦小淮登录
             if (isRuinsMode) {
-                const allowedUsers = ['秦小淮']
+                const allowedUsers = ['秦小淮', '李星斗']
                 if (!allowedUsers.includes(userId)) {
                     console.log('废墟状态下用户被拒绝:', userId)
                     setUserInfo({
