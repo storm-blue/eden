@@ -4370,6 +4370,22 @@
     }
 }
 
+/* 补充精力页面强制横屏样式 */
+.energy-recovery-container.force-landscape {
+    position: fixed !important;
+    top: 50% !important;
+    left: 50% !important;
+    width: 100vh !important;
+    height: 100vw !important;
+    transform: translate(-50%, -50%) rotate(90deg) !important;
+    transform-origin: center center !important;
+    overflow: hidden !important;
+}
+
+.energy-recovery-container.force-landscape * {
+    transform-origin: center center !important;
+}
+
 /* 雨天特效动画 */
 @keyframes rainDrop {
     0% {
@@ -4984,5 +5000,40 @@
     100% {
         opacity: 0;
         transform: translateY(-60px) scale(2);
+    }
+}
+
+/* 补充精力提示动画 */
+@keyframes energyRecoveryTipFadeIn {
+    0% {
+        opacity: 0;
+        transform: translateX(-10px) scale(0.9);
+    }
+    100% {
+        opacity: 1;
+        transform: translateX(0) scale(1);
+    }
+}
+
+/* 补充精力字幕动画 */
+@keyframes energyRecoverySubtitleFadeIn {
+    0% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.8);
+    }
+    100% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+}
+
+@keyframes energyRecoverySubtitleFadeOut {
+    0% {
+        opacity: 1;
+        transform: translate(-50%, -50%) scale(1);
+    }
+    100% {
+        opacity: 0;
+        transform: translate(-50%, -50%) scale(0.9);
     }
 }
