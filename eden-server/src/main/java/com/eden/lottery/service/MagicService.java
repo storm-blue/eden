@@ -138,7 +138,7 @@ public class MagicService {
      * 执行天降食物魔法效果
      */
     private void executeFoodRainMagic() {
-        // 增加10000食物
+        // 增加20000食物，并增加2点幸福度
         StarCity starCity = starCityMapper.getStarCity();
         if (starCity == null) {
             logger.error("未找到秦小淮的星星城数据");
@@ -146,11 +146,15 @@ public class MagicService {
         }
 
         Long oldFood = starCity.getFood();
-        Long newFood = oldFood + 10000;
+        int oldHappiness = starCity.getHappiness();
+        Long newFood = oldFood + 20000;
+        int newHappiness = oldHappiness + 2;
         starCity.setFood(newFood);
+        starCity.setHappiness(newHappiness);
+        starCity.setLevel(starCity.calculateLevel());
         starCityMapper.updateStarCity(starCity);
 
-        logger.info("天降食物魔法生效: 食物从 {} 增加到 {}", oldFood, newFood);
+        logger.info("天降食物魔法生效: 食物从 {} 增加到 {}，幸福度从 {} 增加到 {}", oldFood, newFood, oldHappiness, newHappiness);
     }
     
     /**

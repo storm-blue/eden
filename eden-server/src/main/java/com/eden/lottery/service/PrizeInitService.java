@@ -817,48 +817,75 @@ public class PrizeInitService implements ApplicationRunner {
      */
     private void ensureMagicRecords(Connection connection) throws Exception {
         try (Statement statement = connection.createStatement()) {
-            // 检查并添加"天降食物"魔法
+            // 检查并添加/更新"天降食物"魔法
             String checkMagic1 = "SELECT COUNT(*) as cnt FROM magic WHERE code = 'FOOD_RAIN'";
             ResultSet rs1 = statement.executeQuery(checkMagic1);
             if (rs1.next() && rs1.getInt("cnt") == 0) {
                 String insertMagic1 = """
                         INSERT INTO magic (code, name, description, daily_limit, remaining_uses, energy_cost, last_refresh_at, created_at)
                         VALUES ('FOOD_RAIN', '天降食物', 
-                                '施展魔法后，将会有10000份食物从天而降，储存到星星城的食物仓库中。消耗5点精力。', 
+                                '施展魔法后，将会有20000份食物从天而降，储存到星星城的食物仓库中，同时增加2点幸福度。', 
                                 3, 3, 5, datetime('now', 'localtime'), datetime('now', 'localtime'))
                         """;
                 statement.execute(insertMagic1);
                 logger.info("添加魔法: FOOD_RAIN");
+            } else {
+                // 如果魔法已存在，更新描述以确保描述是最新的
+                String updateMagic1 = """
+                        UPDATE magic 
+                        SET description = '施展魔法后，将会有20000份食物从天而降，储存到星星城的食物仓库中，同时增加2点幸福度。'
+                        WHERE code = 'FOOD_RAIN'
+                        """;
+                statement.execute(updateMagic1);
+                logger.info("更新魔法描述: FOOD_RAIN");
             }
             rs1.close();
             
-            // 检查并添加"改变天气"魔法
+            // 检查并添加/更新"改变天气"魔法
             String checkMagic2 = "SELECT COUNT(*) as cnt FROM magic WHERE code = 'CHANGE_WEATHER'";
             ResultSet rs2 = statement.executeQuery(checkMagic2);
             if (rs2.next() && rs2.getInt("cnt") == 0) {
                 String insertMagic2 = """
                         INSERT INTO magic (code, name, description, daily_limit, remaining_uses, energy_cost, last_refresh_at, created_at)
                         VALUES ('CHANGE_WEATHER', '改变天气', 
-                                '施展魔法后，星星城的天气将立即改变为随机的新天气，包括晴天、雨天、雪天等。消耗3点精力。', 
+                                '施展魔法后，星星城的天气将立即改变为随机的新天气，包括晴天、雨天、雪天等。', 
                                 3, 3, 3, datetime('now', 'localtime'), datetime('now', 'localtime'))
                         """;
                 statement.execute(insertMagic2);
                 logger.info("添加魔法: CHANGE_WEATHER");
+            } else {
+                // 如果魔法已存在，更新描述以确保描述是最新的
+                String updateMagic2 = """
+                        UPDATE magic 
+                        SET description = '施展魔法后，星星城的天气将立即改变为随机的新天气，包括晴天、雨天、雪天等。'
+                        WHERE code = 'CHANGE_WEATHER'
+                        """;
+                statement.execute(updateMagic2);
+                logger.info("更新魔法描述: CHANGE_WEATHER");
             }
             rs2.close();
             
-            // 检查并添加"驱逐巨人"魔法
+            // 检查并添加/更新"驱逐巨人"魔法
             String checkMagic3 = "SELECT COUNT(*) as cnt FROM magic WHERE code = 'BANISH_GIANT'";
             ResultSet rs3 = statement.executeQuery(checkMagic3);
             if (rs3.next() && rs3.getInt("cnt") == 0) {
                 String insertMagic3 = """
                         INSERT INTO magic (code, name, description, daily_limit, remaining_uses, energy_cost, last_refresh_at, created_at)
                         VALUES ('BANISH_GIANT', '驱逐巨人', 
-                                '施展魔法后，正在进攻的巨人将被驱逐，巨人进攻立即停止，巨人逐渐暗淡消失。消耗8点精力。', 
+                                '施展魔法后，正在进攻的巨人将被驱逐，巨人进攻立即停止，巨人逐渐暗淡消失。', 
                                 1, 1, 8, datetime('now', 'localtime'), datetime('now', 'localtime'))
                         """;
                 statement.execute(insertMagic3);
                 logger.info("添加魔法: BANISH_GIANT");
+            } else {
+                // 如果魔法已存在，更新描述以确保描述是最新的
+                String updateMagic3 = """
+                        UPDATE magic 
+                        SET description = '施展魔法后，正在进攻的巨人将被驱逐，巨人进攻立即停止，巨人逐渐暗淡消失。'
+                        WHERE code = 'BANISH_GIANT'
+                        """;
+                statement.execute(updateMagic3);
+                logger.info("更新魔法描述: BANISH_GIANT");
             }
             rs3.close();
         }
@@ -894,7 +921,7 @@ public class PrizeInitService implements ApplicationRunner {
             String insertMagic1 = """
                     INSERT INTO magic (code, name, description, daily_limit, remaining_uses, energy_cost, last_refresh_at, created_at)
                     VALUES ('FOOD_RAIN', '天降食物', 
-                            '施展魔法后，将会有10000份食物从天而降，储存到星星城的食物仓库中。消耗5点精力。', 
+                            '施展魔法后，将会有20000份食物从天而降，储存到星星城的食物仓库中，同时增加2点幸福度。', 
                             3, 3, 5, datetime('now', 'localtime'), datetime('now', 'localtime'))
                     """;
             statement.execute(insertMagic1);
@@ -910,7 +937,7 @@ public class PrizeInitService implements ApplicationRunner {
             String insertMagic3 = """
                     INSERT INTO magic (code, name, description, daily_limit, remaining_uses, energy_cost, last_refresh_at, created_at)
                     VALUES ('BANISH_GIANT', '驱逐巨人', 
-                            '施展魔法后，正在进攻的巨人将被驱逐，巨人进攻立即停止，巨人逐渐暗淡消失。消耗8点精力。', 
+                            '施展魔法后，正在进攻的巨人将被驱逐，巨人进攻立即停止，巨人逐渐暗淡消失。', 
                             1, 1, 8, datetime('now', 'localtime'), datetime('now', 'localtime'))
                     """;
             statement.execute(insertMagic3);

@@ -6,11 +6,6 @@ import DecreeModal from './DecreeModal'
 import MagicModal from './MagicModal'
 
 const LotteryLuckyWheel = () => {
-  // PWA 相关状态
-  const [isPWAInstalled, setIsPWAInstalled] = useState(false)
-  const [showPWAInstallPrompt, setShowPWAInstallPrompt] = useState(false)
-  const [deferredPrompt, setDeferredPrompt] = useState(null)
-
   const [prizes, setPrizes] = useState([
     { 
             background: '#ffcdd2', // 浅粉红色 🌈
@@ -506,6 +501,16 @@ const LotteryLuckyWheel = () => {
     // 用户精力状态
     const [userEnergy, setUserEnergy] = useState(null) // 用户精力信息
     const [showUserDropdown, setShowUserDropdown] = useState(false) // 显示用户下拉菜单
+    const [showEnergyRecoveryPage, setShowEnergyRecoveryPage] = useState(false) // 显示补充精力页面
+    const [energyRecoveryTip, setEnergyRecoveryTip] = useState('') // 补充精力提示消息
+    const [showEnergyRecoverySubtitle, setShowEnergyRecoverySubtitle] = useState(false) // 显示补充精力字幕
+    const [energyRecoverySubtitleText, setEnergyRecoverySubtitleText] = useState('') // 补充精力字幕文本
+
+    // 补充精力字幕列表
+    const energyRecoverySubtitles = [
+        '星斗哥哥轻点～',
+        '啊，喜欢'
+    ]
 
     // 奖品名称映射（与后端保持一致）
   const prizeNames = [
@@ -576,41 +581,6 @@ const LotteryLuckyWheel = () => {
         return descriptions
     }
 
-    // PWA 安装相关函数
-    const installPWA = async () => {
-        if (!deferredPrompt) {
-            console.log('没有可用的安装提示')
-            return
-        }
-        
-        try {
-            // 显示安装提示
-            const result = await deferredPrompt.prompt()
-            console.log('安装提示结果:', result)
-            
-            // 等待用户选择
-            const choiceResult = await deferredPrompt.userChoice
-            console.log('用户选择:', choiceResult.outcome)
-            
-            if (choiceResult.outcome === 'accepted') {
-                console.log('用户接受了安装')
-                setIsPWAInstalled(true)
-            } else {
-                console.log('用户拒绝了安装')
-            }
-            
-            // 清除提示
-            setDeferredPrompt(null)
-            setShowPWAInstallPrompt(false)
-        } catch (error) {
-            console.error('安装PWA时出错:', error)
-        }
-    }
-    
-    const dismissPWAInstallPrompt = () => {
-        setShowPWAInstallPrompt(false)
-        setDeferredPrompt(null)
-    }
 
     // 获取所有许愿
     const fetchWishes = async () => {
@@ -676,6 +646,50 @@ const LotteryLuckyWheel = () => {
             }
         } catch (error) {
             console.error('获取用户精力失败:', error)
+        }
+    }
+
+    // 补充精力：做好玩的事
+    const handleRecoverEnergy = async () => {
+        if (!userName || userName !== '秦小淮') {
+            setEnergyRecoveryTip('只有秦小淮可以使用此功能')
+            setTimeout(() => setEnergyRecoveryTip(''), 2000)
+            return
+        }
+
+        // 随机选择字幕并显示
+        const randomSubtitle = energyRecoverySubtitles[Math.floor(Math.random() * energyRecoverySubtitles.length)]
+        setEnergyRecoverySubtitleText(randomSubtitle)
+        setShowEnergyRecoverySubtitle(true)
+        setTimeout(() => setShowEnergyRecoverySubtitle(false), 3000)
+
+        try {
+            const response = await fetch('/api/user-info/recover-energy', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    userId: userName
+                })
+            })
+
+            const data = await response.json()
+            if (data.success) {
+                // 显示成功提示
+                setEnergyRecoveryTip(`精力补充成功！+3 (李星斗-1)`)
+                setTimeout(() => setEnergyRecoveryTip(''), 2000)
+                // 刷新精力信息
+                await fetchUserEnergy()
+            } else {
+                // 显示错误提示
+                setEnergyRecoveryTip(data.message || '补充精力失败')
+                setTimeout(() => setEnergyRecoveryTip(''), 2000)
+            }
+        } catch (error) {
+            console.error('补充精力失败:', error)
+            setEnergyRecoveryTip('补充精力失败，请稍后重试')
+            setTimeout(() => setEnergyRecoveryTip(''), 2000)
         }
     }
 
@@ -988,71 +1002,14 @@ const LotteryLuckyWheel = () => {
         return stars
     }, [isMobileDevice]) // 添加依赖，设备类型变化时重新计算
 
-    // PWA 相关功能
     useEffect(() => {
-        console.log('🔍 PWA 初始化检查开始...')
-        
-        // 检查是否已经是 PWA 模式
-        const checkPWAStatus = () => {
-            const isStandalone = window.matchMedia('(display-mode: standalone)').matches
-            const isFullscreen = window.matchMedia('(display-mode: fullscreen)').matches
-            console.log('📱 PWA 状态检查:', { isStandalone, isFullscreen })
-            setIsPWAInstalled(isStandalone || isFullscreen)
-        }
-        
-        checkPWAStatus()
-        
-        // 监听 PWA 安装提示事件
-        const handleBeforeInstallPrompt = (e) => {
-            console.log('🎉 收到 PWA 安装提示事件!', e)
-            e.preventDefault()
-            setDeferredPrompt(e)
-            setShowPWAInstallPrompt(true)
-        }
-        
-        // 监听应用安装完成事件
-        const handleAppInstalled = () => {
-            console.log('✅ PWA 安装完成!')
-            setIsPWAInstalled(true)
-            setShowPWAInstallPrompt(false)
-            setDeferredPrompt(null)
-        }
-        
-        // 检查 Service Worker 支持
-        if ('serviceWorker' in navigator) {
-            console.log('✅ Service Worker 支持检测通过')
-        } else {
-            console.log('❌ 浏览器不支持 Service Worker')
-        }
-        
-        // 检查 manifest 支持
-        if ('onbeforeinstallprompt' in window) {
-            console.log('✅ 浏览器支持 PWA 安装提示')
-        } else {
-            console.log('❌ 浏览器不支持 PWA 安装提示')
-        }
-        
-        window.addEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-        window.addEventListener('appinstalled', handleAppInstalled)
-        
-        // 延迟检查，给浏览器时间加载 manifest
-        setTimeout(() => {
-            console.log('🔍 延迟检查 PWA 状态...')
-            checkPWAStatus()
-        }, 2000)
-
         // 页面加载时立即检查废墟状态
         checkRuinsStatus()
-        
-        return () => {
-            window.removeEventListener('beforeinstallprompt', handleBeforeInstallPrompt)
-            window.removeEventListener('appinstalled', handleAppInstalled)
-        }
     }, [])
 
-    // 监听屏幕尺寸变化（仅在星星城页面时）
+    // 监听屏幕尺寸变化（仅在星星城页面或补充精力页面时）
     useEffect(() => {
-        if (!showStarCity) return
+        if (!showStarCity && !showEnergyRecoveryPage) return
 
         // 🔥 CPU优化：防抖函数，减少频繁调用
         let resizeTimer
@@ -1082,7 +1039,7 @@ const LotteryLuckyWheel = () => {
             window.removeEventListener('resize', checkScreenSize)
             window.removeEventListener('orientationchange', checkScreenSize)
         }
-    }, [showStarCity])
+    }, [showStarCity, showEnergyRecoveryPage])
 
     // 获取星星城数据
     const fetchStarCityData = async () => {
@@ -1368,12 +1325,15 @@ const LotteryLuckyWheel = () => {
                 switch (prizeType) {
                     case '🍰 吃的～':
                         effectMessage = '食物 +1万'
-        break
+                        break
                     case '🥤 喝的～':
                         effectMessage = '食物 +0.5万，幸福 +1'
                         break
                     case '🎁 随机礼物':
                         effectMessage = '幸福 +2'
+                        break
+                    case '🧧 红包':
+                        effectMessage = '幸福 +3'
                         break
                     default:
                         effectMessage = '捐献成功'
@@ -2427,93 +2387,6 @@ const LotteryLuckyWheel = () => {
 
   return (
     <div className="lucky-lottery-container">
-            {/* PWA 安装提示 */}
-            {(showPWAInstallPrompt || (!isPWAInstalled && deferredPrompt)) && (
-                <div style={{
-                    position: 'fixed',
-                    top: '20px',
-                    right: '20px',
-                    zIndex: 10000,
-                    background: 'linear-gradient(135deg, #4CAF50, #45a049)',
-                    color: 'white',
-                    padding: '15px 20px',
-                    borderRadius: '10px',
-                    boxShadow: '0 4px 20px rgba(0,0,0,0.3)',
-                    maxWidth: '300px',
-                    fontFamily: 'PingFang SC, Helvetica Neue, Arial, sans-serif'
-                }}>
-                    <div style={{
-                        display: 'flex',
-                        alignItems: 'center',
-                        marginBottom: '10px'
-                    }}>
-                        <span style={{fontSize: '20px', marginRight: '8px'}}>📱</span>
-                        <span style={{fontWeight: 'bold', fontSize: '16px'}}>安装到桌面</span>
-                    </div>
-                    <div style={{
-                        fontSize: '14px',
-                        marginBottom: '12px',
-                        lineHeight: '1.4'
-                    }}>
-                        将 Eden Lottery 安装到桌面，享受全屏游戏体验！
-                    </div>
-                    <div style={{
-                        display: 'flex',
-                        gap: '10px'
-                    }}>
-                        <button
-                            onClick={installPWA}
-                            style={{
-                                background: 'rgba(255,255,255,0.2)',
-                                border: '1px solid rgba(255,255,255,0.3)',
-                                color: 'white',
-                                padding: '8px 16px',
-                                borderRadius: '5px',
-                                cursor: 'pointer',
-                                fontSize: '14px',
-                                fontWeight: 'bold',
-                                transition: 'all 0.3s ease'
-                            }}
-                            onMouseEnter={(e) => {
-                                e.target.style.background = 'rgba(255,255,255,0.3)'
-                            }}
-                            onMouseLeave={(e) => {
-                                e.target.style.background = 'rgba(255,255,255,0.2)'
-                            }}
-                        >
-                            安装
-                        </button>
-                        <button
-                            onClick={dismissPWAInstallPrompt}
-                            style={{
-                                background: 'transparent',
-                                border: '1px solid rgba(255,255,255,0.3)',
-                                color: 'white',
-                                padding: '8px 16px',
-                                borderRadius: '5px',
-                                cursor: 'pointer',
-                                fontSize: '14px',
-                                transition: 'all 0.3s ease'
-                            }}
-                            onMouseEnter={(e) => {
-                                e.target.style.background = 'rgba(255,255,255,0.1)'
-                            }}
-                            onMouseLeave={(e) => {
-                                e.target.style.background = 'transparent'
-                            }}
-                        >
-                            稍后
-                        </button>
-                    </div>
-                    <div style={{
-                        fontSize: '12px',
-                        marginTop: '8px',
-                        opacity: 0.8
-                    }}>
-                        💡 调试信息: {deferredPrompt ? '有安装提示' : '无安装提示'}
-                    </div>
-                </div>
-            )}
 
             {/* 星星城背景音乐（彻底修复双重下载） */}
             <audio
@@ -3617,6 +3490,37 @@ const LotteryLuckyWheel = () => {
                                                 >
                                                     ✨ 施展魔法
                                                 </button>
+                                                <button
+                                                    onClick={async () => {
+                                                        setShowEnergyRecoveryPage(true)
+                                                        setShowUserDropdown(false)
+                                                        // 进入页面时获取精力信息
+                                                        await fetchUserEnergy()
+                                                    }}
+                                                    style={{
+                                                        width: '100%',
+                                                        padding: '12px 16px',
+                                                        background: 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+                                                        border: 'none',
+                                                        borderRadius: '0',
+                                                        color: 'white',
+                                                        fontSize: '14px',
+                                                        fontWeight: 'bold',
+                                                        cursor: 'pointer',
+                                                        display: 'flex',
+                                                        alignItems: 'center',
+                                                        gap: '8px',
+                                                        transition: 'all 0.3s ease'
+                                                    }}
+                                                    onMouseEnter={(e) => {
+                                                        e.target.style.background = 'linear-gradient(135deg, #00f2fe 0%, #4facfe 100%)'
+                                                    }}
+                                                    onMouseLeave={(e) => {
+                                                        e.target.style.background = 'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)'
+                                                    }}
+                                                >
+                                                    💖 补充精力
+                                                </button>
                                             </>
                                         )}
                                     </div>
@@ -4348,6 +4252,7 @@ const LotteryLuckyWheel = () => {
                                 <div>🍰 吃的～ → +1万食物</div>
                                 <div>🥤 喝的～ → +0.5万食物 +1幸福</div>
                                 <div>🎁 随机礼物 → +2幸福</div>
+                                <div>🧧 红包 → +3幸福</div>
                                 
                                 {/* 城市升级条件 */}
                                 {starCityData && starCityData.nextLevelRequirements && (
@@ -4410,6 +4315,7 @@ const LotteryLuckyWheel = () => {
                                                     {prize.name === '🍰 吃的～' && '🍽️'}
                                                     {prize.name === '🥤 喝的～' && '🥤'}
                                                     {prize.name === '🎁 随机礼物' && '🎁'}
+                                                    {prize.name === '🧧 红包' && '🧧'}
                                                     {' ' + prize.name}
                                                 </div>
                                                 <div style={{
@@ -5127,8 +5033,171 @@ const LotteryLuckyWheel = () => {
                 </div>
             )}
 
+            {/* 补充精力页面 */}
+            {showEnergyRecoveryPage && (
+                <div
+                    className={`energy-recovery-container ${isMobileDevice ? 'force-landscape' : ''}`}
+                    style={{
+                        position: 'fixed',
+                        top: isMobileDevice ? '50%' : 0,
+                        left: isMobileDevice ? '50%' : 0,
+                        width: isMobileDevice ? '100vh' : '100vw',
+                        height: isMobileDevice ? '100vw' : '100vh',
+                        backgroundImage: 'url(/picture/qin_li.jpg)',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                        backgroundRepeat: 'no-repeat',
+                        zIndex: 99999,
+                        display: 'flex',
+                        flexDirection: 'column',
+                        alignItems: 'center',
+                        justifyContent: 'center',
+                        transform: isMobileDevice ? 'translate(-50%, -50%) rotate(90deg)' : 'none',
+                        transformOrigin: 'center center'
+                    }}
+                >
+                    {/* 左上角精力显示 */}
+                    {userEnergy && (
+                        <div style={{
+                            position: 'fixed',
+                            top: isMobileDevice ? '20px' : '20px',
+                            left: isMobileDevice ? '20px' : '20px',
+                            zIndex: 1000,
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: '12px'
+                        }}>
+                            <div style={{
+                                background: 'rgba(255, 255, 255, 0.9)',
+                                backdropFilter: 'blur(10px)',
+                                borderRadius: '20px',
+                                padding: isMobileDevice ? '6px 12px' : '8px 16px',
+                                display: 'flex',
+                                alignItems: 'center',
+                                gap: '8px',
+                                fontSize: isMobileDevice ? '12px' : '14px',
+                                fontWeight: 'bold',
+                                color: '#333',
+                                boxShadow: '0 4px 15px rgba(0, 0, 0, 0.2)',
+                                border: '1px solid rgba(255, 255, 255, 0.3)'
+                            }}>
+                                <span style={{ fontSize: isMobileDevice ? '14px' : '16px' }}>⚡</span>
+                                <span>{userEnergy.energy}/{userEnergy.maxEnergy}</span>
+                            </div>
+
+                            {/* 补充精力提示 */}
+                            {energyRecoveryTip && (
+                                <div style={{
+                                    background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                                    borderRadius: '20px',
+                                    padding: isMobileDevice ? '6px 12px' : '8px 16px',
+                                    fontSize: isMobileDevice ? '11px' : '13px',
+                                    fontWeight: 'bold',
+                                    color: 'white',
+                                    boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
+                                    border: '1px solid rgba(255, 255, 255, 0.3)',
+                                    animation: 'energyRecoveryTipFadeIn 0.3s ease-out',
+                                    whiteSpace: 'nowrap',
+                                    maxWidth: isMobileDevice ? '200px' : '300px',
+                                    overflow: 'hidden',
+                                    textOverflow: 'ellipsis'
+                                }}>
+                                    {energyRecoveryTip}
+                                </div>
+                            )}
+                        </div>
+                    )}
+
+                    {/* 屏幕中央字幕 */}
+                    {showEnergyRecoverySubtitle && (
+                        <div style={{
+                            position: 'fixed',
+                            top: '50%',
+                            left: '50%',
+                            transform: 'translate(-50%, -50%)',
+                            zIndex: 100001,
+                            fontSize: isMobileDevice ? '24px' : '36px',
+                            fontWeight: 'bold',
+                            color: 'white',
+                            textShadow: '0 2px 10px rgba(0, 0, 0, 0.8), 0 0 20px rgba(255, 255, 255, 0.5)',
+                            animation: 'energyRecoverySubtitleFadeIn 0.5s ease-out, energyRecoverySubtitleFadeOut 0.5s ease-out 2.5s',
+                            whiteSpace: 'nowrap',
+                            pointerEvents: 'none'
+                        }}>
+                            {energyRecoverySubtitleText}
+                        </div>
+                    )}
+
+                    {/* 关闭按钮 */}
+                    <button
+                        onClick={() => setShowEnergyRecoveryPage(false)}
+                        style={{
+                            position: 'fixed',
+                            top: isMobileDevice ? '20px' : '30px',
+                            right: isMobileDevice ? '20px' : '30px',
+                            background: 'rgba(255, 255, 255, 0.9)',
+                            border: 'none',
+                            borderRadius: '50%',
+                            width: isMobileDevice ? '40px' : '50px',
+                            height: isMobileDevice ? '40px' : '50px',
+                            fontSize: isMobileDevice ? '20px' : '24px',
+                            cursor: 'pointer',
+                            display: 'flex',
+                            alignItems: 'center',
+                            justifyContent: 'center',
+                            boxShadow: '0 4px 15px rgba(0, 0, 0, 0.3)',
+                            transition: 'all 0.3s ease',
+                            zIndex: 1000
+                        }}
+                        onMouseEnter={(e) => {
+                            e.target.style.transform = 'scale(1.1)'
+                            e.target.style.background = 'rgba(255, 255, 255, 1)'
+                        }}
+                        onMouseLeave={(e) => {
+                            e.target.style.transform = 'scale(1)'
+                            e.target.style.background = 'rgba(255, 255, 255, 0.9)'
+                        }}
+                    >
+                        ✕
+                    </button>
+
+                    {/* 做好玩的事按钮 */}
+                    <button
+                        onClick={handleRecoverEnergy}
+                        style={{
+                            position: 'fixed',
+                            bottom: isMobileDevice ? '30px' : '50px',
+                            left: '50%',
+                            transform: 'translateX(-50%)',
+                            background: 'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+                            border: 'none',
+                            borderRadius: '30px',
+                            padding: isMobileDevice ? '16px 40px' : '20px 60px',
+                            fontSize: isMobileDevice ? '18px' : '24px',
+                            fontWeight: 'bold',
+                            color: 'white',
+                            cursor: 'pointer',
+                            boxShadow: '0 8px 32px rgba(0, 0, 0, 0.4)',
+                            transition: 'all 0.3s ease',
+                            zIndex: 1000,
+                            textShadow: '0 2px 4px rgba(0, 0, 0, 0.3)'
+                        }}
+                        onMouseEnter={(e) => {
+                            e.target.style.transform = 'translateX(-50%) scale(1.05)'
+                            e.target.style.boxShadow = '0 12px 40px rgba(0, 0, 0, 0.5)'
+                        }}
+                        onMouseLeave={(e) => {
+                            e.target.style.transform = 'translateX(-50%) scale(1)'
+                            e.target.style.boxShadow = '0 8px 32px rgba(0, 0, 0, 0.4)'
+                        }}
+                    >
+                        做好玩的事
+                    </button>
+                </div>
+            )}
+
             {/* 🚀 性能优化：只在非星星城和非许愿页面时渲染轮盘 */}
-            {!showStarCity && !showWishPage && (
+            {!showStarCity && !showWishPage && !showEnergyRecoveryPage && (
                 <>
       {/* 转盘区域 */}
       <div className={`wheel-container ${isRuinsMode ? 'ruins-mode' : ''}`}>

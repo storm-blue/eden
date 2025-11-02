@@ -97,7 +97,7 @@ public class StarCityController {
             }
             
             // 检查奖品类型是否有效
-            if (!prizeType.equals("🍰 吃的～") && !prizeType.equals("🥤 喝的～") && !prizeType.equals("🎁 随机礼物")) {
+            if (!prizeType.equals("🍰 吃的～") && !prizeType.equals("🥤 喝的～") && !prizeType.equals("🎁 随机礼物") && !prizeType.equals("🧧 红包")) {
                 return ApiResponse.error("无效的奖品类型");
             }
             

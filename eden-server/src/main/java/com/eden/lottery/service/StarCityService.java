@@ -216,6 +216,9 @@ public class StarCityService {
                 case "🎁 随机礼物":
                     starCity.setHappiness(starCity.getHappiness() + 2);
                     break;
+                case "🧧 红包":
+                    starCity.setHappiness(starCity.getHappiness() + 3);
+                    break;
                 default:
                     return false;
             }
@@ -267,7 +270,7 @@ public class StarCityService {
                 String prizeName = record.getPrize().getName();
                 logger.debug("处理奖品记录: {}", prizeName);
                 // 只统计可捐献的奖品
-                if ("🍰 吃的～".equals(prizeName) || "🥤 喝的～".equals(prizeName) || "🎁 随机礼物".equals(prizeName)) {
+                if ("🍰 吃的～".equals(prizeName) || "🥤 喝的～".equals(prizeName) || "🎁 随机礼物".equals(prizeName) || "🧧 红包".equals(prizeName)) {
                     prizeCount.put(prizeName, prizeCount.getOrDefault(prizeName, 0) + 1);
                     logger.debug("找到可捐献奖品: {} (当前数量: {})", prizeName, prizeCount.get(prizeName));
                 }
