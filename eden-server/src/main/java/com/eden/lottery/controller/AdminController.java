@@ -9,6 +9,7 @@ import com.eden.lottery.entity.Wish;
 import com.eden.lottery.entity.ResidenceHistory;
 import com.eden.lottery.entity.Decree;
 import com.eden.lottery.entity.Magic;
+import com.eden.lottery.entity.StarCity;
 import com.eden.lottery.service.AdminService;
 import com.eden.lottery.service.LotteryService;
 import com.eden.lottery.service.UserAttemptService;
@@ -17,6 +18,7 @@ import com.eden.lottery.service.ResidenceHistoryService;
 import com.eden.lottery.service.ResidenceEventService;
 import com.eden.lottery.service.DecreeService;
 import com.eden.lottery.service.MagicService;
+import com.eden.lottery.service.StarCityService;
 import com.eden.lottery.task.UserStatusRefreshTask;
 import com.eden.lottery.task.HourlyRefreshTask;
 import com.eden.lottery.entity.UserAttempt;
@@ -50,8 +52,9 @@ public class AdminController {
     private final HourlyRefreshTask hourlyRefreshTask;
     private final DecreeService decreeService;
     private final MagicService magicService;
+    private final StarCityService starCityService;
 
-    public AdminController(AdminService adminService, LotteryService lotteryService, UserAttemptService userAttemptService, WishService wishService, ResidenceHistoryService residenceHistoryService, ResidenceEventService residenceEventService, UserStatusRefreshTask userStatusRefreshTask, HourlyRefreshTask hourlyRefreshTask, DecreeService decreeService, MagicService magicService) {
+    public AdminController(AdminService adminService, LotteryService lotteryService, UserAttemptService userAttemptService, WishService wishService, ResidenceHistoryService residenceHistoryService, ResidenceEventService residenceEventService, UserStatusRefreshTask userStatusRefreshTask, HourlyRefreshTask hourlyRefreshTask, DecreeService decreeService, MagicService magicService, StarCityService starCityService) {
         this.adminService = adminService;
         this.lotteryService = lotteryService;
         this.userAttemptService = userAttemptService;
@@ -62,6 +65,7 @@ public class AdminController {
         this.hourlyRefreshTask = hourlyRefreshTask;
         this.decreeService = decreeService;
         this.magicService = magicService;
+        this.starCityService = starCityService;
     }
 
     /**
@@ -1091,6 +1095,77 @@ public class AdminController {
         } catch (Exception e) {
             logger.error("更新魔法精力消耗失败", e);
             return ApiResponse.error("更新失败: " + e.getMessage());
+        }
+    }
+
+    // ==================== 星星城管理 ====================
+
+    /**
+     * 获取星星城数据（管理员）
+     */
+    @GetMapping("/star-city")
+    public ApiResponse<StarCity> getStarCity(HttpServletRequest request) {
+        try {
+            if (isInvalidAdmin(request)) {
+                return ApiResponse.error("未授权访问");
+            }
+            
+            StarCity starCity = starCityService.getStarCity();
+            return ApiResponse.success("获取星星城数据成功", starCity);
+        } catch (Exception e) {
+            logger.error("获取星星城数据失败", e);
+            return ApiResponse.error("获取星星城数据失败: " + e.getMessage());
+        }
+    }
+
+    /**
+     * 更新星星城数据（管理员）
+     */
+    @PutMapping("/star-city")
+    public ApiResponse<String> updateStarCity(
+            HttpServletRequest request,
+            @RequestBody StarCity starCity) {
+        try {
+            if (isInvalidAdmin(request)) {
+                return ApiResponse.error("未授权访问");
+            }
+            
+            // 验证数据
+            if (starCity.getPopulation() == null || starCity.getPopulation() < 0) {
+                return ApiResponse.error("人口数量不能为空且不能为负数");
+            }
+            
+            if (starCity.getFood() == null || starCity.getFood() < 0) {
+                return ApiResponse.error("食物数量不能为空且不能为负数");
+            }
+            
+            if (starCity.getHappiness() == null || starCity.getHappiness() < 0) {
+                return ApiResponse.error("幸福指数不能为空且不能为负数");
+            }
+            
+            // 获取当前星星城数据（保留其他字段）
+            StarCity current = starCityService.getStarCity();
+            if (current != null) {
+                // 更新指定字段
+                current.setPopulation(starCity.getPopulation());
+                current.setFood(starCity.getFood());
+                current.setHappiness(starCity.getHappiness());
+                // 根据最新数据重新计算等级（不需要手动设置level，自动计算）
+                current.setLevel(current.calculateLevel());
+                starCityService.updateStarCity(current);
+            } else {
+                // 如果没有数据，创建新数据
+                starCity.setLevel(starCity.calculateLevel());
+                starCityService.updateStarCity(starCity);
+            }
+            
+            logger.info("管理员更新星星城数据: population={}, food={}, happiness={}, calculatedLevel={}", 
+                       starCity.getPopulation(), starCity.getFood(), starCity.getHappiness(), 
+                       current != null ? current.getLevel() : starCity.getLevel());
+            return ApiResponse.success("星星城数据更新成功");
+        } catch (Exception e) {
+            logger.error("更新星星城数据失败", e);
+            return ApiResponse.error("更新星星城数据失败: " + e.getMessage());
         }
     }
 

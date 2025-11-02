@@ -557,6 +557,7 @@
                 <button class="tab" data-tab="decrees">命令管理</button>
                 <button class="tab" data-tab="magic">魔法管理</button>
                 <button class="tab" data-tab="giant-attack">巨人进攻管理</button>
+                <button class="tab" data-tab="star-city">星星城管理</button>
             </div>
 
             <!-- 用户管理标签页 -->
@@ -1075,6 +1076,65 @@
                     </div>
                 </div>
             </div>
+
+            <!-- 星星城管理标签页 -->
+            <div id="star-city" class="tab-content">
+                <div class="action-form">
+                    <h4>✨ 星星城等级管理</h4>
+                    <p style="margin-bottom: 15px; color: #666; font-size: 14px;">
+                        直接修改星星城的等级、食物、人口、幸福指数
+                    </p>
+                    
+                    <!-- 当前状态显示 -->
+                    <div class="stats-section" style="margin-bottom: 20px;">
+                        <h4>📊 当前状态</h4>
+                        <div class="stats-grid">
+                            <div class="stat-card">
+                                <h3 id="starCityLevel">-</h3>
+                                <p>等级</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3 id="starCityPopulation">-</h3>
+                                <p>人口</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3 id="starCityFood">-</h3>
+                                <p>食物</p>
+                            </div>
+                            <div class="stat-card">
+                                <h3 id="starCityHappiness">-</h3>
+                                <p>幸福</p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 修改表单 -->
+                    <div class="form-section" style="background: #f8f9fa; padding: 20px; border-radius: 10px; margin-bottom: 20px;">
+                        <h4 style="margin-bottom: 15px;">✏️ 修改数据</h4>
+                        <div class="form-group">
+                            <label for="editPopulation">人口数量</label>
+                            <input type="number" id="editPopulation" min="0" step="1" placeholder="输入人口数量">
+                        </div>
+                        <div class="form-group">
+                            <label for="editFood">食物数量</label>
+                            <input type="number" id="editFood" min="0" step="1" placeholder="输入食物数量">
+                        </div>
+                        <div class="form-group">
+                            <label for="editHappiness">幸福指数</label>
+                            <input type="number" id="editHappiness" min="0" step="1" placeholder="输入幸福指数">
+                        </div>
+                        <div style="margin-top: 15px;">
+                            <button onclick="updateStarCity()" class="action-btn" style="background: #667eea;">
+                                💾 保存修改
+                            </button>
+                            <button onclick="loadStarCity()" class="action-btn" style="background: #48bb78;">
+                                🔄 刷新数据
+                            </button>
+                        </div>
+                        <div id="starCityMessage" style="margin-top: 15px; padding: 10px; border-radius: 5px; display: none;"></div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
@@ -1227,6 +1287,8 @@
                 loadMagics();
             } else if (tabName === 'giant-attack') {
                 loadGiantAttackStatus();
+            } else if (tabName === 'star-city') {
+                loadStarCity();
             }
         }
 
@@ -2706,6 +2768,121 @@
                 console.error(`${action}错误:`, error);
                 showMessage('adminMessage', '网络错误，请稍后重试', 'error');
             }
+        }
+
+        // ==================== 星星城管理功能 ====================
+
+        // 加载星星城数据
+        async function loadStarCity() {
+            try {
+                const response = await fetch(`${API_BASE}/admin/star-city`, {
+                    headers: {
+                        'Authorization': `Bearer ${adminToken}`
+                    }
+                });
+
+                const result = await response.json();
+                if (result.success && result.data) {
+                    const starCity = result.data;
+                    
+                    // 更新状态显示
+                    document.getElementById('starCityLevel').textContent = starCity.level || 0;
+                    document.getElementById('starCityPopulation').textContent = formatNumber(starCity.population || 0);
+                    document.getElementById('starCityFood').textContent = formatNumber(starCity.food || 0);
+                    document.getElementById('starCityHappiness').textContent = starCity.happiness || 0;
+                    
+                    // 填充表单
+                    document.getElementById('editPopulation').value = starCity.population || '';
+                    document.getElementById('editFood').value = starCity.food || '';
+                    document.getElementById('editHappiness').value = starCity.happiness || '';
+                    
+                    // 清除消息
+                    const messageDiv = document.getElementById('starCityMessage');
+                    messageDiv.style.display = 'none';
+                    messageDiv.innerHTML = '';
+                } else {
+                    showStarCityMessage(result.message || '加载星星城数据失败', 'error');
+                }
+            } catch (error) {
+                console.error('加载星星城数据错误:', error);
+                showStarCityMessage('网络错误，请稍后重试', 'error');
+            }
+        }
+
+        // 更新星星城数据
+        async function updateStarCity() {
+            const population = document.getElementById('editPopulation').value.trim();
+            const food = document.getElementById('editFood').value.trim();
+            const happiness = document.getElementById('editHappiness').value.trim();
+            
+            // 验证数据
+            if (!population || population === '' || isNaN(population) || parseInt(population) < 0) {
+                showStarCityMessage('请输入有效的人口数量（≥0）', 'error');
+                return;
+            }
+            
+            if (!food || food === '' || isNaN(food) || parseInt(food) < 0) {
+                showStarCityMessage('请输入有效的食物数量（≥0）', 'error');
+                return;
+            }
+            
+            if (!happiness || happiness === '' || isNaN(happiness) || parseInt(happiness) < 0) {
+                showStarCityMessage('请输入有效的幸福指数（≥0）', 'error');
+                return;
+            }
+            
+            try {
+                const response = await fetch(`${API_BASE}/admin/star-city`, {
+                    method: 'PUT',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'Authorization': `Bearer ${adminToken}`
+                    },
+                    body: JSON.stringify({
+                        population: parseInt(population),
+                        food: parseInt(food),
+                        happiness: parseInt(happiness)
+                    })
+                });
+
+                const result = await response.json();
+                if (result.success) {
+                    showStarCityMessage('星星城数据更新成功！', 'success');
+                    // 重新加载数据以显示计算后的等级
+                    setTimeout(() => {
+                        loadStarCity();
+                    }, 500);
+                } else {
+                    showStarCityMessage(result.message || '更新星星城数据失败', 'error');
+                }
+            } catch (error) {
+                console.error('更新星星城数据错误:', error);
+                showStarCityMessage('网络错误，请稍后重试', 'error');
+            }
+        }
+
+        // 显示星星城消息
+        function showStarCityMessage(message, type) {
+            const messageDiv = document.getElementById('starCityMessage');
+            messageDiv.style.display = 'block';
+            messageDiv.style.backgroundColor = type === 'success' ? '#d4edda' : '#f8d7da';
+            messageDiv.style.color = type === 'success' ? '#155724' : '#721c24';
+            messageDiv.style.border = `1px solid ${type === 'success' ? '#c3e6cb' : '#f5c6cb'}`;
+            messageDiv.textContent = message;
+            
+            // 3秒后自动清除消息
+            setTimeout(() => {
+                messageDiv.style.display = 'none';
+                messageDiv.innerHTML = '';
+            }, 3000);
+        }
+
+        // 格式化数字显示
+        function formatNumber(num) {
+            if (num >= 10000) {
+                return (num / 10000).toFixed(1) + '万';
+            }
+            return num.toString();
         }
     </script>
 </body>
